@@ -1,0 +1,59 @@
+<section class="reservation" id="reservation">
+  <form (ngSubmit)="submit()" #reservationForm="ngForm">
+    <h3>make a reservation</h3>
+    <div class="flex">
+      <div class="box">
+        <p>check in <span>*</span></p>
+        <input type="date" name="checkIn" class="input" required [(ngModel)]="booking.checkIn">
+      </div>
+      <div class="box">
+        <p>check out <span>*</span></p>
+        <input type="date" name="checkOut" class="input" required [(ngModel)]="booking.checkOut">
+      </div>
+      <div class="box">
+        <p>adults <span>*</span></p>
+        <input 
+          type="number" 
+          name="adults" 
+          class="input" 
+          min="1" 
+          max="10" 
+          placeholder="Enter number of adults" 
+          required
+          [(ngModel)]="booking.adults"
+        >
+      </div>
+      <div class="box">
+        <p>childs <span>*</span></p>
+        <input 
+          type="number" 
+          name="childs" 
+          class="input" 
+          min="0" 
+          max="10" 
+          placeholder="Enter number of childs" 
+          required
+          [(ngModel)]="booking.childs"
+        >
+      </div>
+      <div class="box">
+        <p>rooms <span>*</span></p>
+        <input 
+          type="number" 
+          name="rooms" 
+          class="input" 
+          min="1" 
+          max="10" 
+          placeholder="Enter number of rooms" 
+          required
+          [(ngModel)]="booking.rooms"
+        >
+      </div>
+      <div class="box">
+        <p>special requests</p>
+        <textarea name="requests" class="input" placeholder="Enter any special requests" [(ngModel)]="booking.requests"></textarea>
+      </div>
+    </div>
+    <input type="submit" value="check availability" class="btn">
+  </form>
+</section>
