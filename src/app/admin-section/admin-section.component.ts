@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-admin-section',
   standalone: true,
-  template: `<h2>Welcome, Administrator!</h2>`
+  templateUrl: './admin-section.component.html',
+  styleUrl: './admin-section.component.scss'
 })
 export class AdminSectionComponent {}
