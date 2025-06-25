@@ -1,1 +1,79 @@
-<p>i-add lang ari imo design abai!</p>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/images/bcflats.png" alt="Hotel Logo" />
+    </div>
+    <nav>
+      <a href="#" class="active"><i class="fa fa-chart-bar"></i> Dashboard</a>
+      <a href="#"><i class="fa fa-desktop"></i> Front Office</a>
+      <a href="#"><i class="fa fa-briefcase"></i> Back Office</a>
+      <a href="#"><i class="fa fa-file-alt"></i> Reports</a>
+      <a href="#"><i class="fa fa-broom"></i> House Keeping</a>
+      <a href="#"><i class="fa fa-wrench"></i> Maintenance</a>
+      <a href="#"><i class="fa fa-money-check-alt"></i> Payroll</a>
+    </nav>
+    
+  </aside>
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <div class="left">
+        <span class="hotel-title">{{ hotelName }}</span>
+        <div class="search-box">
+          <input type="text" placeholder="Search anything... Press CTRL+SPACE for hint">
+        </div>
+      </div>
+      <div class="user-info">
+        <span>{{ user }}</span>
+        <i class="fa fa-user-circle"></i>
+        <button class="toggle-mode-btn" (click)="toggleDarkMode()">
+          <i class="fa" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+        </button>
+      </div>
+    </div>
+    <!-- Status Summary -->
+    <div class="status-summary">
+      <div *ngFor="let status of statusSummary" class="status-card" [ngClass]="status.class">
+        <span class="icon"><i class="fa" [ngClass]="status.icon"></i></span>
+        {{ status.label }} <b>{{ status.count }}</b>
+      </div>
+    </div>
+    <!-- Room View -->
+    <div class="room-view-container">
+      <div class="room-view-header">
+        <select>
+          <option>Room View</option>
+          <option>List View</option>
+        </select>
+        <input type="date" value="2025-06-25">
+      </div>
+      <div class="room-tabs">
+        <button *ngFor="let tab of roomTabs; let i = index"
+                [class.active]="selectedTab === i"
+                (click)="selectedTab = i">{{ tab }}</button>
+      </div>
+      <div class="room-grid">
+        <div *ngFor="let room of rooms" class="room-card" [ngClass]="room.status">
+          <div class="room-number">{{ room.number }}</div>
+          <div class="room-type">{{ room.type }}</div>
+          <div class="room-guest">{{ room.guest }}</div>
+          <div class="room-icons">
+            <i class="fa fa-user"></i>
+            <i class="fa fa-bed"></i>
+          </div>
+          <div class="room-status-label">{{ room.status | titlecase }}</div>
+        </div>
+        <div class="spa-block">Spa</div>
+      </div>
+    </div>
+    <!-- Footer / Working Info -->
+    <div style="padding:1rem 2rem; color:#888; font-size:1rem;">
+      Working Date: <b>Tuesday, February 06, 2018</b> &nbsp;|&nbsp;
+      Audited Date: <b>Saturday, March 10, 2018</b> &nbsp;|&nbsp;
+      Shift Date: <b>Friday, March 16, 2018 12:28:16 PM</b>
+    </div>
+  </main>
+</div>
