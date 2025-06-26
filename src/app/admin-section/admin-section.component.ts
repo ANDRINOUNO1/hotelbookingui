@@ -1,4 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface Room {
   number: string;
@@ -8,11 +9,13 @@ interface Room {
 }
 
 @Component({
-  selector: 'app-hotel-dashboard',
+  selector: 'app-admin-section',
+  standalone: true, // <-- Add this if not present
+  imports: [CommonModule], // <-- Add this line
   templateUrl: './admin-section.component.html',
   styleUrls: ['./admin-section.component.scss'],
 })
-export class HotelDashboardComponent {
+export class AdminSectionComponent {
   hotelName = 'eZee BC Flats - eZee FrontDesk Demo';
   user = 'Admin';
 
