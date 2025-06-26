@@ -1,9 +1,19 @@
-<section class="login-section">
-  <form (ngSubmit)="login()" #loginForm="ngForm">
-    <h3>Login</h3>
-    <input type="text" name="username" [(ngModel)]="username" placeholder="Username" required class="input">
-    <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required class="input">
-    <button type="submit" class="btn">Login</button>
-  </form>
-  <p *ngIf="error" style="color:red;">{{ error }}</p>
-</section>
+<div class="login-bg">
+  <div class="login-card">
+    <div class="tab-header">
+      <button [class.active]="activeTab === 'signin'" (click)="activeTab = 'signin'">SIGN IN</button>
+    </div>
+    <!-- Sign In Form -->
+    <form *ngIf="activeTab === 'signin'" class="login-form" (ngSubmit)="login()">
+      <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required />
+      <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required />
+      <div class="login-options">
+        <label>
+          <input type="checkbox" [(ngModel)]="keepLoggedIn" name="keepLoggedIn" /> Keep me logged in
+        </label>
+      </div>
+      <button type="submit" class="login-btn">LOGIN</button>
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
+    </form>
+  </div>
+</div>
