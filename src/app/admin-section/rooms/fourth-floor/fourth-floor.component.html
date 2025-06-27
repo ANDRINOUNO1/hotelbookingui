@@ -1,0 +1,22 @@
+<div>
+    <table class="tables">
+      <thead>
+        <tr>
+          <th>Room No.</th>
+          <th>Name</th>
+          <th>Room Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let room of rooms" >
+            <td>{{ room.number }}</td>
+            <td>{{ room.guest }}</td>
+            <td>{{ room.type }}</td>
+            <td>
+              <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+</div>

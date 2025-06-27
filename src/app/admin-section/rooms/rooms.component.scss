@@ -208,6 +208,25 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 1rem;
 }
+.tables {
+    border-collapse: separate; /* Use 'separate' to apply border radius */
+    border-spacing: 0; /* Remove spacing between cells */
+    width: 100%;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 10px; /* Rounded corners for the table */
+    overflow: hidden;
+    text-align: center;
+}
+.tables th,
+.tables td {
+    border: 1px solid #ddd;
+    padding: 8px;   
+}
+
+.tables th {
+    font-weight: bold;
+}
 .room-card {
   background: var(--card-bg);
   border: 2px solid var(--room-default);
