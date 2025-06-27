@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PricingComponent } from './pricing.component';
+import { SecondFloorComponent } from './second-floor.component';
 
-describe('PricingComponent', () => {
-  let component: PricingComponent;
-  let fixture: ComponentFixture<PricingComponent>;
+describe('SecondFloorComponent', () => {
+  let component: SecondFloorComponent;
+  let fixture: ComponentFixture<SecondFloorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PricingComponent]
+      imports: [SecondFloorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PricingComponent);
+    fixture = TestBed.createComponent(SecondFloorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

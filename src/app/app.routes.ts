@@ -8,11 +8,6 @@ import { DashboardComponent } from './admin-section/dashboard/dashboard.componen
 import { BookingComponent } from './admin-section/booking/booking.component';
 import { CustomersComponent } from './admin-section/customers/customers.component';
 import { RoomsComponent } from './admin-section/rooms/rooms.component';
-import { StaffComponent } from './admin-section/staff/staff.component';
-import { PricingComponent } from './admin-section/pricing/pricing.component';
-import { AppsComponent } from './admin-section/apps/apps.component';
-import { EmployeesComponent } from './admin-section/employees/employees.component';
-import { AccountsComponent } from './admin-section/accounts/accounts.component';
 import { PayrollComponent } from './admin-section/payroll/payroll.component';
 
 export const routes: Routes = [
@@ -30,11 +25,6 @@ export const routes: Routes = [
       { path: 'booking', component: BookingComponent },
       { path: 'customers', component: CustomersComponent },
       { path: 'rooms', component: RoomsComponent },
-      { path: 'staff', component: StaffComponent },
-      { path: 'pricing', component: PricingComponent },
-      { path: 'apps', component: AppsComponent },
-      { path: 'employees', component: EmployeesComponent },
-      { path: 'accounts', component: AccountsComponent },
       { path: 'payroll', component: PayrollComponent }
     ]
   }

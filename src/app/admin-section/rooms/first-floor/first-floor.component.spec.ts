@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppsComponent } from './apps.component';
+import { FirstFloorComponent } from './first-floor.component';
 
-describe('AppsComponent', () => {
-  let component: AppsComponent;
-  let fixture: ComponentFixture<AppsComponent>;
+describe('FirstFloorComponent', () => {
+  let component: FirstFloorComponent;
+  let fixture: ComponentFixture<FirstFloorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppsComponent]
+      imports: [FirstFloorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AppsComponent);
+    fixture = TestBed.createComponent(FirstFloorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

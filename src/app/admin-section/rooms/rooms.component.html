@@ -1,27 +1,20 @@
 <div class="room-view-container">
-      <div class="room-view-header">
-        <select>
-          <option>Room View</option>
-          <option>List View</option>
-        </select>
-        <input type="date" value="2025-06-25">
-      </div>
-      <div class="room-tabs">
-        <button *ngFor="let tab of roomTabs; let i = index"
-                [class.active]="selectedTab === i"
-                (click)="selectedTab = i">{{ tab }}</button>
-      </div>
-      <div class="room-grid">
-        <div *ngFor="let room of rooms" class="room-card" [ngClass]="room.status">
-          <div class="room-number">{{ room.number }}</div>
-          <div class="room-type">{{ room.type }}</div>
-          <div class="room-guest">{{ room.guest }}</div>
-          <div class="room-icons">
-            <i class="fa fa-user"></i>
-            <i class="fa fa-bed"></i>
-          </div>
-          <div class="room-status-label">{{ room.status | titlecase }}</div>
-        </div>
-        <div class="spa-block">Spa</div>
-      </div>
-    </div>
+  <div class="room-view-header">
+    <select>
+      <option>Room View</option>
+      <option>List View</option>
+    </select>
+    <input type="date" value="2025-06-25">
+  </div>
+  <div class="room-tabs">
+    <button *ngFor="let tab of roomTabs; let i = index"
+            [class.active]="selectedTab === i"
+            (click)="selectedTab = i">{{ tab }}</button>
+  </div>
+  <ng-container [ngSwitch]="selectedTab">
+    <app-first-floor *ngSwitchCase="0" [rooms]="firstFloorRooms"></app-first-floor>
+    <app-second-floor *ngSwitchCase="1" [rooms]="secondFloorRooms"></app-second-floor>
+    <app-third-floor *ngSwitchCase="2" [rooms]="thirdFloorRooms"></app-third-floor>
+    <app-fourth-floor *ngSwitchCase="3" [rooms]="fourthFloorRooms"></app-fourth-floor>
+  </ng-container>
+</div>

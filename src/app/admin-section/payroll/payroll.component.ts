@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './payroll.component.scss'
 })
 export class PayrollComponent {
-
+  
 }
