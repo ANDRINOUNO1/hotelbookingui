@@ -13,6 +13,15 @@
       <a routerLink="rooms" routerLinkActive="active"><i class="fa fa-bed"></i> Rooms</a>
       <a routerLink="payroll" routerLinkActive="active"><i class="fa fa-money-check-alt"></i> Payroll</a>
     </nav>
+    <div class="sidebar-bottom">
+      <button class="toggle-mode-btn" (click)="toggleDarkMode()">
+        <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
+        {{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
+      </button>
+      <button class="logout-btn" (click)="logout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </aside>
   <!-- Main Content -->
   <main class="main-content">
@@ -27,10 +36,6 @@
       <div class="user-info">
         <span>{{ user }}</span>
         <i class="fa fa-user-circle"></i>
-        <button class="toggle-mode-btn" (click)="toggleDarkMode()">
-          <i class="fa" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
-          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-        </button>
       </div>
     </div>
 

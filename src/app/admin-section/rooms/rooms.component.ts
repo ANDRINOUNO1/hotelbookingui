@@ -1,18 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FirstFloorComponent } from './first-floor/first-floor.component';
-import { SecondFloorComponent } from './second-floor/second-floor.component';
-import { ThirdFloorComponent } from './third-floor/third-floor.component';
-import { FourthFloorComponent } from './fourth-floor/fourth-floor.component';
-
-
-interface Room {
-  number: string;
-  type: string;
-  guest: string;
-  status: 'occupied' | 'vacant' | 'reserved' | 'dueout' | 'dirty' | 'outoforder';
-  floor: number;
-}
+import { FirstFloorComponent } from './classic/first-floor.component';
+import { SecondFloorComponent } from './deluxe/second-floor.component';
+import { ThirdFloorComponent } from './prestige/third-floor.component';
+import { FourthFloorComponent } from './luxury/fourth-floor.component';
+import { ROOMS } from '../../models/entities'; // <-- Import your seeded rooms
+import { Room } from '../../models/booking.model';
+import { BookingService } from '../../booking.service';
+import { Booking } from '../../models/booking.model';
 
 @Component({
   selector: 'app-rooms',
@@ -22,30 +17,26 @@ interface Room {
 })
 
 export class RoomsComponent {
-  rooms: Room[] = [
-    { number: '101', type: 'Classic', guest: 'eric dosdos', status: 'occupied', floor: 1 },
-    { number: '102', type: 'Deluxe', guest: 'Michael Hermosa', status: 'occupied', floor: 2 },
-    { number: '103', type: 'Prestige', guest: 'Julian Buntis', status: 'occupied', floor: 3 },
-    { number: '104', type: 'Luxury', guest: 'Lourd Mendosa', status: 'vacant', floor: 4},
-    { number: '105', type: 'Classic', guest: 'Yamilo Yams', status: 'reserved', floor: 1 },
-    { number: '106', type: 'Deluxe', guest: 'Harry Scougall', status: 'dueout', floor: 2 },
-    { number: '107', type: 'Prestige', guest: 'Sutton Summerell', status: 'dirty', floor: 3 },
-    { number: '108', type: 'Luxury', guest: 'Kein Andrew', status: 'outoforder', floor: 4 }
-  ];
+  rooms: Room[] = ROOMS;
+  bookings: Booking[] = [];
 
-  roomTabs = ['First Floor', 'Second Floor', 'Third Floor', 'Fourth Floor'];
+  constructor(private bookingService: BookingService) {
+    this.bookings = this.bookingService.getBookings();
+  }
+
+  roomTabs = ['Classic', 'Deluxe', 'Prestige', 'Luxury'];
   selectedTab = 0;
 
-  get firstFloorRooms() {
-    return this.rooms.filter(r => r.floor === 1);
+  get classicRooms() {
+    return this.rooms.filter(r => r.roomType?.type === 'Classic');
   }
-  get secondFloorRooms() {
-    return this.rooms.filter(r => r.floor === 2);
+  get deluxeRooms() {
+    return this.rooms.filter(r => r.roomType?.type === 'Deluxe');
   }
-  get thirdFloorRooms() {
-    return this.rooms.filter(r => r.floor === 3);
+  get prestigeRooms() {
+    return this.rooms.filter(r => r.roomType?.type === 'Prestige');
   }
-  get fourthFloorRooms() {
-    return this.rooms.filter(r => r.floor === 4);
+  get luxuryRooms() {
+    return this.rooms.filter(r => r.roomType?.type === 'Luxury');
   }
 }
