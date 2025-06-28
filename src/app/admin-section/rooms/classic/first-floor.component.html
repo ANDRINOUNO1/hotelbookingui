@@ -1,0 +1,22 @@
+<div>
+  <table class="tables">
+    <thead>
+      <tr>
+        <th>Room No.</th>
+        <th>Customer's Name</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of rooms">
+        <td>{{ room.room_number }}</td>
+        <td>{{ getGuestName(room.id) }}</td>
+        <td>
+          <span class="status-label" [ngClass]="getRoomStatus(room) === 'Vacant' ? 'vacant' : 'occupied'">
+            {{ getRoomStatus(room) }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import Swiper from 'swiper/bundle';
 import flatpickr from 'flatpickr';
 import { ReservationFormComponent } from './reservation-form/reservation-form.component';
@@ -8,18 +9,44 @@ import { ReservationFormComponent } from './reservation-form/reservation-form.co
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, ReservationFormComponent],
+  imports: [RouterModule, CommonModule, ReservationFormComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements AfterViewInit {
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
   title = 'hotel-reservation-app';
+  isDarkMode = false;
 
   @ViewChild('navbar') navbar!: ElementRef;
 
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private renderer: Renderer2,
+    private router: Router
+  ) {}
+
   toggleMenu() {
     this.navbar.nativeElement.classList.toggle('active');
+  }
+
+  ngOnInit() {
+    const savedTheme = localStorage.getItem('theme');
+    this.isDarkMode = savedTheme === 'dark';
+    this.applyTheme();
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.isDarkMode) {
+      this.renderer.addClass(document.body, 'dark-mode');
+    } else {
+      this.renderer.removeClass(document.body, 'dark-mode');
+    }
   }
 
   ngAfterViewInit() {

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllFloorComponent } from './all-floor.component';
+import { ConfirmationComponent } from './confirmation.component';
 
-describe('AllFloorComponent', () => {
-  let component: AllFloorComponent;
-  let fixture: ComponentFixture<AllFloorComponent>;
+describe('ConfirmationComponent', () => {
+  let component: ConfirmationComponent;
+  let fixture: ComponentFixture<ConfirmationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AllFloorComponent]
+      imports: [ConfirmationComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AllFloorComponent);
+    fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

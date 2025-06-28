@@ -12,9 +12,25 @@
             (click)="selectedTab = i">{{ tab }}</button>
   </div>
   <ng-container [ngSwitch]="selectedTab">
-    <app-first-floor *ngSwitchCase="0" [rooms]="firstFloorRooms"></app-first-floor>
-    <app-second-floor *ngSwitchCase="1" [rooms]="secondFloorRooms"></app-second-floor>
-    <app-third-floor *ngSwitchCase="2" [rooms]="thirdFloorRooms"></app-third-floor>
-    <app-fourth-floor *ngSwitchCase="3" [rooms]="fourthFloorRooms"></app-fourth-floor>
-  </ng-container>
+  <app-first-floor
+    *ngSwitchCase="0"
+    [rooms]="classicRooms"
+    [bookings]="bookings">
+  </app-first-floor>
+  <app-second-floor
+    *ngSwitchCase="1"
+    [rooms]="deluxeRooms"
+    [bookings]="bookings">
+  </app-second-floor>
+  <app-third-floor
+    *ngSwitchCase="2"
+    [rooms]="prestigeRooms"
+    [bookings]="bookings">
+  </app-third-floor>
+  <app-fourth-floor
+    *ngSwitchCase="3"
+    [rooms]="luxuryRooms"
+    [bookings]="bookings">
+  </app-fourth-floor>
+</ng-container>
 </div>
