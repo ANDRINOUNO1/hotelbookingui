@@ -13,29 +13,4 @@
     </div>
   </div>
 </div>
-
-<div class="container">
-  <div class="header">
-    <h2>Traffic Trends</h2>
-    <div class="tabs">
-      <button 
-        class="tab" 
-        [class.active]="selectedTab === 'day'" 
-        (click)="selectTab('day')">Day</button>
-      <button 
-        class="tab" 
-        [class.active]="selectedTab === 'week'" 
-        (click)="selectTab('week')">Week</button>
-      <button 
-        class="tab" 
-        [class.active]="selectedTab === 'month'" 
-        (click)="selectTab('month')">Month</button>
-    </div>
-  </div>
-  <canvas #lineChart height="100"></canvas>
-
-  <div class="header">
-    <h2>Traffic Sources</h2>
-  </div>
-  <canvas #doughnutChart height="100"></canvas>
-</div>
+<app-analytics></app-analytics>

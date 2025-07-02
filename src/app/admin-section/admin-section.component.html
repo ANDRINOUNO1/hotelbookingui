@@ -1,4 +1,5 @@
-<aside class="sidebar">
+<div class="dashboard-container">
+  <aside class="sidebar">
   <div class="admin-logo-bar">
     <img src="assets/images/bcflats.png" alt="Hotel Logo" class="admin-logo" />
     <span class="hotel-title">HOTEL</span>
@@ -33,9 +34,7 @@
   </div>
 
   <nav>
-    <a routerLink="dashboard" routerLinkActive="active">
-      <i class="fa fa-gauge"></i> Dashboard
-    </a>
+    <a routerLink="dashboard" routerLinkActive="active"><i class="fa fa-chart-bar"></i> Dashboard</a>
 
     <div class="sidebar-group" [class.open]="openMenu === 'booking'">
       <a (click)="toggleMenu('booking')">
@@ -45,7 +44,7 @@
         </span>
       </a>
       <div class="submenu" *ngIf="openMenu === 'booking'">
-        <a routerLink="booking/new">New Booking</a>
+        <a routerLink="booking" routerLinkActive="active"><i class="fa fa-briefcase"></i> New Bookings</a>
         <a routerLink="booking/history">Booking History</a>
       </div>
     </div>
@@ -58,7 +57,7 @@
         </span>
       </a>
       <div class="submenu" *ngIf="openMenu === 'customers'">
-        <a routerLink="customers/list">Customer List</a>
+        <a routerLink="customers" routerLinkActive="active"><i class="fa fa-users"></i>Customer List</a>
         <a routerLink="customers/feedback">Feedback</a>
       </div>
     </div>
@@ -71,7 +70,7 @@
         </span>
       </a>
       <div class="submenu" *ngIf="openMenu === 'rooms'">
-        <a routerLink="rooms/list">Room List</a>
+        <a routerLink="rooms" routerLinkActive="active"><i class="fa fa-bed"></i>Room List</a>
         <a routerLink="rooms/types">Room Types</a>
       </div>
     </div>
@@ -89,10 +88,14 @@
       </div>
     </div>
 
-    <a routerLink="pricing" routerLinkActive="active">
-      <i class="fa fa-money-bill"></i> Pricing
-    </a>
+    <a routerLink="payroll" routerLinkActive="active"><i class="fa fa-money-check-alt"></i> Pricing </a>
   </nav>
+</aside>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+</div>
   <div class="footer">
     <p>&copy; 2023 Hotel Management System</p>
     <p>Version 1.0.0</p>
+  </div>

@@ -1,4 +1,4 @@
-:root {
+:host {
   --sidebar-bg: var(--main-color, #0b0b31);
   --sidebar-active: var(--dark-base, #181824);
   --sidebar-text: var(--sub-color, #e5c07b);
@@ -19,7 +19,7 @@
   --border: .1rem solid rgba(229, 192, 123, 0.15);
 }
 
-body.dark-mode {
+:host(.dark-mode) {
   --sidebar-bg: #181824;
   --sidebar-active: #23233a;
   --sidebar-text: #e5c07b;
@@ -63,6 +63,7 @@ body {
   display: flex;
   min-height: 100vh;
   background: var(--main-bg);
+  position: relative;
 }
 
 /* Sidebar */
@@ -75,6 +76,7 @@ body {
   padding-top: 1rem;
   min-height: 100vh;
   justify-content: space-between;
+  z-index: 1;
 }
 .sidebar-bottom {
   margin-top: auto;
@@ -139,9 +141,13 @@ body {
 /* Main */
 .main-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 2rem;
+  background: var(--main-bg, #181824);
+  color: var(--header-text, #fff);
+  z-index: 0;
+  position: relative;
   min-width: 0;
+  overflow-x: auto;
 }
 
 /* Header */
