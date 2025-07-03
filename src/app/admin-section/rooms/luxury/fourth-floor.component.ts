@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Booking, Room } from '../../../models/booking.model';
+import { Booking, Room } from '../../../_models/booking.model';
 
 @Component({
   selector: 'app-fourth-floor',

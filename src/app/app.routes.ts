@@ -9,6 +9,7 @@ import { BookingComponent } from './admin-section/booking/booking.component';
 import { CustomersComponent } from './admin-section/customers/customers.component';
 import { RoomsComponent } from './admin-section/rooms/rooms.component';
 import { PayrollComponent } from './admin-section/payroll/payroll.component';
+import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,7 +26,8 @@ export const routes: Routes = [
       { path: 'booking', component: BookingComponent },
       { path: 'customers', component: CustomersComponent },
       { path: 'rooms', component: RoomsComponent },
-      { path: 'payroll', component: PayrollComponent }
+      { path: 'payroll', component: PayrollComponent },
+      { path: 'addaccount', component: AddAccountComponent }
     ]
   }
 ];

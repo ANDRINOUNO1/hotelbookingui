@@ -4,10 +4,10 @@ import { FirstFloorComponent } from './classic/first-floor.component';
 import { SecondFloorComponent } from './deluxe/second-floor.component';
 import { ThirdFloorComponent } from './prestige/third-floor.component';
 import { FourthFloorComponent } from './luxury/fourth-floor.component';
-import { ROOMS } from '../../models/entities'; // <-- Import your seeded rooms
-import { Room } from '../../models/booking.model';
+import { ROOMS } from '../../_models/entities'; 
+import { Room } from '../../_models/booking.model';
 import { BookingService } from '../../booking.service';
-import { Booking } from '../../models/booking.model';
+import { Booking } from '../../_models/booking.model';
 
 @Component({
   selector: 'app-rooms',
