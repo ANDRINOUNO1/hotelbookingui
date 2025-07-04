@@ -1,0 +1,50 @@
+<div class="account-list-container">
+  
+  <table class="account-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Password</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let acc of pagedAccounts; let i = index">
+        <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+        <td *ngIf="editingId !== acc.id">{{ acc.title }}</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.title" /></td>
+        <td *ngIf="editingId !== acc.id">{{ acc.firstName }} {{ acc.lastName }}</td>
+        <td *ngIf="editingId === acc.id">
+          <input [(ngModel)]="editAccount!.firstName" placeholder="First Name" style="width: 45%" />
+          <input [(ngModel)]="editAccount!.lastName" placeholder="Last Name" style="width: 45%" />
+        </td>
+        <td *ngIf="editingId !== acc.id">{{ acc.email }}</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.email" /></td>
+        <td *ngIf="editingId !== acc.id">{{ acc.role }}</td>
+        <td *ngIf="editingId === acc.id">
+          <select [(ngModel)]="editAccount!.role">
+            <option [ngValue]="Role.Admin">Admin</option>
+            <option [ngValue]="Role.frontdeskUser">Frontdesk</option>
+          </select>
+        </td>
+        <td *ngIf="editingId !== acc.id">••••••••</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.password" type="text" /></td>
+        <td>
+          <button *ngIf="editingId !== acc.id" class="update-btn" (click)="startEdit(acc)">Update</button>
+          <button *ngIf="editingId === acc.id" class="save-btn" (click)="saveEdit()">Save</button>
+          <button *ngIf="editingId === acc.id" class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+          <button class="delete-btn" [disabled]="acc.id === currentUserId" (click)="deleteAccount(acc.id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="pagination-row">
+    <button (click)="page = page - 1" [disabled]="page === 1">Previous</button>
+    <span>Page {{ page }} of {{ totalPages() }}</span>
+    <button (click)="page = page + 1" [disabled]="page === totalPages()">Next</button>
+  </div>
+</div> 

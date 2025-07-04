@@ -8,8 +8,9 @@ import { DashboardComponent } from './admin-section/dashboard/dashboard.componen
 import { BookingComponent } from './admin-section/booking/booking.component';
 import { CustomersComponent } from './admin-section/customers/customers.component';
 import { RoomsComponent } from './admin-section/rooms/rooms.component';
-import { PayrollComponent } from './admin-section/payroll/payroll.component';
+import { PricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
+import { AccountListComponent } from './admin-section/accountlist/account-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,8 +27,9 @@ export const routes: Routes = [
       { path: 'booking', component: BookingComponent },
       { path: 'customers', component: CustomersComponent },
       { path: 'rooms', component: RoomsComponent },
-      { path: 'payroll', component: PayrollComponent },
-      { path: 'addaccount', component: AddAccountComponent }
+      { path: 'pricing', component: PricingComponent },
+      { path: 'addaccount', component: AddAccountComponent },
+      { path: 'accountlist', component: AccountListComponent }
     ]
   }
 ];

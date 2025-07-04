@@ -43,6 +43,18 @@ if (accounts.length === 0) {
     localStorage.setItem(accountsKey, JSON.stringify(accounts));
 }
 
+const roomTypesKey = 'fake-room-types';
+let roomTypes = JSON.parse(localStorage.getItem(roomTypesKey) || 'null');
+if (!roomTypes) {
+  roomTypes = [
+    { id: 1, type: 'Classic', rate: 120 },
+    { id: 2, type: 'Deluxe', rate: 200 },
+    { id: 3, type: 'Prestige', rate: 150 },
+    { id: 4, type: 'Luxury', rate: 80 }
+  ];
+  localStorage.setItem(roomTypesKey, JSON.stringify(roomTypes));
+}
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -64,6 +76,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateAccount();
                 case url.match(/\/api\/accounts\/\w+$/) && method === 'DELETE':
                     return deleteAccount();
+                case url.endsWith('/api/room-types') && method === 'GET':
+                    return getRoomTypes();
+                case url.match(/\/api\/room-types\/\d+$/) && method === 'PUT':
+                    return updateRoomType();
                 default:
                     return next.handle(request);
             }
@@ -97,11 +113,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             account.password = account.password || 'changeme';
             accounts.push(account);
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
-            return ok();
+            return ok(account); // Return the new account
         }
 
         function getAccounts() {
-            if (!isLoggedIn()) return unauthorized();
+            // Allow unauthenticated access for development/testing
             return ok(accounts);
         }
 
@@ -112,7 +128,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function updateAccount() {
-            if (!isLoggedIn()) return unauthorized();
+            // Allow unauthenticated access for development/testing
             let params = body;
             let account = accounts.find(x => x.id === idFromUrl());
             if (!account) return error('Account not found');
@@ -126,6 +142,19 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             accounts = accounts.filter(x => x.id !== idFromUrl());
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
             return ok();
+        }
+
+        function getRoomTypes() {
+            return ok(roomTypes);
+        }
+        function updateRoomType() {
+            const id = parseInt(url.split('/').pop() || '');
+            const params = body;
+            const roomType = roomTypes.find((rt: any) => rt.id === id);
+            if (!roomType) return error('Room type not found');
+            Object.assign(roomType, params);
+            localStorage.setItem(roomTypesKey, JSON.stringify(roomTypes));
+            return ok(roomType);
         }
 
         // helper functions
