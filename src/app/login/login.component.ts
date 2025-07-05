@@ -16,6 +16,7 @@ export class LoginComponent {
   password = '';
   keepLoggedIn = false;
   error = '';
+  isLoading = false;
 
   signupName = '';
   signupEmail = '';
@@ -27,9 +28,12 @@ export class LoginComponent {
   constructor(private router: Router, private accountService: AccountService) {}
 
   login() {
+    this.isLoading = true;
+    this.error = '';
+    
     this.accountService.login(this.username, this.password).subscribe({
       next: (account) => {
-        this.error = '';
+        this.isLoading = false;
         if (account.role === 'Admin') {
           this.router.navigate(['/admin']);
         } else {
@@ -37,6 +41,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.isLoading = false;
         this.error = err?.error?.message || 'Invalid credentials!';
       }
     });
