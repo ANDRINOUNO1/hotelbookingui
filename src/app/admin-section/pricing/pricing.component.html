@@ -1,0 +1,24 @@
+<h2>Room Pricing Management</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Room Type</th>
+      <th>Current Rate</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let roomType of roomTypes">
+      <td>{{ roomType.type }}</td>
+      <td *ngIf="editingId !== roomType.id">₱{{ roomType.rate }}</td>
+      <td *ngIf="editingId === roomType.id">
+        <input type="number" [(ngModel)]="editRate" min="0" />
+      </td>
+      <td>
+        <button *ngIf="editingId !== roomType.id" (click)="startEdit(roomType)">Edit</button>
+        <button *ngIf="editingId === roomType.id" (click)="saveEdit(roomType)">Save</button>
+        <button *ngif="editingId === roomType.id" (click)="cancelEdit()">Cancel</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
