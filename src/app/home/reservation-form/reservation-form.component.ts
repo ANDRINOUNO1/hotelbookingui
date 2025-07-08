@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../booking.service';
-import { Availability } from '../../models/booking.model';
+import { Availability } from '../../_models/booking.model';
 import { Router } from '@angular/router';
 
 @Component({

@@ -7,12 +7,37 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Role } from './app/_models/role.model.js';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// In-memory accounts (simulate localStorage)
+let accounts = [
+  {
+    id: '1',
+    title: 'admin',
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@example.com',
+    status: 'Active',
+    role: Role.Admin,
+    password: 'admin123'
+  },
+  {
+    id: '2',
+    title: 'frontdesk',
+    firstName: 'Front',
+    lastName: 'Desk',
+    email: 'frontdesk@example.com',
+    status: 'Active',
+    role: Role.frontdeskUser,
+    password: 'frontdesk123'
+  }
+];
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -25,6 +50,47 @@ const angularApp = new AngularNodeAppEngine();
  * });
  * ```
  */
+
+/**
+ * Parse JSON bodies
+ */
+app.use(express.json());
+
+/**
+ * Authentication endpoint
+ */
+app.post('/api/accounts/authenticate', (req, res) => {
+  const { email, password, username } = req.body;
+  let user = accounts.find(
+    x =>
+      (x.title && x.title.toLowerCase() === (username || '').toLowerCase() && x.password === password) ||
+      (x.email === email && x.password === password)
+  );
+  if (!user) {
+    res.status(400).json({ message: 'Email or password is incorrect' });
+    return;
+  }
+  const jwtToken = 'fake-jwt-token.' + Buffer.from(JSON.stringify({ id: user.id, exp: Math.floor(Date.now() / 1000) + 60 * 60 })).toString('base64');
+  res.json({ ...user, jwtToken });
+  return;
+});
+
+/**
+ * Registration endpoint
+ */
+app.post('/api/accounts/register', (req, res) => {
+  const account = req.body;
+  if (accounts.find(x => x.email === account.email)) {
+    res.status(400).json({ message: 'Email is already registered' });
+    return;
+  }
+  account.id = (accounts.length + 1).toString();
+  account.role = account.role || Role.frontdeskUser;
+  account.status = 'Active';
+  accounts.push(account);
+  res.status(200).json({});
+  return;
+});
 
 /**
  * Serve static files from /browser

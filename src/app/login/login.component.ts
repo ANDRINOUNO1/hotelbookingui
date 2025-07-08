@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AccountService } from '../_services/account.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent {
   password = '';
   keepLoggedIn = false;
   error = '';
+  isLoading = false;
 
   signupName = '';
   signupEmail = '';
@@ -23,25 +25,30 @@ export class LoginComponent {
 
   activeTab: 'signin' | 'signup' = 'signin';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private accountService: AccountService) {}
 
   login() {
-    // Example: Hardcoded credentials for demo
-    if (this.username === 'admin' && this.password === 'admin123') {
-      this.error = '';
-      this.router.navigate(['/admin']);
-    } else if (this.username === 'frontdesk' && this.password === 'frontdesk123') {
-      this.error = '';
-      this.router.navigate(['/frontdesk']);
-    } else {
-      this.error = 'Invalid credentials!';
-    }
+    this.isLoading = true;
+    this.error = '';
+    
+    this.accountService.login(this.username, this.password).subscribe({
+      next: (account) => {
+        this.isLoading = false;
+        if (account.role === 'Admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/frontdesk']);
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.error = err?.error?.message || 'Invalid credentials!';
+      }
+    });
   }
 
   signup() {
-    // Demo only: Show a message
     this.signupMsg = 'Account created! You can now sign in.';
-    // Optionally, switch to sign in tab after a short delay
     setTimeout(() => {
       this.activeTab = 'signin';
       this.signupMsg = '';

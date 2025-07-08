@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ROOMS } from '../../models/entities';
-import { Booking } from '../../models/booking.model';
+import { ROOMS } from '../../_models/entities';
+import { Booking } from '../../_models/booking.model';
 import { BookingService } from '../../booking.service';
 import { AnalyticsComponent } from './analytics/analytics.component';
 

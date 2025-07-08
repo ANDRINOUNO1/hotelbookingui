@@ -687,3 +687,27 @@ section{
    }
 
 }
+
+.services .box-container .box,
+.reservation form,
+.contact .row form,
+.contact .row .faq .box,
+.reviews .box {
+   background: var(--main-color) !important;
+   color: var(--white) !important;
+}
+
+.google-map iframe {
+   background: var(--main-color) !important;
+}
+
+body, html {
+  background: var(--main-color) !important;
+  color: var(--white);
+}
+
+:host {
+  background: var(--main-color) !important;
+  display: block;
+  min-height: 100vh;
+}
