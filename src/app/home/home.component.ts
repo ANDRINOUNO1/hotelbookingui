@@ -4,12 +4,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper/bundle';
 import flatpickr from 'flatpickr';
-import { ReservationFormComponent } from './reservation-form/reservation-form.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule, ReservationFormComponent],
+  imports: [RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -30,11 +29,6 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      const savedTheme = localStorage.getItem('theme');
-      this.isDarkMode = savedTheme === 'dark';
-      this.applyTheme();
-    }
   }
 
   toggleDarkMode() {

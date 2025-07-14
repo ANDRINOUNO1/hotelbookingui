@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Room Type</th>
         <th>Status</th>
+        <th>Payment Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -25,12 +26,16 @@
           <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
         </td>
         <td>
+            <span class="status-label" [ngClass]="room.paymentStatus">{{ room.paymentStatus }}</span>
+        </td>
+        <td>
           <button (click)="openViewPopup(room)">View</button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
 
 <div class="popup-backdrop" *ngIf="selectedBooking">
   <div class="popup">
@@ -153,8 +158,11 @@
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="popup-actions">
+      
       <button (click)="closePopup()">Close</button>
+      
     </div>
   </div>
 </div>

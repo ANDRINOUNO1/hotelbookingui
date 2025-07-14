@@ -14,7 +14,7 @@ ROOM_TYPES.forEach(roomType => {
   let roomsPerFloor = 1;
 
   switch (roomType.type) {
-    case 'Classic':
+    case 'Classic': 
       floors = 2;
       roomsPerFloor = 8;
       break;

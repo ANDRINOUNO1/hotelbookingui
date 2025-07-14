@@ -1,0 +1,178 @@
+$steps: 4;
+$step-width: 100% / $steps;
+$step-point-width: 30px;
+$step-gap: 60px; // More gap for wider look
+$bar-height: 6px;
+
+.progress {
+  &_inner {
+    width: 1000px; // made wider
+    margin: 100px auto;
+    position: relative;
+
+    &__step {
+      width: $step-width;
+      float: left;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+
+      label {
+        display: block;
+        margin-top: $step-gap;
+        position: relative;
+        font-weight: bold;
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: $step-point-width;
+        height: $step-point-width;
+        background: white;
+        border: 3px solid #1ea4ec;
+        border-radius: 50%;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    &__bar--set {
+      position: absolute;
+      height: $bar-height;
+      width: 100%;
+      background: #ddd;
+      top: $step-point-width / 2;
+      left: 0;
+      z-index: -1;
+      border-radius: $bar-height;
+    }
+
+    &__bar {
+      position: absolute;
+      height: $bar-height;
+      background: #1ea4ec;
+      top: $step-point-width / 2;
+      left: 0;
+      border-radius: $bar-height;
+      transition: width 0.4s ease;
+    }
+
+    &__tabs {
+      clear: both;
+      position: relative;
+      margin-top: 100px; // More margin for bigger look
+
+      .tab {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 50px; // More padding
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        display: none;
+
+        &.active {
+          display: block;
+        }
+      }
+    }
+
+    &__status {
+      width: 40px;
+      height: 40px;
+      top: -80px;
+      position: relative;
+      margin: 50px auto;
+
+      div {
+        position: absolute;
+      }
+
+      .box_base {
+        width: 36px;
+        height: 40px;
+        background: repeating-linear-gradient(
+          45deg,
+          #986c5d,
+          #986c5d 2px,
+          #775144 2px,
+          #775144 4px
+        );
+        left: 2px;
+        bottom: 0;
+      }
+
+      .box_lid {
+        width: 40px;
+        height: 14px;
+        background: #775144;
+        top: 0;
+      }
+
+      .box_ribbon {
+        width: 10px;
+        height: 42px;
+        background: #ee0f29;
+        left: 15px;
+        top: -1px;
+      }
+
+      .box_bow {
+        top: -10px;
+        left: 10px;
+
+        &__left,
+        &__right {
+          width: 6px;
+          height: 10px;
+          background: darken(#ee0f29, 10%);
+          position: absolute;
+        }
+
+        &__left {
+          left: 6px;
+          transform: rotate(45deg);
+        }
+
+        &__right {
+          left: -4px;
+          transform: rotate(-45deg);
+        }
+      }
+
+      .box_item {
+        width: 20px;
+        height: 20px;
+        background: #be69d2;
+        left: 10px;
+        bottom: 50%;
+        transform: rotate(45deg);
+      }
+
+      .box_tag {
+        width: 20px;
+        height: 10px;
+        background: #487ac7;
+        left: -20px;
+        top: 50%;
+        transform: rotate(-10deg);
+      }
+
+      .box_string {
+        width: 17px;
+        height: 2px;
+        background: #343434;
+        left: -15px;
+        top: 55%;
+        transform: rotate(-39deg);
+      }
+    }
+  }
+}
+
+body {
+  background: #f0f8ff;
+  font-family: 'Nunito', sans-serif;
+}

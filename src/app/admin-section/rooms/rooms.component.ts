@@ -1,42 +1,77 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FirstFloorComponent } from './classic/first-floor.component';
-import { SecondFloorComponent } from './deluxe/second-floor.component';
-import { ThirdFloorComponent } from './prestige/third-floor.component';
-import { FourthFloorComponent } from './luxury/fourth-floor.component';
-import { ROOMS } from '../../_models/entities'; 
-import { Room } from '../../_models/booking.model';
-import { BookingService } from '../../booking.service';
-import { Booking } from '../../_models/booking.model';
+  import { CommonModule } from '@angular/common';
+  import { Component, OnInit } from '@angular/core';
+  import { HttpClient } from '@angular/common/http';
 
-@Component({
-  selector: 'app-rooms',
-  imports: [CommonModule, FirstFloorComponent, SecondFloorComponent, ThirdFloorComponent, FourthFloorComponent],
-  templateUrl: './rooms.component.html',
-  styleUrl: './rooms.component.scss'
-})
+  import { FirstFloorComponent } from './classic/first-floor.component';
+  import { SecondFloorComponent } from './deluxe/second-floor.component';
+  import { ThirdFloorComponent } from './prestige/third-floor.component';
+  import { FourthFloorComponent } from './luxury/fourth-floor.component';
 
-export class RoomsComponent {
-  rooms: Room[] = ROOMS;
-  bookings: Booking[] = [];
+  import { Room, Booking } from '../../_models/booking.model';
 
-  constructor(private bookingService: BookingService) {
-    this.bookings = this.bookingService.getBookings();
-  }
+  @Component({
+    selector: 'app-rooms',
+    standalone: true,
+    imports: [
+      CommonModule,
+      FirstFloorComponent,
+      SecondFloorComponent,
+      ThirdFloorComponent,
+      FourthFloorComponent
+    ],
+    templateUrl: './rooms.component.html',
+    styleUrl: './rooms.component.scss'
+  })
+  export class RoomsComponent implements OnInit {
+    rooms: Room[] = [];
+    bookings: Booking[] = [];
 
-  roomTabs = ['Classic', 'Deluxe', 'Prestige', 'Luxury'];
-  selectedTab = 0;
+    roomTabs = ['Classic', 'Deluxe', 'Prestige', 'Luxury'];
+    selectedTab = 0;
 
-  get classicRooms() {
-    return this.rooms.filter(r => r.roomType?.type === 'Classic');
+    constructor(private http: HttpClient) {}
+
+    ngOnInit(): void {
+      this.loadRooms();
+      this.getBookings();
+    }
+
+    /** ✅ Get rooms from fake backend */
+    loadRooms() {
+      this.http.get<Room[]>('/api/rooms').subscribe({
+        next: (data) => {
+          this.rooms = data;
+          console.log('Rooms loaded:', this.rooms);
+        },
+        error: (err) => {
+          console.error('Failed to load rooms:', err);
+        }
+      });
+    }
+
+    /** ✅ Get bookings from fake backend */
+    getBookings() {
+      this.http.get<Booking[]>('/api/bookings').subscribe({
+        next: (data) => {
+          this.bookings = data;
+          console.log('Bookings loaded:', this.bookings);
+        },
+        error: (err) => {
+          console.error('Failed to load bookings:', err);
+        }
+      });
+    }
+
+    get classicRooms() {
+      return this.rooms.filter(r => r.roomType?.type === 'Classic');
+    }
+    get deluxeRooms() {
+      return this.rooms.filter(r => r.roomType?.type === 'Deluxe');
+    }
+    get prestigeRooms() {
+      return this.rooms.filter(r => r.roomType?.type === 'Prestige');
+    }
+    get luxuryRooms() {
+      return this.rooms.filter(r => r.roomType?.type === 'Luxury');
+    }
   }
-  get deluxeRooms() {
-    return this.rooms.filter(r => r.roomType?.type === 'Deluxe');
-  }
-  get prestigeRooms() {
-    return this.rooms.filter(r => r.roomType?.type === 'Prestige');
-  }
-  get luxuryRooms() {
-    return this.rooms.filter(r => r.roomType?.type === 'Luxury');
-  }
-}

@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
-import { ReservationFormComponent } from './home/reservation-form/reservation-form.component';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { ReservationComponent  } from './reservation/reservation.component';
+
 import { LoginComponent } from './login/login.component';
 import { AdminSectionComponent } from './admin-section/admin-section.component';
 import { HomeComponent } from './home/home.component';
@@ -11,10 +14,11 @@ import { RoomsComponent } from './admin-section/rooms/rooms.component';
 import { PricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
 import { AccountListComponent } from './admin-section/accountlist/account-list.component';
+import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'reserve', component: ReservationFormComponent },
+  { path: 'reserve', component: ReservationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminSectionComponent },
   { path: 'frontdesk', component: FrontdeskComponent },
@@ -29,7 +33,13 @@ export const routes: Routes = [
       { path: 'rooms', component: RoomsComponent },
       { path: 'pricing', component: PricingComponent },
       { path: 'addaccount', component: AddAccountComponent },
-      { path: 'accountlist', component: AccountListComponent }
+      { path: 'accountlist', component: AccountListComponent },
+      { path: 'allbooking', component: AllbookingsComponent }
     ]
   }
 ];
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
