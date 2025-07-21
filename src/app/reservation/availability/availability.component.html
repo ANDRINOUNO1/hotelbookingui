@@ -1,1 +1,27 @@
-<p>availability works!</p>
+<div class="availability-container">
+  <h2>Available Room Types</h2>
+
+  <div *ngIf="availableRoomTypes.length; else noRoomTypes" class="room-type-list">
+    <div *ngFor="let type of availableRoomTypes; index as i" class="room-card">
+      <div class="room-card-index">
+        {{ (i + 1) | number: '2.0' }}
+      </div>
+
+      <h3>{{ type.type }}</h3>
+
+      <img src="https://source.unsplash.com/300x200/?hotel-room,{{ type.type }}" alt="{{ type.type }}">
+
+      <p class="details-link">CLICK TO SEE DETAILS ▼</p>
+
+      <div class="price-circle">
+        ${{ type.rate }}
+      </div>
+
+      <button class="select-btn" (click)="selectRoomType(type)">Select</button>
+    </div>
+  </div>
+  <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
+    <ng-template #noRoomTypes>
+        <p>No room types available for the selected dates.</p>
+    </ng-template>
+</div>

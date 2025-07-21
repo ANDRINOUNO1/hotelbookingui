@@ -1,5 +1,5 @@
-import { Component, Renderer2 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
 @Component({
@@ -7,39 +7,73 @@ import { RouterModule, Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './admin-section.component.html',
-  styleUrls: ['./admin-section.component.scss'] // <-- This connects the HTML to the SCSS
+  styleUrls: ['./admin-section.component.scss']
 })
-export class AdminSectionComponent {
+export class AdminSectionComponent implements OnInit {
   hotelName = 'BC Flats - Admin';
   user = 'Admin';
 
   isDarkMode = false;
+  openMenu: string | null = null;
+  userMenuOpen = false;
 
-  constructor(private renderer: Renderer2, private router: Router) {}
+  constructor(
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit() {
-    const savedTheme = localStorage.getItem('theme');
-    this.isDarkMode = savedTheme === 'dark';
-    this.applyTheme();
+    if (isPlatformBrowser(this.platformId)) {
+      const savedTheme = localStorage.getItem('admin-theme');
+      this.isDarkMode = savedTheme === 'dark';
+      this.applyTheme();
+    }
   }
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('admin-theme', this.isDarkMode ? 'dark' : 'light');
+    }
     this.applyTheme();
   }
 
   applyTheme() {
     if (this.isDarkMode) {
-      this.renderer.addClass(document.body, 'dark-mode');
+      this.renderer.addClass(this.el.nativeElement, 'dark-mode');
     } else {
-      this.renderer.removeClass(document.body, 'dark-mode');
+      this.renderer.removeClass(this.el.nativeElement, 'dark-mode');
     }
   }
 
+  toggleMenu(menu: string) {
+    this.openMenu = this.openMenu === menu ? null : menu;
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  closeUserMenu() {
+    setTimeout(() => this.userMenuOpen = false, 150); // Delay to allow click
+  }
+
+  goToProfile() {
+    // Navigate to profile page
+    // Example: this.router.navigate(['/admin/profile']);
+  }
+
+  goToSettings() {
+    // Navigate to settings page
+    // Example: this.router.navigate(['/admin/settings']);
+  }
+
   logout() {
-    // Add your logout logic here (e.g., clear tokens, redirect)
-    localStorage.removeItem('auth_token');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('auth_token');
+    }
     this.router.navigate(['/']);
   }
 }

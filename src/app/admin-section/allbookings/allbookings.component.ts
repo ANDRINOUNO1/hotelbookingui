@@ -5,16 +5,15 @@ import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-customers',
+  selector: 'app-allbookings',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './customers.component.html',
-  styleUrl: './customers.component.scss'
+  templateUrl: './allbookings.component.html',
+  styleUrl: './allbookings.component.scss'
 })
-export class CustomersComponent implements OnInit {
+export class AllbookingsComponent implements OnInit {
   occupiedRooms: any[] = [];
   selectedBooking: any = null;
-  selectedCustomer: any = null;
 
   constructor(private http: HttpClient) {}
 
@@ -27,29 +26,26 @@ export class CustomersComponent implements OnInit {
       next: (roomsData) => {
         this.http.get<Booking[]>('/api/bookings').subscribe({
           next: (bookingsData) => {
-            const grouped: { [email: string]: any } = {};
-
-            bookingsData.forEach(booking => {
-              const guestEmail = booking.guest.email;
-              const room = roomsData.find(r => r.id === booking.room_id);
-
-              if (!grouped[guestEmail]) {
-                grouped[guestEmail] = {
-                  guest: booking.guest,
-                  rooms: []
-                };
-              }
-
-              grouped[guestEmail].rooms.push({
-                number: room?.room_number,
-                type: room?.roomType?.type || '',
-                status: room?.status ? 'Available' : 'Occupied',
-                paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
-                booking
-              });
-            });
-
-            this.occupiedRooms = Object.values(grouped);
+            this.occupiedRooms = roomsData
+              .map(room => {
+                const booking = bookingsData.find(
+                  b => b.room_id === room.id
+                );
+                if (booking) {
+                  return {
+                    id: booking.id,
+                    number: room.room_number,
+                    guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
+                    address: `${booking.guest.address}, ${booking.guest.city}`,
+                    type: room.roomType?.type || '',
+                    status: 'occupied',
+                    paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
+                    booking
+                  };
+                }
+                return null;
+              })
+              .filter(room => room !== null);
           },
           error: (err) => console.error('Failed to load bookings:', err)
         });
@@ -90,17 +86,14 @@ export class CustomersComponent implements OnInit {
         cvv: ''
       }
     };
-    this.editMode = false;
-  }
-
-  openCustomerPopup(customer: any) {
-    this.selectedCustomer = customer;
+    this.editMode = false; // Always start in view mode
   }
 
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
   closePopup() {
-    this.selectedCustomer = null;
+    this.selectedBooking = null;
+    this.editMode = false;
   }
 }

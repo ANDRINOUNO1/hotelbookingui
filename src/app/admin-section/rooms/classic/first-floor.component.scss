@@ -16,3 +16,14 @@
 .tables th {
     font-weight: bold;
 }
+.room-occupied {
+  background: #d32f2f; // red for occupied
+}
+
+.room-pending {
+  background: #fbc02d; // yellow for pending payment
+}
+
+.room-vacant {
+  background: #4caf50; // green for vacant
+}

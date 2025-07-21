@@ -1,26 +1,37 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Booking, Room } from '../../../_models/booking.model';
+import { Room, Booking } from '../../../_models/booking.model';
 
 @Component({
   selector: 'app-third-floor',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './third-floor.component.html',
   styleUrl: './third-floor.component.scss'
 })
 export class ThirdFloorComponent {
   @Input() rooms: Room[] = [];
-    @Input() bookings: Booking[] = []; // <-- Accept bookings dynamically
+  @Input() bookings: Booking[] = [];
+
   
-    getGuestName(roomId: number): string {
-      const booking = this.bookings.find(
-        b => b.room_id === roomId && b.pay_status
-      );
-      return booking ? `${booking.first_name} ${booking.last_name}` : '';
+  getGuestName(roomId: number): string {
+    const booking = this.bookings.find(b => b.room_id === roomId);
+    return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : '';
+  }
+
+  getRoomStatus(room: Room): string {
+    const booking = this.bookings.find(b => b.room_id === room.id);
+
+    if (booking) {
+      return booking.pay_status ? 'Occupied' : 'Pending';
     }
+
+    return room.status === false ? 'Occupied' : 'Vacant';
+  }
+
   
-    getRoomStatus(room: Room): string {
-      const occupied = this.bookings.some(b => b.room_id === room.id && b.pay_status);
-      return occupied ? 'Occupied' : 'Vacant';
-    }
+  getRoomClass(room: Room): string {
+    const status = this.getRoomStatus(room).toLowerCase();
+    return `room-${status}`; 
+  }
 }

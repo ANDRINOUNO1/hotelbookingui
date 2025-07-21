@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { ROOMS } from '../../_models/entities';
 import { Booking } from '../../_models/booking.model';
 import { BookingService } from '../../booking.service';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, AnalyticsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

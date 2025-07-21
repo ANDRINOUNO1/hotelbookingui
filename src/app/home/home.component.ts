@@ -4,12 +4,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper/bundle';
 import flatpickr from 'flatpickr';
-import { ReservationFormComponent } from './reservation-form/reservation-form.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule, ReservationFormComponent],
+  imports: [RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -30,22 +29,23 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-    const savedTheme = localStorage.getItem('theme');
-    this.isDarkMode = savedTheme === 'dark';
-    this.applyTheme();
   }
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    }
     this.applyTheme();
   }
 
   applyTheme() {
-    if (this.isDarkMode) {
-      this.renderer.addClass(document.body, 'dark-mode');
-    } else {
-      this.renderer.removeClass(document.body, 'dark-mode');
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.isDarkMode) {
+        this.renderer.addClass(document.body, 'dark-mode');
+      } else {
+        this.renderer.removeClass(document.body, 'dark-mode');
+      }
     }
   }
 

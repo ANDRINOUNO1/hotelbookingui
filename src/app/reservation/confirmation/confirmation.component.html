@@ -1,1 +1,35 @@
-<p>confirmation works!</p>
+<div class="container py-5">
+  <h2 class="text-center mb-4">Reservation Confirmation</h2>
+
+  <div class="card p-4">
+    <h4>Selected Room Type</h4>
+    <p><strong>Room:</strong> {{ selectedRoomType?.type }}</p>
+    <p><strong>Rate:</strong> ${{ selectedRoomType?.rate }}</p>
+
+    <hr>
+
+    <h4>Reservation Details</h4>
+    <p><strong>Check-In:</strong> {{ reservationData?.checkIn }}</p>
+    <p><strong>Check-Out:</strong> {{ reservationData?.checkOut }}</p>
+    <p><strong>Adults:</strong> {{ reservationData?.adults }}</p>
+    <p><strong>Children:</strong> {{ reservationData?.children }}</p>
+    <p><strong>Rooms:</strong> {{ reservationData?.rooms }}</p>
+
+    <hr>
+
+    <h4>Guest Details</h4>
+    <p><strong>First Name:</strong> {{ customerDetails?.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ customerDetails?.lastName }}</p>
+    <p><strong>Email:</strong> {{ customerDetails?.email }}</p>
+    <p><strong>Phone:</strong> {{ customerDetails?.phone }}</p>
+    <p><strong>Address:</strong> {{ customerDetails?.address }}</p>
+    <p><strong>City:</strong> {{ customerDetails?.city }}</p>
+    <p><strong>Postal Code:</strong> {{ customerDetails?.postalCode }}</p>
+    <p><strong>Special Request:</strong> {{ customerDetails?.specialRequest || 'None' }}</p>
+  </div>
+
+  <div class="text-center mt-4">
+    <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
+    <button class="btn btn-success" (click)="confirmBooking()">Confirm Booking</button>
+  </div>
+</div>
