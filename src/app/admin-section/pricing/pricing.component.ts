@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RoomType } from '../../_models/booking.model';
+import { RoomType, ReservationFee } from '../../_models/booking.model';
 
 @Component({
   selector: 'app-pricing',
@@ -13,14 +13,21 @@ import { RoomType } from '../../_models/booking.model';
 })
 export class PricingComponent implements OnInit {
   roomTypes: RoomType[] = [];
+  reservationFee: number = 0;
+
   editingId: number | null = null;
   editRate: number | null = null;
+
+  editingReservationFee = false;
+  editReservationFee: number | null = null;
+
   loading = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.fetchRoomTypes();
+    this.fetchReservationFee();
   }
 
   fetchRoomTypes() {
@@ -28,6 +35,12 @@ export class PricingComponent implements OnInit {
     this.http.get<RoomType[]>('/api/room-types').subscribe(roomTypes => {
       this.roomTypes = roomTypes;
       this.loading = false;
+    });
+  }
+
+  fetchReservationFee() {
+    this.http.get<ReservationFee>('/api/reservation-fee').subscribe(fee => {
+      this.reservationFee = fee.fee;
     });
   }
 
@@ -49,5 +62,26 @@ export class PricingComponent implements OnInit {
   cancelEdit() {
     this.editingId = null;
     this.editRate = null;
+  }
+
+  // ✅ Reservation fee handlers
+  startEditReservationFee() {
+    this.editingReservationFee = true;
+    this.editReservationFee = this.reservationFee;
+  }
+
+  saveEditReservationFee() {
+    if (this.editReservationFee !== null) {
+      this.http.put<ReservationFee>('/api/reservation-fee', { fee: this.editReservationFee }).subscribe(updated => {
+        this.reservationFee = updated.fee;
+        this.editingReservationFee = false;
+        this.editReservationFee = null;
+      });
+    }
+  }
+
+  cancelEditReservationFee() {
+    this.editingReservationFee = false;
+    this.editReservationFee = null;
   }
 }

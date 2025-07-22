@@ -131,7 +131,7 @@
       <div class="form-group">
         <label>Payment Method:</label>
         <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMethod || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMethod" />
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMethod" placeholder="e.g. GCash, Maya, Card" />
       </div>
       <div class="form-group">
         <label>Amount:</label>
@@ -155,6 +155,11 @@
         <label>CVV:</label>
         <span *ngIf="!editMode">{{ selectedBooking.payment?.cvv || 'N/A' }}</span>
         <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cvv" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number (for GCash/Maya):</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.mobileNumber || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.mobileNumber" placeholder="09XXXXXXXXX" />
       </div>
     </div>
 

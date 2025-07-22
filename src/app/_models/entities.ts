@@ -1,4 +1,8 @@
-import { RoomType, Room } from './booking.model';
+import { RoomType, Room, ReservationFee } from './booking.model';
+
+export const RESERVATION_FEES: ReservationFee[] = [
+    { fee: 50 }
+];
 
 export const ROOM_TYPES: RoomType[] = [
     { id: 1, type: 'Classic', rate: 120 },

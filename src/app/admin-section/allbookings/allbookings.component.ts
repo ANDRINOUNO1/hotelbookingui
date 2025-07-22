@@ -64,6 +64,7 @@ export class AllbookingsComponent implements OnInit {
   deleteBooking(id: number) {
     this.http.delete(`/api/bookings/${id}`).subscribe(() => {
       this.loadOccupiedRooms();
+      this.closePopup();
     });
   }
   editMode = false;

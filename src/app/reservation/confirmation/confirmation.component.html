@@ -1,35 +1,110 @@
-<div class="container py-5">
-  <h2 class="text-center mb-4">Reservation Confirmation</h2>
+<div class="reservation-confirmation">
+  <div class="confirmation-container">
+    <h2 class="text-center mb-4">Reservation Confirmation</h2>
 
-  <div class="card p-4">
-    <h4>Selected Room Type</h4>
-    <p><strong>Room:</strong> {{ selectedRoomType?.type }}</p>
-    <p><strong>Rate:</strong> ${{ selectedRoomType?.rate }}</p>
+    <div class="card p-4">
+      <h4>Selected Room Type</h4>
+      <p><strong>Room:</strong> {{ selectedRoomType?.type }}</p>
+      <p><strong>Rate:</strong> ${{ selectedRoomType?.rate }}</p>
 
-    <hr>
+      <hr>
 
-    <h4>Reservation Details</h4>
-    <p><strong>Check-In:</strong> {{ reservationData?.checkIn }}</p>
-    <p><strong>Check-Out:</strong> {{ reservationData?.checkOut }}</p>
-    <p><strong>Adults:</strong> {{ reservationData?.adults }}</p>
-    <p><strong>Children:</strong> {{ reservationData?.children }}</p>
-    <p><strong>Rooms:</strong> {{ reservationData?.rooms }}</p>
+      <h4>Reservation Details</h4>
+      <p><strong>Check-In:</strong> {{ reservationData?.checkIn }}</p>
+      <p><strong>Check-Out:</strong> {{ reservationData?.checkOut }}</p>
+      <p><strong>Adults:</strong> {{ reservationData?.adults }}</p>
+      <p><strong>Children:</strong> {{ reservationData?.children }}</p>
+      <p><strong>Rooms:</strong> {{ reservationData?.rooms }}</p>
 
-    <hr>
+      <hr>
 
-    <h4>Guest Details</h4>
-    <p><strong>First Name:</strong> {{ customerDetails?.firstName }}</p>
-    <p><strong>Last Name:</strong> {{ customerDetails?.lastName }}</p>
-    <p><strong>Email:</strong> {{ customerDetails?.email }}</p>
-    <p><strong>Phone:</strong> {{ customerDetails?.phone }}</p>
-    <p><strong>Address:</strong> {{ customerDetails?.address }}</p>
-    <p><strong>City:</strong> {{ customerDetails?.city }}</p>
-    <p><strong>Postal Code:</strong> {{ customerDetails?.postalCode }}</p>
-    <p><strong>Special Request:</strong> {{ customerDetails?.specialRequest || 'None' }}</p>
+      <h4>Guest Details</h4>
+      <p><strong>First Name:</strong> {{ customerDetails?.firstName }}</p>
+      <p><strong>Last Name:</strong> {{ customerDetails?.lastName }}</p>
+      <p><strong>Email:</strong> {{ customerDetails?.email }}</p>
+      <p><strong>Phone:</strong> {{ customerDetails?.phone }}</p>
+      <p><strong>Address:</strong> {{ customerDetails?.address }}</p>
+      <p><strong>City:</strong> {{ customerDetails?.city }}</p>
+      <p><strong>Postal Code:</strong> {{ customerDetails?.postalCode }}</p>
+      <p><strong>Special Request:</strong> {{ customerDetails?.specialRequest || 'None' }}</p>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
+    </div>
   </div>
+  <div class="payment-container">
+    <h2 class="text-center mb-4">Payment Details</h2>
+    
+    <form (ngSubmit)="confirmBooking()" #paymentForm="ngForm">
+      <div class="form-group">
+        <label for="paymentMode">Payment Mode</label>
+        <select name="paymentMode" class="form-control" required [(ngModel)]="paymentDetails.paymentMode">
+          <option value="" disabled selected>Select Payment Mode</option>
+          <option value="GCash">GCash</option>
+          <option value="Maya">Maya</option>
+          <option value="Card">Card (Visa / MasterCard / AmEx)</option>
+        </select>
+      </div>
 
-  <div class="text-center mt-4">
-    <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
-    <button class="btn btn-success" (click)="confirmBooking()">Confirm Booking</button>
+      <div *ngIf="paymentDetails.paymentMode === 'GCash' || paymentDetails.paymentMode === 'Maya'">
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" name="mobileNumber" class="form-control"
+                [(ngModel)]="paymentDetails.mobileNumber"
+                required />
+        </div>
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" name="amount" class="form-control"
+                [(ngModel)]="paymentDetails.amount"
+                required />
+        </div>
+      </div>
+
+      <div *ngIf="paymentDetails.paymentMode === 'Card'">
+        <div class="form-group">
+          <label>Card Type</label>
+          <select name="cardType" class="form-control"
+                  required [(ngModel)]="paymentDetails.paymentMethod">
+            <option value="" disabled selected>Select Card Type</option>
+            <option value="Visa">Visa</option>
+            <option value="MasterCard">MasterCard</option>
+            <option value="AmEx">American Express</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" name="cardNumber" class="form-control"
+                [(ngModel)]="paymentDetails.cardNumber"
+                required />
+        </div>
+
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="month" name="expiryDate" class="form-control"
+                [(ngModel)]="paymentDetails.expiry"
+                required />
+        </div>
+
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" name="cvv" class="form-control"
+                [(ngModel)]="paymentDetails.cvv"
+                required />
+        </div>
+
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" name="amount" class="form-control"
+                [(ngModel)]="paymentDetails.amount"
+                required />
+        </div>
+      </div>
+
+      <button class="btn btn-success" type="submit">Confirm Booking</button>
+
+    </form> 
   </div>
 </div>
