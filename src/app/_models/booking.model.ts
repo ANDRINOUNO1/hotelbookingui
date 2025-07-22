@@ -15,8 +15,11 @@ export interface Booking {
   pay_status: boolean;
   created_at?: string;
   updated_at?: string;
-  room?: Room; // Optional: populated if joined
+  room?: Room;
+  requests?: string;
+  paidamount: number;
 }
+
 export interface Guest {
   first_name: string;
   last_name: string;
@@ -42,9 +45,14 @@ export interface Room {
 }
 
 export interface PaymentDetails {
+  paymentMode: string;
   paymentMethod: string;
   amount: number;
   cardNumber: string;
   expiry: string;
   cvv: string;
+}
+
+export interface ReservationFee{
+  fee: number;
 }

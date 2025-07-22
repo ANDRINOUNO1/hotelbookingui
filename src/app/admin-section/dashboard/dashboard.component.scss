@@ -1,6 +1,8 @@
 .dashboard-basic-info {
   margin: 2rem 0;
+  color: --text-color;
 }
+
 
 .dashboard-title {
   display: flex;
@@ -9,6 +11,7 @@
   font-size: 1.2rem;
   margin-bottom: 1rem;
   gap: 0.5rem;
+  color: var(--text-color);
 }
 
 .dashboard-cards {
@@ -139,7 +142,9 @@ canvas {
   flex-direction: column;
   align-items: center;
 }
-
+.info{
+  color: --text-color;
+}
 /* Responsive styles */
 @media (max-width: 700px) {
   .dashboard-cards {

@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ROOMS } from '../../_models/entities';
-import { Booking } from '../../_models/booking.model';
-import { BookingService } from '../../booking.service';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AnalyticsComponent } from './analytics/analytics.component';
 
 @Component({
@@ -11,12 +9,23 @@ import { AnalyticsComponent } from './analytics/analytics.component';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-  rooms = ROOMS;
-  bookings: Booking[] = [];
+export class DashboardComponent implements OnInit {
+  rooms: any[] = [];
+  bookings: any[] = [];
 
-  constructor(private bookingService: BookingService) {
-    this.bookings = this.bookingService.getBookings();
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.http.get<any[]>('/api/rooms').subscribe(rooms => {
+      this.rooms = rooms;
+    });
+    this.http.get<any[]>('/api/bookings').subscribe(bookings => {
+      this.bookings = bookings;
+    });
   }
 
   get vacantCount() {
@@ -28,7 +37,7 @@ export class DashboardComponent {
     // Occupied: rooms with status false or with a paid booking
     return this.rooms.filter(room =>
       room.status === false ||
-      this.bookings.some(b => b.room_id === room.id && b.pay_status)
+      this.bookings.some(b => b.room_id === room.id && b.pay_status == false)
     ).length;
   }
 
@@ -41,14 +50,11 @@ export class DashboardComponent {
     return this.rooms.length;
   }
 
-  // Add more getters for other statuses as needed
-
   get statusSummary() {
     return [
       { label: 'Vacant', icon: 'fa-bed', class: 'status-vacant', count: this.vacantCount },
       { label: 'Occupied', icon: 'fa-bed', class: 'status-occupied', count: this.occupiedCount },
       { label: 'Reserved', icon: 'fa-calendar-check', class: 'status-reserved', count: this.reservedCount },
-      // Add more as needed
       { label: 'All', icon: 'fa-list', class: 'status-all', count: this.allCount }
     ];
   }

@@ -68,30 +68,43 @@ export class BookingComponent implements OnInit {
   deleteBooking(id: number) {
     this.http.delete(`/api/bookings/${id}`).subscribe(() => {
       this.loadOccupiedRooms();
+      this.closePopup
     });
   }
   editMode = false;
   openEditPopup(room: any) {
-    this.selectedBooking = { 
-      ...room.booking,
-      payment: room.booking.payment || {
-        cardNumber: '',
-        expiry: '',
-        cvv: ''
-      }
-    };
-  }
-  openViewPopup(room: any) {
-    this.selectedBooking = { 
-      ...room.booking,
-      payment: room.booking.payment || {
-        cardNumber: '',
-        expiry: '',
-        cvv: ''
-      }
-    };
-    this.editMode = false;
-  }
+  this.selectedBooking = { 
+    ...room.booking,
+    paidamount: {
+      amount: '',
+      cardNumber: '',
+      expiry: '',
+      cvv: '',
+      mobileNumber: '',
+      paymentMethod: '',
+      paymentMode: '',
+      ...room.booking.paidamount
+    }
+  };
+  this.editMode = true;
+}
+
+openViewPopup(room: any) {
+  this.selectedBooking = { 
+    ...room.booking,
+    paidamount: {
+      amount: '',
+      cardNumber: '',
+      expiry: '',
+      cvv: '',
+      mobileNumber: '',
+      paymentMethod: '',
+      paymentMode: '',
+      ...room.booking.paidamount
+    }
+  };
+  this.editMode = false;
+}
 
   toggleEditMode() {
     this.editMode = !this.editMode;

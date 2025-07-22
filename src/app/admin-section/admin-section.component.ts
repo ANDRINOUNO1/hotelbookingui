@@ -27,7 +27,7 @@ export class AdminSectionComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       const savedTheme = localStorage.getItem('admin-theme');
-      this.isDarkMode = savedTheme === 'dark';
+      this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
       this.applyTheme();
     }
   }

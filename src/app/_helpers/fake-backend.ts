@@ -13,6 +13,7 @@ import { delay, materialize, dematerialize } from 'rxjs/operators';
 import { Account } from '../_models/account.model';
 import { Role } from '../_models/role.model';
 import { Booking, Room, RoomType } from '../_models/booking.model';
+import { RESERVATION_FEES } from '../_models/entities';
 
 const isBrowser = typeof window !== 'undefined';
 
@@ -231,44 +232,55 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     }
 
     function createBooking() {
-        const bookingData = body;
+      const bookingData = body;
 
-        const roomsCount = bookingData.roomsCount || 1;
-        const availableRooms = rooms.filter(r => r.room_type_id === bookingData.roomTypeId && r.status === true);
+      const reservationFee = RESERVATION_FEES;
 
-        if (availableRooms.length < roomsCount) {
-            return error('Not enough available rooms for selected type');
-        }
+      if (!bookingData.payment || bookingData.payment.amount < reservationFee) {
+        return error(`Payment amount must be at least $${reservationFee}.`);
+      }
 
-        const newBookings: Booking[] = [];
+      const roomsCount = bookingData.roomsCount || 1;
+      const availableRooms = rooms.filter(
+        r => r.room_type_id === bookingData.roomTypeId && r.status === true
+      );
 
-        for (let i = 0; i < roomsCount; i++) {
-            const randomIndex = Math.floor(Math.random() * availableRooms.length);
-            const selectedRoom = availableRooms[randomIndex];
-            availableRooms.splice(randomIndex, 1);
+      if (availableRooms.length < roomsCount) {
+        return error('Not enough available rooms for selected type.');
+      }
 
-            selectedRoom.status = false;
+      const newBookings: Booking[] = [];
 
-            const newBooking: Booking = {
-            id: bookings.length + 1 + i,
-            room_id: selectedRoom.id,
-            guest: bookingData.guest,
-            availability: bookingData.availability,
-            pay_status: false,
-            room: selectedRoom
-            };
+      for (let i = 0; i < roomsCount; i++) {
+        const randomIndex = Math.floor(Math.random() * availableRooms.length);
+        const selectedRoom = availableRooms[randomIndex];
+        availableRooms.splice(randomIndex, 1);
 
-            bookings.push(newBooking);
-            newBookings.push(newBooking);
-        }
+        selectedRoom.status = false;
 
-        if (isBrowser) {
-            localStorage.setItem(roomsKey, JSON.stringify(rooms));
-            localStorage.setItem(bookingsKey, JSON.stringify(bookings));
-        }
+        const newBooking: Booking = {
+          id: bookings.length + 1 + i,
+          room_id: selectedRoom.id,
+          guest: bookingData.guest,
+          availability: bookingData.availability,
+          pay_status: false, 
+          paidamount: bookingData.payment,
+          room: selectedRoom,
+          requests: bookingData.requests || '',
+        };
 
-        return ok(newBookings);
+        bookings.push(newBooking);
+        newBookings.push(newBooking);
+      }
+
+      if (isBrowser) {
+        localStorage.setItem(roomsKey, JSON.stringify(rooms));
+        localStorage.setItem(bookingsKey, JSON.stringify(bookings));
+      }
+
+      return ok(newBookings);
     }
+
 
 
 

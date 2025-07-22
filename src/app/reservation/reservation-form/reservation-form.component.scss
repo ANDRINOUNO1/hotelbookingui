@@ -19,6 +19,13 @@
       top: 0; left: 0; right: 0; bottom: 0;
     }
   }
+  input,
+  textarea,
+  select {
+    color: #111 !important;
+    background: #fff !important;
+  }
+
 
   .reservation-right {
     flex: 1;

@@ -20,6 +20,13 @@
       bottom: 0;
     }
   }
+  input,
+  textarea,
+  select {
+    color: #111 !important;
+    background: #fff !important;
+  }
+
 
   .right-side {
     flex: 1;
