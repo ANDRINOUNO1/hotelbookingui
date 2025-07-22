@@ -1,10 +1,18 @@
 <div class="room-view-container">
   <div class="room-view-header">
-    <select>
-      <option>Room View</option>
-      <option>List View</option>
-    </select>
-  </div>
+    <h2>All Bookings</h2>
+    <div class="header-bar" style="display: flex; align-items: center; justify-content: space-between;">
+      <div class="left" style="flex: 1;">
+        <div class="search-box">
+          <input type="text" placeholder="Search anything... Press CTRL+SPACE for hint">
+        </div>
+      </div>
+      <div class="user-info" style="display: flex; align-items: center; gap: 0.5rem;">
+        <span *ngIf="selectedBooking">{{ selectedBooking.guest.first_name }} {{ selectedBooking.guest.last_name }}</span>
+        <i class="fa fa-user-circle"></i>
+      </div>
+    </div>
+</div>
 
   <table class="tables">
     <thead>

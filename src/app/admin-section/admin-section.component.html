@@ -5,34 +5,6 @@
     <span class="hotel-title">HOTEL</span>
   </div>
 
-  <div class="header-bar">
-    <div class="header-search">
-      <input type="text" placeholder="Search here" />
-      <button><i class="fa fa-search"></i></button>
-    </div>
-    <div class="header-actions">
-      <div class="notification">
-        <i class="fa fa-bell"></i>
-        <span class="badge">3</span>
-      </div>
-      <div class="user-menu" (click)="toggleUserMenu()" tabindex="0" (blur)="closeUserMenu()">
-        <img src="assets/images/flag.png" alt="User" class="user-avatar" />
-        <i class="fa fa-chevron-down"></i>
-        <div class="user-dropdown" *ngIf="userMenuOpen">
-         <div class="dropdown-header">Profile of Administrator</div>
-         <a (click)="goToProfile()">My Profile</a>
-         <a (click)="goToSettings()">Account Settings</a>
-          <a (click)="logout()">Log Out</a>
-          <hr />
-          <button class="toggle-mode-btn" (click)="toggleDarkMode()">
-            <i class="fa" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
-            {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-          </button>
-      </div>
-      </div>
-    </div>
-  </div>
-
   <nav>
     <a routerLink="dashboard" routerLinkActive="active"><i class="fa fa-chart-bar"></i> Dashboard</a>
 
@@ -90,6 +62,15 @@
 
     <a routerLink="pricing" routerLinkActive="active"><i class="fa fa-money-check-alt"></i> Pricing </a>
   </nav>
+  <div class="sidebar-bottom">
+      <button class="toggle-mode-btn" (click)="toggleDarkMode()">
+        <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
+        {{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
+      </button>
+      <button class="logout-btn" (click)="logout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
 </aside>
 <main class="main-content">
   <router-outlet></router-outlet>

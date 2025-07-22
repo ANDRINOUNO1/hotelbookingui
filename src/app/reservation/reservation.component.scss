@@ -1,7 +1,6 @@
 $steps: 4;
-$step-width: 100% / $steps;
 $step-point-width: 30px;
-$step-gap: 60px; // More gap for wider look
+$step-gap: 60px;
 $bar-height: 6px;
 
 .progress {
@@ -11,7 +10,6 @@ $bar-height: 6px;
     position: relative;
 
     &__step {
-      width: $step-width;
       float: left;
       text-align: center;
       position: relative;
@@ -43,7 +41,6 @@ $bar-height: 6px;
       height: $bar-height;
       width: 100%;
       background: #ddd;
-      top: $step-point-width / 2;
       left: 0;
       z-index: -1;
       border-radius: $bar-height;
@@ -53,7 +50,6 @@ $bar-height: 6px;
       position: absolute;
       height: $bar-height;
       background: #1ea4ec;
-      top: $step-point-width / 2;
       left: 0;
       border-radius: $bar-height;
       transition: width 0.4s ease;
@@ -88,85 +84,6 @@ $bar-height: 6px;
 
       div {
         position: absolute;
-      }
-
-      .box_base {
-        width: 36px;
-        height: 40px;
-        background: repeating-linear-gradient(
-          45deg,
-          #986c5d,
-          #986c5d 2px,
-          #775144 2px,
-          #775144 4px
-        );
-        left: 2px;
-        bottom: 0;
-      }
-
-      .box_lid {
-        width: 40px;
-        height: 14px;
-        background: #775144;
-        top: 0;
-      }
-
-      .box_ribbon {
-        width: 10px;
-        height: 42px;
-        background: #ee0f29;
-        left: 15px;
-        top: -1px;
-      }
-
-      .box_bow {
-        top: -10px;
-        left: 10px;
-
-        &__left,
-        &__right {
-          width: 6px;
-          height: 10px;
-          background: darken(#ee0f29, 10%);
-          position: absolute;
-        }
-
-        &__left {
-          left: 6px;
-          transform: rotate(45deg);
-        }
-
-        &__right {
-          left: -4px;
-          transform: rotate(-45deg);
-        }
-      }
-
-      .box_item {
-        width: 20px;
-        height: 20px;
-        background: #be69d2;
-        left: 10px;
-        bottom: 50%;
-        transform: rotate(45deg);
-      }
-
-      .box_tag {
-        width: 20px;
-        height: 10px;
-        background: #487ac7;
-        left: -20px;
-        top: 50%;
-        transform: rotate(-10deg);
-      }
-
-      .box_string {
-        width: 17px;
-        height: 2px;
-        background: #343434;
-        left: -15px;
-        top: 55%;
-        transform: rotate(-39deg);
       }
     }
   }
