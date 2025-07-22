@@ -13,3 +13,9 @@
 .modal-actions { display: flex; gap: 1rem; margin-top: 1rem; }
 .error { color: #c00; margin-top: 0.5rem; }
 .success { color: #080; margin-top: 0.5rem; } 
+input,
+textarea,
+select {
+  color: #111 !important;
+  background: #fff !important;
+}

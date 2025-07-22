@@ -49,14 +49,14 @@
 
     <div class="sidebar-group" [class.open]="openMenu === 'staff'">
       <a (click)="toggleMenu('staff')">
-        <i class="fa fa-user"></i> Staff
+        <i class="fa fa-user"></i> Accounts
         <span class="arrow">
           <i class="fa" [ngClass]="openMenu === 'staff' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
         </span>
       </a>
       <div class="submenu" *ngIf="openMenu === 'staff'">
-        <a routerLink="staff/list">Staff List</a>
-        <a routerLink="staff/roles">Roles</a>
+        <a routerLink="accountlist" routerLinkActive="active">Account List</a>
+        <a routerLink="addaccount" routerLinkActive="active">Add Account</a>
       </div>
     </div>
 
