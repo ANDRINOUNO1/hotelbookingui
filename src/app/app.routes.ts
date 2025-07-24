@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 import { ReservationComponent  } from './reservation/reservation.component';
 
 import { LoginComponent } from './login/login.component';
+
 import { AdminSectionComponent } from './admin-section/admin-section.component';
 import { HomeComponent } from './home/home.component';
-import { FrontdeskComponent } from './frontdesk/frontdesk.component';
 import { DashboardComponent } from './admin-section/dashboard/dashboard.component';
 import { BookingComponent } from './admin-section/booking/booking.component';
 import { CustomersComponent } from './admin-section/customers/customers.component';
@@ -16,12 +16,19 @@ import { AddAccountComponent } from './admin-section/addaccount/add-account.comp
 import { AccountListComponent } from './admin-section/accountlist/account-list.component';
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 
+import { FrontdeskComponent } from './frontdesk/frontdesk.component';
+import { ReservationsComponent } from './frontdesk/reservations/reservations.component';
+import { RequestsComponent } from './frontdesk/requests/requests.component';
+import { CalendarComponent } from './frontdesk/calendar/calendar.component';
+import { ListsComponent } from './frontdesk/lists/lists.component';
+import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
+import path from 'path';
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'reserve', component: ReservationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminSectionComponent },
-  { path: 'frontdesk', component: FrontdeskComponent },
   {
     path: 'admin',
     component: AdminSectionComponent,
@@ -35,6 +42,18 @@ export const routes: Routes = [
       { path: 'addaccount', component: AddAccountComponent },
       { path: 'accountlist', component: AccountListComponent },
       { path: 'allbooking', component: AllbookingsComponent }
+    ]
+  },
+  {
+    path: 'frontdesk',
+    component: FrontdeskComponent,
+    children: [
+      { path: '', redirectTo: 'frontdeskdashboard', pathMatch: 'full' },
+      { path: 'frontdeskdashboard', component: FrontdeskdashboardComponent },
+      { path: 'reservations', component: ReservationsComponent },
+      { path: 'requests', component: RequestsComponent },
+      { path: 'calendar', component: CalendarComponent },
+      { path: 'lists', component: ListsComponent }  
     ]
   }
 ];

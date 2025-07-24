@@ -1,0 +1,27 @@
+<div>
+  <div class="roomview-header">
+    <select>
+      <option>Room View</option>
+    </select>
+    <input type="date" [value]="(today | date:'yyyy-MM-dd')" />
+  </div>
+  <div class="type-tabs">
+    <button *ngFor="let type of roomTypes"
+            [class.active]="type.type === selectedType"
+            (click)="selectType(type.type)">
+      {{ type.type }}
+    </button>
+  </div>
+  <div class="roomview-grid">
+    <div *ngFor="let room of roomsByType[selectedType]"
+         class="room-card"
+         [ngClass]="{'vacant': room.status, 'occupied': !room.status}">
+      <div class="room-number">{{ room.room_number }}</div>
+      <div class="room-type">{{ room.roomType?.type }}</div>
+      <div class="room-icons">
+        <i class="fa fa-bed"></i>
+        <i class="fa fa-user"></i>
+      </div>
+    </div>
+  </div>
+</div>
