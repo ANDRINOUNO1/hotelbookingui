@@ -2,7 +2,9 @@ import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, R
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import Swiper from 'swiper/bundle';
+import Swiper from 'swiper';
+import { Navigation, Autoplay } from 'swiper/modules';
+Swiper.use([Navigation, Autoplay]);
 import flatpickr from 'flatpickr';
 import { ReservationComponent } from '../reservation/reservation.component';
 
@@ -46,6 +48,21 @@ export class HomeComponent implements AfterViewInit {
         'assets/images/pic-6.png',
         'assets/images/about-img-1.jpg',
         'assets/images/about-img-2.jpg'
+      ]
+    },
+    {
+      name: 'Prestige Room',
+      description: 'Experience luxury in our premium suite with exclusive services.',
+      image: 'assets/images/gallery-img-3.webp',
+      price: 200,
+      brand: 'Luxury',
+      tags: ['Luxury', 'Suite', 'King Bed'],
+      link: '#',
+      seasonalImages: [
+        'assets/images/about-img-3.jpg',
+        'assets/images/home-img-1.jpg',
+        'assets/images/home-img-2.jpg',
+        'assets/images/home-img-3.jpg'
       ]
     },
     {
@@ -138,7 +155,8 @@ export class HomeComponent implements AfterViewInit {
 
       // Swiper for home slider
       setTimeout(() => {
-        if (document.querySelector('.home-slider')) {
+        const homeSlider = document.querySelector('.home-slider');
+        if (homeSlider && homeSlider.querySelectorAll('.swiper-slide').length > 1) {
           new Swiper('.home-slider', {
             loop: true,
             grabCursor: true,
@@ -147,7 +165,7 @@ export class HomeComponent implements AfterViewInit {
               prevEl: '.swiper-button-prev',
             },
             autoplay: {
-              delay: 3500,
+              delay: 2500,
               disableOnInteraction: false
             },
             effect: 'slide',
@@ -155,7 +173,7 @@ export class HomeComponent implements AfterViewInit {
             spaceBetween: 30
           });
         }
-      }, 0);
+      }, 100); // Slightly longer delay to ensure DOM is ready
 
       // Swiper for gallery slider
       if (document.querySelector('.gallery-slider')) {
