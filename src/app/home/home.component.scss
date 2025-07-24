@@ -55,6 +55,96 @@ section{
    max-width: 1200px;
    margin: 0 auto;
 }
+
+/* Header Bar Modern Minimal Style */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: linear-gradient(90deg, #b4884d 0%, #0b0b31 100%);
+  padding: 1.2rem 3rem;
+  box-sizing: border-box;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  min-height: 64px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #b4884d;
+  letter-spacing: 0.5px;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 0.7rem;
+}
+
+.header-bar nav {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.header-bar nav a {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.header-bar nav a:hover {
+  color: #b4884d;
+  background: #fff;
+}
+
+.login-btn, .book-now-btn {
+  background: #b4884d;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 2.2rem;
+  padding: 0.9rem 2.8rem;
+  margin-left: 2rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(180,136,77,0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.login-btn:hover, .book-now-btn:hover {
+  background: #fff;
+  color: #b4884d;
+  box-shadow: 0 4px 16px #0b0b31;
+}
+
+section.header {
+  max-width: none;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: none;
+  box-shadow: none;
+}
+
 .logo img {
   height: 90px;         // Match the height you set in HTML
   width: auto;
@@ -104,6 +194,7 @@ section{
    align-items: center;
    justify-content: space-between;
    gap: 1.5rem;
+   width: 100%;
 }
 
 .header .flex .logo{
@@ -135,12 +226,26 @@ section{
    border-radius: .5rem;
 }
 
-.header .navbar a{
-   font-size: 1.8rem;
-   color: var(--main-color);
-   padding: 1rem 3rem;
-   border-radius: .5rem;
-   transition: background 0.2s, color 0.2s;
+.header .navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 0;
+  margin-top: 2rem;
+  background-color: var(--sub-color);
+  padding: .5rem 0;
+  border-radius: .5rem;
+}
+
+.header .navbar a {
+  flex: 1 1 0;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 1.8rem;
+  color: var(--main-color);
+  border-radius: .5rem;
+  transition: background 0.2s, color 0.2s;
 }
 
 .header .navbar a:hover{
@@ -713,3 +818,4 @@ body, html {
   display: block;
   min-height: 100vh;
 }
+
