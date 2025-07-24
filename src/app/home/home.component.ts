@@ -4,11 +4,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper/bundle';
 import flatpickr from 'flatpickr';
+import { ReservationComponent } from '../reservation/reservation.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, ReservationComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -16,7 +17,71 @@ export class HomeComponent implements AfterViewInit {
   title = 'hotel-reservation-app';
   isDarkMode = false;
 
+  rooms = [
+    {
+      name: 'Classic Room',
+      description: 'A cozy room with all the essentials for a comfortable stay.',
+      image: 'assets/images/gallery-img-1.jpg',
+      price: 80,
+      brand: 'Classic',
+      tags: ['Cozy', 'Affordable', 'Single Bed'],
+      link: '#',
+      seasonalImages: [
+        'assets/images/pic-1.png',
+        'assets/images/pic-2.png',
+        'assets/images/pic-3.png',
+        'assets/images/pic-4.png'
+      ]
+    },
+    {
+      name: 'Deluxe Room',
+      description: 'Spacious room with a beautiful view and modern amenities.',
+      image: 'assets/images/gallery-img-2.webp',
+      price: 120,
+      brand: 'Deluxe',
+      tags: ['Spacious', 'View', 'Double Bed'],
+      link: '#',
+      seasonalImages: [
+        'assets/images/pic-5.png',
+        'assets/images/pic-6.png',
+        'assets/images/about-img-1.jpg',
+        'assets/images/about-img-2.jpg'
+      ]
+    },
+    {
+      name: 'Luxury Suite',
+      description: 'Experience luxury in our premium suite with exclusive services.',
+      image: 'assets/images/gallery-img-3.webp',
+      price: 200,
+      brand: 'Luxury',
+      tags: ['Luxury', 'Suite', 'King Bed'],
+      link: '#',
+      seasonalImages: [
+        'assets/images/about-img-3.jpg',
+        'assets/images/home-img-1.jpg',
+        'assets/images/home-img-2.jpg',
+        'assets/images/home-img-3.jpg'
+      ]
+    }
+  ];
+
+  activeRoom = 0;
+
+  nextRoom() {
+    this.activeRoom = (this.activeRoom + 1) % this.rooms.length;
+  }
+  prevRoom() {
+    this.activeRoom = (this.activeRoom - 1 + this.rooms.length) % this.rooms.length;
+  }
+  getCardClass(i: number): string {
+    if (i === this.activeRoom) return 'z-20 scale-100 opacity-100';
+    if (i === (this.activeRoom + 1) % this.rooms.length) return 'z-10 translate-x-[40%] scale-95 opacity-60';
+    if (i === (this.activeRoom - 1 + this.rooms.length) % this.rooms.length) return 'z-10 -translate-x-[40%] scale-95 opacity-60';
+    return 'scale-90 opacity-0 pointer-events-none';
+  }
+
   @ViewChild('navbar') navbar!: ElementRef;
+
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
