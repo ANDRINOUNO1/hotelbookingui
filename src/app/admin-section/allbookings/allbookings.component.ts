@@ -5,13 +5,13 @@ import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-booking',
+  selector: 'app-allbookings',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './booking.component.html',
-  styleUrl: './booking.component.scss'
+  templateUrl: './allbookings.component.html',
+  styleUrl: './allbookings.component.scss'
 })
-export class BookingComponent implements OnInit {
+export class AllbookingsComponent implements OnInit {
   occupiedRooms: any[] = [];
   selectedBooking: any = null;
 
@@ -29,16 +29,18 @@ export class BookingComponent implements OnInit {
             this.occupiedRooms = roomsData
               .map(room => {
                 const booking = bookingsData.find(
-                  b => b.room_id === room.id && b.pay_status === false
+                  b => b.room_id === room.id
                 );
                 if (booking) {
                   return {
                     id: booking.id,
                     number: room.room_number,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
+                    address: `${booking.guest.address}, ${booking.guest.city}`,
                     type: room.roomType?.type || '',
                     status: 'occupied',
-                    booking 
+                    paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
+                    booking
                   };
                 }
                 return null;
@@ -52,12 +54,6 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  addBooking(newBooking: Booking) {
-    this.http.post<Booking>('/api/bookings', newBooking).subscribe(() => {
-      this.loadOccupiedRooms();
-    });
-  }
-
   updateBooking(id: number, changes: Partial<Booking>) {
     this.http.put<Booking>(`/api/bookings/${id}`, changes).subscribe(() => {
       this.loadOccupiedRooms();
@@ -68,43 +64,31 @@ export class BookingComponent implements OnInit {
   deleteBooking(id: number) {
     this.http.delete(`/api/bookings/${id}`).subscribe(() => {
       this.loadOccupiedRooms();
-      this.closePopup
+      this.closePopup();
     });
   }
   editMode = false;
   openEditPopup(room: any) {
-  this.selectedBooking = { 
-    ...room.booking,
-    paidamount: {
-      amount: '',
-      cardNumber: '',
-      expiry: '',
-      cvv: '',
-      mobileNumber: '',
-      paymentMethod: '',
-      paymentMode: '',
-      ...room.booking.paidamount
-    }
-  };
-  this.editMode = true;
-}
-
-openViewPopup(room: any) {
-  this.selectedBooking = { 
-    ...room.booking,
-    paidamount: {
-      amount: '',
-      cardNumber: '',
-      expiry: '',
-      cvv: '',
-      mobileNumber: '',
-      paymentMethod: '',
-      paymentMode: '',
-      ...room.booking.paidamount
-    }
-  };
-  this.editMode = false;
-}
+    this.selectedBooking = { 
+      ...room.booking,
+      payment: room.booking.payment || {
+        cardNumber: '',
+        expiry: '',
+        cvv: ''
+      }
+    };
+  }
+  openViewPopup(room: any) {
+    this.selectedBooking = { 
+      ...room.booking,
+      payment: room.booking.payment || {
+        cardNumber: '',
+        expiry: '',
+        cvv: ''
+      }
+    };
+    this.editMode = false; // Always start in view mode
+  }
 
   toggleEditMode() {
     this.editMode = !this.editMode;

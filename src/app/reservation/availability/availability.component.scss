@@ -1,0 +1,100 @@
+.availability-container {
+  text-align: center;
+  padding: 2rem;
+
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+
+  .room-type-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .room-card {
+    background: #e3b778;
+    border-radius: 1.5rem;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    .room-card-index {
+      background: #5a4e3c;
+      color: #fff;
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    h3 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 0.8rem;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    .seasonal-tag {
+      background: #456c4e;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      margin-top: -1.5rem;
+      position: relative;
+    }
+
+    .details-link {
+      font-size: 0.7rem;
+      margin: 0.5rem 0;
+      text-transform: uppercase;
+    }
+
+    .price-circle {
+      background: #5a4e3c;
+      color: #fff;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .select-btn {
+      background: #5a4e3c;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #3a2f21;
+      }
+    }
+  }
+}

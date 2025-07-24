@@ -3,9 +3,10 @@
         border-spacing: 0; /* Remove spacing between cells */
         width: 100%;
         text-align: left;
-        border: 1px solid #ddd;
+        border: 1px solid var(--card-border);
         border-radius: 10px; /* Rounded corners for the table */
         overflow: hidden;
+        color: var(--text-color);
 }
 .tables th,
 .tables td {
@@ -15,4 +16,15 @@
 
 .tables th {
     font-weight: bold;
+}
+.room-occupied {
+  background: #d32f2f; // red for occupied
+}
+
+.room-pending {
+  background: #fbc02d; // yellow for pending payment
+}
+
+.room-vacant {
+  background: #4caf50; // green for vacant
 }

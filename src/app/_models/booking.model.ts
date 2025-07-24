@@ -5,27 +5,28 @@ export interface Availability {
   adults: number;
   children: number;
   rooms: number;
-  requests?: string;
 }
 export interface Booking {
   id?: number;
   room_id: number;
+  guest: Guest;
+  availability: Availability;
+  payment?: PaymentDetails;
+  pay_status: boolean;
+  created_at?: string;
+  updated_at?: string;
+  room?: Room;
+  requests?: string;
+  paidamount: number;
+}
+
+export interface Guest {
   first_name: string;
   last_name: string;
   email: string;
   phone: string;
-  availability: Availability;
-  payment?: string;
-  pay_status: boolean;
-  created_at?: string;
-  updated_at?: string;
-  room?: Room; // Optional: populated if joined
-}
-export interface Guest {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phonenumber: string;
+  address: string;
+  city: string;
 }
 
 export interface RoomType {
@@ -44,18 +45,14 @@ export interface Room {
 }
 
 export interface PaymentDetails {
+  paymentMode: string;
+  paymentMethod: string;
+  amount: number;
   cardNumber: string;
   expiry: string;
   cvv: string;
 }
 
-export interface Reservation {
-  id: number;
-  checkIn: string;
-  checkOut: string;
-  roomType: string;
-  rate: number;
-  guest: Guest;
-  paymentStatus: 'pending' | 'paid';
-  paymentDetails?: PaymentDetails;
+export interface ReservationFee{
+  fee: number;
 }

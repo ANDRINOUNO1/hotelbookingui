@@ -1,1 +1,42 @@
-<p>reservation works!</p>
+<section class="progress">
+  <div class="progress_inner">
+
+    <!-- Steps -->
+    <div *ngFor="let step of steps; index as i" class="progress_inner__step">
+      <label>{{ step }}</label>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress_inner__bar--set"></div>
+    <div class="progress_inner__bar"
+         [style.width.%]="(100 / steps.length) * (currentStep - 1)">
+    </div>
+
+    <!-- Steps content -->
+    <div class="progress_inner__tabs">
+      <ng-container [ngSwitch]="currentStep">
+        <app-reservation-form 
+            *ngSwitchCase="1" 
+            (next)="handleReservationSubmitted($event)">
+        </app-reservation-form>
+
+        <app-availability 
+            *ngSwitchCase="2" 
+            (next)="handleRoomSelected($event)" 
+            (back)="goBack()">
+        </app-availability>
+
+        <app-process 
+            *ngSwitchCase="3" 
+            (next)="handleCustomerDetails($event)" 
+            (back)="goBack()">
+        </app-process>
+
+        <app-confirmation 
+            *ngSwitchCase="4">
+        </app-confirmation>
+    </ng-container>
+
+    </div>
+  </div>
+</section>

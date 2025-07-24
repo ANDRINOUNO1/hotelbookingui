@@ -1,0 +1,98 @@
+.form-container {
+  display: flex;
+  height: 100vh;
+
+  .left-side {
+    flex: 1;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+  input,
+  textarea,
+  select {
+    color: #111 !important;
+    background: #fff !important;
+  }
+
+
+  .right-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .form-box {
+      max-width: 400px;
+      width: 100%;
+
+      h2 {
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      .selected-room {
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #888;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+
+        input,
+        textarea {
+          width: 100%;
+          padding: 12px 15px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          outline: none;
+          font-size: 14px;
+
+          &::placeholder {
+            color: #aaa;
+          }
+        }
+
+        textarea {
+          min-height: 80px;
+        }
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .btn-primary {
+          background: linear-gradient(135deg, #ff00aa, #aa00ff);
+          color: #fff;
+          border: none;
+          border-radius: 25px;
+          padding: 10px 30px;
+          cursor: pointer;
+          font-weight: 600;
+        }
+
+        .sign-in-link {
+          margin-left: 20px;
+          font-size: 14px;
+          text-decoration: none;
+          color: #555;
+        }
+      }
+    }
+  }
+}

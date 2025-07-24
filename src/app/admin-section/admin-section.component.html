@@ -1,21 +1,68 @@
 <div class="dashboard-container">
-
-
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="admin-logo-bar">
-  <img src="assets/images/bcflats.png" alt="Hotel Logo" class="admin-logo" />
-</div>
-    <nav>
-      <a routerLink="dashboard" routerLinkActive="active"><i class="fa fa-chart-bar"></i> Dashboard</a>
-      <a routerLink="booking" routerLinkActive="active"><i class="fa fa-briefcase"></i> Bookings</a>
-      <a routerLink="customers" routerLinkActive="active"><i class="fa fa-users"></i> Customers</a>
-      <a routerLink="rooms" routerLinkActive="active"><i class="fa fa-bed"></i> Rooms</a>
-      <a routerLink="pricing" routerLinkActive="active"><i class="fa fa-money-check-alt"></i> Pricing</a>
-      <a routerLink="addaccount" routerLinkActive="active"><i class="fa fa-user-plus"></i> Add Account</a>
-      <a routerLink="accountlist" routerLinkActive="active"><i class="fa fa-user-plus"></i> Account List</a>
-    </nav>
-    <div class="sidebar-bottom">
+  <div class="admin-logo-bar">
+    <img src="assets/images/bcflats.png" alt="Hotel Logo" class="admin-logo" />
+    <span class="hotel-title">HOTEL</span>
+  </div>
+
+  <nav>
+    <a routerLink="dashboard" routerLinkActive="active"><i class="fa fa-chart-bar"></i> Dashboard</a>
+
+    <div class="sidebar-group" [class.open]="openMenu === 'booking'">
+      <a (click)="toggleMenu('booking')">
+        <i class="fa fa-briefcase"></i> Booking
+        <span class="arrow">
+          <i class="fa" [ngClass]="openMenu === 'booking' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </span>
+      </a>
+      <div class="submenu" *ngIf="openMenu === 'booking'">
+        <a routerLink="booking" routerLinkActive="active"><i class="fa fa-briefcase"></i> New Bookings</a>
+        <a routerLink="allbooking" routerLinkActive="active"><i class="fa fa-briefcase"></i>All Bookings</a>
+      </div>
+    </div>
+
+    <div class="sidebar-group" [class.open]="openMenu === 'customers'">
+      <a (click)="toggleMenu('customers')">
+        <i class="fa fa-user"></i> Customers
+        <span class="arrow">
+          <i class="fa" [ngClass]="openMenu === 'customers' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </span>
+      </a>
+      <div class="submenu" *ngIf="openMenu === 'customers'">
+        <a routerLink="customers" routerLinkActive="active"><i class="fa fa-users"></i>Customer List</a>
+        <a routerLink="customers/feedback">Feedback</a>
+      </div>
+    </div>
+
+    <div class="sidebar-group" [class.open]="openMenu === 'rooms'">
+      <a (click)="toggleMenu('rooms')">
+        <i class="fa fa-key"></i> Rooms
+        <span class="arrow">
+          <i class="fa" [ngClass]="openMenu === 'rooms' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </span>
+      </a>
+      <div class="submenu" *ngIf="openMenu === 'rooms'">
+        <a routerLink="rooms" routerLinkActive="active"><i class="fa fa-bed"></i>Room List</a>
+        <a routerLink="rooms/types">Room Types</a>
+      </div>
+    </div>
+
+    <div class="sidebar-group" [class.open]="openMenu === 'staff'">
+      <a (click)="toggleMenu('staff')">
+        <i class="fa fa-user"></i> Accounts
+        <span class="arrow">
+          <i class="fa" [ngClass]="openMenu === 'staff' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </span>
+      </a>
+      <div class="submenu" *ngIf="openMenu === 'staff'">
+        <a routerLink="accountlist" routerLinkActive="active">Account List</a>
+        <a routerLink="addaccount" routerLinkActive="active">Add Account</a>
+      </div>
+    </div>
+
+    <a routerLink="pricing" routerLinkActive="active"><i class="fa fa-money-check-alt"></i> Pricing </a>
+  </nav>
+  <div class="sidebar-bottom">
       <button class="toggle-mode-btn" (click)="toggleDarkMode()">
         <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
         {{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
@@ -24,29 +71,12 @@
         <i class="fa fa-sign-out-alt"></i> Logout
       </button>
     </div>
-  </aside>
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Header Bar -->
-    <div class="header-bar">
-      <div class="left">
-        <span class="hotel-title">{{ hotelName }}</span>
-        <div class="search-box">
-          <input type="text" placeholder="Search anything... Press CTRL+SPACE for hint">
-        </div>
-      </div>
-      <div class="user-info">
-        <span>{{ user }}</span>
-        <i class="fa fa-user-circle"></i>
-      </div>
-    </div>
-
-    <router-outlet></router-outlet>
-    <!-- Footer / Working Info -->
-    <div style="padding:1rem 2rem; color:#888; font-size:1rem;">
-      Working Date: <b>Tuesday, February 06, 2018</b> &nbsp;|&nbsp;
-      Audited Date: <b>Saturday, March 10, 2018</b> &nbsp;|&nbsp;
-      Shift Date: <b>Friday, March 16, 2018 12:28:16 PM</b>
-    </div>
-  </main>
+</aside>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
 </div>
+  <div class="footer">
+    <p>&copy; 2023 Hotel Management System</p>
+    <p>Version 1.0.0</p>
+  </div>

@@ -1,0 +1,81 @@
+.reservation-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+  .reservation-left {
+    flex: 1;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+    }
+  }
+  input,
+  textarea,
+  select {
+    color: #111 !important;
+    background: #fff !important;
+  }
+
+
+  .reservation-right {
+    flex: 1;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h1 {
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: black;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+
+        label {
+          font-size: 0.9rem;
+          margin-bottom: 0.3rem;
+        }
+
+        input {
+          padding: 0.75rem;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+      }
+
+      .submit-btn {
+        margin-top: 1.5rem;
+        background: linear-gradient(90deg, #ff00aa, #ff55dd);
+        color: #fff;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s ease;
+
+        &:hover {
+          background: linear-gradient(90deg, #ff55dd, #ff00aa);
+        }
+      }
+    }
+  }
+}

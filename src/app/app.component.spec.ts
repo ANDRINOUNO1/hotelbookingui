@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReservationFormComponent } from './home/reservation-form/reservation-form.component';
+import { ReservationFormComponent } from './reservation/reservation-form/reservation-form.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({

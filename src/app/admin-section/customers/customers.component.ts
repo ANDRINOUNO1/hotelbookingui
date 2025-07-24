@@ -1,11 +1,106 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Room, Booking } from '../../_models/booking.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-customers',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.scss'
 })
-export class CustomersComponent {
+export class CustomersComponent implements OnInit {
+  occupiedRooms: any[] = [];
+  selectedBooking: any = null;
+  selectedCustomer: any = null;
 
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.loadOccupiedRooms();
+  }
+
+  loadOccupiedRooms() {
+    this.http.get<Room[]>('/api/rooms').subscribe({
+      next: (roomsData) => {
+        this.http.get<Booking[]>('/api/bookings').subscribe({
+          next: (bookingsData) => {
+            const grouped: { [email: string]: any } = {};
+
+            bookingsData.forEach(booking => {
+              const guestEmail = booking.guest.email;
+              const room = roomsData.find(r => r.id === booking.room_id);
+
+              if (!grouped[guestEmail]) {
+                grouped[guestEmail] = {
+                  guest: booking.guest,
+                  rooms: []
+                };
+              }
+
+              grouped[guestEmail].rooms.push({
+                number: room?.room_number,
+                type: room?.roomType?.type || '',
+                status: room?.status ? 'Available' : 'Occupied',
+                paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
+                booking
+              });
+            });
+
+            this.occupiedRooms = Object.values(grouped);
+          },
+          error: (err) => console.error('Failed to load bookings:', err)
+        });
+      },
+      error: (err) => console.error('Failed to load rooms:', err)
+    });
+  }
+
+  updateBooking(id: number, changes: Partial<Booking>) {
+    this.http.put<Booking>(`/api/bookings/${id}`, changes).subscribe(() => {
+      this.loadOccupiedRooms();
+      this.closePopup();
+    });
+  }
+
+  deleteBooking(id: number) {
+    this.http.delete(`/api/bookings/${id}`).subscribe(() => {
+      this.loadOccupiedRooms();
+    });
+  }
+  editMode = false;
+  openEditPopup(room: any) {
+    this.selectedBooking = { 
+      ...room.booking,
+      payment: room.booking.payment || {
+        cardNumber: '',
+        expiry: '',
+        cvv: ''
+      }
+    };
+  }
+  openViewPopup(room: any) {
+    this.selectedBooking = { 
+      ...room.booking,
+      payment: room.booking.payment || {
+        cardNumber: '',
+        expiry: '',
+        cvv: ''
+      }
+    };
+    this.editMode = false;
+  }
+
+  openCustomerPopup(customer: any) {
+    this.selectedCustomer = customer;
+  }
+
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+  }
+  closePopup() {
+    this.selectedCustomer = null;
+  }
 }

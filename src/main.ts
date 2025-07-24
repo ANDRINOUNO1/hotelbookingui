@@ -5,10 +5,13 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { fakeBackendProvider } from './app/_helpers/fake-backend';
 
 bootstrapApplication(AppComponent, {
-  ...appConfig,
+  ...appConfig, 
   providers: [
     ...(appConfig.providers || []),
     provideHttpClient(withInterceptorsFromDi()),
     fakeBackendProvider
+    
   ]
+
+  
 }).catch((err) => console.error(err));

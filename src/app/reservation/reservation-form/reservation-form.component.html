@@ -1,0 +1,42 @@
+<section class="reservation-wrapper">
+  <div class="reservation-left">
+    <img src="assets/images/gallery-img-6.webp" alt="Reservation Guest" />
+    <div class="overlay"></div>
+  </div>
+
+  <div class="reservation-right">
+    <h1>Make a Reservation</h1>
+
+    <form (ngSubmit)="submit()" #reservationForm="ngForm">
+      <div class="form-group">
+        <label>Check In</label>
+        <input type="date" name="checkIn" class="form-control" required [(ngModel)]="booking.checkIn" />
+      </div>
+
+      <div class="form-group">
+        <label>Check Out</label>
+        <input type="date" name="checkOut" class="form-control" required [(ngModel)]="booking.checkOut" />
+      </div>
+
+      <div class="form-group">
+        <label>Adults</label>
+        <input type="number" name="adults" min="1" max="10" class="form-control"
+          placeholder="Number of adults" required [(ngModel)]="booking.adults" />
+      </div>
+
+      <div class="form-group">
+        <label>Children</label>
+        <input type="number" name="children" min="0" max="10" class="form-control"
+          placeholder="Number of children" required [(ngModel)]="booking.children" />
+      </div>
+
+      <div class="form-group">
+        <label>Rooms</label>
+        <input type="number" name="rooms" min="1" max="10" class="form-control"
+          placeholder="Number of rooms" required [(ngModel)]="booking.rooms" />
+      </div>
+
+      <button type="submit" class="submit-btn" >Check Availability</button>
+    </form>
+  </div>
+</section>

@@ -17,7 +17,20 @@
       <td>
         <button *ngIf="editingId !== roomType.id" (click)="startEdit(roomType)">Edit</button>
         <button *ngIf="editingId === roomType.id" (click)="saveEdit(roomType)">Save</button>
-        <button *ngif="editingId === roomType.id" (click)="cancelEdit()">Cancel</button>
+        <button *ngIf="editingId === roomType.id" (click)="cancelEdit()">Cancel</button>
+      </td>
+    </tr>
+
+    <tr>
+      <td><strong>Reservation Fee</strong></td>
+      <td *ngIf="!editingReservationFee">₱{{ reservationFee }}</td>
+      <td *ngIf="editingReservationFee">
+        <input type="number" [(ngModel)]="editReservationFee" min="0" />
+      </td>
+      <td>
+        <button *ngIf="!editingReservationFee" (click)="startEditReservationFee()">Edit</button>
+        <button *ngIf="editingReservationFee" (click)="saveEditReservationFee()">Save</button>
+        <button *ngIf="editingReservationFee" (click)="cancelEditReservationFee()">Cancel</button>
       </td>
     </tr>
   </tbody>

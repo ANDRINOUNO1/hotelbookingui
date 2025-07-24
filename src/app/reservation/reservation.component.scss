@@ -1,0 +1,95 @@
+$steps: 4;
+$step-point-width: 30px;
+$step-gap: 60px;
+$bar-height: 6px;
+
+.progress {
+  &_inner {
+    width: 1000px; // made wider
+    margin: 100px auto;
+    position: relative;
+
+    &__step {
+      float: left;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+
+      label {
+        display: block;
+        margin-top: $step-gap;
+        position: relative;
+        font-weight: bold;
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: $step-point-width;
+        height: $step-point-width;
+        background: white;
+        border: 3px solid #1ea4ec;
+        border-radius: 50%;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    &__bar--set {
+      position: absolute;
+      height: $bar-height;
+      width: 100%;
+      background: #ddd;
+      left: 0;
+      z-index: -1;
+      border-radius: $bar-height;
+    }
+
+    &__bar {
+      position: absolute;
+      height: $bar-height;
+      background: #1ea4ec;
+      left: 0;
+      border-radius: $bar-height;
+      transition: width 0.4s ease;
+    }
+
+    &__tabs {
+      clear: both;
+      position: relative;
+      margin-top: 100px; // More margin for bigger look
+
+      .tab {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 50px; // More padding
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        display: none;
+
+        &.active {
+          display: block;
+        }
+      }
+    }
+
+    &__status {
+      width: 40px;
+      height: 40px;
+      top: -80px;
+      position: relative;
+      margin: 50px auto;
+
+      div {
+        position: absolute;
+      }
+    }
+  }
+}
+
+body {
+  background: #f0f8ff;
+  font-family: 'Nunito', sans-serif;
+}
