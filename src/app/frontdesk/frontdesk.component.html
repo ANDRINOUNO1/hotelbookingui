@@ -1,1 +1,34 @@
-<p>frontdesk works!</p>
+<div class="frontdesk-topbar">
+  <div class="topbar-left">
+    <h1>Bc Flats</h1>
+    <div class="search-section">
+      <input type="text" placeholder="Search anything... Press (CTRL+SPACE) for hint" />
+    </div>
+  </div>
+  <div class="user-section">
+    <h1>Front Desk</h1>
+    <i class="fa fa-user-circle"></i>
+  </div>
+
+  <div class="logout">
+    <button (click)="logout()">
+      <i class="fa fa-sign-out-alt"></i>Logout
+    </button>
+  </div>
+  
+</div>
+<div class="frontdesk-container">
+  <div class="frontdesk-sidebar">
+    <ul>
+      <li routerLink="frontdeskdashboard" routerLinkActive="active" class="fa fa-dashboard"><span>Dashboard</span></li>
+      <li routerLink="calendar" routerLinkActive="active" class="fa fa-calendar"><span>Calendar</span></li>
+      <li routerLink="reservations" routerLinkActive="active" class="fa fa-bed"><span>Reservations</span></li>
+      <li routerLink="room-status" routerLinkActive="active" class="fa fa-cogs"><span>Room Status</span></li>
+      <li routerLink="requests" routerLinkActive="active" class="fa fa-dashboard"><span>Requests</span></li>
+      <li routerLink="lists" routerLinkActive="active" class="fa fa-list"><span>Lists</span></li>
+    </ul>
+  </div>
+  <main class="frontdesk-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
