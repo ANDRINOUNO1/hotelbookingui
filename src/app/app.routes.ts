@@ -13,7 +13,6 @@ import { CustomersComponent } from './admin-section/customers/customers.componen
 import { RoomsComponent } from './admin-section/rooms/rooms.component';
 import { PricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
-import { AccountListComponent } from './admin-section/accountlist/account-list.component';
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
@@ -22,6 +21,10 @@ import { RequestsComponent } from './frontdesk/requests/requests.component';
 import { CalendarComponent } from './frontdesk/calendar/calendar.component';
 import { ListsComponent } from './frontdesk/lists/lists.component';
 import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
+import { SuperhomeComponent } from './superadmin-sect/superhome.component';
+import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
+import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
+import { AddAccountsComponent } from './superadmin-sect/add-account.component';
 import path from 'path';
 
 export const routes: Routes = [
@@ -40,7 +43,6 @@ export const routes: Routes = [
       { path: 'rooms', component: RoomsComponent },
       { path: 'pricing', component: PricingComponent },
       { path: 'addaccount', component: AddAccountComponent },
-      { path: 'accountlist', component: AccountListComponent },
       { path: 'allbooking', component: AllbookingsComponent }
     ]
   },
@@ -54,6 +56,16 @@ export const routes: Routes = [
       { path: 'requests', component: RequestsComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'lists', component: ListsComponent }  
+    ]
+  },
+  {
+    path: 'superadmin',
+    component: SuperhomeComponent,
+    children: [
+      { path: '', redirectTo: 'account-list', pathMatch: 'full' },
+      { path: 'account-list', component: AccountListComponent },
+      { path: 'pending-accounts', component: PendingAccountsComponent },
+      { path: 'add-account', component: AddAccountsComponent }
     ]
   }
 ];

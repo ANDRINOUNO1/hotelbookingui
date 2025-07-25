@@ -1,0 +1,32 @@
+<div class="account-list-container">
+  <table class="account-table">
+    <thead>
+      <tr>
+        <th class="table-header">#</th>
+        <th class="table-header">Username</th>
+        <th class="table-header">Name</th>
+        <th class="table-header">Email</th>
+        <th class="table-header">Role</th>
+        <th class="table-header">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let acc of pagedAccounts; let i = index" class="table-row">
+        <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+        <td>{{ acc.title }}</td>
+        <td>{{ acc.firstName }} {{ acc.lastName }}</td>
+        <td>{{ acc.email }}</td>
+        <td>{{ acc.role }}</td>
+        <td>
+          <button (click)="approveAccount(acc.id!)" class="approve-btn">Approve</button>
+          <button (click)="deleteAccount(acc.id!)" class="delete-btn">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="pagination-row">
+    <button (click)="page = page - 1" [disabled]="page === 1" class="pagination-btn">Previous</button>
+    <span class="pagination-info">Page {{ page }} of {{ totalPages() }}</span>
+    <button (click)="page = page + 1" [disabled]="page === totalPages()" class="pagination-btn">Next</button>
+  </div>
+</div> 

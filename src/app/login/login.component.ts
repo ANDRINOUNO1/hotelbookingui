@@ -36,6 +36,8 @@ export class LoginComponent {
         this.isLoading = false;
         if (account.role === 'Admin') {
           this.router.navigate(['/admin']);
+        } else if (account.role === 'SuperAdmin') {
+          this.router.navigate(['/superadmin']);
         } else {
           this.router.navigate(['/frontdesk']);
         }

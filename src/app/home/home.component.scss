@@ -310,11 +310,12 @@ section.header {
 .swiper-button-next,
 .swiper-button-prev{
    padding: 3rem 2rem;
-   background-color: var(--white);
+   background-color:transparent;
    top: 40%;
    opacity: .7;
    border-radius: 50%;
-   border: 2px solid var(--accent-color);
+   border: transparent;
+   transition: background-color 0.2s, opacity 0.2s;
 }
 
 .swiper-button-next::after,
@@ -326,7 +327,7 @@ section.header {
 .swiper-button-next:hover,
 .swiper-button-prev:hover{
    opacity: 1;
-   background: var(--sub-color);
+   background-color: rgba(229, 192, 123, 0.2); /* subtle translucent hover */
    color: var(--main-color);
 }
 

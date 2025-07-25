@@ -39,6 +39,16 @@ if (isBrowser) {
     accounts = [
       {
         id: '1',
+        title: 'superadmin',
+        firstName: 'Super',
+        lastName: 'Admin',
+        email: 'superadmin@example.com',
+        status: 'Active',
+        role: Role.SuperAdmin,
+        password: 'superadmin123'
+      },
+      {
+        id: '3',
         title: 'admin',
         firstName: 'Admin',
         lastName: 'User',
@@ -57,6 +67,8 @@ if (isBrowser) {
         role: Role.frontdeskUser,
         password: 'frontdesk123'
       }
+      
+      
     ];
     localStorage.setItem(accountsKey, JSON.stringify(accounts));
   }
@@ -167,7 +179,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         ((x.title && x.title.toLowerCase() === (username || '').toLowerCase()) ||
           (x.email && x.email.toLowerCase() === (email || '').toLowerCase())) &&
         x.password === password &&
-        x.status !== 'Inactive'
+        x.status === 'Active'
       );
       if (!account) return error('Email or password is incorrect');
 
@@ -182,7 +194,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       }
       account.id = (accounts.length + 1).toString();
       account.role = Role.frontdeskUser;
-      account.status = 'Active';
+      account.status = 'Pending'; 
       account.password = account.password || 'changeme';
       accounts.push(account);
 
