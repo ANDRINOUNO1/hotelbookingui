@@ -1,4 +1,10 @@
 export enum Role {
     Admin = 'Admin',
-    frontdeskUser = 'frontdeskUser'
-} 
+    frontdeskUser = 'frontdeskUser',
+    SuperAdmin = 'SuperAdmin'
+}
+
+export const SUPER_ADMIN_ACCOUNT = {
+    username: 'superadmin',
+    role: Role.SuperAdmin
+}; 

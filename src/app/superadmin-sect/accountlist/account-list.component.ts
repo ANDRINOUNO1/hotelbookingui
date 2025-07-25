@@ -24,6 +24,7 @@ export class AccountListComponent implements OnInit {
   pageSize = 10;
   currentUserId: string | null = null;
   public Role = Role;
+  showEditModal = false;
 
   newAccount: any = {
     username: '',
@@ -50,8 +51,8 @@ export class AccountListComponent implements OnInit {
 
   loadAccounts() {
     this.accountService.getAll().subscribe(accounts => {
-      this.accounts = accounts;
-      this.filteredAccounts = accounts; 
+      this.accounts = accounts.filter(acc => acc.status === 'Active');
+      this.filteredAccounts = this.accounts;
     });
   }
 
@@ -70,6 +71,7 @@ export class AccountListComponent implements OnInit {
   startEdit(account: Account) {
     this.editingId = account.id || null;
     this.editAccount = { ...account };
+    this.showEditModal = true;
   }
 
   saveEdit() {
@@ -77,6 +79,7 @@ export class AccountListComponent implements OnInit {
       this.accountService.update(this.editingId, this.editAccount).subscribe(() => {
         this.editingId = null;
         this.editAccount = null;
+        this.showEditModal = false;
         this.loadAccounts();
       });
     }
@@ -85,6 +88,7 @@ export class AccountListComponent implements OnInit {
   cancelEdit() {
     this.editingId = null;
     this.editAccount = null;
+    this.showEditModal = false;
   }
 
   deleteAccount(id: string) {

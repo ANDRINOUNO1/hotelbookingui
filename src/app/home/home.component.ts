@@ -11,7 +11,7 @@ import { ReservationComponent } from '../reservation/reservation.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule, ReservationComponent],
+  imports: [RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

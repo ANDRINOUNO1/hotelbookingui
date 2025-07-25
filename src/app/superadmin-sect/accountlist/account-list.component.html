@@ -1,0 +1,94 @@
+<div class="account-list-container">
+  <table class="account-table">
+    <thead>
+      <tr>
+        <th class="table-header">#</th>
+        <th class="table-header">Username</th>
+        <th class="table-header">Name</th>
+        <th class="table-header">Email</th>
+        <th class="table-header">Role</th>
+        <th class="table-header">Password</th>
+        <th class="table-header">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let acc of pagedAccounts; let i = index" class="table-row">
+        <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+        <td *ngIf="editingId !== acc.id">{{ acc.title }}</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.title" class="table-input" /></td>
+        <td *ngIf="editingId !== acc.id">{{ acc.firstName }} {{ acc.lastName }}</td>
+        <td *ngIf="editingId === acc.id">
+          <input [(ngModel)]="editAccount!.firstName" class="table-input half-width" />
+          <input [(ngModel)]="editAccount!.lastName" class="table-input half-width" />
+        </td>
+        <td *ngIf="editingId !== acc.id">{{ acc.email }}</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.email" class="table-input" /></td>
+        <td *ngIf="editingId !== acc.id">{{ acc.role }}</td>
+        <td *ngIf="editingId === acc.id">
+          <select [(ngModel)]="editAccount!.role" class="table-input">
+            <option [ngValue]="Role.Admin">Admin</option>
+            <option [ngValue]="Role.frontdeskUser">Frontdesk</option>
+            <option [ngValue]="Role.SuperAdmin">SuperAdmin</option>
+          </select>
+        </td>
+        <td *ngIf="editingId !== acc.id">••••••••</td>
+        <td *ngIf="editingId === acc.id"><input [(ngModel)]="editAccount!.password" type="text" class="table-input" /></td>
+        <td>
+          <button *ngIf="editingId !== acc.id" (click)="startEdit(acc)" class="update-btn">Update</button>
+          <button *ngIf="editingId === acc.id" (click)="saveEdit()" class="save-btn">Save</button>
+          <button *ngIf="editingId === acc.id" (click)="cancelEdit()" class="cancel-btn">Cancel</button>
+          <button (click)="deleteAccount(acc.id!)" class="delete-btn" [disabled]="acc.id === currentUserId || acc.role === Role.SuperAdmin">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="pagination-row">
+    <button (click)="page = page - 1" [disabled]="page === 1" class="pagination-btn">Previous</button>
+    <span class="pagination-info">Page {{ page }} of {{ totalPages() }}</span>
+    <button (click)="page = page + 1" [disabled]="page === totalPages()" class="pagination-btn">Next</button>
+  </div>
+</div>
+
+<!-- Edit Account Modal -->
+<div *ngIf="showEditModal" class="edit-modal">
+  <div class="modal-content">
+    <h2 class="modal-title">Edit Account</h2>
+    <form (ngSubmit)="saveEdit()">
+      <div>
+        <label class="modal-label">Username</label>
+        <input [(ngModel)]="editAccount!.title" name="title" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin" />
+      </div>
+      <div class="modal-row">
+        <div class="modal-col">
+          <label class="modal-label">First Name</label>
+          <input [(ngModel)]="editAccount!.firstName" name="firstName" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin" />
+        </div>
+        <div class="modal-col">
+          <label class="modal-label">Last Name</label>
+          <input [(ngModel)]="editAccount!.lastName" name="lastName" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin" />
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Email</label>
+        <input [(ngModel)]="editAccount!.email" name="email" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin" />
+      </div>
+      <div>
+        <label class="modal-label">Role</label>
+        <select [(ngModel)]="editAccount!.role" name="role" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin">
+          <option [ngValue]="Role.Admin">Admin</option>
+          <option [ngValue]="Role.frontdeskUser">Frontdesk</option>
+          <option [ngValue]="Role.SuperAdmin">SuperAdmin</option>
+        </select>
+      </div>
+      <div>
+        <label class="modal-label">Password</label>
+        <input [(ngModel)]="editAccount!.password" name="password" type="text" class="modal-input" [disabled]="editAccount?.role === Role.SuperAdmin" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" (click)="cancelEdit()" class="modal-cancel">Cancel</button>
+        <button type="submit" class="modal-save">Save</button>
+      </div>
+    </form>
+    <button (click)="cancelEdit()" class="modal-close">&times;</button>
+  </div>
+</div>

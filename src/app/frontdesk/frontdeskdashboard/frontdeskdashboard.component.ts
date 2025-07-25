@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Room, RoomType } from '../../_models/booking.model';
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { Guest } from '../../_models/booking.model';
+import { Booking } from '../../_models/booking.model';
 @Component({
   selector: 'app-frontdeskdashboard',
   templateUrl: './frontdeskdashboard.component.html',
@@ -16,8 +16,9 @@ export class FrontdeskdashboardComponent implements OnInit {
   roomTypes: RoomType[] = [];
   roomsByType: { [type: string]: Room[] } = {};
   selectedType: string = '';
-  guestname: string ='';
+  guestname: string = '';
   today = new Date();
+  bookings: Booking[] = [];
   
   constructor(private http: HttpClient) {}
 
@@ -25,22 +26,31 @@ export class FrontdeskdashboardComponent implements OnInit {
     this.http.get<RoomType[]>('/api/room-types').subscribe((types) => {
       this.roomTypes = types;
       this.http.get<Room[]>('/api/rooms').subscribe((rooms) => {
-        rooms.forEach(room => {
-          const typeObj = this.roomTypes.find(t => t.id === room.room_type_id);
-          const typeName = typeObj ? typeObj.type : 'Unknown';
-          if (!this.roomsByType[typeName]) {
-            this.roomsByType[typeName] = [];
-          }
-          room.roomType = typeObj;
-          this.roomsByType[typeName].push(room);
+        this.http.get<Booking[]>('/api/bookings').subscribe((bookings) => {
+          this.bookings = bookings;
+          rooms.forEach(room => {
+            const typeObj = this.roomTypes.find(t => t.id === room.room_type_id);
+            const typeName = typeObj ? typeObj.type : 'Unknown';
+            if (!this.roomsByType[typeName]) {
+              this.roomsByType[typeName] = [];
+            }
+            room.roomType = typeObj;
+            this.roomsByType[typeName].push(room);
+          });
+          this.selectedType = this.roomTypes[0]?.type || '';
         });
-        this.selectedType = this.roomTypes[0]?.type || '';
       });
     });
   }
 
   selectType(type: string) {
     this.selectedType = type;
+  }
+
+  getGuestName(roomId: number): string {
+    console.log('Checking roomId:', roomId, 'Bookings:', this.bookings);
+    const booking = this.bookings.find(b => b.room_id === roomId && b.pay_status);
+    return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : 'No Guest';
   }
   
 }

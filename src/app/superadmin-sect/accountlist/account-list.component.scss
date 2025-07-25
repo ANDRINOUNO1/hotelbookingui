@@ -1,0 +1,238 @@
+.account-list-container {
+  background: #fff;
+  color: #222;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  max-width: 100vw;
+}
+.account-list-container.dark {
+  background: #18181b;
+  color: #f3f4f6;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.add-btn {
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.search-box {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.account-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+.account-list-container.dark .account-table {
+  background: #23232b;
+}
+.account-table th, .account-table td {
+  border: 1px solid #eee;
+  padding: 0.7rem 0.5rem;
+  text-align: left;
+}
+.account-table th {
+  font-weight: 600;
+}
+.table-header {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #222;
+}
+.account-list-container.dark .table-header {
+  background: #23232b;
+  color: #f3f4f6;
+}
+.table-row {
+  border-bottom: 1px solid #eee;
+}
+.account-list-container.dark .table-row {
+  border-bottom: 1px solid #444;
+}
+.update-btn {
+  background: #fde68a;
+  color: #222;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  margin-right: 0.3rem;
+  cursor: pointer;
+}
+.save-btn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  margin-right: 0.3rem;
+  cursor: pointer;
+}
+.cancel-btn {
+  background: #888;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  margin-right: 0.3rem;
+  cursor: pointer;
+}
+.delete-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.delete-btn[disabled] {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.pagination-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.edit-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 50;
+
+  .modal-content {
+    background: #fff;
+    color: #222;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 32rem;
+    position: relative;
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .modal-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #f3f4f6;
+      color: #222;
+      margin-bottom: 1rem;
+      &.disabled, &:disabled {
+        background: #e5e7eb;
+        color: #222;
+        opacity: 1;
+      }
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #888;
+      cursor: pointer;
+      &:hover {
+        color: #222;
+      }
+    }
+  }
+}
+.table-input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  color: #222;
+  margin-bottom: 0.25rem;
+  width: 100%;
+  &.half-width {
+    width: 48%;
+    display: inline-block;
+    margin-right: 2%;
+  }
+}
+.half-width {
+  width: 48%;
+  display: inline-block;
+  margin-right: 2%;
+}
+.pagination-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  border: none;
+  background: #e5e7eb;
+  color: #222;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pagination-btn:disabled {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.pagination-info {
+  font-size: 1rem;
+  color: #444;
+  margin: 0 0.5rem;
+}
+.modal-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.modal-col {
+  flex: 1;
+}
+.modal-cancel {
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  border: none;
+  background: #888;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+.modal-save {
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  border: none;
+  background: #22c55e;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+} 

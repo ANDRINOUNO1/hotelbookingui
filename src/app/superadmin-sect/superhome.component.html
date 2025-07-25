@@ -1,0 +1,34 @@
+<div class="superadmin-topbar">
+  <div class="topbar-left">
+    <a href="#home" class="logo">
+      <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
+    </a>
+    <h1>Bc Flats</h1>
+  </div>
+  <div class="user-section">
+    <h1>Super Admin</h1>
+  </div>
+  <div class="logout">
+    <button (click)="logout()">
+      <i class="fa fa-sign-out-alt"></i>Logout
+    </button>
+  </div>
+</div>
+<div class="superadmin-container">
+  <div class="superadmin-sidebar">
+    <ul>
+      <li (click)="toggleAccountsDropdown()" [class.active]="showAccountsDropdown" class="fa fa-users dropdown-toggle">
+        <span>Manage Accounts</span>
+      </li>
+      <ul *ngIf="showAccountsDropdown" class="dropdown-menu">
+        <li routerLink="account-list" routerLinkActive="active"><span>Account List</span></li>
+        <li routerLink="pending-accounts" routerLinkActive="active"><span>Pending Accounts</span></li>
+        <li routerLink="add-account" routerLinkActive="active"><span>Add Account</span></li>
+      </ul>
+      <li routerLink="settings" routerLinkActive="active" class="fa fa-cogs"><span>Settings</span></li>
+    </ul>
+  </div>
+  <main class="superadmin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
