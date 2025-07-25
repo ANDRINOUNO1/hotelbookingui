@@ -1,8 +1,8 @@
 :host {
-  --main-background: #c0dbff;
+  --main-background: #0b0b31;
   --text-color: #222;
   --header-text-color: #fff;
-  --color-primary: #278bfd;
+  --color-primary:  linear-gradient(90deg, #171725 0%, #b4884d 100%);
   --color-secondary: #2196f3;
   --sidebar-color: #222d35;
 }
@@ -51,7 +51,14 @@
     cursor: pointer;
   }
 }
-
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #b4884d;
+  letter-spacing: 0.5px;
+}
 .frontdesk-sidebar {
   flex-direction: column;
   padding-top: 1rem;

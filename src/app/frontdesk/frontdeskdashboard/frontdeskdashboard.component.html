@@ -16,6 +16,7 @@
     <div *ngFor="let room of roomsByType[selectedType]"
          class="room-card"
          [ngClass]="{'vacant': room.status, 'occupied': !room.status}">
+      <div class="booking-guest">{{ guestname|| 'No Guest' }}</div>
       <div class="room-number">{{ room.room_number }}</div>
       <div class="room-type">{{ room.roomType?.type }}</div>
       <div class="room-icons">

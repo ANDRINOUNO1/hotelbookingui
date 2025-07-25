@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Room, RoomType } from '../../_models/booking.model';
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
+import { Guest } from '../../_models/booking.model';
 @Component({
   selector: 'app-frontdeskdashboard',
   templateUrl: './frontdeskdashboard.component.html',
@@ -16,7 +16,7 @@ export class FrontdeskdashboardComponent implements OnInit {
   roomTypes: RoomType[] = [];
   roomsByType: { [type: string]: Room[] } = {};
   selectedType: string = '';
-
+  guestname: string ='';
   today = new Date();
   
   constructor(private http: HttpClient) {}
