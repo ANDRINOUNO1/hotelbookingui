@@ -3,15 +3,18 @@
    <div class="header-bar" style="display: flex; align-items: center; justify-content: space-between;">
       <div class="left" style="flex: 1;">
         <div class="search-box">
-          <input type="text" id="Namesearch" placeholder="Search">
+          <input type="text" id="Namesearch" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearchTermChange()">
         </div>
       </div>
       <div class="user-info" style="display: flex; align-items: center; gap: 0.5rem;">
         <span *ngIf="selectedBooking">{{ selectedBooking.guest.first_name }} {{ selectedBooking.guest.last_name }}</span>
-        <i class="fa fa-user-circle"></i>
       </div>
     </div>
 </div>
+
+  <div *ngIf="searchTerm.trim()" class="searched-name" style="margin: 0.5rem 0; font-style: italic; color: #555;">
+    Searched: {{ searchTerm }}
+  </div>
 
   <table class="tables">
     <thead>
@@ -25,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let room of occupiedRooms">
+      <tr *ngFor="let room of filteredRooms">
         <td>{{ room.number }}</td>
         <td>{{ room.guest }}</td>
         <td>{{ room.type }}</td>

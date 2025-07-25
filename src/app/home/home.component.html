@@ -61,65 +61,6 @@
 </section>
 
 <!-- home section ends -->
-<section id="rooms" class="py-12 bg-gray-900 min-h-[600px]">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-8 text-white">Our Rooms</h2>
-    <div class="relative h-[500px] flex items-center justify-center">
-      <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-        <div *ngFor="let room of rooms; let i = index"
-          class="absolute top-0 w-1/2 mx-auto transition-all duration-500"
-          [ngClass]="getCardClass(i)">
-          <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col h-[600px]">
-            <div class="relative w-full flex-shrink-0" style="height: 50%;">
-              <div
-                class="relative w-full h-full bg-cover bg-center rounded-t-xl"
-                [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
-                <div class="absolute inset-0 bg-black/30 rounded-t-xl"></div>
-              </div>
-            </div>
-
-            <div class="flex justify-center items-center gap-6 w-full flex-shrink-0" style="height: 20%;">
-              <div
-                *ngFor="let img of room.seasonalImages"
-                class="aspect-square h-full rounded-xl overflow-hidden border-2 border-gray-700 bg-cover bg-center cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:shadow-2xl"
-                [ngStyle]="{'background-image': 'url(' + img + ')'}"
-              ></div>
-            </div>
-            <div class="flex flex-col flex-grow justify-center items-center text-center p-6" style="height: 30%;">
-              <h3 class="text-xl font-bold mb-1 text-white">{{ room.name }}</h3>
-              <p class="text-gray-400 text-sm font-medium mb-2">{{ room.brand }}</p>
-              <p class="text-gray-300 text-sm">{{ room.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
-        (click)="prevRoom()"
-        aria-label="Previous"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
-      </button>
-      <button
-        class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
-        (click)="nextRoom()"
-        aria-label="Next"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
-      </button>
-  
-      <div class="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-3 z-30">
-        <button
-          *ngFor="let room of rooms; let idx = index"
-          class="w-2 h-2 rounded-full transition-all duration-300"
-          [ngClass]="activeRoom === idx ? 'bg-blue-400 w-5' : 'bg-gray-600 hover:bg-gray-400'"
-          (click)="activeRoom = idx"
-          [attr.aria-label]="'Go to item ' + (idx + 1)"
-        ></button>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- availability section starts  -->
 
@@ -134,7 +75,7 @@
       <div class="content">
          <h3>best staff</h3>
          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi laborum maxime eius aliquid temporibus unde?</p>
-         <a href="#reservation" class="btn">make a reservation</a>
+         <a routerLink="/reserve" class="btn">make a reservation</a>
       </div>
    </div>
 
@@ -211,6 +152,65 @@
 </section>
 
 <!-- services section ends -->
+<section id="rooms" class="py-12 bg-gray-900 min-h-[600px]">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-8 text-white">Our Rooms</h2>
+    <div class="relative h-[500px] flex items-center justify-center">
+      <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <div *ngFor="let room of rooms; let i = index"
+          class="absolute top-0 w-1/2 mx-auto transition-all duration-500"
+          [ngClass]="getCardClass(i)">
+          <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col h-[600px]">
+            <div class="relative w-full flex-shrink-0" style="height: 50%;">
+              <div
+                class="relative w-full h-full bg-cover bg-center rounded-t-xl"
+                [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
+                <div class="absolute inset-0 bg-black/30 rounded-t-xl"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-center items-center gap-6 w-full flex-shrink-0" style="height: 20%;">
+              <div
+                *ngFor="let img of room.seasonalImages"
+                class="aspect-square h-full rounded-xl overflow-hidden border-2 border-gray-700 bg-cover bg-center cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:shadow-2xl"
+                [ngStyle]="{'background-image': 'url(' + img + ')'}"
+              ></div>
+            </div>
+            <div class="flex flex-col flex-grow justify-center items-center text-center p-6" style="height: 30%;">
+              <h3 class="text-xl font-bold mb-1 text-white">{{ room.name }}</h3>
+              <p class="text-gray-400 text-sm font-medium mb-2">{{ room.brand }}</p>
+              <p class="text-gray-300 text-sm">{{ room.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
+        (click)="prevRoom()"
+        aria-label="Previous"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      <button
+        class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
+        (click)="nextRoom()"
+        aria-label="Next"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+  
+      <div class="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-3 z-30">
+        <button
+          *ngFor="let room of rooms; let idx = index"
+          class="w-2 h-2 rounded-full transition-all duration-300"
+          [ngClass]="activeRoom === idx ? 'bg-blue-400 w-5' : 'bg-gray-600 hover:bg-gray-400'"
+          (click)="activeRoom = idx"
+          [attr.aria-label]="'Go to item ' + (idx + 1)"
+        ></button>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- contact section starts  -->
 

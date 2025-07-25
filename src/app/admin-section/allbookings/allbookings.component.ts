@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class AllbookingsComponent implements OnInit {
   occupiedRooms: any[] = [];
+  filteredRooms: any[] = [];
+  searchTerm: string = '';
   selectedBooking: any = null;
 
   constructor(private http: HttpClient) {}
@@ -46,12 +48,28 @@ export class AllbookingsComponent implements OnInit {
                 return null;
               })
               .filter(room => room !== null);
+            this.applySearch();
           },
           error: (err) => console.error('Failed to load bookings:', err)
         });
       },
       error: (err) => console.error('Failed to load rooms:', err)
     });
+  }
+
+  applySearch() {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredRooms = this.occupiedRooms;
+    } else {
+      this.filteredRooms = this.occupiedRooms.filter(room =>
+        room.guest.toLowerCase().includes(term) ||
+        room.number.toString().includes(term) ||
+        room.type.toLowerCase().includes(term) ||
+        room.status.toLowerCase().includes(term) ||
+        room.paymentStatus.toLowerCase().includes(term)
+      );
+    }
   }
 
   updateBooking(id: number, changes: Partial<Booking>) {
@@ -96,5 +114,9 @@ export class AllbookingsComponent implements OnInit {
   closePopup() {
     this.selectedBooking = null;
     this.editMode = false;
+  }
+
+  onSearchTermChange() {
+    this.applySearch();
   }
 }
