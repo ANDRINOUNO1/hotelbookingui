@@ -17,7 +17,7 @@ export class FrontdeskComponent {
   ) {}
   logout(){
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       this.router.navigate(['/']);
     }
   }

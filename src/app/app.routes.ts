@@ -21,6 +21,8 @@ import { RequestsComponent } from './frontdesk/requests/requests.component';
 import { CalendarComponent } from './frontdesk/calendar/calendar.component';
 import { ListsComponent } from './frontdesk/lists/lists.component';
 import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
+import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.component';
+
 import { SuperhomeComponent } from './superadmin-sect/superhome.component';
 import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
@@ -55,7 +57,8 @@ export const routes: Routes = [
       { path: 'reservations', component: ReservationsComponent },
       { path: 'requests', component: RequestsComponent },
       { path: 'calendar', component: CalendarComponent },
-      { path: 'lists', component: ListsComponent }  
+      { path: 'lists', component: ListsComponent },
+      { path: 'addbookings', component: AddbookingsComponent }
     ]
   },
   {

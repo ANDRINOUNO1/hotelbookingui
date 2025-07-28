@@ -99,8 +99,10 @@ let rooms: Room[] = [];
 
 if (isBrowser) {
   rooms = JSON.parse(localStorage.getItem(roomsKey) || 'null');
+
   if (!rooms) {
     rooms = [];
+
     roomTypes.forEach((roomType: RoomType) => {
       let floors = 1;
       let roomsPerFloor = 1;
@@ -114,7 +116,9 @@ if (isBrowser) {
 
       for (let floor = 1; floor <= floors; floor++) {
         for (let i = 1; i <= roomsPerFloor; i++) {
-          const room_number = roomType.id * 100 + floor * i;
+          const baseNumber = roomType.id * 100 + i;
+          const room_number = `${baseNumber}-${floor}`;
+
           rooms.push({
             id: rooms.length + 1,
             room_number,
@@ -126,6 +130,7 @@ if (isBrowser) {
         }
       }
     });
+
     localStorage.setItem(roomsKey, JSON.stringify(rooms));
   }
 }
@@ -232,7 +237,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     function getRoomTypes() {
       return ok(roomTypes);
     }
-
+    
     function updateRoomType() {
       const id = parseInt(url.split('/').pop() || '');
       const params = body;
@@ -246,7 +251,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     function createBooking() {
       const bookingData = body;
 
-      const reservationFee = RESERVATION_FEES;
+      const reservationFee = RESERVATION_FEES[0]?.fee || 50;
 
       if (!bookingData.payment || bookingData.payment.amount < reservationFee) {
         return error(`Payment amount must be at least $${reservationFee}.`);
@@ -270,13 +275,23 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         selectedRoom.status = false;
 
+        let currentUser = null;
+          if (isBrowser) {
+            try {
+              currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            } catch (e) {
+              currentUser = null;
+            }
+          }
+
+        const payStatus = currentUser?.role === 'frontdeskUser' ? true : false;
         const newBooking: Booking = {
           id: bookings.length + 1 + i,
           room_id: selectedRoom.id,
           guest: bookingData.guest,
           availability: bookingData.availability,
-          pay_status: false, 
-          paidamount: bookingData.payment,
+          pay_status: payStatus, 
+          paidamount: bookingData.payment.amount,
           room: selectedRoom,
           requests: bookingData.requests || '',
         };
