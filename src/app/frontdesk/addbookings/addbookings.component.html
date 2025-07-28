@@ -1,0 +1,345 @@
+<div class="addbooking-container">
+  <div class="addbooking-header">
+    <h1>Add New Booking</h1>
+    <p class="text-gray-600">Create a new booking for guests</p>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger mb-4">
+    <strong>Error:</strong> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success mb-4">
+    <strong>Success:</strong> {{ successMessage }}
+  </div>
+
+  <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
+    
+    <!-- Guest Information Section -->
+    <div class="form-section">
+      <h2 class="section-title">Guest Information</h2>
+      <div class="form-grid" formGroupName="guest">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input 
+            type="text" 
+            id="firstName"
+            formControlName="first_name"
+            [class.invalid]="isFieldInvalid('guest', 'first_name')"
+            placeholder="Enter first name">
+          <div *ngIf="getErrorMessage('guest', 'first_name')" class="error-message">
+            {{ getErrorMessage('guest', 'first_name') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input 
+            type="text" 
+            id="lastName"
+            formControlName="last_name"
+            [class.invalid]="isFieldInvalid('guest', 'last_name')"
+            placeholder="Enter last name">
+          <div *ngIf="getErrorMessage('guest', 'last_name')" class="error-message">
+            {{ getErrorMessage('guest', 'last_name') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input 
+            type="email" 
+            id="email"
+            formControlName="email"
+            [class.invalid]="isFieldInvalid('guest', 'email')"
+            placeholder="Enter email address">
+          <div *ngIf="getErrorMessage('guest', 'email')" class="error-message">
+            {{ getErrorMessage('guest', 'email') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input 
+            type="tel" 
+            id="phone"
+            formControlName="phone"
+            [class.invalid]="isFieldInvalid('guest', 'phone')"
+            placeholder="Enter phone number">
+          <div *ngIf="getErrorMessage('guest', 'phone')" class="error-message">
+            {{ getErrorMessage('guest', 'phone') }}
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="address">Address *</label>
+          <input 
+            type="text" 
+            id="address"
+            formControlName="address"
+            [class.invalid]="isFieldInvalid('guest', 'address')"
+            placeholder="Enter full address">
+          <div *ngIf="getErrorMessage('guest', 'address')" class="error-message">
+            {{ getErrorMessage('guest', 'address') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City *</label>
+          <input 
+            type="text" 
+            id="city"
+            formControlName="city"
+            [class.invalid]="isFieldInvalid('guest', 'city')"
+            placeholder="Enter city">
+          <div *ngIf="getErrorMessage('guest', 'city')" class="error-message">
+            {{ getErrorMessage('guest', 'city') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Availability Section -->
+    <div class="form-section">
+      <h2 class="section-title">Stay Details</h2>
+      <div class="form-grid" formGroupName="availability">
+        <div class="form-group">
+          <label for="checkIn">Check-in Date *</label>
+          <input 
+            type="date" 
+            id="checkIn"
+            formControlName="checkIn"
+            [class.invalid]="isFieldInvalid('availability', 'checkIn')">
+          <div *ngIf="getErrorMessage('availability', 'checkIn')" class="error-message">
+            {{ getErrorMessage('availability', 'checkIn') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="checkOut">Check-out Date *</label>
+          <input 
+            type="date" 
+            id="checkOut"
+            formControlName="checkOut"
+            [class.invalid]="isFieldInvalid('availability', 'checkOut')">
+          <div *ngIf="getErrorMessage('availability', 'checkOut')" class="error-message">
+            {{ getErrorMessage('availability', 'checkOut') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adults">Number of Adults *</label>
+          <input 
+            type="number" 
+            id="adults"
+            formControlName="adults"
+            [class.invalid]="isFieldInvalid('availability', 'adults')"
+            min="1" max="10">
+          <div *ngIf="getErrorMessage('availability', 'adults')" class="error-message">
+            {{ getErrorMessage('availability', 'adults') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="children">Number of Children</label>
+          <input 
+            type="number" 
+            id="children"
+            formControlName="children"
+            [class.invalid]="isFieldInvalid('availability', 'children')"
+            min="0" max="10">
+          <div *ngIf="getErrorMessage('availability', 'children')" class="error-message">
+            {{ getErrorMessage('availability', 'children') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rooms">Number of Rooms *</label>
+          <input 
+            type="number" 
+            id="rooms"
+            formControlName="rooms"
+            [class.invalid]="isFieldInvalid('availability', 'rooms')"
+            min="1" max="5">
+          <div *ngIf="getErrorMessage('availability', 'rooms')" class="error-message">
+            {{ getErrorMessage('availability', 'rooms') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Selection Section -->
+    <div class="form-section">
+      <h2 class="section-title">Room Type Selection</h2>
+      <div class="room-types-grid">
+        <div *ngFor="let roomType of roomTypes" class="room-type-card">
+          <div class="room-type-checkbox">
+            <input 
+              type="checkbox" 
+              [id]="'roomType' + roomType.id"
+              [checked]="selectedRoomTypes[roomType.id]"
+              (change)="onCheckboxChange($event, roomType.id)"
+              class="room-checkbox">
+            <label [for]="'roomType' + roomType.id" class="room-type-label">
+              <div class="room-type-info">
+                <h3 class="room-type-name">{{ roomType.type }}</h3>
+                <p class="room-type-rate">${{ roomType.rate }}/night</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!hasSelectedRoomTypes() && errorMessage.includes('room type')" class="error-message">
+        Please select at least one room type
+      </div>
+    </div>
+
+    <!-- Payment Section -->
+    <div class="form-section">
+      <h2 class="section-title">Payment Information</h2>
+      <div class="form-grid" formGroupName="payment">
+        <div class="form-group">
+          <label for="paymentMode">Payment Mode *</label>
+          <select 
+            id="paymentMode"
+            formControlName="paymentMode"
+            [class.invalid]="isFieldInvalid('payment', 'paymentMode')">
+            <option value="" disabled>Select Payment Mode</option>
+            <option value="GCash">GCash</option>
+            <option value="Maya">Maya</option>
+            <option value="Card">Card (Visa / MasterCard / AmEx)</option>
+            <option value="Cash">Cash</option>
+          </select>
+          <div *ngIf="getErrorMessage('payment', 'paymentMode')" class="error-message">
+            {{ getErrorMessage('payment', 'paymentMode') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="amount">Amount ($) *</label>
+          <input 
+            type="number" 
+            id="amount"
+            formControlName="amount"
+            [class.invalid]="isFieldInvalid('payment', 'amount')"
+            [min]="reservationFee"
+            step="0.01">
+          <div *ngIf="getErrorMessage('payment', 'amount')" class="error-message">
+            {{ getErrorMessage('payment', 'amount') }}
+          </div>
+          <small class="help-text">Minimum amount: ${{ reservationFee }}</small>
+        </div>
+      </div>
+
+      <!-- Digital Wallet Details (shown only when GCash or Maya is selected) -->
+      <div *ngIf="bookingForm.get('payment.paymentMode')?.value === 'GCash' || bookingForm.get('payment.paymentMode')?.value === 'Maya'" class="digital-wallet-details">
+        <div class="form-grid" formGroupName="payment">
+          <div class="form-group">
+            <label for="mobileNumber">Mobile Number *</label>
+            <input 
+              type="tel" 
+              id="mobileNumber"
+              formControlName="mobileNumber"
+              [class.invalid]="isFieldInvalid('payment', 'mobileNumber')"
+              placeholder="Enter mobile number">
+            <div *ngIf="getErrorMessage('payment', 'mobileNumber')" class="error-message">
+              {{ getErrorMessage('payment', 'mobileNumber') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Details (shown only when payment mode is Card) -->
+      <div *ngIf="bookingForm.get('payment.paymentMode')?.value === 'Card'" class="card-details">
+        <div class="form-grid" formGroupName="payment">
+          <div class="form-group">
+            <label for="paymentMethod">Card Type *</label>
+            <select 
+              id="paymentMethod"
+              formControlName="paymentMethod"
+              [class.invalid]="isFieldInvalid('payment', 'paymentMethod')">
+              <option value="" disabled>Select Card Type</option>
+              <option value="Visa">Visa</option>
+              <option value="MasterCard">MasterCard</option>
+              <option value="AmEx">American Express</option>
+            </select>
+            <div *ngIf="getErrorMessage('payment', 'paymentMethod')" class="error-message">
+              {{ getErrorMessage('payment', 'paymentMethod') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cardNumber">Card Number *</label>
+            <input 
+              type="text" 
+              id="cardNumber"
+              formControlName="cardNumber"
+              [class.invalid]="isFieldInvalid('payment', 'cardNumber')"
+              placeholder="1234 5678 9012 3456"
+              maxlength="19">
+            <div *ngIf="getErrorMessage('payment', 'cardNumber')" class="error-message">
+              {{ getErrorMessage('payment', 'cardNumber') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="expiry">Expiry Date *</label>
+            <input 
+              type="month" 
+              id="expiry"
+              formControlName="expiry"
+              [class.invalid]="isFieldInvalid('payment', 'expiry')">
+            <div *ngIf="getErrorMessage('payment', 'expiry')" class="error-message">
+              {{ getErrorMessage('payment', 'expiry') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV *</label>
+            <input 
+              type="text" 
+              id="cvv"
+              formControlName="cvv"
+              [class.invalid]="isFieldInvalid('payment', 'cvv')"
+              placeholder="123"
+              maxlength="4">
+            <div *ngIf="getErrorMessage('payment', 'cvv')" class="error-message">
+              {{ getErrorMessage('payment', 'cvv') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Requests Section -->
+    <div class="form-section">
+      <h2 class="section-title">Additional Requests</h2>
+      <div class="form-group">
+        <label for="requests">Special Requests</label>
+        <textarea 
+          id="requests"
+          formControlName="requests"
+          rows="4"
+          placeholder="Any special requests or additional information..."></textarea>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="loading || bookingForm.invalid">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ loading ? 'Creating Booking...' : 'Create Booking' }}
+      </button>
+      
+      <button 
+        type="button" 
+        class="btn btn-secondary"
+        (click)="bookingForm.reset(); initForm()">
+        Reset Form
+      </button>
+    </div>
+  </form>
+</div>

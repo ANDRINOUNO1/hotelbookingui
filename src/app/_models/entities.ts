@@ -38,7 +38,8 @@ ROOM_TYPES.forEach(roomType => {
 
   for (let floor = 1; floor <= floors; floor++) {
     for (let i = 1; i <= roomsPerFloor; i++) {
-      const room_number = roomType.id * 100 + floor * i;
+      const baseNumber = roomType.id * 100 + i;
+      const room_number = `${baseNumber}-${floor}`;
       ROOMS.push({
         id: ROOMS.length + 1,
         room_number,

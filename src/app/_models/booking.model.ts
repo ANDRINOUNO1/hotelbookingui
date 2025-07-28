@@ -37,7 +37,7 @@ export interface RoomType {
 
 export interface Room {
   id: number;
-  room_number: number;
+  room_number: string;
   room_type_id: number;
   floor: number;
   status: boolean; // true for available, false for occupied
