@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, finalize } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, finalize, catchError } from 'rxjs/operators';
+import { environment } from '../environments/environments';
 
-// TODO: Replace with your environment config if available
-const baseUrl = `/api/accounts`;
+const baseUrl = `${environment.apiUrl}/accounts`;
 
 import { Account } from '../_models/account.model';
 
@@ -18,6 +18,7 @@ export class AccountService {
         private router: Router,
         private http: HttpClient
     ) {
+        // Do NOT initialize from localStorage; always start as null
         this.accountSubject = new BehaviorSubject<Account | null>(null);
         this.account = this.accountSubject.asObservable();
     }
@@ -28,18 +29,47 @@ export class AccountService {
 
     login(usernameOrEmail: string, password: string) {
         return this.http.post<any>(`${baseUrl}/authenticate`, { email: usernameOrEmail, username: usernameOrEmail, password }, { withCredentials: true })
-            .pipe(map(account => {
-                this.accountSubject.next(account);
-                this.startRefreshTokenTimer();
-                return account;
-            }));
+            .pipe(
+                map(account => {
+                    // Only set localStorage if backend returns a valid account
+                    this.accountSubject.next(account);
+                    localStorage.setItem('account', JSON.stringify(account));
+                    this.startRefreshTokenTimer();
+                    return account;
+                }),
+                catchError(err => {
+                    // Always clear localStorage on error
+                    this.accountSubject.next(null);
+                    localStorage.removeItem('account');
+                    throw err;
+                })
+            );
     }
 
     logout() {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
+        localStorage.removeItem('account');
         this.router.navigate(['/account/login']);
+    }
+
+    // Optionally, validate session with backend on app start
+    validateSession() {
+        return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+            .pipe(
+                map(account => {
+                    this.accountSubject.next(account);
+                    localStorage.setItem('account', JSON.stringify(account));
+                    this.startRefreshTokenTimer();
+                    return account;
+                }),
+                catchError(err => {
+                    this.accountSubject.next(null);
+                    localStorage.removeItem('account');
+                    return of(null);
+                })
+            );
     }
 
     refreshToken() {
@@ -99,7 +129,6 @@ export class AccountService {
     delete(id: string) {
         return this.http.delete(`${baseUrl}/${id}`)
             .pipe(finalize(() => {
-                // auto logout if the logged in account was deleted
                 if (id === this.accountValue?.id)
                     this.logout();
             }));
@@ -111,10 +140,8 @@ export class AccountService {
 
     private startRefreshTokenTimer() {
         if (!this.accountValue?.jwtToken) return;
-        // parse json object from base64 encoded jwt token
         const jwtToken = JSON.parse(atob(this.accountValue.jwtToken.split('.')[1]));
 
-        // set a timeout to refresh the token a minute before it expires
         const expires = new Date(jwtToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - (60 * 1000);
         this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);

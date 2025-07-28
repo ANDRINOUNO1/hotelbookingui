@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoomType, ReservationFee } from '../../_models/booking.model';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-pricing',
@@ -32,14 +33,14 @@ export class PricingComponent implements OnInit {
 
   fetchRoomTypes() {
     this.loading = true;
-    this.http.get<RoomType[]>('/api/room-types').subscribe(roomTypes => {
+    this.http.get<RoomType[]>(`${environment.apiUrl}/room-types`).subscribe(roomTypes => {
       this.roomTypes = roomTypes;
       this.loading = false;
     });
   }
 
   fetchReservationFee() {
-    this.http.get<ReservationFee>('/api/reservation-fee').subscribe(fee => {
+    this.http.get<ReservationFee>(`${environment.apiUrl}/reservation-fee`).subscribe(fee => {
       this.reservationFee = fee.fee;
     });
   }
@@ -51,7 +52,7 @@ export class PricingComponent implements OnInit {
 
   saveEdit(roomType: RoomType) {
     if (this.editingId === roomType.id && this.editRate !== null) {
-      this.http.put<RoomType>(`/api/room-types/${roomType.id}`, { rate: this.editRate }).subscribe(updated => {
+      this.http.put<RoomType>(`${environment.apiUrl}/room-types/${roomType.id}`, { rate: this.editRate }).subscribe(updated => {
         roomType.rate = updated.rate;
         this.editingId = null;
         this.editRate = null;
@@ -72,7 +73,7 @@ export class PricingComponent implements OnInit {
 
   saveEditReservationFee() {
     if (this.editReservationFee !== null) {
-      this.http.put<ReservationFee>('/api/reservation-fee', { fee: this.editReservationFee }).subscribe(updated => {
+      this.http.put<ReservationFee>(`${environment.apiUrl}/reservation-fee`, { fee: this.editReservationFee }).subscribe(updated => {
         this.reservationFee = updated.fee;
         this.editingReservationFee = false;
         this.editReservationFee = null;

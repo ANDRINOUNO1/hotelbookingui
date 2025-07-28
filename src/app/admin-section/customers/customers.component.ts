@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-customers',
@@ -23,9 +24,9 @@ export class CustomersComponent implements OnInit {
   }
 
   loadOccupiedRooms() {
-    this.http.get<Room[]>('/api/rooms').subscribe({
+    this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (roomsData) => {
-        this.http.get<Booking[]>('/api/bookings').subscribe({
+        this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
           next: (bookingsData) => {
             const grouped: { [email: string]: any } = {};
 
@@ -59,14 +60,14 @@ export class CustomersComponent implements OnInit {
   }
 
   updateBooking(id: number, changes: Partial<Booking>) {
-    this.http.put<Booking>(`/api/bookings/${id}`, changes).subscribe(() => {
+    this.http.put<Booking>(`${environment.apiUrl}/bookings/${id}`, changes).subscribe(() => {
       this.loadOccupiedRooms();
       this.closePopup();
     });
   }
 
   deleteBooking(id: number) {
-    this.http.delete(`/api/bookings/${id}`).subscribe(() => {
+    this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe(() => {
       this.loadOccupiedRooms();
     });
   }
