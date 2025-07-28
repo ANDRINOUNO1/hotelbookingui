@@ -9,7 +9,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     ...(appConfig.providers || []),
     provideHttpClient(withInterceptorsFromDi()),
-    fakeBackendProvider
+    //fakeBackendProvider
     
   ]
 

@@ -2,6 +2,7 @@
   import { Component, OnInit } from '@angular/core';
   import { HttpClient } from '@angular/common/http';
 
+  import { environment } from '../../environments/environments';
   import { FirstFloorComponent } from './classic/first-floor.component';
   import { SecondFloorComponent } from './deluxe/second-floor.component';
   import { ThirdFloorComponent } from './prestige/third-floor.component';
@@ -38,7 +39,7 @@
 
     /** ✅ Get rooms from fake backend */
     loadRooms() {
-      this.http.get<Room[]>('/api/rooms').subscribe({
+      this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
         next: (data) => {
           this.rooms = data;
           console.log('Rooms loaded:', this.rooms);
@@ -51,7 +52,7 @@
 
     /** ✅ Get bookings from fake backend */
     getBookings() {
-      this.http.get<Booking[]>('/api/bookings').subscribe({
+      this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
         next: (data) => {
           this.bookings = data;
           console.log('Bookings loaded:', this.bookings);

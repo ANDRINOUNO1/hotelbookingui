@@ -45,6 +45,7 @@ export class LoginComponent {
       error: (err) => {
         this.isLoading = false;
         this.error = err?.error?.message || 'Invalid credentials!';
+        console.log('Login failed, account state:', this.accountService.accountValue);
       }
     });
   }

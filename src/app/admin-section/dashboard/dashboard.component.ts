@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments';
 import { AnalyticsComponent } from './analytics/analytics.component';
 
 @Component({
@@ -20,10 +21,10 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchData() {
-    this.http.get<any[]>('/api/rooms').subscribe(rooms => {
+    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe(rooms => {
       this.rooms = rooms;
     });
-    this.http.get<any[]>('/api/bookings').subscribe(bookings => {
+    this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe(bookings => {
       this.bookings = bookings;
     });
   }

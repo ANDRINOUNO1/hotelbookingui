@@ -4,6 +4,7 @@ import { Room, RoomType } from '../../_models/booking.model';
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Booking } from '../../_models/booking.model';
+import { environment } from '../../environments/environments';
 @Component({
   selector: 'app-frontdeskdashboard',
   templateUrl: './frontdeskdashboard.component.html',
@@ -23,10 +24,10 @@ export class FrontdeskdashboardComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<RoomType[]>('/api/room-types').subscribe((types) => {
+    this.http.get<RoomType[]>(`${environment.apiUrl}/room-types`).subscribe((types) => {
       this.roomTypes = types;
-      this.http.get<Room[]>('/api/rooms').subscribe((rooms) => {
-        this.http.get<Booking[]>('/api/bookings').subscribe((bookings) => {
+      this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe((rooms) => {
+        this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe((bookings) => {
           this.bookings = bookings;
           rooms.forEach(room => {
             const typeObj = this.roomTypes.find(t => t.id === room.room_type_id);

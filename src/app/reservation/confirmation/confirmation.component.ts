@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { RESERVATION_FEES } from '../../_models/entities';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-confirmation',
@@ -106,7 +107,7 @@ export class ConfirmationComponent implements OnInit {
       }
     };
 
-    this.http.post('/api/bookings', bookingPayload).subscribe({
+    this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({
       next: booking => {
         console.log('Booking saved:', booking);
         this.showConfirmationAlert();
