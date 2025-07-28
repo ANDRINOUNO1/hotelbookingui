@@ -1,0 +1,126 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Booking Details</h2>
+      <button class="close-button" (click)="closeModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body" *ngIf="booking">
+      <div class="booking-info">
+        <div class="info-section">
+          <h3>Guest Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Name:</label>
+              <span>{{ booking.guest.first_name }} {{ booking.guest.last_name }}</span>
+            </div>
+            <div class="info-item">
+              <label>Email:</label>
+              <span>{{ booking.guest.email }}</span>
+            </div>
+            <div class="info-item">
+              <label>Phone:</label>
+              <span>{{ booking.guest.phone }}</span>
+            </div>
+            <div class="info-item">
+              <label>Address:</label>
+              <span>{{ booking.guest.address }}, {{ booking.guest.city }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Room Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Room Number:</label>
+              <span>{{ room?.room_number || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Room Type:</label>
+              <span>{{ room?.roomType?.type || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Floor:</label>
+              <span>{{ room?.floor || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Stay Details</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Check-in:</label>
+              <span>{{ booking.availability.checkIn | date:'mediumDate' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Check-out:</label>
+              <span>{{ booking.availability.checkOut | date:'mediumDate' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Adults:</label>
+              <span>{{ booking.availability.adults }}</span>
+            </div>
+            <div class="info-item">
+              <label>Children:</label>
+              <span>{{ booking.availability.children }}</span>
+            </div>
+            <div class="info-item">
+              <label>Duration:</label>
+              <span>{{ getDuration() }} night(s)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Payment Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Payment Status:</label>
+              <span [ngClass]="{'paid': booking.pay_status, 'unpaid': !booking.pay_status}">
+                {{ booking.pay_status ? 'Paid' : 'Unpaid' }}
+              </span>
+            </div>
+            <div class="info-item" *ngIf="booking.pay_status">
+              <label>Amount Paid:</label>
+              <span>₱{{ booking.paidamount | number:'1.2-2' }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.payment">
+              <label>Payment Method:</label>
+              <span>{{ booking.payment.paymentMethod }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section" *ngIf="booking.requests">
+          <h3>Special Requests</h3>
+          <div class="requests">
+            <p>{{ booking.requests }}</p>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Booking Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Booking ID:</label>
+              <span>{{ booking.id }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.created_at">
+              <label>Created:</label>
+              <span>{{ booking.created_at | date:'medium' }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.updated_at">
+              <label>Last Updated:</label>
+              <span>{{ booking.updated_at | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+    </div>
+  </div>
+</div> 

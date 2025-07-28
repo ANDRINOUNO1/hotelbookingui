@@ -1,11 +1,302 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { RoomType, Room, Booking } from '../../_models/booking.model';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { BookingModalComponent } from './booking-modal.component';
+import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-calendar',
-  imports: [],
+  imports: [CommonModule, BookingModalComponent, DragDropModule],
+  standalone: true,
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss'
+  styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
+  roomTypes: RoomType[] = [];
+  allRooms: Room[] = [];
+  bookings: Booking[] = [];
+
+  selectedTypeId!: number;
+
+  dates: Date[] = [];
+  
+  // Modal state
+  showModal = false;
+  selectedBooking: Booking | null = null;
+  selectedRoom: Room | null = null;
+  dragStart = false;
+
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private http: HttpClient // ✅ inject HttpClient
+  ) {}
+
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadData();
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 14; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      this.dates.push(date);
+    }
+  }
+
+  loadData() {
+    this.http.get<RoomType[]>('/api/room-types').subscribe(types => {
+      this.roomTypes = types;
+      if (this.roomTypes.length) {
+        this.selectedTypeId = this.roomTypes[0].id;
+      }
+
+      this.http.get<Room[]>('/api/rooms').subscribe(rooms => {
+        this.allRooms = rooms;
+
+        this.http.get<Booking[]>('/api/bookings').subscribe(bookings => {
+          this.bookings = bookings;
+
+          console.log('Room Types:', this.roomTypes);
+          console.log('Rooms:', this.allRooms);
+          console.log('Bookings:', this.bookings);
+        });
+      });
+    });
+  }
+
+  get filteredRooms(): Room[] {
+    return this.allRooms.filter(r => r.room_type_id === this.selectedTypeId);
+  }
+
+  getBookingsForRoomAndDate(roomId: number, date: Date) {
+    return this.bookings.filter(b => {
+      if (b.room_id !== roomId) return false;
+
+      const checkIn = new Date(b.availability.checkIn);
+      const checkOut = new Date(b.availability.checkOut);
+
+      const target = new Date(date);
+      target.setHours(0, 0, 0, 0);
+      checkIn.setHours(0, 0, 0, 0);
+      checkOut.setHours(0, 0, 0, 0);
+
+      return target >= checkIn && target < checkOut;
+    });
+  }
+
+  isCheckInDate(booking: any, date: Date): boolean {
+    const checkIn = new Date(booking.availability.checkIn);
+    const currentDate = new Date(date);
+
+    checkIn.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0);
+
+    return checkIn.getTime() === currentDate.getTime();
+  }
+
+
+  getBookingWidth(booking: any): number {
+    const checkIn = new Date(booking.availability.checkIn);
+    const checkOut = new Date(booking.availability.checkOut);
+
+    checkIn.setHours(0, 0, 0, 0);
+    checkOut.setHours(0, 0, 0, 0);
+
+    const timeDiff = checkOut.getTime() - checkIn.getTime();
+    const dayCount = Math.max((timeDiff / (1000 * 60 * 60 * 24)), 1);
+
+    return dayCount * (100 / this.dates.length);
+  }
+
+  // Helper for colspan-based booking rendering
+  shouldRenderCell(room: Room, date: Date, dateIdx: number): boolean {
+    // Only render a cell if it's not covered by a previous booking
+    const bookings = this.bookings.filter(b => b.room_id === room.id);
+    for (const booking of bookings) {
+      const checkIn = new Date(booking.availability.checkIn);
+      const checkOut = new Date(booking.availability.checkOut);
+      checkIn.setHours(0, 0, 0, 0);
+      checkOut.setHours(0, 0, 0, 0);
+      const current = new Date(date);
+      current.setHours(0, 0, 0, 0);
+      if (current > checkIn && current < checkOut) {
+        // This cell is covered by a previous booking's colspan
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isCheckInForBooking(room: Room, date: Date): boolean {
+    // Returns true if this date is the check-in date for a booking in this room
+    return !!this.getBookingForRoomAndDate(room, date);
+  }
+
+  getBookingForRoomAndDate(room: Room, date: Date): Booking | null {
+    // Returns the booking for this room and date if this date is the check-in date
+    return this.bookings.find(b => {
+      if (b.room_id !== room.id) return false;
+      const checkIn = new Date(b.availability.checkIn);
+      checkIn.setHours(0, 0, 0, 0);
+      const current = new Date(date);
+      current.setHours(0, 0, 0, 0);
+      return checkIn.getTime() === current.getTime();
+    }) || null;
+  }
+
+  getBookingColspan(room: Room, date: Date): number {
+    // Returns the number of days for the booking starting at this date
+    const booking = this.getBookingForRoomAndDate(room, date);
+    if (!booking) return 1;
+    const checkIn = new Date(booking.availability.checkIn);
+    const checkOut = new Date(booking.availability.checkOut);
+    checkIn.setHours(0, 0, 0, 0);
+    checkOut.setHours(0, 0, 0, 0);
+    const days = Math.max((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24), 1);
+    // Limit colspan to not overflow the calendar
+    const startIdx = this.dates.findIndex(d => d.getTime() === checkIn.getTime());
+    const endIdx = this.dates.findIndex(d => d.getTime() === checkOut.getTime());
+    if (startIdx === -1) return days;
+    if (endIdx === -1) return this.dates.length - startIdx;
+    return endIdx - startIdx;
+  }
+
+  // Precompute cells for each room row for colspan-based rendering
+  getRowCells(room: Room): Array<{ type: 'booking' | 'empty', colspan: number, booking?: Booking }> {
+    const cells: Array<{ type: 'booking' | 'empty', colspan: number, booking?: Booking }> = [];
+    let dateIdx = 0;
+    const bookings = this.bookings.filter(b => b.room_id === room.id);
+    while (dateIdx < this.dates.length) {
+      const currentDate = this.dates[dateIdx];
+      // Find a booking that overlaps with the current date and hasn't been rendered yet
+      const booking = bookings.find(b => {
+        const checkIn = new Date(b.availability.checkIn);
+        const checkOut = new Date(b.availability.checkOut);
+        checkIn.setHours(0, 0, 0, 0);
+        checkOut.setHours(0, 0, 0, 0);
+        const start = checkIn.getTime();
+        const end = checkOut.getTime();
+        const current = currentDate.getTime();
+        // Booking overlaps if current date is within [checkIn, checkOut)
+        return current >= start && current < end &&
+          // Only render at the first visible date for this booking
+          (dateIdx === 0 || this.dates[dateIdx - 1].getTime() < start);
+      });
+      if (booking) {
+        // Calculate the visible start and end indices for the booking
+        const checkIn = new Date(booking.availability.checkIn);
+        const checkOut = new Date(booking.availability.checkOut);
+        checkIn.setHours(0, 0, 0, 0);
+        checkOut.setHours(0, 0, 0, 0);
+        const bookingStartIdx = this.dates.findIndex(d => d.getTime() === checkIn.getTime());
+        const bookingEndIdx = this.dates.findIndex(d => d.getTime() === checkOut.getTime());
+        const startIdx = bookingStartIdx === -1 ? 0 : bookingStartIdx;
+        const endIdx = bookingEndIdx === -1 ? this.dates.length : bookingEndIdx;
+        const colspan = endIdx - Math.max(dateIdx, startIdx);
+        cells.push({ type: 'booking', colspan, booking });
+        dateIdx += colspan;
+      } else {
+        // No booking overlaps with this date
+        cells.push({ type: 'empty', colspan: 1 });
+        dateIdx++;
+      }
+    }
+    return cells;
+  }
+
+  isMaintenance(cell: { booking?: Booking }): boolean {
+    return !!cell.booking?.requests && cell.booking.requests!.toLowerCase().includes('maintenance');
+  }
+  
+  setSelectedType(id: number) {
+    this.selectedTypeId = id;
+  }
+
+  // Modal methods
+  openBookingModal(booking: Booking, room: Room) {
+    this.selectedBooking = booking;
+    this.selectedRoom = room;
+    this.showModal = true;
+  }
+
+  closeBookingModal() {
+    this.showModal = false;
+    this.selectedBooking = null;
+    this.selectedRoom = null;
+  }
+
+  getRoomStatus(room: Room, date: Date): 'available' | 'reserved' | 'occupied' {
+    const booking = this.bookings.find(b => {
+      if (b.room_id !== room.id) return false;
+      const checkIn = new Date(b.availability.checkIn);
+      const checkOut = new Date(b.availability.checkOut);
+      checkIn.setHours(0, 0, 0, 0);
+      checkOut.setHours(0, 0, 0, 0);
+      return date >= checkIn && date < checkOut;
+    });
+    if (!booking) return 'available';
+    if (booking.pay_status) return 'occupied';
+    return 'reserved';
+  }
+
+  getStatusDate(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const idx = this.dates.findIndex(d => d.getTime() === today.getTime());
+    return idx !== -1 ? this.dates[idx] : this.dates[0];
+  }
+
+  onClickBooking(booking: any, room: any) {
+  if (this.dragStart) {
+    setTimeout(() => this.dragStart = false, 100); 
+    return;
+  }
+  this.openBookingModal(booking, room);
+  }
+  bookingColspan(booking: Booking): number {
+    const checkIn = new Date(booking.availability.checkIn);
+    const checkOut = new Date(booking.availability.checkOut);
+    return Math.max((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24), 1);
+  }
+
+  onDragEnd(event: CdkDragEnd, booking: Booking, room: Room) {
+  const deltaX = event.distance.x;
+
+  const parent = event.source.element.nativeElement.parentElement;
+  if (!parent) return;
+
+  const colspan = this.getBookingColspan(room, new Date(booking.availability.checkIn));
+  if (colspan === 0) return;
+
+  const cellWidth = parent.offsetWidth / colspan;
+  const daysMoved = Math.round(deltaX / cellWidth);
+
+  if (daysMoved !== 0) {
+    const newCheckIn = new Date(booking.availability.checkIn);
+    const newCheckOut = new Date(booking.availability.checkOut);
+
+    newCheckIn.setDate(newCheckIn.getDate() + daysMoved);
+    newCheckOut.setDate(newCheckOut.getDate() + daysMoved);
+
+    booking.availability.checkIn = newCheckIn.toISOString();
+    booking.availability.checkOut = newCheckOut.toISOString();
+
+    this.http.patch(`/api/bookings/${booking.id}`, {
+      availability: {
+        checkIn: booking.availability.checkIn,
+        checkOut: booking.availability.checkOut
+      }
+    }).subscribe(() => {
+      console.log('Booking updated!');
+    }, err => {
+      console.error('Failed to update booking', err);
+    });
+  }
+}
 
 }
+

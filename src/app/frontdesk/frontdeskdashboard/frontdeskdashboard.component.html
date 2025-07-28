@@ -1,10 +1,36 @@
-<div>
-  <div class="roomview-header">
-    <select>
-      <option>Room View</option>
-    </select>
-    <input type="date" [value]="(today | date:'yyyy-MM-dd')" />
+<div class="frontdeskdashboard-container">
+  <div class="dashboard-basic-info">
+    <div class="dashboard-header">
+      <h1>Front Desk Dashboard</h1>
+      <p class="text-gray-600">Overview of room status and bookings</p>
+    </div>
+    <div class="dashboard-cards">
+      <div *ngFor="let status of statusSummary" class="dashboard-card" [ngClass]="status.class">
+        <div class="dashboard-card-icon">
+          <i class="fa" [ngClass]="status.icon"></i>
+        </div>
+        <div class="dashboard-card-label">{{ status.label }}</div>
+        <div class="dashboard-card-value">{{ status.count }}</div>
+      </div>
+    </div>
   </div>
+    <div class="dashboard-headertwo">
+      <h2>Booking Status</h2>
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-color legend-occupied"></span>
+          <span class="legend-text">Available</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color legend-reserved"></span>
+          <span class="legend-text">Reserved</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color legend-paid"></span>
+          <span class="legend-text">Occupied</span>
+        </div>
+      </div>
+    </div>
   <div class="type-tabs">
     <button *ngFor="let type of roomTypes"
             [class.active]="type.type === selectedType"
@@ -14,8 +40,8 @@
   </div>
   <div class="roomview-grid">
     <div *ngFor="let room of roomsByType[selectedType]"
-         class="room-card"
-         [ngClass]="{'vacant': room.status, 'occupied': !room.status}">
+        class="room-card"
+        [ngClass]="getRoomStatusClass(room.id)">
       <div class="booking-guest">{{ getGuestName(room.id) }}</div>
       <div class="room-number">{{ room.room_number }}</div>
       <div class="room-type">{{ room.roomType?.type }}</div>

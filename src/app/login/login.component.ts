@@ -34,6 +34,9 @@ export class LoginComponent {
     this.accountService.login(this.username, this.password).subscribe({
       next: (account) => {
         this.isLoading = false;
+
+        localStorage.setItem('user', JSON.stringify(account));
+        
         if (account.role === 'Admin') {
           this.router.navigate(['/admin']);
         } else if (account.role === 'SuperAdmin') {

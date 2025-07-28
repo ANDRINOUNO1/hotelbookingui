@@ -1,1 +1,83 @@
-<p>calendar works!</p>
+<div class="calendar-sudlanan">
+  <div class="calendar-h">
+    <h1>Calendar View</h1>
+    <p class="text-gray-600">Manage room bookings and availability</p>
+  </div>
+
+  <div class="calendar-content">
+    <div class="button-group">
+      <button
+        *ngFor="let type of roomTypes"
+        (click)="setSelectedType(type.id)"
+        [ngClass]="{ 'selected': type.id === selectedTypeId }"
+        class="type-button">
+        {{ type.type }}
+      </button>
+    </div>
+
+    <div class="calendar-legend">
+      <div class="legend-item">
+        <span class="legend-color legend-reserved"></span>
+        <span class="legend-text">Reserved (Unpaid)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color legend-occupied"></span>
+        <span class="legend-text">Occupied (Paid)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color legend-maintenance"></span>
+        <span class="legend-text">Maintenance</span>
+      </div>
+    </div>
+
+  <div class="calendar-container">
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th class="calendar-header">Room</th>
+          <th *ngFor="let date of dates" class="calendar-header">
+            {{ date | date: 'MMM d (EEE)' }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let room of filteredRooms">
+          <td class="calendar-cell room-info">
+            Room {{ room.room_number }}
+          </td>
+          <ng-container *ngFor="let cell of getRowCells(room)">
+            <td *ngIf="cell.type === 'empty'" class="calendar-cell booking-cell"></td>
+            <td *ngIf="cell.type === 'booking'"
+                class="calendar-cell booking-cell"
+                [ngClass]="{'reserved-cell': cell.booking && !cell.booking.pay_status}"
+                [attr.colspan]="cell.colspan">
+              <div class="booking-block"
+                cdkDrag
+                (cdkDragEnded)="onDragEnd($event, cell.booking!, room)"
+                (mousedown)="dragStart = true"
+                (mouseup)="onClickBooking(cell.booking, room)"
+                [ngClass]="{
+                  'booking-reserved': room.status && !cell.booking?.pay_status,
+                  'booking-occupied': !room.status && cell.booking?.pay_status,
+                  'booking-maintenance': isMaintenance(cell)
+                }"
+                style="cursor: pointer;">
+              {{ cell.booking?.guest?.first_name || '' }} {{ cell.booking?.guest?.last_name || cell.booking?.requests || '' }}
+            </div>
+
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Booking Details Modal -->
+  <app-booking-modal
+    *ngIf="showModal"
+    [booking]="selectedBooking"
+    [room]="selectedRoom"
+    (close)="closeBookingModal()">
+  </app-booking-modal>
+</div>
+</div>
