@@ -27,24 +27,26 @@ export class AccountService {
         return this.accountSubject.value;
     }
 
-    login(usernameOrEmail: string, password: string) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, { email: usernameOrEmail, username: usernameOrEmail, password }, { withCredentials: true })
-            .pipe(
-                map(account => {
-                    // Only set localStorage if backend returns a valid account
-                    this.accountSubject.next(account);
-                    localStorage.setItem('account', JSON.stringify(account));
-                    this.startRefreshTokenTimer();
-                    return account;
-                }),
-                catchError(err => {
-                    // Always clear localStorage on error
-                    this.accountSubject.next(null);
-                    localStorage.removeItem('account');
-                    throw err;
-                })
-            );
-    }
+   login(usernameOrEmail: string, password: string) {
+    return this.http.post<any>(
+        `${baseUrl}/authenticate`,
+        { email: usernameOrEmail, password }, 
+        { withCredentials: true }
+    ).pipe(
+        map(account => {
+            this.accountSubject.next(account);
+            localStorage.setItem('account', JSON.stringify(account));
+            this.startRefreshTokenTimer();
+            return account;
+        }),
+        catchError(err => {
+            this.accountSubject.next(null);
+            localStorage.removeItem('account');
+            throw err;
+        })
+    );
+}
+
 
     logout() {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();

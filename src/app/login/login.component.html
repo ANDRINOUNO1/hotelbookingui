@@ -7,10 +7,10 @@
     <!-- Sign In Form -->
     <form *ngIf="activeTab === 'signin'" class="login-form space-y-4" (ngSubmit)="login()">
       <input
-        type="text"
-        placeholder="Username"
-        [(ngModel)]="username"
-        name="username"
+        type="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        name="email"
         required
         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
