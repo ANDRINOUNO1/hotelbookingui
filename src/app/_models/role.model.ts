@@ -5,6 +5,6 @@ export enum Role {
 }
 
 export const SUPER_ADMIN_ACCOUNT = {
-    username: 'superadmin',
+    email: 'superadmin@example.com',
     role: Role.SuperAdmin
 }; 
