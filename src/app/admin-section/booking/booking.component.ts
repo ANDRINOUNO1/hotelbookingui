@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-booking',
@@ -27,18 +27,17 @@ export class BookingComponent implements OnInit {
       next: (roomsData) => {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
           next: (bookingsData) => {
-            this.occupiedRooms = roomsData
-              .map(room => {
-                const booking = bookingsData.find(
-                  b => b.room_id === room.id && b.pay_status === false
-                );
-                if (booking) {
+            this.occupiedRooms = bookingsData
+              .map(booking => {
+                const room = roomsData.find(r => r.id === booking.room_id);
+                if (room) {
                   return {
                     id: booking.id,
-                    number: room.room_number,
+                    number: room.roomNumber,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
-                    type: room.roomType?.type || '',
-                    status: 'occupied',
+                    type: room.RoomType?.type || 'Classic',
+                    status: booking.pay_status ? 'paid' : 'occupied',
+                    paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking 
                   };
                 }
@@ -60,17 +59,72 @@ export class BookingComponent implements OnInit {
   }
 
   updateBooking(id: number, changes: Partial<Booking>) {
-    this.http.put<Booking>(`${environment.apiUrl}/bookings/${id}`, changes).subscribe(() => {
-      this.loadOccupiedRooms();
-      this.closePopup();
+    // Check if payment status is being changed to paid
+    const wasUnpaid = !this.selectedBooking.pay_status;
+    const willBePaid = changes.pay_status === true;
+    
+    this.http.put<Booking>(`${environment.apiUrl}/bookings/${id}`, changes).subscribe({
+      next: (updatedBooking) => {
+        // Send email if payment status changed from unpaid to paid
+        if (wasUnpaid && willBePaid) {
+          this.sendPaymentConfirmationEmail(updatedBooking);
+        }
+        this.loadOccupiedRooms();
+        this.closePopup();
+      },
+      error: (err) => {
+        console.error('Failed to update booking:', err);
+      }
+    });
+  }
+
+  sendPaymentConfirmationEmail(booking: any) {
+    const emailData = {
+      bookingId: booking.id,
+      guestEmail: booking.guest.email,
+      guestName: `${booking.guest.first_name} ${booking.guest.last_name}`,
+      paymentAmount: booking.paidamount || booking.payment?.amount,
+      paymentMethod: booking.payment?.paymentMethod || booking.paidamount?.paymentMode
+    };
+
+    this.http.post(`${environment.apiUrl}/bookings/send-payment-confirmation`, emailData).subscribe({
+      next: (response) => {
+        console.log('✅ Payment confirmation email sent successfully');
+      },
+      error: (err) => {
+        console.error('❌ Failed to send payment confirmation email:', err);
+      }
+    });
+  }
+
+  confirmPayment(room: any) {
+    const updatedBooking = {
+      ...room.booking,
+      pay_status: true
+    };
+
+    this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
+      next: (updatedBooking) => {
+        this.sendPaymentConfirmationEmail(updatedBooking);
+        this.loadOccupiedRooms();
+      },
+      error: (err) => {
+      }
     });
   }
 
   deleteBooking(id: number) {
-    this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe(() => {
-      this.loadOccupiedRooms();
-      this.closePopup
-    });
+    if (confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
+      this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe({
+        next: () => {
+          this.loadOccupiedRooms();
+          console.log('✅ Booking deleted successfully');
+        },
+        error: (err) => {
+          console.error('❌ Failed to delete booking:', err);
+        }
+      });
+    }
   }
   editMode = false;
   openEditPopup(room: any) {

@@ -58,7 +58,9 @@
           <label>Amount</label>
           <input type="number" name="amount" class="form-control"
                 [(ngModel)]="paymentDetails.amount"
+                [placeholder]="'Reservation fee: ₱' + reservationFee"
                 required />
+          <small class="text-muted">Reservation fee: ₱{{ reservationFee }}</small>
         </div>
       </div>
 
@@ -99,7 +101,9 @@
           <label>Amount</label>
           <input type="number" name="amount" class="form-control"
                 [(ngModel)]="paymentDetails.amount"
+                [placeholder]="'Reservation fee: ₱' + reservationFee"
                 required />
+          <small class="text-muted">Reservation fee: ₱{{ reservationFee }}</small>
         </div>
       </div>
 

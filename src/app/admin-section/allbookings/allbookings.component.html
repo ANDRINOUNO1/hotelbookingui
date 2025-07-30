@@ -38,9 +38,9 @@
         <td>
             <span class="status-label" [ngClass]="room.paymentStatus">{{ room.paymentStatus }}</span>
         </td>
-        <td>
-          <button (click)="openViewPopup(room)">View</button>
-        </td>
+                 <td>
+           <button class="btn-view" (click)="openViewPopup(room)">View</button>
+         </td>
       </tr>
     </tbody>
   </table>

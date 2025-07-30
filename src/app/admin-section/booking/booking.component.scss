@@ -80,6 +80,85 @@ select {
 button {
   padding: 0.5rem 1rem;
 }
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-view {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  
+  &:hover {
+    background-color: #2980b9;
+  }
+}
+
+.btn-confirm-payment {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  
+  &:hover {
+    background-color: #229954;
+  }
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  
+  &:hover {
+    background-color: #c0392b;
+  }
+}
+
+.status-label {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  &.occupied {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  &.paid {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+}
+
+.payment-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  &.paid {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  &.unpaid {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+}
 p{
   font-size: 18px;
 }

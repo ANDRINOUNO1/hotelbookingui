@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-allbookings',
@@ -29,19 +29,17 @@ export class AllbookingsComponent implements OnInit {
       next: (roomsData) => {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
           next: (bookingsData) => {
-            this.occupiedRooms = roomsData
-              .map(room => {
-                const booking = bookingsData.find(
-                  b => b.room_id === room.id
-                );
-                if (booking) {
+            this.occupiedRooms = bookingsData
+              .map(booking => {
+                const room = roomsData.find(r => r.id === booking.room_id);
+                if (room) {
                   return {
                     id: booking.id,
-                    number: room.room_number,
+                    number: room.roomNumber || 'N/A',
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     address: `${booking.guest.address}, ${booking.guest.city}`,
-                    type: room.roomType?.type || '',
-                    status: 'occupied',
+                    type: room.RoomType?.type || 'Classic',
+                    status: booking.pay_status ? 'paid' : 'occupied',
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking
                   };
@@ -64,11 +62,11 @@ export class AllbookingsComponent implements OnInit {
       this.filteredRooms = this.occupiedRooms;
     } else {
       this.filteredRooms = this.occupiedRooms.filter(room =>
-        room.guest.toLowerCase().includes(term) ||
-        room.number.toString().includes(term) ||
-        room.type.toLowerCase().includes(term) ||
-        room.status.toLowerCase().includes(term) ||
-        room.paymentStatus.toLowerCase().includes(term)
+        (room.guest?.toLowerCase() || '').includes(term) ||
+        (room.number?.toString() || '').includes(term) ||
+        (room.type?.toLowerCase() || '').includes(term) ||
+        (room.status?.toLowerCase() || '').includes(term) ||
+        (room.paymentStatus?.toLowerCase() || '').includes(term)
       );
     }
   }

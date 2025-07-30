@@ -2,7 +2,7 @@
   import { Component, OnInit } from '@angular/core';
   import { HttpClient } from '@angular/common/http';
 
-  import { environment } from '../../environments/environments';
+  import { environment } from '../../../environments/environment';
   import { FirstFloorComponent } from './classic/first-floor.component';
   import { SecondFloorComponent } from './deluxe/second-floor.component';
   import { ThirdFloorComponent } from './prestige/third-floor.component';
@@ -37,12 +37,13 @@
       this.getBookings();
     }
 
-    /** ✅ Get rooms from fake backend */
+    /** ✅ Get rooms from backend */
     loadRooms() {
       this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
         next: (data) => {
           this.rooms = data;
           console.log('Rooms loaded:', this.rooms);
+          console.log('Room types found:', this.rooms.map(r => r.RoomType?.type));
         },
         error: (err) => {
           console.error('Failed to load rooms:', err);
@@ -64,15 +65,33 @@
     }
 
     get classicRooms() {
-      return this.rooms.filter(r => r.roomType?.type === 'Classic');
+      const classic = this.rooms.filter(r => r.RoomType?.type === 'Classic');
+      console.log('Classic rooms:', classic.length);
+      return classic;
     }
     get deluxeRooms() {
-      return this.rooms.filter(r => r.roomType?.type === 'Deluxe');
+      const deluxe = this.rooms.filter(r => r.RoomType?.type === 'Deluxe');
+      console.log('Deluxe rooms:', deluxe.length);
+      return deluxe;
     }
     get prestigeRooms() {
-      return this.rooms.filter(r => r.roomType?.type === 'Prestige');
+      const prestige = this.rooms.filter(r => r.RoomType?.type === 'Prestige');
+      console.log('Prestige rooms:', prestige.length);
+      return prestige;
     }
     get luxuryRooms() {
-      return this.rooms.filter(r => r.roomType?.type === 'Luxury');
+      const luxury = this.rooms.filter(r => r.RoomType?.type === 'Luxury');
+      console.log('Luxury rooms:', luxury.length);
+      return luxury;
+    }
+
+    getRoomCount(tabIndex: number): number {
+      switch (tabIndex) {
+        case 0: return this.classicRooms.length;
+        case 1: return this.deluxeRooms.length;
+        case 2: return this.prestigeRooms.length;
+        case 3: return this.luxuryRooms.length;
+        default: return 0;
+      }
     }
   }
