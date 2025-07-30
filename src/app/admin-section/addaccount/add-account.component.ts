@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Account } from '../../_models/account.model';
 import { Role } from '../../_models/role.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-add-account-modal',

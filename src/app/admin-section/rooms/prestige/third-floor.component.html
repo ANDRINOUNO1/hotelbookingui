@@ -8,7 +8,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let room of rooms">
-        <td>{{ room.room_number }}</td>
+        <td>{{ room.roomNumber }}</td>
         <td>
           <span class="status-label" [ngClass]="getRoomStatus(room) === 'Vacant' ? 'vacant' : 'occupied'">
             {{ getRoomStatus(room) }}

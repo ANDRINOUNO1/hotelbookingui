@@ -1,37 +1,54 @@
-<h2>Room Pricing Management</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Room Type</th>
-      <th>Current Rate</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let roomType of roomTypes">
-      <td>{{ roomType.type }}</td>
-      <td *ngIf="editingId !== roomType.id">₱{{ roomType.rate }}</td>
-      <td *ngIf="editingId === roomType.id">
-        <input type="number" [(ngModel)]="editRate" min="0" />
-      </td>
-      <td>
-        <button *ngIf="editingId !== roomType.id" (click)="startEdit(roomType)">Edit</button>
-        <button *ngIf="editingId === roomType.id" (click)="saveEdit(roomType)">Save</button>
-        <button *ngIf="editingId === roomType.id" (click)="cancelEdit()">Cancel</button>
-      </td>
-    </tr>
+<div class="pricing-container">
+  <h2>Room Pricing Management</h2>
+  
+  <div *ngIf="loading" class="loading">
+    Loading room types...
+  </div>
+  
+  <div *ngIf="!loading && roomTypes.length === 0" class="no-data">
+    No room types found.
+  </div>
+  
+  <table *ngIf="!loading && roomTypes.length > 0" class="pricing-table">
+    <thead>
+      <tr>
+        <th>Room Type</th>
+        <th>Current Rate</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let roomType of roomTypes; let i = index">
+        <td>
+          <span *ngIf="roomType.type">{{ roomType.type }}</span>
+          <span *ngIf="!roomType.type" style="color: red;">[NO TYPE]</span>
+        </td>
+        <td *ngIf="editingId !== roomType.id">
+          <span *ngIf="roomType.rate || roomType.basePrice">₱{{ roomType.rate || roomType.basePrice || 0 }}</span>
+          <span *ngIf="!roomType.rate && !roomType.basePrice" style="color: red;">[NO RATE]</span>
+        </td>
+        <td *ngIf="editingId === roomType.id">
+          <input type="number" [(ngModel)]="editRate" min="0" step="0.01" class="rate-input" />
+        </td>
+        <td>
+          <button *ngIf="editingId !== roomType.id" (click)="startEdit(roomType)" class="btn-edit">Edit</button>
+          <button *ngIf="editingId === roomType.id" (click)="saveEdit(roomType)" class="btn-save">Save</button>
+          <button *ngIf="editingId === roomType.id" (click)="cancelEdit()" class="btn-cancel">Cancel</button>
+        </td>
+      </tr>
 
-    <tr>
-      <td><strong>Reservation Fee</strong></td>
-      <td *ngIf="!editingReservationFee">₱{{ reservationFee }}</td>
-      <td *ngIf="editingReservationFee">
-        <input type="number" [(ngModel)]="editReservationFee" min="0" />
-      </td>
-      <td>
-        <button *ngIf="!editingReservationFee" (click)="startEditReservationFee()">Edit</button>
-        <button *ngIf="editingReservationFee" (click)="saveEditReservationFee()">Save</button>
-        <button *ngIf="editingReservationFee" (click)="cancelEditReservationFee()">Cancel</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      <tr class="reservation-fee-row">
+        <td><strong>Reservation Fee</strong></td>
+        <td *ngIf="!editingReservationFee">₱{{ reservationFee }}</td>
+        <td *ngIf="editingReservationFee">
+          <input type="number" [(ngModel)]="editReservationFee" min="0" step="0.01" class="rate-input" />
+        </td>
+        <td>
+          <button *ngIf="!editingReservationFee" (click)="startEditReservationFee()" class="btn-edit">Edit</button>
+          <button *ngIf="editingReservationFee" (click)="saveEditReservationFee()" class="btn-save">Save</button>
+          <button *ngIf="editingReservationFee" (click)="cancelEditReservationFee()" class="btn-cancel">Cancel</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

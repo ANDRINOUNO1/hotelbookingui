@@ -114,10 +114,9 @@ export class AddbookingsComponent implements OnInit {
   }
 
   loadRoomTypes() {
-    this.http.get<RoomType[]>('/api/room-types').subscribe({
+    this.http.get<RoomType[]>('/api/rooms/types').subscribe({
       next: (types) => {
         this.roomTypes = types;
-        // Initialize selected room types
         types.forEach(roomType => {
           this.selectedRoomTypes[roomType.id] = false;
         });
@@ -181,7 +180,7 @@ export class AddbookingsComponent implements OnInit {
             amount: roomType.rate || this.reservationFee
           },
           requests: formValue.requests,
-          pay_status: true
+          pay_status: false
         };
 
         return this.http.post<Booking[]>('/api/bookings', bookingData).toPromise();

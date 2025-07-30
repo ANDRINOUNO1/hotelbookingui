@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-customers',
@@ -42,8 +42,8 @@ export class CustomersComponent implements OnInit {
               }
 
               grouped[guestEmail].rooms.push({
-                number: room?.room_number,
-                type: room?.roomType?.type || '',
+                number: room?.roomNumber,
+                                 type: room?.RoomType?.type || '',
                 status: room?.status ? 'Available' : 'Occupied',
                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                 booking

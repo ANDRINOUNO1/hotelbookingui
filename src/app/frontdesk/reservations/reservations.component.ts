@@ -41,8 +41,8 @@ occupiedRooms: any[] = [];
               }
 
               grouped[guestEmail].rooms.push({
-                number: room?.room_number,
-                type: room?.roomType?.type || '',
+                number: room?.roomNumber,
+                                 type: room?.RoomType?.type || '',
                 status: room?.status ? 'Available' : 'Occupied',
                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                 booking

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { RESERVATION_FEES } from '../../_models/entities';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-confirmation',
@@ -47,13 +47,25 @@ export class ConfirmationComponent implements OnInit {
     this.reservationData = this.reservationDataService.getReservation();
     this.customerDetails = this.reservationDataService.getCustomerDetails();
 
-    const feeData: ReservationFee | undefined = RESERVATION_FEES[0];
-    this.reservationFee = feeData?.fee ?? 0;
+    this.fetchReservationFee();
+  }
+
+  fetchReservationFee() {
+    this.http.get<ReservationFee>(`${environment.apiUrl}/rooms/reservation-fee`).subscribe({
+      next: (fee) => {
+        this.reservationFee = fee.fee;
+        this.paymentDetails.amount = this.reservationFee;
+      },
+      error: (err) => {
+        this.reservationFee = 500;
+        this.paymentDetails.amount = this.reservationFee;
+      }
+    });
   }
 
   confirmBooking() {
     if (this.paymentDetails.amount < this.reservationFee) {
-      alert(`Reservation fee must be at least $${this.reservationFee}. Please enter the correct amount.`);
+      alert(`Reservation fee must be at least ₱${this.reservationFee}. Please enter the correct amount.`);
       return; 
     }
 
@@ -104,7 +116,9 @@ export class ConfirmationComponent implements OnInit {
         expiry: this.paymentDetails.expiry,
         cvv: this.paymentDetails.cvv,
         mobileNumber: this.paymentDetails.mobileNumber
-      }
+      },
+      pay_status: false, 
+      paidamount: this.paymentDetails.amount 
     };
 
     this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({

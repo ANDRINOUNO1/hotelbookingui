@@ -43,7 +43,7 @@
       <tbody>
         <tr *ngFor="let room of filteredRooms">
           <td class="calendar-cell room-info">
-            Room {{ room.room_number }}
+            Room {{ room.roomNumber }}
           </td>
           <ng-container *ngFor="let cell of getRowCells(room)">
             <td *ngIf="cell.type === 'empty'" class="calendar-cell booking-cell"></td>

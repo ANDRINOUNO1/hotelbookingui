@@ -43,8 +43,8 @@
         class="room-card"
         [ngClass]="getRoomStatusClass(room.id)">
       <div class="booking-guest">{{ getGuestName(room.id) }}</div>
-      <div class="room-number">{{ room.room_number }}</div>
-      <div class="room-type">{{ room.roomType?.type }}</div>
+      <div class="room-number">{{ room.roomNumber }}</div>
+             <div class="room-type">{{ room.RoomType?.type }}</div>
       <div class="room-icons">
         <i class="fa fa-bed"></i>
         <i class="fa fa-user"></i>

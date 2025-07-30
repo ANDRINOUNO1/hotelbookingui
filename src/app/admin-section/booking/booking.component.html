@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Room Type</th>
         <th>Status</th>
+          <th>Payment Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -25,7 +26,18 @@
           <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
         </td>
         <td>
-          <button (click)="openViewPopup(room)">View</button>
+          <span class="payment-status" [ngClass]="room.paymentStatus.toLowerCase()">{{ room.paymentStatus }}</span>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn-view" (click)="openViewPopup(room)">View</button>
+            <button class="btn-confirm-payment" (click)="confirmPayment(room)" *ngIf="!room.booking.pay_status">
+              Confirm Payment
+            </button>
+            <button class="btn-delete" (click)="deleteBooking(room.id)">
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>

@@ -117,16 +117,16 @@ if (isBrowser) {
       for (let floor = 1; floor <= floors; floor++) {
         for (let i = 1; i <= roomsPerFloor; i++) {
           const baseNumber = roomType.id * 100 + i;
-          const room_number = `${baseNumber}-${floor}`;
+          const roomNumber = `${baseNumber}-${floor}`;
 
-          rooms.push({
-            id: rooms.length + 1,
-            room_number,
-            room_type_id: roomType.id,
-            floor,
-            status: true,
-            roomType
-          });
+                     rooms.push({
+             id: rooms.length + 1,
+             roomNumber,
+             room_type_id: roomType.id,
+             floor,
+             status: true,
+             RoomType: roomType
+           });
         }
       }
     });
@@ -313,10 +313,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     function getRooms() {
         let storedRooms = JSON.parse(localStorage.getItem('fake-rooms') || '[]');
-        // Re-link roomType from roomTypes
+        // Re-link RoomType from roomTypes
         storedRooms = storedRooms.map((r: Room) => ({
             ...r,
-            roomType: roomTypes.find((rt: RoomType) => rt.id === r.room_type_id)
+            RoomType: roomTypes.find((rt: RoomType) => rt.id === r.room_type_id)
         }));
         return ok(storedRooms);
     }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, finalize, catchError } from 'rxjs/operators';
-import { environment } from '../environments/environments';
+import { environment } from '../../environments/environment';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
 

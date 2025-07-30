@@ -48,7 +48,7 @@ export class CalendarComponent implements OnInit {
   }
 
   loadData() {
-    this.http.get<RoomType[]>('/api/room-types').subscribe(types => {
+    this.http.get<RoomType[]>('/api/rooms/types').subscribe(types => {
       this.roomTypes = types;
       if (this.roomTypes.length) {
         this.selectedTypeId = this.roomTypes[0].id;

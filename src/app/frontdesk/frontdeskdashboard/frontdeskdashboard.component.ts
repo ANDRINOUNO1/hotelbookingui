@@ -4,7 +4,7 @@ import { Room, RoomType } from '../../_models/booking.model';
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Booking } from '../../_models/booking.model';
-import { environment } from '../../environments/environments';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-frontdeskdashboard',
   templateUrl: './frontdeskdashboard.component.html',
@@ -28,7 +28,7 @@ export class FrontdeskdashboardComponent implements OnInit {
   ngOnInit() {
 
     this.fetchData();
-    this.http.get<RoomType[]>(`${environment.apiUrl}/room-types`).subscribe((types) => {
+    this.http.get<RoomType[]>(`${environment.apiUrl}/rooms/types`).subscribe((types) => {
       this.roomTypes = types;
       this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe((rooms) => {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe((bookings) => {
@@ -39,7 +39,7 @@ export class FrontdeskdashboardComponent implements OnInit {
             if (!this.roomsByType[typeName]) {
               this.roomsByType[typeName] = [];
             }
-            room.roomType = typeObj;
+            room.RoomType = typeObj;
             this.roomsByType[typeName].push(room);
           });
           this.selectedType = this.roomTypes[0]?.type || '';
