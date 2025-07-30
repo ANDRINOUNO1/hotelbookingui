@@ -1,27 +1,53 @@
 <div class="availability-container">
   <h2>Available Room Types</h2>
 
-  <div *ngIf="availableRoomTypes.length; else noRoomTypes" class="room-type-list">
-    <div *ngFor="let type of availableRoomTypes; index as i" class="room-card">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading available rooms...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button (click)="loadAvailableRoomTypes()" class="retry-btn">Try Again</button>
+  </div>
+
+  <!-- Room Types List -->
+  <div *ngIf="!loading && !error && availableRoomTypes.length" class="room-type-list">
+    <div *ngFor="let type of availableRoomTypes; index as i" 
+         class="room-card" 
+         (click)="selectRoomType(type)">
       <div class="room-card-index">
         {{ (i + 1) | number: '2.0' }}
       </div>
 
       <h3>{{ type.type }}</h3>
 
-      <img src="https://source.unsplash.com/300x200/?hotel-room,{{ type.type }}" alt="{{ type.type }}">
+      <div class="room-images-grid">
+        <img [src]="getRoomImage(type.type, 1)" [alt]="type.type + ' - View 1'">
+        <img [src]="getRoomImage(type.type, 2)" [alt]="type.type + ' - View 2'">
+        <img [src]="getRoomImage(type.type, 3)" [alt]="type.type + ' - View 3'">
+        <img [src]="getRoomImage(type.type, 4)" [alt]="type.type + ' - View 4'">
+      </div>
 
       <p class="details-link">CLICK TO SEE DETAILS ▼</p>
 
       <div class="price-circle">
-        ${{ type.rate }}
+        ${{ type.rate || type.basePrice }}
       </div>
 
-      <button class="select-btn" (click)="selectRoomType(type)">Select</button>
+      <div class="select-indicator">
+        SELECT ROOM
+      </div>
     </div>
   </div>
-  <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
-    <ng-template #noRoomTypes>
-        <p>No room types available for the selected dates.</p>
-    </ng-template>
+  
+  <!-- No Rooms Available -->
+  <div *ngIf="!loading && !error && availableRoomTypes.length === 0" class="no-rooms">
+    <p>No room types available for the selected dates.</p>
+    <button (click)="loadAvailableRoomTypes()" class="refresh-btn">Refresh</button>
+  </div>
 </div>
+
+<button type="button" (click)="back.emit()" class="btn-secondary back-button">Back</button>

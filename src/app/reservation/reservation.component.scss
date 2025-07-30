@@ -1,12 +1,22 @@
 $steps: 4;
 $step-point-width: 30px;
 $step-gap: 60px;
-$bar-height: 6px;
+$bar-height: 8px;
+
+// Color variables based on the gradient
+$primary-gold: #b4884d;
+$dark-blue: #171725;
+$light-gold: #d4a574;
+$gold-transparent: rgba(180, 136, 77, 0.3);
 
 .progress {
+  background: transparent; // Remove solid background to show gradient
+  min-height: 100vh;
+  padding: 20px;
+
   &_inner {
-    width: 1000px; // made wider
-    margin: 100px auto;
+    width: 1000px;
+    margin: 50px auto;
     position: relative;
 
     &__step {
@@ -14,12 +24,19 @@ $bar-height: 6px;
       text-align: center;
       position: relative;
       cursor: pointer;
+      width: calc(100% / $steps);
+      padding: 0 $step-gap;      
 
       label {
         display: block;
         margin-top: $step-gap;
         position: relative;
         font-weight: bold;
+        color: white;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5); // Darker shadow for better contrast
       }
 
       &:before {
@@ -28,11 +45,27 @@ $bar-height: 6px;
         width: $step-point-width;
         height: $step-point-width;
         background: white;
-        border: 3px solid #1ea4ec;
+        border: 2px solid $primary-gold; // Use golden color for borders
         border-radius: 50%;
         top: 0;
         left: 50%;
         transform: translateX(-50%);
+        z-index: 2;
+        box-shadow: 0 2px 8px rgba(180, 136, 77, 0.3); // Golden shadow
+      }
+
+      // Active step styling
+      &.active:before {
+        background: $primary-gold; // Golden background for active
+        border-color: $primary-gold;
+        box-shadow: 0 0 15px rgba(180, 136, 77, 0.6); // Enhanced glow for active
+      }
+
+      // Completed step styling
+      &.completed:before {
+        background: $primary-gold; // Golden background for completed
+        border-color: $primary-gold;
+        box-shadow: 0 2px 8px rgba(180, 136, 77, 0.4); // Golden shadow
       }
     }
 
@@ -40,32 +73,37 @@ $bar-height: 6px;
       position: absolute;
       height: $bar-height;
       width: 100%;
-      background: #ddd;
+      background: rgba(255, 255, 255, 0.15); // Lighter semi-transparent for better contrast
       left: 0;
-      z-index: -1;
+      z-index: 1;
       border-radius: $bar-height;
+      top: 15px; // Align with step circles
     }
 
     &__bar {
       position: absolute;
       height: $bar-height;
-      background: #1ea4ec;
+      background: linear-gradient(90deg, $primary-gold 0%, $light-gold 100%); // Golden gradient
       left: 0;
       border-radius: $bar-height;
       transition: width 0.4s ease;
+      top: 15px; // Align with step circles
+      z-index: 1;
+      box-shadow: 0 2px 8px rgba(180, 136, 77, 0.4); // Golden glow
     }
 
     &__tabs {
       clear: both;
       position: relative;
-      margin-top: 100px; // More margin for bigger look
+      margin-top: 100px;
 
       .tab {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 50px; // More padding
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.95); // Semi-transparent white background
+        border: 1px solid rgba(180, 136, 77, 0.2); // Golden border
+        border-radius: 12px; // More rounded corners
+        padding: 50px;
+        box-shadow: 0 8px 32px rgba(23, 23, 37, 0.15); // Darker shadow
+        backdrop-filter: blur(10px); // Glass effect
 
         display: none;
 
@@ -90,6 +128,7 @@ $bar-height: 6px;
 }
 
 body {
-  background: #f0f8ff;
+  background: linear-gradient(90deg, #171725 0%, #b4884d 100%);
   font-family: 'Nunito', sans-serif;
+  color: white;
 }

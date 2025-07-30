@@ -2,7 +2,10 @@
   <div class="progress_inner">
 
     <!-- Steps -->
-    <div *ngFor="let step of steps; index as i" class="progress_inner__step">
+    <div *ngFor="let step of steps; index as i" 
+         class="progress_inner__step"
+         [class.active]="currentStep === i + 1"
+         [class.completed]="currentStep > i + 1">
       <label>{{ step }}</label>
     </div>
 
