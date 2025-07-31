@@ -1,50 +1,70 @@
-<div class="login-bg min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="login-card bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-    <div class="tab-header mb-6">
-      <button [class.active]="activeTab === 'signin'" (click)="activeTab = 'signin'" class="w-full py-2 px-4 text-center font-semibold text-gray-600 border-b-2 border-transparent hover:text-blue-600 transition-colors">SIGN IN</button>
+<div class="login-bg min-h-screen flex items-center justify-center">
+  <div class="login-container">
+    <!-- Left Section - Login Form -->
+    <div class="form-section">
+      <div class="login-card">
+        <div class="tab-header mb-6">
+          <button [class.active]="activeTab === 'signin'" (click)="activeTab = 'signin'" class="tab-button">SIGN IN</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form *ngIf="activeTab === 'signin'" class="login-form space-y-4" (ngSubmit)="login()">
+          <input
+            type="email"
+            placeholder="Email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            class="form-input"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            [(ngModel)]="password"
+            name="password"
+            required
+            class="form-input"
+          />
+
+          <div class="login-options">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="keepLoggedIn" name="keepLoggedIn" class="checkbox-input" />
+              Keep me logged in
+            </label>
+          </div>
+
+          <!-- bomboclat pprocessing -->
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="login-btn"
+          >
+            <span *ngIf="isLoading" class="loading-spinner"></span>
+            {{ isLoading ? 'Processing...' : 'LOGIN' }}
+          </button>
+
+          <div *ngIf="error" class="error-message">
+            {{ error }}
+          </div>
+        </form>
+      </div>
     </div>
 
-    <!-- Sign In Form -->
-    <form *ngIf="activeTab === 'signin'" class="login-form space-y-4" (ngSubmit)="login()">
-      <input
-        type="email"
-        placeholder="Email"
-        [(ngModel)]="email"
-        name="email"
-        required
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        [(ngModel)]="password"
-        name="password"
-        required
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-
-      <div class="login-options">
-        <label class="flex items-center text-sm text-gray-600">
-          <input type="checkbox" [(ngModel)]="keepLoggedIn" name="keepLoggedIn" class="mr-2" />
-          Keep me logged in
-        </label>
+    <!-- Right Section - Image Area -->
+    <div class="image-section">
+      <div class="image-container">
+        <img 
+          [src]="rightImage || '/assets/images/log-in.jpg'" 
+          alt="Login background" 
+          class="background-image"
+        />
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <h2 class="overlay-title">Welcome Back</h2>
+            <p class="overlay-subtitle">Sign in to continue your journey</p>
+          </div>
+        </div>
       </div>
-
-      <!-- bomboclat pprocessing -->
-      <button
-        type="submit"
-        [disabled]="isLoading"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        <span *ngIf="isLoading" class="relative flex h-4 w-4">
-          <span class="animate-spin inline-block h-4 w-4 rounded-full border-2 border-white border-t-transparent"></span>
-        </span>
-        {{ isLoading ? 'Processing...' : 'LOGIN' }}
-      </button>
-
-      <div *ngIf="error" class="text-red-600 text-sm text-center bg-red-50 border border-red-200 rounded-lg p-3">
-        {{ error }}
-      </div>
-    </form>
+    </div>
   </div>
 </div>

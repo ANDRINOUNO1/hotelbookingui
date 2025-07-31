@@ -66,22 +66,18 @@
 
     get classicRooms() {
       const classic = this.rooms.filter(r => r.RoomType?.type === 'Classic');
-      console.log('Classic rooms:', classic.length);
       return classic;
     }
     get deluxeRooms() {
       const deluxe = this.rooms.filter(r => r.RoomType?.type === 'Deluxe');
-      console.log('Deluxe rooms:', deluxe.length);
       return deluxe;
     }
     get prestigeRooms() {
       const prestige = this.rooms.filter(r => r.RoomType?.type === 'Prestige');
-      console.log('Prestige rooms:', prestige.length);
       return prestige;
     }
     get luxuryRooms() {
       const luxury = this.rooms.filter(r => r.RoomType?.type === 'Luxury');
-      console.log('Luxury rooms:', luxury.length);
       return luxury;
     }
 

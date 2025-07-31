@@ -11,23 +11,41 @@
 .login-bg {
   min-height: 100vh;
   width: 100vw;
-    background: url('/assets/images/log-in.jpg') center center/cover no-repeat;
+  background: url('/assets/images/log-in.jpg') center center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
-.login-card {
-  background: rgba(11, 11, 49, 0.55);
-  border-radius: 18px;
-  box-shadow: 0 8px 32px 0 rgba(11,11,49,0.18);
-  padding: 2.5rem 2.5rem 2rem 2.5rem;
-  width: 340px;
-  max-width: 94vw;
+.login-container {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  width: 90%;
+  max-width: 1200px;
+  height: 600px;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+// Left Section - Form
+.form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: rgba(11, 11, 49, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: rgba(11, 11, 49, 0.8);
+  border-radius: 18px;
   backdrop-filter: blur(4px);
 }
 
@@ -38,11 +56,11 @@
   margin-bottom: 2rem;
 }
 
-.tab-header button {
+.tab-button {
   background: none;
   border: none;
   color: var(--white);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 600;
   padding-bottom: 0.4rem;
   cursor: pointer;
@@ -51,11 +69,11 @@
   outline: none;
 }
 
-.tab-header button.active {
+.tab-button.active {
   color: var(--sub-color);
 }
 
-.tab-header button.active::after {
+.tab-button.active::after {
   content: '';
   display: block;
   height: 3px;
@@ -70,14 +88,13 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.5rem;
 }
 
-.login-form input[type="text"],
-.login-form input[type="password"],
-.login-form input[type="email"] {
-  padding: 0.8rem 1.1rem;
-  border-radius: 24px;
+.form-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(245,245,247,0.92);
   color: var(--main-color);
@@ -86,28 +103,38 @@
   transition: border 0.2s;
 }
 
-.login-form input:focus {
+.form-input:focus {
   border: 1.5px solid var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
 }
 
 .login-options {
   display: flex;
   align-items: center;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--white);
   margin-top: -0.5rem;
   margin-bottom: -0.5rem;
 }
 
-.login-options input[type="checkbox"] {
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--white);
+}
+
+.checkbox-input {
   accent-color: var(--sub-color);
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
+  transform: scale(1.2);
 }
 
 .login-btn {
-  margin-top: 0.5rem;
-  padding: 0.8rem 0;
-  border-radius: 24px;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
   border: none;
   background: var(--sub-color);
   color: var(--main-color);
@@ -116,30 +143,161 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(180,136,77,0.08);
   transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.login-btn:hover {
+.login-btn:hover:not(:disabled) {
   background: var(--accent-color);
   color: var(--white);
+  transform: translateY(-1px);
 }
 
-.forgot-link {
-  display: block;
-  margin: 1rem auto 0 auto;
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background: rgba(220, 38, 38, 0.1);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+// Right Section - Image
+.image-section {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(11, 11, 49, 0.3) 0%, rgba(180, 136, 77, 0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-content {
   text-align: center;
   color: var(--white);
-  font-size: 0.98rem;
-  text-decoration: underline;
-  opacity: 0.85;
-  transition: color 0.2s;
-}
-.forgot-link:hover {
-  color: var(--sub-color);
+  padding: 2rem;
 }
 
-@media (max-width: 600px) {
+.overlay-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .login-container {
+    width: 95%;
+    height: 500px;
+  }
+  
+  .form-section {
+    padding: 2rem;
+  }
+  
+  .overlay-title {
+    font-size: 2rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    width: 95%;
+  }
+  
+  .form-section {
+    padding: 2rem;
+  }
+  
+  .image-section {
+    height: 200px;
+  }
+  
+  .overlay-title {
+    font-size: 1.8rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    width: 98%;
+    margin: 1rem;
+  }
+  
+  .form-section {
+    padding: 1.5rem;
+  }
+  
   .login-card {
-    padding: 1.5rem 0.5rem 1rem 0.5rem;
-    width: 98vw;
+    padding: 1.5rem;
+  }
+  
+  .overlay-title {
+    font-size: 1.5rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.8rem;
   }
 }
