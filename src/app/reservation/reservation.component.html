@@ -5,7 +5,10 @@
     <div *ngFor="let step of steps; index as i" 
          class="progress_inner__step"
          [class.active]="currentStep === i + 1"
-         [class.completed]="currentStep > i + 1">
+         [class.completed]="isStepCompleted(i + 1)"
+         [class.disabled]="!canProceedToStep(i + 1) && currentStep < i + 1"
+         (click)="goToStep(i + 1)"
+         [style.cursor]="canProceedToStep(i + 1) ? 'pointer' : 'not-allowed'">
       <label>{{ step }}</label>
     </div>
 
@@ -36,7 +39,9 @@
         </app-process>
 
         <app-confirmation 
-            *ngSwitchCase="4">
+            *ngSwitchCase="4"
+            (back)="goBack()"
+            (newReservation)="startNewReservation()">
         </app-confirmation>
     </ng-container>
 

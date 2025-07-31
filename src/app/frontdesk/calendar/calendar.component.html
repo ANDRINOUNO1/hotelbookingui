@@ -8,8 +8,8 @@
     <div class="button-group">
       <button
         *ngFor="let type of roomTypes"
-        (click)="setSelectedType(type.id)"
-        [ngClass]="{ 'selected': type.id === selectedTypeId }"
+        (click)="setSelectedType(type.type)"
+        [ngClass]="{ 'selected': type.type === selectedType }"
         class="type-button">
         {{ type.type }}
       </button>
@@ -36,7 +36,8 @@
         <tr>
           <th class="calendar-header">Room</th>
           <th *ngFor="let date of dates" class="calendar-header">
-            {{ date | date: 'MMM d (EEE)' }}
+            {{ date | date: 'MMM d' }}<br>
+            <small>{{ date | date: 'EEE' }}</small>
           </th>
         </tr>
       </thead>
@@ -49,7 +50,6 @@
             <td *ngIf="cell.type === 'empty'" class="calendar-cell booking-cell"></td>
             <td *ngIf="cell.type === 'booking'"
                 class="calendar-cell booking-cell"
-                [ngClass]="{'reserved-cell': cell.booking && !cell.booking.pay_status}"
                 [attr.colspan]="cell.colspan">
               <div class="booking-block"
                 cdkDrag
@@ -57,8 +57,8 @@
                 (mousedown)="dragStart = true"
                 (mouseup)="onClickBooking(cell.booking, room)"
                 [ngClass]="{
-                  'booking-reserved': room.status && !cell.booking?.pay_status,
-                  'booking-occupied': !room.status && cell.booking?.pay_status,
+                  'booking-reserved': cell.booking && !cell.booking.pay_status,
+                  'booking-occupied': cell.booking && cell.booking.pay_status,
                   'booking-maintenance': isMaintenance(cell)
                 }"
                 style="cursor: pointer;">

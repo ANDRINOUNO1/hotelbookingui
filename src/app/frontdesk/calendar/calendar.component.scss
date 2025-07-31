@@ -93,11 +93,12 @@
 }
 
 .booking-block.booking-reserved {
-  background-color: #cccf00; 
-  color: #fff;
+  background-color: #fbbf24; /* Yellow for reserved (unpaid) */
+  color: #000;
 }
 .booking-block.booking-occupied {
-  background-color: #22c55e; /* Tailwind's green-500 */
+  background-color: #10b981; /* Green for occupied (paid) */
+  color: #fff;
 }
 .booking-block.booking-maintenance {
   background-color: #ef4444; /* Tailwind's red-500 */
@@ -116,9 +117,7 @@
   pointer-events: none;
 }
 
-.booking-cell.reserved-cell {
-  background-color: #ca9400; /* Tailwind's yellow-100 */
-}
+
 
 .calendar-h{
   text-align: center;
@@ -190,11 +189,11 @@
         border: 2px solid #ffffff;
 
         &.legend-reserved {
-          background: #fbbf24;
+          background: #fbbf24; /* Yellow for reserved */
         }
 
         &.legend-occupied {
-          background: #10b981;
+          background: #10b981; /* Green for occupied */
         }
 
         &.legend-maintenance {
