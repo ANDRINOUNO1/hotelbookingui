@@ -12,12 +12,14 @@ import { AccountService } from '../_services/account.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  // FIX: Changed property from 'username' to 'email'
+
   email = '';
   password = '';
   keepLoggedIn = false;
+  showPassword = false;
   error = '';
   isLoading = false;
+  rightImage = ''; 
 
   signupName = '';
   signupEmail = '';
@@ -27,6 +29,10 @@ export class LoginComponent {
   activeTab: 'signin' | 'signup' = 'signin';
 
   constructor(private router: Router, private accountService: AccountService) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   login() {
     this.isLoading = true;
