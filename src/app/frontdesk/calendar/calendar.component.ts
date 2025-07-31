@@ -4,6 +4,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BookingModalComponent } from './booking-modal.component';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-calendar',
@@ -17,7 +18,7 @@ export class CalendarComponent implements OnInit {
   allRooms: Room[] = [];
   bookings: Booking[] = [];
 
-  selectedTypeId!: number;
+  selectedType: string = '';
 
   dates: Date[] = [];
   
@@ -35,7 +36,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadData();
+      this.loadRoomsAndBookings();
     }
 
     const today = new Date();
@@ -47,29 +48,29 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  loadData() {
-    this.http.get<RoomType[]>('/api/rooms/types').subscribe(types => {
-      this.roomTypes = types;
-      if (this.roomTypes.length) {
-        this.selectedTypeId = this.roomTypes[0].id;
-      }
-
-      this.http.get<Room[]>('/api/rooms').subscribe(rooms => {
-        this.allRooms = rooms;
-
-        this.http.get<Booking[]>('/api/bookings').subscribe(bookings => {
-          this.bookings = bookings;
-
-          console.log('Room Types:', this.roomTypes);
-          console.log('Rooms:', this.allRooms);
-          console.log('Bookings:', this.bookings);
-        });
+  loadRoomsAndBookings() {
+    this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe(rooms => {
+      this.allRooms = rooms;
+      this.roomTypes = this.getUniqueRoomTypes(rooms);
+      this.selectedType = this.roomTypes.length ? this.roomTypes[0].type : '';
+      this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe(bookings => {
+        this.bookings = bookings;
       });
     });
   }
 
+  getUniqueRoomTypes(rooms: Room[]): RoomType[] {
+    const types: { [key: string]: RoomType } = {};
+    rooms.forEach(room => {
+      if (room.RoomType) {
+        types[room.RoomType.type] = room.RoomType;
+      }
+    });
+    return Object.values(types);
+  }
+
   get filteredRooms(): Room[] {
-    return this.allRooms.filter(r => r.room_type_id === this.selectedTypeId);
+    return this.allRooms.filter(r => r.RoomType?.type === this.selectedType);
   }
 
   getBookingsForRoomAndDate(roomId: number, date: Date) {
@@ -212,8 +213,8 @@ export class CalendarComponent implements OnInit {
     return !!cell.booking?.requests && cell.booking.requests!.toLowerCase().includes('maintenance');
   }
   
-  setSelectedType(id: number) {
-    this.selectedTypeId = id;
+  setSelectedType(type: string) {
+    this.selectedType = type;
   }
 
   // Modal methods
@@ -285,7 +286,7 @@ export class CalendarComponent implements OnInit {
     booking.availability.checkIn = newCheckIn.toISOString();
     booking.availability.checkOut = newCheckOut.toISOString();
 
-    this.http.patch(`/api/bookings/${booking.id}`, {
+    this.http.patch(`${environment.apiUrl}/bookings/${booking.id}`, {
       availability: {
         checkIn: booking.availability.checkIn,
         checkOut: booking.availability.checkOut

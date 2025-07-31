@@ -1,6 +1,9 @@
 <div class="room-view-container">
   <div class="room-view-header">
-    <h1>Reservation List</h1>
+    <select>
+      <option>Room View</option>
+      <option>List View</option>
+    </select>
   </div>
 
   <table class="tables">
@@ -18,7 +21,7 @@
         <td>{{ customer.guest.email }}</td>
         <td>{{ customer.rooms.length }}</td>
         <td>
-          <button (click)="openCustomerPopup(customer)">View</button>
+          <button (click)="openCustomerPopup(customer)">⋮</button>
         </td>
       </tr>
     </tbody>
