@@ -1,4 +1,13 @@
-<div class="room-view-container">
+<!-- Loading Spinner Overlay -->
+<app-loading-spinner 
+  *ngIf="isLoading" 
+  [overlay]="true" 
+  message="Loading Bookings..." 
+  [size]="'large'">
+</app-loading-spinner>
+
+<!-- Content will show after loading -->
+<div *ngIf="!isLoading" class="booking-container">
   <div class="room-view-header">
     <select>
       <option>Room View</option>

@@ -124,6 +124,8 @@
   font-size: 1.1rem;
   border-left: 4px solid transparent;
   transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 .sidebar nav a.active,
 .sidebar nav a:hover {
@@ -131,6 +133,11 @@
   border-left: 4px solid var(--sidebar-text);
   color: var(--white);
 }
+.sidebar nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
 .sidebar .powered {
   font-size: 0.9rem;
   text-align: center;

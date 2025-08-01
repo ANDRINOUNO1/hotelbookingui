@@ -49,10 +49,14 @@ export class AllbookingsComponent implements OnInit {
               .filter(room => room !== null);
             this.applySearch();
           },
-          error: (err) => console.error('Failed to load bookings:', err)
+          error: (err) => {
+            console.error('Failed to load bookings:', err);
+          }
         });
       },
-      error: (err) => console.error('Failed to load rooms:', err)
+      error: (err) => {
+        console.error('Failed to load rooms:', err);
+      }
     });
   }
 

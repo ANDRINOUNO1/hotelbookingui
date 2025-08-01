@@ -9,6 +9,7 @@
   import { FourthFloorComponent } from './luxury/fourth-floor.component';
 
   import { Room, Booking } from '../../_models/booking.model';
+  import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
 
   @Component({
     selector: 'app-rooms',
@@ -18,7 +19,8 @@
       FirstFloorComponent,
       SecondFloorComponent,
       ThirdFloorComponent,
-      FourthFloorComponent
+      FourthFloorComponent,
+      LoadingSpinnerComponent
     ],
     templateUrl: './rooms.component.html',
     styleUrl: './rooms.component.scss'
@@ -29,6 +31,7 @@
 
     roomTabs = ['Classic', 'Deluxe', 'Prestige', 'Luxury'];
     selectedTab = 0;
+    isLoading = true;
 
     constructor(private http: HttpClient) {}
 
@@ -44,9 +47,11 @@
           this.rooms = data;
           console.log('Rooms loaded:', this.rooms);
           console.log('Room types found:', this.rooms.map(r => r.RoomType?.type));
+          this.checkLoadingComplete();
         },
         error: (err) => {
           console.error('Failed to load rooms:', err);
+          this.checkLoadingComplete();
         }
       });
     }
@@ -57,11 +62,20 @@
         next: (data) => {
           this.bookings = data;
           console.log('Bookings loaded:', this.bookings);
+          this.checkLoadingComplete();
         },
         error: (err) => {
           console.error('Failed to load bookings:', err);
+          this.checkLoadingComplete();
         }
       });
+    }
+
+    checkLoadingComplete() {
+      // Hide loading after data is loaded
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 500);
     }
 
     get classicRooms() {
