@@ -44,7 +44,8 @@
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "prerender": false
           },
           "configurations": {
             "production": {
@@ -58,16 +59,23 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "16kB",
                   "maximumError": "32kB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "32kB",
+                  "maximumError": "64kB"
                 }
               ],
               "outputHashing": "all",
-              "outputMode": "static"
+              "outputMode": "static",
+              "prerender": false
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "outputMode": "static"
+              "outputMode": "static",
+              "prerender": false
             }
           },
           "defaultConfiguration": "production"

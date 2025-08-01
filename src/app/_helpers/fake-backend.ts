@@ -198,7 +198,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     
     // Handle all API requests during build time and SSR
     if (isSSR || url.includes('/api/') || url.includes('/rooms') || url.includes('/bookings') || url.includes('/accounts')) {
-      return handleRoute().pipe(materialize(), delay(500), dematerialize());
+      try {
+        return handleRoute().pipe(materialize(), delay(500), dematerialize());
+      } catch (error) {
+        // During build time, return empty data to prevent errors
+        return of(new HttpResponse({ status: 200, body: [] }));
+      }
     }
 
     return next.handle(request);
