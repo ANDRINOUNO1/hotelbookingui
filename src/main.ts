@@ -10,6 +10,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     ...(appConfig.providers || []),
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    // fakeBackendProvider
+    fakeBackendProvider
   ]
 }).catch((err) => console.error(err));

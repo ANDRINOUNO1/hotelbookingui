@@ -1,6 +1,7 @@
 import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-section',
@@ -16,13 +17,21 @@ export class AdminSectionComponent implements OnInit {
   isDarkMode = false;
   openMenu: string | null = null;
   userMenuOpen = false;
+  isLoading = false;
 
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    // Listen to route changes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.showLoading();
+    });
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -30,6 +39,22 @@ export class AdminSectionComponent implements OnInit {
       this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
       this.applyTheme();
     }
+  }
+
+  showLoading() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000); // 2 seconds delay
+  }
+
+  navigateWithLoading(route: string) {
+    this.isLoading = true;
+    this.router.navigate([route]).then(() => {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
+    });
   }
 
   toggleDarkMode() {

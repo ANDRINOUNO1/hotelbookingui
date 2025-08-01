@@ -1,49 +1,60 @@
-<div class="room-view-container">
-  <div class="room-view-header">
-    <select>
-      <option>Room View</option>
-      <option>List View</option>
-    </select>
-  </div>
+<!-- Loading Spinner Overlay -->
+<app-loading-spinner 
+  *ngIf="isLoading" 
+  [overlay]="true" 
+  message="Loading Customers..." 
+  [size]="'large'">
+</app-loading-spinner>
 
-  <table class="tables">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Rooms Booked</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let customer of occupiedRooms">
-        <td>{{ customer.guest.first_name }} {{ customer.guest.last_name }}</td>
-        <td>{{ customer.guest.email }}</td>
-        <td>{{ customer.rooms.length }}</td>
-        <td>
-          <button (click)="openCustomerPopup(customer)">⋮</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-<div class="popup-backdrop" *ngIf="selectedCustomer">
-  <div class="popup">
-    <h3>{{ selectedCustomer.guest.first_name }} {{ selectedCustomer.guest.last_name }}</h3>
-    <p>{{ selectedCustomer.guest.email }}</p>
-    <p>{{ selectedCustomer.guest.phone }}</p>
-    <p>{{ selectedCustomer.guest.address }}, {{ selectedCustomer.guest.city }}</p>
-
-    <h4>Booked Rooms</h4>
-    <div *ngFor="let room of selectedCustomer.rooms" class="room-card">
-      <p>Room No: {{ room.number }}</p>
-      <p>Type: {{ room.type }}</p>
-      <p>Status: {{ room.status }}</p>
-      <p>Payment: {{ room.paymentStatus }}</p>
+<!-- Content will show after loading -->
+<div *ngIf="!isLoading" class="customers-container">
+  <div class="room-view-container">
+    <div class="room-view-header">
+      <select>
+        <option>Room View</option>
+        <option>List View</option>
+      </select>
     </div>
 
-    <button (click)="closePopup()">Close</button>
+    <table class="tables">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Rooms Booked</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of occupiedRooms">
+          <td>{{ customer.guest.first_name }} {{ customer.guest.last_name }}</td>
+          <td>{{ customer.guest.email }}</td>
+          <td>{{ customer.rooms.length }}</td>
+          <td>
+            <button (click)="openCustomerPopup(customer)">⋮</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="popup-backdrop" *ngIf="selectedCustomer">
+    <div class="popup">
+      <h3>{{ selectedCustomer.guest.first_name }} {{ selectedCustomer.guest.last_name }}</h3>
+      <p>{{ selectedCustomer.guest.email }}</p>
+      <p>{{ selectedCustomer.guest.phone }}</p>
+      <p>{{ selectedCustomer.guest.address }}, {{ selectedCustomer.guest.city }}</p>
+
+      <h4>Booked Rooms</h4>
+      <div *ngFor="let room of selectedCustomer.rooms" class="room-card">
+        <p>Room No: {{ room.number }}</p>
+        <p>Type: {{ room.type }}</p>
+        <p>Status: {{ room.status }}</p>
+        <p>Payment: {{ room.paymentStatus }}</p>
+      </div>
+
+      <button (click)="closePopup()">Close</button>
+    </div>
   </div>
 </div>

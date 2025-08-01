@@ -1,19 +1,19 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Account } from '../../_models/account.model';
 import { Role } from '../../_models/role.model';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-add-account-modal',
+  selector: 'app-add-account',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-account.component.html',
   styleUrls: ['./add-account.component.scss']
 })
-export class AddAccountComponent {
+export class AddAccountComponent implements OnInit {
   @Output() accountAdded = new EventEmitter<Account>();
   @Output() closed = new EventEmitter<void>();
 
@@ -23,6 +23,10 @@ export class AddAccountComponent {
   Role = Role;
 
   constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    // Component initialized without loading spinner
+  }
 
   addAccount() {
     this.error = '';
