@@ -1,0 +1,44 @@
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">Archived Bookings</h2>
+  <table class="tables">
+    <thead >
+      <tr>
+        <th>Room No.</th>
+        <th>Room Type</th>
+        <th>Guest</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let archive of archives">
+        <td>{{ archive.Room?.roomNumber }}</td>
+        <td>{{ archive.Room?.RoomType?.type }}</td>
+        <td>{{ archive.guest_firstName }} {{ archive.guest_lastName }}</td>
+        <td>
+          <button (click)="viewDetails(archive)" class="bg-blue-500 text-white px-3 py-1 rounded">View Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedArchive" class="popup-backdrop">
+    <div class="popup">
+    <h3>Archived Booking Details</h3>
+    <p><strong>Guest:</strong> {{ selectedArchive.guest_firstName }} {{ selectedArchive.guest_lastName }}</p>
+    <p><strong>Email:</strong> {{ selectedArchive.guest_email }}</p>
+    <p><strong>Phone:</strong> {{ selectedArchive.guest_phone }}</p>
+    <p><strong>Address:</strong> {{ selectedArchive.guest_address }}, {{ selectedArchive.guest_city }}</p>
+    <p><strong>Room Number:</strong> {{ selectedArchive.Room?.roomNumber }}</p>
+    <p><strong>Room Type:</strong> {{ selectedArchive.Room?.RoomType?.type }}</p>
+    <p><strong>Check-In:</strong> {{ selectedArchive.checkIn }}</p>
+    <p><strong>Check-Out:</strong> {{ selectedArchive.checkOut }}</p>
+    <p><strong>Adults:</strong> {{ selectedArchive.adults }}</p>
+    <p><strong>Children:</strong> {{ selectedArchive.children }}</p>
+    <p><strong>Requests:</strong> {{ selectedArchive.requests || 'None' }}</p>
+    <p><strong>Payment Mode:</strong> {{ selectedArchive.paymentMode }}</p>
+    <p><strong>Amount:</strong> ₱{{ selectedArchive.amount }}</p>
+    <p><strong>Paid Amount:</strong> ₱{{ selectedArchive.paidamount }}</p>
+    <button (click)="closeDetails()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+  </div>
+  </div>
+</div>
