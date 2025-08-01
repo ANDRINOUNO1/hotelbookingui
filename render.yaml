@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: hotel-reservation-app
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist/hotel-reservation-app
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html 

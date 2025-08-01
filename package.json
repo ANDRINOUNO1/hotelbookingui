@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:hotel-reservation-app": "node dist/hotel-reservation-app/server/server.mjs"
+
   },
   "private": true,
   "dependencies": {
