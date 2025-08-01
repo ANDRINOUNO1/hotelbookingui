@@ -101,14 +101,14 @@
       border-radius: 8px;
       font-size: 1rem;
       transition: all 0.2s ease;
-      background: #fff;
-      color: #000000;
+      background: #0b0b31;
+      color: #ffffff;
 
       &:focus {
         outline: none;
         border-color: #3b82f6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        color: #000000;
+        color: #ffffff;
       }
 
       &.invalid {
@@ -144,7 +144,7 @@
   .card-details {
     margin-top: 1.5rem;
     padding: 1.5rem;
-    background: #fff;
+    background: #0b0b31;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
 
@@ -157,7 +157,7 @@
   .digital-wallet-details {
     margin-top: 1.5rem;
     padding: 1.5rem;
-    background: #fff;
+    background: #0b0b31;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
 

@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --main-color: #dfdffa;
+  --main-color: #0b0b31;
   --dark-base: #181824;
   --sub-color: #e5c07b;
   --white: #f5f5f7;
@@ -13,7 +13,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
   padding: 0;
-  background: var(--main-color);
+  background: #0b0b31 !important;
 }
 
 *{
@@ -67,13 +67,13 @@ section{
    text-transform: capitalize;
    transition: .2s linear;
    margin-top: 1rem;
-   background-color: var(--main-color);
+   background-color: #0b0b31;
 }
 
 .btn:hover{
    border-radius: 5rem;
    background-color: var(--sub-color);
-   color: var(--main-color);
+   color: #0b0b31;
    box-shadow: 0 0 10px var(--accent-color);
 }
 
@@ -120,14 +120,14 @@ section{
 
 .header .navbar a{
    font-size: 1.8rem;
-   color: var(--main-color);
+   color: #0b0b31;
    padding: 1rem 3rem;
    border-radius: .5rem;
    transition: background 0.2s, color 0.2s;
 }
 
 .header .navbar a:hover{
-   background-color: var(--main-color);
+   background-color: #0b0b31;
    color: var(--sub-color);
 }
 
@@ -149,7 +149,7 @@ section{
 .book-now-btn:hover,
 .book-now-btn:focus {
   background: var(--sub-color);
-  color: var(--main-color);
+  color: #0b0b31;
   box-shadow: 0 4px 16px var(--accent-color);
   outline: none;
 }
@@ -197,7 +197,7 @@ section{
 
 .swiper-button-next::after,
 .swiper-button-prev::after{
-   color: var(--main-color);
+   color: #0b0b31;
    font-size: 2rem;
 }
 
@@ -205,7 +205,7 @@ section{
 .swiper-button-prev:hover{
    opacity: 1;
    background: var(--sub-color);
-   color: var(--main-color);
+   color: #0b0b31;
 }
 
 .availability form .flex{
@@ -227,7 +227,7 @@ section{
    width: 100%;
    padding: 1rem 0;
    font-size: 1.8rem;
-   background-color: var(--main-color);
+   background-color: #0b0b31;
    color: var(--white);
    border-bottom: var(--border);
    margin: 1rem 0;
@@ -294,7 +294,7 @@ section{
 .services .box-container .box{
    padding: 2rem;
    text-align: center;
-   background: var(--white);
+   background: #0b0b31;
    border-radius: 1rem;
    box-shadow: 0 2px 8px rgba(26,26,128,0.08);
    border: 1px solid var(--accent-color);
@@ -315,13 +315,13 @@ section{
 .services .box-container .box p{
    line-height: 2;
    font-size: 1.5rem;
-   color:var(--main-color);
+   color: var(--white);
 }
 
 .reservation form{
    border: var(--border);
    padding: 2rem;
-   background: var(--white);
+   background: #0b0b31;
    border-radius: 1rem;
 }
 
@@ -333,7 +333,7 @@ section{
 
 .reservation form h3{
    background-color: var(--sub-color);
-   color: var(--main-color);
+   color: #0b0b31;
    font-size: 2.5rem;
    margin-bottom: 2rem;
    border-radius: .5rem;
@@ -348,14 +348,14 @@ section{
 
 .reservation form .flex .box p{
    font-size: 1.8rem;
-   color: var(--main-color);
+   color: var(--white);
 }
 
 .reservation form .flex .box .input{
    padding: 1rem 0;
    margin: 1rem 0;
    border-bottom: var(--border);
-   background: var(--main-color);
+   background: #0b0b31;
    color: var(--white);
    font-size: 1.8rem;
    width: 100%;
@@ -404,7 +404,7 @@ section{
    border-radius: .5rem;
    padding: 2rem;
    text-align: center;
-   background: var(--white);
+   background: #0b0b31;
 }
 
 .contact .row .faq{
@@ -415,7 +415,7 @@ section{
    margin-bottom: 1rem;
    border-radius: .5rem;
    padding: 1.2rem;
-   color: var(--main-color);
+   color: #0b0b31;
    background-color: var(--sub-color);
    font-size: 2.2rem;
    text-transform: capitalize;
@@ -426,8 +426,8 @@ section{
    margin: 1rem 0;
    border-bottom: var(--border);
    font-size: 1.8rem;
-   color: var(--main-color);
-   background:var(--white);
+   color: var(--white);
+   background: #0b0b31;
    width: 100%;
 }
 
@@ -452,7 +452,7 @@ section{
    border-radius: .5rem;
    border: var(--border);
    margin-top: 2rem;
-   background: var(--white);
+   background: #0b0b31;
 }
 
 .contact .row .faq .box h3{
@@ -468,7 +468,7 @@ section{
    padding:1.5rem 2rem;
    line-height: 2;
    font-size: 1.6rem;
-   color: var(--main-color);
+   color: var(--white);
    display: none;
 }
 
@@ -485,7 +485,7 @@ section{
    user-select: none;
    padding: 2rem;
    margin-bottom: 4rem;
-   background: var(--white);
+   background: #0b0b31;
    border-radius: 1rem;
    border: 1px solid var(--accent-color);
 }
@@ -507,7 +507,7 @@ section{
 .reviews .box p{
    line-height: 2;
    font-size: 1.5rem;
-   color: var(--main-color);
+   color: var(--white);
 }
 
 /* Google Map Responsive Styling */
@@ -554,7 +554,7 @@ section{
 .footer .box-container .box a{
    display: block;
    font-size: 1.8rem;
-   color: var(--main-color);
+   color: var(--white);
    padding: 1rem 0;
    transition: color 0.2s;
 }
@@ -583,7 +583,7 @@ section{
    border-radius: .5rem;
    padding: 2rem;
    text-align: center;
-   color: var(--main-color);
+   color: #0b0b31;
    background-color: var(--sub-color);
    font-size: 2rem;
    margin-top: 2rem;
