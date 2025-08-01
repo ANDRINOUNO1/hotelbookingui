@@ -37,11 +37,26 @@ section{
 
 .logo {
   display: flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+}
+
+.logo-bc {
+  font-weight: 700;
+  font-size: 2.5rem;
   color: #b4884d;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.logo-flats {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #fff;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-top: -2px;
 }
 
 .logo img {
@@ -74,6 +89,12 @@ section{
 .header-bar nav a:hover {
   color: #b4884d;
   background: #fff;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .book-now-btn {
@@ -241,6 +262,11 @@ section.header {
 }
 
 
+
+.home {
+  background: #0b0b31;
+  padding: 2rem 0;
+}
 
 .home .box img{
    border-radius: .5rem;
