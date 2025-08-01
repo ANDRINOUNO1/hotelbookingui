@@ -34,14 +34,9 @@
               }
             ],
             "styles": [
-              "src/tailwind.css",
               "src/styles.scss",
               "node_modules/swiper/swiper-bundle.min.css"
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
-            },
-            "postcssConfig": "postcss.config.js",
             "scripts": [
                 "node_modules/apexcharts/dist/apexcharts.min.js"
             ]
