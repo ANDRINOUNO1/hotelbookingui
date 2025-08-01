@@ -25,6 +25,10 @@ export class AccountListComponent implements OnInit {
   currentUserId: string | null = null;
   public Role = Role;
   showEditModal = false;
+  
+  // Custom delete confirmation modal
+  showDeleteModal = false;
+  accountToDelete: Account | null = null;
 
   newAccount: any = {
     username: '',
@@ -39,20 +43,41 @@ export class AccountListComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.loadAccounts();
+      // Only load accounts if user is logged in
+      const account = this.accountService.accountValue;
+      if (account) {
+        this.loadAccounts();
+      }
     });
   }
 
   ngOnInit() {
+    // Check if user is logged in first
+    const account = this.accountService.accountValue;
+    if (!account) {
+      console.log('User not logged in, redirecting to login');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
     this.loadAccounts();
     const current = this.accountService.accountValue;
     this.currentUserId = current?.id || null;
   }
 
   loadAccounts() {
-    this.accountService.getAll().subscribe(accounts => {
-      this.accounts = accounts.filter(acc => acc.status === 'Active');
-      this.filteredAccounts = this.accounts;
+    this.accountService.getAll().subscribe({
+      next: (accounts) => {
+        this.accounts = accounts.filter(acc => acc.status === 'Active');
+        this.filteredAccounts = this.accounts;
+      },
+      error: (error) => {
+        console.error('Error loading accounts:', error);
+        if (error.status === 401) {
+          console.log('Unauthorized - redirecting to login');
+          this.router.navigate(['/login']);
+        }
+      }
     });
   }
 
@@ -89,6 +114,29 @@ export class AccountListComponent implements OnInit {
     this.editingId = null;
     this.editAccount = null;
     this.showEditModal = false;
+  }
+
+  // Show custom delete confirmation modal
+  showDeleteConfirmation(account: Account) {
+    if (account.id === this.currentUserId) return;
+    this.accountToDelete = account;
+    this.showDeleteModal = true;
+  }
+
+  // Confirm delete action
+  confirmDelete() {
+    if (this.accountToDelete && this.accountToDelete.id) {
+      this.accountService.delete(this.accountToDelete.id).subscribe(() => {
+        this.loadAccounts();
+        this.cancelDelete();
+      });
+    }
+  }
+
+  // Cancel delete action
+  cancelDelete() {
+    this.showDeleteModal = false;
+    this.accountToDelete = null;
   }
 
   deleteAccount(id: string) {
