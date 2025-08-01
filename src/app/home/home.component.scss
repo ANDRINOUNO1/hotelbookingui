@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap');
-
+.back{
+   background-color: #0b0b31 !important;
+}
 :root {
    --main-color: #0b0b31;
    --sub-color: #e5c07b;
@@ -46,7 +48,7 @@ html{
 }
 
 body{
-   background-color: var(--main-color);
+   background-color: #0b0b31 !important;
    color: var(--white);
 }
 
@@ -999,7 +1001,7 @@ section.header {
 }
 
 body, html {
-  background: var(--main-color) !important;
+  background: #0b0b31 !important;
   color: var(--white);
 }
 
