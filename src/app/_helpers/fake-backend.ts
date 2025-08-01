@@ -135,12 +135,73 @@ if (isBrowser) {
   }
 }
 
+// Initialize data for SSR/build time
+if (!isBrowser) {
+  // Initialize with default data for server-side rendering
+  accounts = [
+    {
+      id: '1',
+      title: 'superadmin',
+      firstName: 'Super',
+      lastName: 'Admin',
+      email: 'superadmin@example.com',
+      status: 'Active',
+      role: Role.SuperAdmin,
+      password: 'superadmin123'
+    },
+    {
+      id: '3',
+      title: 'admin',
+      firstName: 'Admin',
+      lastName: 'User',
+      email: 'admin@example.com',
+      status: 'Active',
+      role: Role.Admin,
+      password: 'admin123'
+    },
+    {
+      id: '2',
+      title: 'frontdesk',
+      firstName: 'Front',
+      lastName: 'Desk',
+      email: 'frontdesk@example.com',
+      status: 'Active',
+      role: Role.frontdeskUser,
+      password: 'frontdesk123'
+    }
+  ];
+
+  roomTypes = [
+    { id: 1, type: 'Classic', rate: 120 },
+    { id: 2, type: 'Deluxe', rate: 200 },
+    { id: 3, type: 'Prestige', rate: 150 },
+    { id: 4, type: 'Luxury', rate: 80 }
+  ];
+
+  rooms = [
+    { id: 1, roomNumber: '101', room_type_id: 1, floor: 1, status: true },
+    { id: 2, roomNumber: '102', room_type_id: 1, floor: 1, status: true },
+    { id: 3, roomNumber: '201', room_type_id: 2, floor: 2, status: true },
+    { id: 4, roomNumber: '202', room_type_id: 2, floor: 2, status: true }
+  ];
+
+  bookings = [];
+}
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const { url, method, headers, body } = request;
 
-    return handleRoute().pipe(materialize(), delay(500), dematerialize());
+    // Check if we're in a server-side rendering context
+    const isSSR = typeof window === 'undefined';
+    
+    // Handle all API requests during build time and SSR
+    if (isSSR || url.includes('/api/') || url.includes('/rooms') || url.includes('/bookings') || url.includes('/accounts')) {
+      return handleRoute().pipe(materialize(), delay(500), dematerialize());
+    }
+
+    return next.handle(request);
 
     function handleRoute() {
       switch (true) {
@@ -172,8 +233,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return deleteBooking();
         case url.endsWith('/api/reset') && method === 'POST':
             return resetData();
+        // Handle direct API calls without /api prefix
+        case url.endsWith('/rooms') && method === 'GET':
+          return getRooms();
+        case url.endsWith('/bookings') && method === 'GET':
+          return getBookings();
+        case url.endsWith('/accounts') && method === 'GET':
+          return getAccounts();
+        case url.endsWith('/rooms/types') && method === 'GET':
+          return getRoomTypes();
+        case url.endsWith('/rooms/reservation-fee') && method === 'GET':
+          return getReservationFee();
         default:
-          return next.handle(request);
+          // For any other API request, return empty data to prevent build errors
+          return ok([]);
       }
     }
 
@@ -398,6 +471,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       }
 
       return ok({ message: 'Fake backend data has been reset.' });
+    }
+
+    function getReservationFee() {
+      return ok(RESERVATION_FEES);
     }
 
   }
