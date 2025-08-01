@@ -1,4 +1,13 @@
-<div class="room-view-container">
+<!-- Loading Spinner Overlay -->
+<app-loading-spinner 
+  *ngIf="isLoading" 
+  [overlay]="true" 
+  message="Loading Rooms..." 
+  [size]="'large'">
+</app-loading-spinner>
+
+<!-- Content will show after loading -->
+<div *ngIf="!isLoading" class="rooms-container">
   <div class="room-view-header">
     <h2>Room Management</h2>
     <div class="header-info">

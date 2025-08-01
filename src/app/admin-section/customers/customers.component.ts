@@ -4,11 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { Room, Booking } from '../../_models/booking.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.scss'
 })
@@ -16,6 +17,7 @@ export class CustomersComponent implements OnInit {
   occupiedRooms: any[] = [];
   selectedBooking: any = null;
   selectedCustomer: any = null;
+  isLoading = true;
 
   constructor(private http: HttpClient) {}
 
@@ -24,6 +26,7 @@ export class CustomersComponent implements OnInit {
   }
 
   loadOccupiedRooms() {
+    this.isLoading = true;
     this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (roomsData) => {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
@@ -51,11 +54,21 @@ export class CustomersComponent implements OnInit {
             });
 
             this.occupiedRooms = Object.values(grouped);
+            // Hide loading after data is loaded
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 500);
           },
-          error: (err) => console.error('Failed to load bookings:', err)
+          error: (err) => {
+            console.error('Failed to load bookings:', err);
+            this.isLoading = false;
+          }
         });
       },
-      error: (err) => console.error('Failed to load rooms:', err)
+      error: (err) => {
+        console.error('Failed to load rooms:', err);
+        this.isLoading = false;
+      }
     });
   }
 

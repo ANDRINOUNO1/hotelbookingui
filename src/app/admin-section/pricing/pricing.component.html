@@ -1,4 +1,13 @@
-<div class="pricing-container">
+<!-- Loading Spinner Overlay -->
+<app-loading-spinner 
+  *ngIf="isLoading" 
+  [overlay]="true" 
+  message="Loading Pricing..." 
+  [size]="'large'">
+</app-loading-spinner>
+
+<!-- Content will show after loading -->
+<div *ngIf="!isLoading" class="pricing-container">
   <h2>Room Pricing Management</h2>
   
   <div *ngIf="loading" class="loading">

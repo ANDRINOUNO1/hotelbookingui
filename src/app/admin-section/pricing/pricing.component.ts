@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoomType, ReservationFee } from '../../_models/booking.model';
 import { environment } from '../../../environments/environment';
+import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
 
 @Component({
   selector: 'app-pricing',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.scss']
 })
@@ -23,6 +24,7 @@ export class PricingComponent implements OnInit {
   editReservationFee: number | null = null;
 
   loading = false;
+  isLoading = true;
 
   constructor(private http: HttpClient) {}
 
@@ -38,6 +40,10 @@ export class PricingComponent implements OnInit {
         this.roomTypes = roomTypes;
         console.log('Room types loaded:', roomTypes);
         this.loading = false;
+        // Hide loading after data is loaded
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500);
       },
       error: (err) => {
         console.error('Failed to fetch room types:', err);
@@ -49,6 +55,10 @@ export class PricingComponent implements OnInit {
           { id: 3, type: 'Prestige', rate: 150, basePrice: 150 },
           { id: 4, type: 'Luxury', rate: 80, basePrice: 80 }
         ];
+        // Hide loading after fallback data is loaded
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500);
       }
     });
   }
