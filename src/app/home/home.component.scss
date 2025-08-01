@@ -76,8 +76,8 @@ section{
   background: #fff;
 }
 
-.login-btn, .book-now-btn {
-  background:#b4884d;
+.book-now-btn {
+  background: #b4884d;
   color: #fff;
   font-size: 1.25rem;
   font-weight: 700;
@@ -85,15 +85,36 @@ section{
   padding: 0.9rem 2.8rem;
   margin-left: 2rem;
   border: none;
-  box-shadow: 0 2px 8px rgba(11,11,49,0.08);
+  box-shadow: 0 2px 8px rgba(180,136,77,0.08);
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
 
-.login-btn:hover, .book-now-btn:hover {
+.login-btn {
   background: #fff;
-  color: #ebb164;
+  color: #0b0b31;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 2.2rem;
+  padding: 0.9rem 2.8rem;
+  margin-left: 2rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.book-now-btn:hover {
+  background: #fff;
+  color: #b4884d;
+  box-shadow: 0 4px 16px #0b0b31;
+}
+
+.login-btn:hover {
+  background: #0b0b31;
+  color: #fff;
   box-shadow: 0 4px 16px #0b0b31;
 }
 

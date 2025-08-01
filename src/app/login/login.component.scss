@@ -95,17 +95,23 @@
   width: 100%;
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(245,245,247,0.92);
-  color: var(--main-color);
+  border: 1px solid rgba(229, 192, 123, 0.3);
+  background: #ffffff;
+  color: #0b0b31;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-input::placeholder {
+  color: #0a0a0a;
 }
 
 .form-input:focus {
-  border: 1.5px solid var(--accent-color);
+  border: 1.5px solid #b4884d;
   box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
+  background: #ffffff;
 }
 
 .login-options {
