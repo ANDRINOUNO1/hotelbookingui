@@ -96,8 +96,8 @@
   padding: 1rem 1.25rem;
   border-radius: 12px;
   border: 1px solid rgba(229, 192, 123, 0.3);
-  background: #ffffff;
-  color: #0b0b31;
+  background: #0b0b31;
+  color: #ffffff;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
@@ -105,13 +105,13 @@
 }
 
 .form-input::placeholder {
-  color: #0a0a0a;
+  color: #cccccc;
 }
 
 .form-input:focus {
   border: 1.5px solid #b4884d;
   box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
-  background: #ffffff;
+  background: #0b0b31;
 }
 
 .login-options {
