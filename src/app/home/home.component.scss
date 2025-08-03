@@ -1456,14 +1456,32 @@ body, html {
     
     // Add mobile menu toggle
     .mobile-menu-toggle {
-      display: block;
+      display: flex;
+      flex-direction: column;
       background: none;
       border: none;
       color: #fff;
-      font-size: 1.5rem;
       cursor: pointer;
       padding: 0.5rem;
       margin-left: auto;
+      margin-right: 1rem;
+      min-width: 44px;
+      min-height: 44px;
+      justify-content: center;
+      align-items: center;
+      gap: 3px;
+      
+      span {
+        width: 20px;
+        height: 2px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+        border-radius: 1px;
+      }
+      
+      &:hover span {
+        background-color: #b4884d;
+      }
     }
     
     nav {
@@ -1484,13 +1502,31 @@ body, html {
       }
       
       a {
-        padding: 0.8rem 1.5rem;
+        padding: 1rem 1.5rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         text-align: center;
         font-size: 1rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         
         &:last-child {
           border-bottom: none;
+        }
+        
+        &.book-now-btn {
+          background: #b4884d;
+          margin: 0.5rem 1.5rem;
+          border-radius: 6px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          
+          &:hover {
+            background: #a67c45;
+            transform: translateY(-1px);
+          }
         }
       }
     }

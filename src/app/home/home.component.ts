@@ -110,6 +110,13 @@ export class HomeComponent implements AfterViewInit {
     this.navbar.nativeElement.classList.toggle('active');
   }
 
+  toggleMobileMenu() {
+    const nav = document.querySelector('.header-bar nav');
+    if (nav) {
+      nav.classList.toggle('mobile-open');
+    }
+  }
+
   ngOnInit() {
   }
 

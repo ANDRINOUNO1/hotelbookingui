@@ -77,6 +77,13 @@ export class AdminSectionComponent implements OnInit {
     this.openMenu = this.openMenu === menu ? null : menu;
   }
 
+  toggleMobileMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('mobile-open');
+    }
+  }
+
   toggleUserMenu() {
     this.userMenuOpen = !this.userMenuOpen;
   }

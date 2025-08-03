@@ -903,6 +903,41 @@ body.dark-mode {
 // Enhanced Mobile Navigation
 @media (max-width: 575px) {
   .sidebar {
+    .admin-logo-bar {
+      position: relative;
+      
+      .mobile-menu-toggle {
+        display: flex;
+        flex-direction: column;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 0.5rem;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        
+        span {
+          width: 20px;
+          height: 2px;
+          background-color: #fff;
+          transition: all 0.3s ease;
+          border-radius: 1px;
+        }
+        
+        &:hover span {
+          background-color: #b4884d;
+        }
+      }
+    }
+    
     .sidebar-header {
       padding: 1rem;
       
@@ -936,5 +971,26 @@ body.dark-mode {
         font-size: 0.8rem;
       }
     }
+  }
+}
+
+// Mobile Sidebar Toggle
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    
+    &.mobile-open {
+      left: 0;
+    }
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
   }
 }
