@@ -566,3 +566,210 @@ body.dark-mode {
 }
     }
   }
+
+
+// Enhanced Responsive Design for Admin Section
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .dashboard-container {
+    .sidebar {
+      width: 250px;
+      padding-top: 1.5rem;
+    }
+    
+    .main-content {
+      padding: 2rem;
+    }
+    
+    .admin-logo {
+      height: 70px;
+    }
+    
+    .hotel-title {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .dashboard-container {
+    .sidebar {
+      width: 240px;
+    }
+    
+    .main-content {
+      padding: 1.5rem;
+    }
+    
+    .hotel-title {
+      font-size: 1.7rem;
+    }
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .dashboard-container {
+    .sidebar {
+      width: 220px;
+    }
+    
+    .main-content {
+      padding: 1.25rem;
+    }
+    
+    .hotel-title {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .dashboard-container {
+    .sidebar {
+      width: 200px;
+    }
+    
+    .main-content {
+      padding: 1rem;
+    }
+    
+    .hotel-title {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .dashboard-container {
+    .sidebar {
+      width: 180px;
+      padding-top: 0.75rem;
+    }
+    
+    .main-content {
+      padding: 0.75rem;
+    }
+    
+    .admin-logo {
+      height: 50px;
+    }
+    
+    .hotel-title {
+      font-size: 1.3rem;
+    }
+    
+    .sidebar-bottom {
+      padding: 1rem 0.75rem 0.75rem 0.75rem;
+    }
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .dashboard-container {
+    flex-direction: column;
+    
+    .sidebar {
+      width: 100%;
+      min-height: auto;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+    }
+    
+    .sidebar-bottom {
+      margin-top: 0;
+      padding: 0;
+      flex-direction: row;
+      gap: 1rem;
+    }
+    
+    .main-content {
+      padding: 0.5rem;
+    }
+    
+    .admin-logo {
+      height: 40px;
+    }
+    
+    .hotel-title {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .dashboard-container {
+    flex-direction: column;
+    
+    .sidebar {
+      width: 100%;
+      min-height: auto;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .sidebar-bottom {
+      margin-top: 0;
+      padding: 0;
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+    
+    .main-content {
+      padding: 0.25rem;
+    }
+    
+    .admin-logo {
+      height: 35px;
+    }
+    
+    .hotel-title {
+      font-size: 1rem;
+    }
+    
+    .user-menu {
+      .user-avatar {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .dashboard-container {
+    .sidebar {
+      padding: 0.2rem 0.4rem;
+    }
+    
+    .main-content {
+      padding: 0.2rem;
+    }
+    
+    .admin-logo {
+      height: 30px;
+    }
+    
+    .hotel-title {
+      font-size: 0.9rem;
+    }
+    
+    .user-menu {
+      .user-avatar {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}

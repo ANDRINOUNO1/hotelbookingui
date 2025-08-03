@@ -15,12 +15,9 @@ import { LoadingSpinnerComponent } from '../../_components/loading-spinner.compo
 })
 export class PricingComponent implements OnInit {
   roomTypes: RoomType[] = [];
-  reservationFee: number = 0;
 
   editingId: number | null = null;
   editRate: number | null = null;
-
-  editingReservationFee = false;
   editReservationFee: number | null = null;
 
   loading = false;
@@ -30,7 +27,6 @@ export class PricingComponent implements OnInit {
 
   ngOnInit() {
     this.fetchRoomTypes();
-    this.fetchReservationFee();
   }
 
   fetchRoomTypes() {
@@ -50,10 +46,10 @@ export class PricingComponent implements OnInit {
         this.loading = false;
         // Fallback to mock data if API fails
         this.roomTypes = [
-          { id: 1, type: 'Classic', rate: 120, basePrice: 120 },
-          { id: 2, type: 'Deluxe', rate: 200, basePrice: 200 },
-          { id: 3, type: 'Prestige', rate: 150, basePrice: 150 },
-          { id: 4, type: 'Luxury', rate: 80, basePrice: 80 }
+          { id: 1, type: 'Classic', rate: 120, basePrice: 120, description: 'Comfortable and affordable accommodation', reservationFeePercentage: 10.00 },
+          { id: 2, type: 'Deluxe', rate: 200, basePrice: 200, description: 'Enhanced amenities and spacious rooms', reservationFeePercentage: 15.00 },
+          { id: 3, type: 'Prestige', rate: 150, basePrice: 150, description: 'Luxury accommodations with premium services', reservationFeePercentage: 12.50 },
+          { id: 4, type: 'Luxury', rate: 80, basePrice: 80, description: 'Ultimate luxury experience', reservationFeePercentage: 8.00 }
         ];
         // Hide loading after fallback data is loaded
         setTimeout(() => {
@@ -63,35 +59,32 @@ export class PricingComponent implements OnInit {
     });
   }
 
-  fetchReservationFee() {
-    this.http.get<ReservationFee>(`${environment.apiUrl}/rooms/reservation-fee`).subscribe({
-      next: (fee) => {
-        this.reservationFee = fee.fee;
-        console.log('✅ Reservation fee loaded from database:', this.reservationFee);
-      },
-      error: (err) => {
-        console.error('❌ Failed to fetch reservation fee:', err);
-        this.reservationFee = 500; // Fallback to default
-      }
-    });
-  }
-
   startEdit(roomType: RoomType) {
     this.editingId = roomType.id;
     this.editRate = roomType.rate ?? roomType.basePrice ?? 0;
+    this.editReservationFee = roomType.reservationFeePercentage ?? 0;
   }
 
   saveEdit(roomType: RoomType) {
-    if (this.editingId === roomType.id && this.editRate !== null) {
-      this.http.put<RoomType>(`${environment.apiUrl}/rooms/types/${roomType.id}`, { rate: this.editRate }).subscribe({
+    if (this.editingId === roomType.id && this.editRate !== null && this.editReservationFee !== null) {
+      const updateData = {
+        basePrice: this.editRate,
+        reservationFeePercentage: this.editReservationFee
+      };
+      
+      this.http.put<RoomType>(`${environment.apiUrl}/rooms/types/${roomType.id}`, updateData).subscribe({
         next: (updated) => {
           roomType.rate = updated.rate || updated.basePrice;
           roomType.basePrice = updated.basePrice;
+          roomType.reservationFeePercentage = updated.reservationFeePercentage;
           this.editingId = null;
           this.editRate = null;
+          this.editReservationFee = null;
+          console.log('✅ Room type updated successfully:', updated);
         },
         error: (err) => {
           console.error('Failed to update room type:', err);
+          alert('Failed to update room type. Please try again.');
         }
       });
     }
@@ -100,33 +93,6 @@ export class PricingComponent implements OnInit {
   cancelEdit() {
     this.editingId = null;
     this.editRate = null;
-  }
-
-  // ✅ Reservation fee handlers
-  startEditReservationFee() {
-    this.editingReservationFee = true;
-    this.editReservationFee = this.reservationFee;
-  }
-
-  saveEditReservationFee() {
-    if (this.editReservationFee !== null) {
-      this.http.put<ReservationFee>(`${environment.apiUrl}/rooms/reservation-fee`, { fee: this.editReservationFee }).subscribe({
-        next: (updated) => {
-          this.reservationFee = updated.fee;
-          this.editingReservationFee = false;
-          this.editReservationFee = null;
-          console.log('✅ Reservation fee updated in database:', updated.fee);
-        },
-        error: (err) => {
-          console.error('❌ Failed to update reservation fee:', err);
-          alert('Failed to update reservation fee. Please try again.');
-        }
-      });
-    }
-  }
-
-  cancelEditReservationFee() {
-    this.editingReservationFee = false;
     this.editReservationFee = null;
   }
 }

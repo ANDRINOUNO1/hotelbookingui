@@ -307,3 +307,187 @@
     font-size: 0.8rem;
   }
 }
+
+// Enhanced Responsive Design for Login Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .login-container {
+    width: 1200px;
+    height: 700px;
+  }
+  
+  .form-section {
+    padding: 3rem;
+  }
+  
+  .login-card {
+    padding: 3rem;
+  }
+  
+  .overlay-title {
+    font-size: 3rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 1.4rem;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .login-container {
+    width: 1100px;
+    height: 650px;
+  }
+  
+  .form-section {
+    padding: 2.5rem;
+  }
+  
+  .login-card {
+    padding: 2.5rem;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .login-container {
+    width: 1000px;
+    height: 600px;
+  }
+  
+  .form-section {
+    padding: 2.25rem;
+  }
+  
+  .login-card {
+    padding: 2.25rem;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .login-container {
+    width: 900px;
+    height: 550px;
+  }
+  
+  .form-section {
+    padding: 2rem;
+  }
+  
+  .login-card {
+    padding: 2rem;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .login-container {
+    width: 95%;
+    height: 500px;
+  }
+  
+  .form-section {
+    padding: 1.75rem;
+  }
+  
+  .login-card {
+    padding: 1.75rem;
+  }
+  
+  .overlay-title {
+    font-size: 1.8rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .form-section {
+    padding: 1.5rem;
+  }
+  
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .image-section {
+    height: 180px;
+  }
+  
+  .overlay-title {
+    font-size: 1.6rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .login-container {
+    width: 98%;
+    margin: 0.5rem;
+  }
+  
+  .form-section {
+    padding: 1.25rem;
+  }
+  
+  .login-card {
+    padding: 1.25rem;
+  }
+  
+  .image-section {
+    height: 150px;
+  }
+  
+  .overlay-title {
+    font-size: 1.4rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.8rem;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .login-container {
+    width: 100%;
+    margin: 0.25rem;
+  }
+  
+  .form-section {
+    padding: 1rem;
+  }
+  
+  .login-card {
+    padding: 1rem;
+  }
+  
+  .image-section {
+    height: 120px;
+  }
+  
+  .overlay-title {
+    font-size: 1.2rem;
+  }
+  
+  .overlay-subtitle {
+    font-size: 0.75rem;
+  }
+}

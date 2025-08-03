@@ -987,6 +987,192 @@ section.header {
 
 }
 
+// Enhanced Responsive Design for Home Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  html {
+    font-size: 70%;
+  }
+  
+  .header .flex .logo {
+    font-size: 3rem;
+  }
+  
+  .home .box img {
+    height: 80vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 4rem 3rem;
+    top: 45%;
+  }
+  
+  .google-map iframe {
+    height: 350px;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  html {
+    font-size: 65%;
+  }
+  
+  .home .box img {
+    height: 70vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 3.5rem 2.5rem;
+    top: 42%;
+  }
+  
+  .google-map iframe {
+    height: 320px;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  html {
+    font-size: 60%;
+  }
+  
+  .home .box img {
+    height: 60vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 3rem 2rem;
+    top: 40%;
+  }
+  
+  .google-map iframe {
+    height: 300px;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  html {
+    font-size: 58%;
+  }
+  
+  .home .box img {
+    height: 55vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 2.5rem 1.5rem;
+    top: 38%;
+  }
+  
+  .google-map iframe {
+    height: 280px;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  html {
+    font-size: 55%;
+  }
+  
+  .home .box img {
+    height: 50vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 2rem 1rem;
+    top: 35%;
+  }
+  
+  .google-map iframe {
+    height: 250px;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  html {
+    font-size: 52%;
+  }
+  
+  .header .flex .logo {
+    font-size: 2.2rem;
+  }
+  
+  .home .box img {
+    height: 45vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 1.5rem 0.75rem;
+    top: 32%;
+  }
+  
+  .google-map iframe {
+    height: 220px;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  html {
+    font-size: 50%;
+  }
+  
+  .header .flex .logo {
+    font-size: 2rem;
+  }
+  
+  .home .box img {
+    height: 35vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 1rem 0.5rem;
+    top: 30%;
+  }
+  
+  .google-map iframe {
+    height: 180px;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  html {
+    font-size: 45%;
+  }
+  
+  .header .flex .logo {
+    font-size: 1.8rem;
+  }
+  
+  .home .box img {
+    height: 30vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 0.75rem 0.4rem;
+    top: 28%;
+  }
+  
+  .google-map iframe {
+    height: 160px;
+  }
+}
+
 .services .box-container .box,
 .reservation form,
 .contact .row form,

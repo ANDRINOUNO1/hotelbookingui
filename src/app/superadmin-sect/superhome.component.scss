@@ -83,4 +83,228 @@
   flex: 1;
   background: var(--main-background);
   padding: 1rem;
+}
+
+// Responsive Design for Superadmin Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      width: 250px;
+      padding-top: 1.5rem;
+    }
+    
+    .superadmin-content {
+      padding: 2rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 1rem 2rem;
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .logo {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      width: 240px;
+    }
+    
+    .superadmin-content {
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      width: 220px;
+    }
+    
+    .superadmin-content {
+      padding: 1.25rem;
+    }
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      width: 200px;
+    }
+    
+    .superadmin-content {
+      padding: 1rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      width: 180px;
+      padding-top: 0.75rem;
+    }
+    
+    .superadmin-content {
+      padding: 0.75rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 0.5rem 1rem;
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .logo {
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .superadmin-container {
+    flex-direction: column;
+    
+    .superadmin-sidebar {
+      width: 100%;
+      min-height: auto;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      
+      ul {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 0;
+      }
+      
+      li {
+        padding: 0.5rem 1rem;
+        margin: 0;
+      }
+    }
+    
+    .superadmin-content {
+      padding: 0.5rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 0.5rem 0.75rem;
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+      
+      .logo {
+        font-size: 1.6rem;
+      }
+      
+      .topbar-left {
+        gap: 1rem;
+      }
+    }
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .superadmin-container {
+    flex-direction: column;
+    
+    .superadmin-sidebar {
+      width: 100%;
+      min-height: auto;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      
+      ul {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        padding: 0;
+      }
+      
+      li {
+        padding: 0.25rem 0.5rem;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+    
+    .superadmin-content {
+      padding: 0.25rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 0.25rem 0.5rem;
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      .logo {
+        font-size: 1.4rem;
+      }
+      
+      .topbar-left {
+        gap: 0.5rem;
+      }
+    }
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .superadmin-container {
+    .superadmin-sidebar {
+      padding: 0.2rem 0.4rem;
+      
+      li {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.8rem;
+      }
+    }
+    
+    .superadmin-content {
+      padding: 0.2rem;
+    }
+    
+    .superadmin-topbar {
+      padding: 0.2rem 0.4rem;
+      
+      h1 {
+        font-size: 1.2rem;
+      }
+      
+      .logo {
+        font-size: 1.2rem;
+      }
+    }
+  }
 } 

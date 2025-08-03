@@ -22,7 +22,9 @@
     <thead>
       <tr>
         <th>Room Type</th>
-        <th>Current Rate</th>
+        <th>Description</th>
+        <th>Base Price</th>
+        <th>Reservation Fee %</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -32,6 +34,10 @@
           <span *ngIf="roomType.type">{{ roomType.type }}</span>
           <span *ngIf="!roomType.type" style="color: red;">[NO TYPE]</span>
         </td>
+        <td>
+          <span *ngIf="roomType.description">{{ roomType.description }}</span>
+          <span *ngIf="!roomType.description" style="color: #999;">No description</span>
+        </td>
         <td *ngIf="editingId !== roomType.id">
           <span *ngIf="roomType.rate || roomType.basePrice">₱{{ roomType.rate || roomType.basePrice || 0 }}</span>
           <span *ngIf="!roomType.rate && !roomType.basePrice" style="color: red;">[NO RATE]</span>
@@ -39,23 +45,17 @@
         <td *ngIf="editingId === roomType.id">
           <input type="number" [(ngModel)]="editRate" min="0" step="0.01" class="rate-input" />
         </td>
+        <td *ngIf="editingId !== roomType.id">
+          <span *ngIf="roomType.reservationFeePercentage !== undefined">{{ roomType.reservationFeePercentage }}%</span>
+          <span *ngIf="roomType.reservationFeePercentage === undefined" style="color: red;">[NO FEE]</span>
+        </td>
+        <td *ngIf="editingId === roomType.id">
+          <input type="number" [(ngModel)]="editReservationFee" min="0" max="100" step="0.01" class="rate-input" />
+        </td>
         <td>
           <button *ngIf="editingId !== roomType.id" (click)="startEdit(roomType)" class="btn-edit">Edit</button>
           <button *ngIf="editingId === roomType.id" (click)="saveEdit(roomType)" class="btn-save">Save</button>
           <button *ngIf="editingId === roomType.id" (click)="cancelEdit()" class="btn-cancel">Cancel</button>
-        </td>
-      </tr>
-
-      <tr class="reservation-fee-row">
-        <td><strong>Reservation Fee</strong></td>
-        <td *ngIf="!editingReservationFee">₱{{ reservationFee }}</td>
-        <td *ngIf="editingReservationFee">
-          <input type="number" [(ngModel)]="editReservationFee" min="0" step="0.01" class="rate-input" />
-        </td>
-        <td>
-          <button *ngIf="!editingReservationFee" (click)="startEditReservationFee()" class="btn-edit">Edit</button>
-          <button *ngIf="editingReservationFee" (click)="saveEditReservationFee()" class="btn-save">Save</button>
-          <button *ngIf="editingReservationFee" (click)="cancelEditReservationFee()" class="btn-cancel">Cancel</button>
         </td>
       </tr>
     </tbody>

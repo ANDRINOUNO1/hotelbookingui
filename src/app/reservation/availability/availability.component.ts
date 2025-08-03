@@ -93,10 +93,10 @@ export class AvailabilityComponent implements OnInit {
   // Fallback to static data
   loadStaticRoomTypes() {
     this.availableRoomTypes = [
-      { id: 1, type: 'Classic', description: 'Comfortable and affordable accommodation', basePrice: 120, rate: 120 },
-      { id: 2, type: 'Deluxe', description: 'Enhanced amenities and spacious rooms', basePrice: 200, rate: 200 },
-      { id: 3, type: 'Prestige', description: 'Luxury accommodations with premium services', basePrice: 150, rate: 150 },
-      { id: 4, type: 'Luxury', description: 'Ultimate luxury experience with top-tier amenities', basePrice: 80, rate: 80 }
+      { id: 1, type: 'Classic', description: 'Comfortable and affordable accommodation', basePrice: 120, rate: 120, reservationFeePercentage: 10.00 },
+      { id: 2, type: 'Deluxe', description: 'Enhanced amenities and spacious rooms', basePrice: 200, rate: 200, reservationFeePercentage: 15.00 },
+      { id: 3, type: 'Prestige', description: 'Luxury accommodations with premium services', basePrice: 150, rate: 150, reservationFeePercentage: 12.50 },
+      { id: 4, type: 'Luxury', description: 'Ultimate luxury experience with top-tier amenities', basePrice: 80, rate: 80, reservationFeePercentage: 8.00 }
     ];
   }
 

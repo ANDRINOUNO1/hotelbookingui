@@ -36,6 +36,7 @@ export class ConfirmationComponent implements OnInit {
   };
 
   reservationFee: number = 0;
+  calculatedReservationFee: number = 0;
 
   constructor(
     private http: HttpClient,
@@ -48,7 +49,18 @@ export class ConfirmationComponent implements OnInit {
     this.reservationData = this.reservationDataService.getReservation();
     this.customerDetails = this.reservationDataService.getCustomerDetails();
 
-    this.fetchReservationFee();
+    this.calculateReservationFee();
+  }
+
+  calculateReservationFee() {
+    if (this.selectedRoomType?.reservationFeePercentage && this.selectedRoomType?.basePrice) {
+      this.calculatedReservationFee = (this.selectedRoomType.basePrice * this.selectedRoomType.reservationFeePercentage) / 100;
+      this.reservationFee = this.calculatedReservationFee;
+      this.paymentDetails.amount = this.reservationFee;
+    } else {
+      // Fallback to default fee if room type doesn't have reservation fee percentage
+      this.fetchReservationFee();
+    }
   }
 
   fetchReservationFee() {

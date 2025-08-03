@@ -6,6 +6,8 @@
       <h4>Selected Room Type</h4>
       <p><strong>Room:</strong> {{ selectedRoomType?.type }}</p>
       <p><strong>Rate:</strong> ${{ selectedRoomType?.rate }}</p>
+      <p *ngIf="selectedRoomType?.reservationFeePercentage"><strong>Reservation Fee:</strong> {{ selectedRoomType?.reservationFeePercentage }}%</p>
+      <p *ngIf="calculatedReservationFee"><strong>Reservation Fee Amount:</strong> ${{ calculatedReservationFee }}</p>
 
       <hr>
 

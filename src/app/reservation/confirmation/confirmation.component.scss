@@ -34,5 +34,129 @@
     display: flex;
     align-items: center;
   }
+}
 
+// Responsive Design for Confirmation Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .reservation-confirmation {
+    gap: 3rem;
+    
+    .confirmation-container,
+    .payment-container {
+      padding: 3rem;
+      border-radius: 12px;
+    }
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .reservation-confirmation {
+    gap: 2.5rem;
+    
+    .confirmation-container,
+    .payment-container {
+      padding: 2.5rem;
+    }
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .reservation-confirmation {
+    gap: 2rem;
+    
+    .confirmation-container,
+    .payment-container {
+      padding: 2rem;
+    }
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .reservation-confirmation {
+    gap: 1.5rem;
+    
+    .confirmation-container,
+    .payment-container {
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .reservation-confirmation {
+    gap: 1rem;
+    flex-direction: column;
+    
+    .confirmation-container,
+    .payment-container {
+      flex: 1 1 100%;
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .reservation-confirmation {
+    gap: 1rem;
+    flex-direction: column;
+    
+    .confirmation-container,
+    .payment-container {
+      flex: 1 1 100%;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    
+    .form-control-static {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.9rem;
+      min-height: 32px;
+    }
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .reservation-confirmation {
+    gap: 0.75rem;
+    flex-direction: column;
+    
+    .confirmation-container,
+    .payment-container {
+      flex: 1 1 100%;
+      padding: 0.75rem;
+      border-radius: 4px;
+    }
+    
+    .form-control-static {
+      padding: 0.2rem 0.4rem;
+      font-size: 0.85rem;
+      min-height: 28px;
+    }
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .reservation-confirmation {
+    gap: 0.5rem;
+    
+    .confirmation-container,
+    .payment-container {
+      padding: 0.5rem;
+    }
+    
+    .form-control-static {
+      padding: 0.15rem 0.3rem;
+      font-size: 0.8rem;
+      min-height: 24px;
+    }
+  }
 }

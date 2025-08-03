@@ -37,6 +37,11 @@
         ${{ type.rate || type.basePrice }}
       </div>
 
+      <div class="reservation-fee-info" *ngIf="type.reservationFeePercentage">
+        <span class="fee-label">Reservation Fee:</span>
+        <span class="fee-percentage">{{ type.reservationFeePercentage }}%</span>
+      </div>
+
       <div class="select-indicator">
         SELECT ROOM
       </div>

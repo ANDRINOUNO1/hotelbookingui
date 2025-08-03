@@ -34,6 +34,8 @@ export interface RoomType {
   type: string;
   rate?: number;
   basePrice?: number;
+  description?: string;
+  reservationFeePercentage?: number;
 }
 
 export interface Room {

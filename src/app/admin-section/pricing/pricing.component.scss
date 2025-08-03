@@ -38,7 +38,7 @@ h2 {
 .pricing-table td {
   padding: 15px;
   border-bottom: 1px solid #eee;
-  color: #333; /* Dark gray text color */
+  color: #333;
 }
 
 .pricing-table tr:hover {
@@ -97,22 +97,258 @@ h2 {
 
 .reservation-fee-row td {
   border-top: 2px solid #dee2e6;
-  color: #333; /* Dark gray text color */
+  color: #333;
 }
 
 /* Ensure room type names are clearly visible */
 .pricing-table td span {
-  color: #333; /* Dark gray text color */
+  color: #333;
   font-weight: 500;
 }
 
 /* Ensure rate values are clearly visible */
 .pricing-table td span:has(+ small) {
-  color: #333; /* Dark gray text color */
+  color: #333;
   font-weight: 600;
 }
 
 .pricing-table td:nth-child(2) span {
-  color: #333; /* Dark gray text color */
+  color: #333;
   font-weight: 600;
+}
+
+// Responsive Design for Pricing Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .pricing-container {
+    max-width: 1200px;
+    padding: 30px;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 20px;
+    font-size: 16px;
+  }
+  
+  .rate-input {
+    width: 120px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .pricing-container {
+    max-width: 1000px;
+    padding: 25px;
+  }
+  
+  h2 {
+    font-size: 2.2rem;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 18px;
+    font-size: 15px;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .pricing-container {
+    max-width: 900px;
+    padding: 20px;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 16px;
+    font-size: 14px;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .pricing-container {
+    max-width: 800px;
+    padding: 18px;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 14px;
+    font-size: 13px;
+  }
+  
+  .rate-input {
+    width: 90px;
+    padding: 6px;
+    font-size: 13px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .pricing-container {
+    max-width: 700px;
+    padding: 15px;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+  .pricing-table {
+    font-size: 12px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 12px;
+    font-size: 12px;
+  }
+  
+  .rate-input {
+    width: 80px;
+    padding: 5px;
+    font-size: 12px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .pricing-container {
+    max-width: 100%;
+    padding: 10px;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  
+  .pricing-table {
+    font-size: 11px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 8px;
+    font-size: 11px;
+  }
+  
+  .rate-input {
+    width: 70px;
+    padding: 4px;
+    font-size: 11px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 4px 8px;
+    font-size: 11px;
+    margin: 0 1px;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .pricing-container {
+    padding: 8px;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .pricing-table {
+    font-size: 10px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 6px;
+    font-size: 10px;
+  }
+  
+  .rate-input {
+    width: 60px;
+    padding: 3px;
+    font-size: 10px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 3px 6px;
+    font-size: 10px;
+    margin: 0 1px;
+  }
+  
+  // Stack table on very small screens
+  .pricing-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .pricing-container {
+    padding: 5px;
+  }
+  
+  h2 {
+    font-size: 1.1rem;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 4px;
+    font-size: 9px;
+  }
+  
+  .rate-input {
+    width: 50px;
+    padding: 2px;
+    font-size: 9px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 2px 4px;
+    font-size: 9px;
+  }
 }

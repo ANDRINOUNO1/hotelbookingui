@@ -9,6 +9,7 @@ export interface RoomType {
   description: string;
   basePrice: number;
   rate?: number;
+  reservationFeePercentage?: number;
 }
 
 export interface Room {

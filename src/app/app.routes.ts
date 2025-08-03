@@ -75,7 +75,8 @@ export const routes: Routes = [
       { path: 'account-list', component: AccountListComponent },
       { path: 'pending-accounts', component: PendingAccountsComponent },
       { path: 'add-account', component: AddAccountsComponent },
-      { path: 'archives', component: ArchivesComponent}
+      { path: 'archives', component: ArchivesComponent},
+      { path: 'pricing', component: PricingComponent }
     ]
   }
 ];

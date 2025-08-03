@@ -100,17 +100,17 @@
     flex-wrap: wrap;
     gap: 2rem;
     justify-content: center;
-    max-width: 1600px; // Increased for wider cards
+    max-width: 1600px;
     margin: 0 auto;
   }
 
   .room-card {
     background: #e3b778;
     border-radius: 1.5rem;
-    width: 400px; // Increased width for wider cards
-    min-width: 380px; // Minimum width
-    flex: 1; // Allow cards to grow
-    max-width: 450px; // Maximum width
+    width: 400px;
+    min-width: 380px;
+    flex: 1;
+    max-width: 450px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,12 +118,12 @@
     position: relative;
     box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     transition: all 0.3s ease;
-    cursor: pointer; // Make entire card clickable
+    cursor: pointer;
 
     &:hover {
       transform: translateY(-8px);
       box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-      background: #f0c78a; // Lighter background on hover
+      background: #f0c78a;
     }
 
     &:active {
@@ -158,15 +158,15 @@
 
     .room-images-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr; // 2 columns
-      grid-template-rows: 1fr 1fr; // 2 rows
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
       gap: 0.5rem;
       width: 100%;
       margin-bottom: 1rem;
 
       img {
         width: 100%;
-        height: 120px; // Fixed height for grid images
+        height: 120px;
         border-radius: 0.8rem;
         object-fit: cover;
         transition: transform 0.3s ease;
@@ -219,6 +219,32 @@
       &:hover {
         transform: scale(1.1);
         box-shadow: 0 4px 12px rgba(90, 78, 60, 0.4);
+      }
+    }
+
+    .reservation-fee-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      background: rgba(90, 78, 60, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(90, 78, 60, 0.2);
+
+      .fee-label {
+        font-size: 0.8rem;
+        color: #5a4e3c;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.2rem;
+      }
+
+      .fee-percentage {
+        font-size: 1.1rem;
+        color: #456c4e;
+        font-weight: bold;
       }
     }
 
@@ -276,34 +302,341 @@
   }
 }
 
-// Responsive design for different screen sizes
-@media (max-width: 1600px) {
+// Enhanced Responsive Design
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .availability-container {
+    padding: 3rem;
+    
+    h2 {
+      font-size: 2.5rem;
+    }
+    
+    .room-type-list {
+      max-width: 1800px;
+      gap: 2.5rem;
+    }
+    
+    .room-card {
+      max-width: 500px;
+      padding: 2rem;
+      
+      h3 {
+        font-size: 1.8rem;
+      }
+      
+      .room-images-grid img {
+        height: 140px;
+      }
+    }
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
   .availability-container .room-type-list {
     max-width: 1400px;
     gap: 1.5rem;
   }
 }
 
-@media (max-width: 1400px) {
-  .availability-container .room-type-list {
-    max-width: 1200px;
-    gap: 1rem;
-  }
-  
-  .availability-container .room-card {
-    max-width: 380px;
-    min-width: 350px;
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .availability-container {
+    padding: 1.5rem;
+    
+    .room-type-list {
+      max-width: 1200px;
+      gap: 1rem;
+    }
+    
+    .room-card {
+      max-width: 380px;
+      min-width: 350px;
+      padding: 1.25rem;
+      
+      h3 {
+        font-size: 1.5rem;
+      }
+    }
   }
 }
 
-@media (max-width: 768px) {
-  .availability-container .room-type-list {
-    flex-direction: column;
-    align-items: center;
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .availability-container {
+    padding: 1rem;
+    
+    .room-type-list {
+      max-width: 1000px;
+      gap: 1rem;
+    }
+    
+    .room-card {
+      max-width: 350px;
+      min-width: 320px;
+      padding: 1rem;
+      
+      h3 {
+        font-size: 1.4rem;
+      }
+      
+      .room-images-grid img {
+        height: 100px;
+      }
+    }
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .availability-container {
+    padding: 1rem;
+    
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .room-type-list {
+      max-width: 800px;
+      gap: 1rem;
+    }
+    
+    .room-card {
+      max-width: 320px;
+      min-width: 280px;
+      padding: 1rem;
+      
+      h3 {
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .room-images-grid {
+        gap: 0.4rem;
+        
+        img {
+          height: 90px;
+        }
+      }
+      
+      .price-circle {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+      }
+      
+      .reservation-fee-info {
+        padding: 0.4rem 0.8rem;
+        
+        .fee-label {
+          font-size: 0.75rem;
+        }
+        
+        .fee-percentage {
+          font-size: 1rem;
+        }
+      }
+      
+      .select-indicator {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .availability-container {
+    padding: 0.75rem;
+    
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    
+    .room-type-list {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .room-card {
+      max-width: 400px;
+      width: 100%;
+      min-width: 300px;
+      padding: 1rem;
+      
+      h3 {
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .room-images-grid {
+        gap: 0.3rem;
+        
+        img {
+          height: 80px;
+        }
+      }
+      
+      .price-circle {
+        width: 2.8rem;
+        height: 2.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .reservation-fee-info {
+        padding: 0.3rem 0.6rem;
+        
+        .fee-label {
+          font-size: 0.7rem;
+        }
+        
+        .fee-percentage {
+          font-size: 0.9rem;
+        }
+      }
+      
+      .select-indicator {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+      }
+    }
   }
   
-  .availability-container .room-card {
-    max-width: 400px;
-    width: 100%;
+  .back-button {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .availability-container {
+    padding: 0.5rem;
+    
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .room-type-list {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .room-card {
+      max-width: 350px;
+      width: 100%;
+      min-width: 280px;
+      padding: 0.75rem;
+      
+      .room-card-index {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.9rem;
+        top: 0.75rem;
+        left: 0.75rem;
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .room-images-grid {
+        gap: 0.25rem;
+        margin-bottom: 0.75rem;
+        
+        img {
+          height: 70px;
+          border-radius: 0.5rem;
+        }
+      }
+      
+      .details-link {
+        font-size: 0.75rem;
+        margin: 0.75rem 0;
+      }
+      
+      .price-circle {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .reservation-fee-info {
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.75rem;
+        
+        .fee-label {
+          font-size: 0.65rem;
+        }
+        
+        .fee-percentage {
+          font-size: 0.8rem;
+        }
+      }
+      
+      .select-indicator {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        letter-spacing: 0.3px;
+      }
+    }
+  }
+  
+  .back-button {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .availability-container {
+    padding: 0.25rem;
+    
+    h2 {
+      font-size: 1.2rem;
+    }
+    
+    .room-card {
+      max-width: 320px;
+      min-width: 260px;
+      padding: 0.5rem;
+      
+      h3 {
+        font-size: 1.1rem;
+      }
+      
+      .room-images-grid img {
+        height: 60px;
+      }
+      
+      .price-circle {
+        width: 2.2rem;
+        height: 2.2rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
+  
+  .back-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
   }
 }

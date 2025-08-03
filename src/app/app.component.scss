@@ -598,8 +598,232 @@ section{
 
 /* media queries  */
 
-@media (max-width:991px){
+// Enhanced Responsive Design
 
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  html {
+    font-size: 70%;
+  }
+  
+  section {
+    max-width: 1400px;
+    padding: 4rem 3rem;
+  }
+  
+  .header .flex .logo {
+    font-size: 3rem;
+  }
+  
+  .book-now-btn {
+    padding: 1.5rem 4rem;
+    font-size: 2.2rem;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  html {
+    font-size: 65%;
+  }
+  
+  section {
+    max-width: 1300px;
+    padding: 3.5rem 2.5rem;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  html {
+    font-size: 60%;
+  }
+  
+  section {
+    max-width: 1200px;
+    padding: 3rem 2rem;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  html {
+    font-size: 58%;
+  }
+  
+  section {
+    max-width: 1100px;
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  html {
+    font-size: 55%;
+  }
+  
+  section {
+    max-width: 900px;
+    padding: 2rem 1rem;
+  }
+  
+  .header .navbar {
+    gap: 1rem;
+  }
+  
+  .header .navbar a {
+    font-size: 1.6rem;
+    padding: 0.8rem 2rem;
+  }
+  
+  .book-now-btn {
+    margin-left: 2rem;
+    padding: 1rem 2.5rem;
+    font-size: 1.8rem;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  html {
+    font-size: 52%;
+  }
+  
+  section {
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .header .flex .logo {
+    font-size: 2.2rem;
+  }
+  
+  .header .navbar {
+    padding: 1.5rem;
+  }
+  
+  .header .navbar a {
+    font-size: 1.4rem;
+    padding: 0.6rem 1.5rem;
+  }
+  
+  .book-now-btn {
+    margin-left: 1.5rem;
+    padding: 0.8rem 2rem;
+    font-size: 1.6rem;
+  }
+  
+  .home .box img {
+    height: 35vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 2rem 1.5rem;
+    top: 30%;
+  }
+  
+  .google-map iframe {
+    height: 180px;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  html {
+    font-size: 50%;
+  }
+  
+  section {
+    padding: 1rem 0.5rem;
+  }
+  
+  .header .flex .logo {
+    font-size: 2rem;
+  }
+  
+  .header .navbar {
+    padding: 1rem;
+  }
+  
+  .header .navbar a {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .book-now-btn {
+    margin-left: 1rem;
+    padding: 0.6rem 1.5rem;
+    font-size: 1.4rem;
+  }
+  
+  .home .box img {
+    height: 30vh;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 1.5rem 1rem;
+    top: 25%;
+  }
+  
+  .google-map iframe {
+    height: 160px;
+  }
+  
+  .about .row .image img {
+    width: 100%;
+  }
+  
+  .gallery img {
+    height: 20rem;
+    width: 25rem;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  html {
+    font-size: 45%;
+  }
+  
+  .header .flex .logo {
+    font-size: 1.8rem;
+  }
+  
+  .header .navbar a {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .book-now-btn {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 1.2rem;
+  }
+  
+  .home .box img {
+    height: 25rem;
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    padding: 1rem 0.8rem;
+    top: 20%;
+  }
+  
+  .google-map iframe {
+    height: 140px;
+  }
+  
+  .gallery img {
+    height: 18rem;
+    width: 22rem;
+  }
+}
+
+// Original media queries (keeping for compatibility)
+@media (max-width:991px){
    html{
       font-size: 55%;
    }
@@ -621,11 +845,9 @@ section{
    .header .navbar.active{
       display: flex;
    }
-
 }
 
 @media (max-width:768px){
-
    .home .box img{
       height: 40vh;
    }
@@ -639,11 +861,9 @@ section{
       max-width: 100%;
       height: 200px;
    }
-
 }
 
 @media (max-width:450px){
-
    html{
       font-size: 50%;
    }
@@ -669,5 +889,4 @@ section{
       max-width: 100%;
       height: 150px;
    }
-
 }
