@@ -132,3 +132,273 @@ body {
   font-family: 'Nunito', sans-serif;
   color: white;
 }
+
+// Enhanced Responsive Design for Reservation Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .progress {
+    padding: 30px;
+    
+    &_inner {
+      width: 1200px;
+      margin: 60px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 80px;
+      
+      label {
+        font-size: 16px;
+        margin-top: 80px;
+      }
+      
+      &:before {
+        width: 35px;
+        height: 35px;
+      }
+    }
+    
+    &_inner__tabs {
+      margin-top: 120px;
+      
+      .tab {
+        padding: 60px;
+      }
+    }
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .progress {
+    &_inner {
+      width: 1100px;
+      margin: 55px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 70px;
+      
+      label {
+        font-size: 15px;
+        margin-top: 70px;
+      }
+    }
+    
+    &_inner__tabs {
+      margin-top: 110px;
+      
+      .tab {
+        padding: 55px;
+      }
+    }
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .progress {
+    &_inner {
+      width: 1000px;
+      margin: 50px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 60px;
+      
+      label {
+        font-size: 14px;
+        margin-top: 60px;
+      }
+    }
+    
+    &_inner__tabs {
+      margin-top: 100px;
+      
+      .tab {
+        padding: 50px;
+      }
+    }
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .progress {
+    &_inner {
+      width: 900px;
+      margin: 45px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 50px;
+      
+      label {
+        font-size: 13px;
+        margin-top: 55px;
+      }
+    }
+    
+    &_inner__tabs {
+      margin-top: 90px;
+      
+      .tab {
+        padding: 45px;
+      }
+    }
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .progress {
+    padding: 15px;
+    
+    &_inner {
+      width: 95%;
+      margin: 40px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 30px;
+      
+      label {
+        font-size: 12px;
+        margin-top: 50px;
+      }
+      
+      &:before {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    
+    &_inner__tabs {
+      margin-top: 80px;
+      
+      .tab {
+        padding: 40px;
+      }
+    }
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .progress {
+    padding: 10px;
+    
+    &_inner {
+      width: 98%;
+      margin: 30px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 15px;
+      
+      label {
+        font-size: 11px;
+        margin-top: 40px;
+      }
+      
+      &:before {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    &_inner__bar--set,
+    &_inner__bar {
+      height: 6px;
+      top: 10px;
+    }
+    
+    &_inner__tabs {
+      margin-top: 60px;
+      
+      .tab {
+        padding: 30px;
+      }
+    }
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .progress {
+    padding: 8px;
+    
+    &_inner {
+      width: 100%;
+      margin: 20px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 8px;
+      
+      label {
+        font-size: 10px;
+        margin-top: 30px;
+      }
+      
+      &:before {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    &_inner__bar--set,
+    &_inner__bar {
+      height: 4px;
+      top: 9px;
+    }
+    
+    &_inner__tabs {
+      margin-top: 50px;
+      
+      .tab {
+        padding: 20px;
+      }
+    }
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .progress {
+    padding: 5px;
+    
+    &_inner {
+      margin: 15px auto;
+    }
+    
+    &_inner__step {
+      padding: 0 5px;
+      
+      label {
+        font-size: 9px;
+        margin-top: 25px;
+      }
+      
+      &:before {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    &_inner__bar--set,
+    &_inner__bar {
+      height: 3px;
+      top: 8px;
+    }
+    
+    &_inner__tabs {
+      margin-top: 40px;
+      
+      .tab {
+        padding: 15px;
+      }
+    }
+  }
+}

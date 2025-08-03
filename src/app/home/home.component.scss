@@ -1197,3 +1197,350 @@ body, html {
   min-height: 100vh;
 }
 
+// Enhanced Responsive Design for Header Bar
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .header-bar {
+    padding: 1.5rem 4rem;
+    min-height: 80px;
+  }
+  
+  .logo {
+    font-size: 2.5rem;
+  }
+  
+  .logo img {
+    height: 50px;
+  }
+  
+  .header-bar nav {
+    gap: 3rem;
+  }
+  
+  .header-bar nav a {
+    font-size: 1.5rem;
+    padding: 0.6rem 2.5rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 1.4rem;
+    padding: 1rem 3rem;
+    margin-left: 2.5rem;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .header-bar {
+    padding: 1.3rem 3.5rem;
+  }
+  
+  .logo {
+    font-size: 2.2rem;
+  }
+  
+  .logo img {
+    height: 45px;
+  }
+  
+  .header-bar nav {
+    gap: 2.8rem;
+  }
+  
+  .header-bar nav a {
+    font-size: 1.4rem;
+    padding: 0.55rem 2.2rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 1.3rem;
+    padding: 0.95rem 2.9rem;
+    margin-left: 2.2rem;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .header-bar {
+    padding: 1.2rem 3rem;
+  }
+  
+  .logo {
+    font-size: 2rem;
+  }
+  
+  .logo img {
+    height: 40px;
+  }
+  
+  .header-bar nav {
+    gap: 2.5rem;
+  }
+  
+  .header-bar nav a {
+    font-size: 1.35rem;
+    padding: 0.5rem 2rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 1.25rem;
+    padding: 0.9rem 2.8rem;
+    margin-left: 2rem;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .header-bar {
+    padding: 1.1rem 2.5rem;
+  }
+  
+  .logo {
+    font-size: 1.8rem;
+  }
+  
+  .logo img {
+    height: 35px;
+  }
+  
+  .header-bar nav {
+    gap: 2rem;
+  }
+  
+  .header-bar nav a {
+    font-size: 1.2rem;
+    padding: 0.45rem 1.8rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 1.1rem;
+    padding: 0.8rem 2.5rem;
+    margin-left: 1.8rem;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .header-bar {
+    padding: 1rem 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .logo {
+    font-size: 1.6rem;
+  }
+  
+  .logo img {
+    height: 30px;
+  }
+  
+  .header-bar nav {
+    gap: 1.5rem;
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .header-bar nav a {
+    font-size: 1rem;
+    padding: 0.4rem 1.5rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 1rem;
+    padding: 0.7rem 2rem;
+    margin-left: 1.5rem;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .header-bar {
+    padding: 0.8rem 1.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .logo {
+    font-size: 1.4rem;
+  }
+  
+  .logo img {
+    height: 25px;
+  }
+  
+  .header-bar nav {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .header-bar nav a {
+    font-size: 0.9rem;
+    padding: 0.3rem 1rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .header-bar {
+    padding: 0.6rem 1rem;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .logo {
+    font-size: 1.2rem;
+  }
+  
+  .logo img {
+    height: 20px;
+  }
+  
+  .header-bar nav {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .header-bar nav a {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.8rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    margin-left: 0;
+    margin-top: 0.3rem;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .header-bar {
+    padding: 0.5rem 0.8rem;
+  }
+  
+  .logo {
+    font-size: 1rem;
+  }
+  
+  .logo img {
+    height: 18px;
+  }
+  
+  .header-bar nav a {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+  
+  .login-btn, .book-now-btn {
+    font-size: 0.7rem;
+    padding: 0.4rem 1rem;
+  }
+}
+
+// Mobile Navigation Improvements
+@media (max-width: 767px) {
+  .header-bar {
+    position: relative;
+    
+    // Add mobile menu toggle
+    .mobile-menu-toggle {
+      display: block;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+    }
+    
+    nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #b4884d 0%, #0b0b31 100%);
+      flex-direction: column;
+      gap: 0;
+      padding: 1rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+      
+      &.mobile-open {
+        display: flex;
+      }
+      
+      a {
+        padding: 0.8rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        text-align: center;
+        font-size: 1rem;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  
+  // Improve touch targets
+  .login-btn, .book-now-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Enhanced Touch Targets for Mobile
+@media (max-width: 575px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+    touch-action: manipulation;
+  }
+  
+  .header-bar nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  
+  // Improve image responsiveness
+  .home .box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  // Better text readability
+  h1, h2, h3 {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    line-height: 1.3;
+  }
+  
+  p {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    line-height: 1.5;
+  }
+}
+

@@ -286,28 +286,230 @@
 // Extra Small Mobile (up to 375px)
 @media (max-width: 375px) {
   .frontdesk-container {
-    .frontdesk-sidebar {
-      padding: 0.2rem 0.4rem;
+    padding: 0.5rem;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    
+    &.mobile-open {
+      left: 0;
+    }
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 0.5rem;
+  }
+  
+  .topbar {
+    padding: 0.5rem;
+    
+    .frontdesk-logo {
+      font-size: 1.2rem;
+    }
+    
+    .hotel-title {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Mobile Frontdesk Improvements
+@media (max-width: 767px) {
+  // Mobile calendar improvements
+  .calendar-container {
+    .calendar-header {
+      flex-direction: column;
+      gap: 1rem;
       
-      li {
-        padding: 0.2rem 0.4rem;
+      .calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+    
+    .calendar-grid {
+      .calendar-day {
+        min-height: 60px;
+        font-size: 0.9rem;
+        
+        .day-number {
+          font-size: 1rem;
+        }
+        
+        .booking-indicator {
+          width: 8px;
+          height: 8px;
+        }
+      }
+    }
+  }
+  
+  // Mobile booking list improvements
+  .booking-list {
+    .booking-item {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      
+      .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        
+        .guest-name {
+          font-weight: bold;
+          color: #b4884d;
+        }
+        
+        .booking-status {
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+        }
+      }
+      
+      .booking-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        
+        .detail-item {
+          .label {
+            color: #b4884d;
+            font-weight: 600;
+          }
+          
+          .value {
+            color: #fff;
+          }
+        }
+      }
+      
+      .booking-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        
+        button {
+          flex: 1;
+          padding: 0.5rem;
+          font-size: 0.8rem;
+          min-height: 44px;
+        }
+      }
+    }
+  }
+  
+  // Mobile form improvements
+  .add-booking-form {
+    .form-group {
+      margin-bottom: 1rem;
+      
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #b4884d;
+      }
+      
+      input, select, textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 4px;
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+        font-size: 1rem;
+        min-height: 44px;
+        
+        &::placeholder {
+          color: rgba(255,255,255,0.5);
+        }
+      }
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      
+      button {
+        flex: 1;
+        min-height: 44px;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Enhanced Mobile Navigation for Frontdesk
+@media (max-width: 575px) {
+  .sidebar {
+    .sidebar-header {
+      padding: 1rem;
+      
+      .frontdesk-logo {
+        font-size: 1.4rem;
+      }
+    }
+    
+    .sidebar-menu {
+      .menu-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        
+        .menu-icon {
+          font-size: 1.2rem;
+          margin-right: 0.75rem;
+        }
+      }
+    }
+  }
+  
+  .main-content {
+    .content-header {
+      padding: 1rem;
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      .breadcrumb {
         font-size: 0.8rem;
       }
     }
+  }
+  
+  // Mobile dashboard cards
+  .dashboard-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
     
-    .frontdesk-content {
-      padding: 0.2rem;
-    }
-    
-    .frontdesk-topbar {
-      padding: 0.2rem 0.4rem;
+    .card {
+      padding: 1rem;
       
-      h1 {
-        font-size: 1.2rem;
+      .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
       }
       
-      .logo {
-        font-size: 1.2rem;
+      .card-value {
+        font-size: 1.5rem;
+        font-weight: bold;
       }
     }
   }

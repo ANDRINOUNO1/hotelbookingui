@@ -748,27 +748,192 @@ body.dark-mode {
 
 // Extra Small Mobile (up to 375px)
 @media (max-width: 375px) {
-  .dashboard-container {
-    .sidebar {
-      padding: 0.2rem 0.4rem;
-    }
+  .admin-container {
+    padding: 0.5rem;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
     
-    .main-content {
-      padding: 0.2rem;
+    &.mobile-open {
+      left: 0;
     }
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 0.5rem;
+  }
+  
+  .topbar {
+    padding: 0.5rem;
     
     .admin-logo {
-      height: 30px;
+      font-size: 1.2rem;
     }
     
     .hotel-title {
-      font-size: 0.9rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Mobile Table Improvements
+@media (max-width: 767px) {
+  // Make tables responsive
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    table {
+      min-width: 600px;
+      
+      th, td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  // Card-based layout for mobile
+  .mobile-card-view {
+    display: block;
+    
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      
+      .card-header {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #b4884d;
+      }
+      
+      .card-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        
+        .label {
+          font-weight: 600;
+          color: #b4884d;
+        }
+        
+        .value {
+          color: #fff;
+        }
+      }
+      
+      .card-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        
+        button {
+          flex: 1;
+          padding: 0.5rem;
+          font-size: 0.8rem;
+          min-height: 44px;
+        }
+      }
+    }
+  }
+  
+  // Mobile form improvements
+  .form-group {
+    margin-bottom: 1rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #b4884d;
     }
     
-    .user-menu {
-      .user-avatar {
-        width: 24px;
-        height: 24px;
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 1rem;
+      min-height: 44px;
+      
+      &::placeholder {
+        color: rgba(255,255,255,0.5);
+      }
+    }
+  }
+  
+  // Mobile button improvements
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    touch-action: manipulation;
+    border-radius: 6px;
+    
+    &.btn-primary {
+      background: #b4884d;
+      color: #fff;
+      border: none;
+    }
+    
+    &.btn-secondary {
+      background: transparent;
+      color: #b4884d;
+      border: 1px solid #b4884d;
+    }
+  }
+}
+
+// Enhanced Mobile Navigation
+@media (max-width: 575px) {
+  .sidebar {
+    .sidebar-header {
+      padding: 1rem;
+      
+      .admin-logo {
+        font-size: 1.4rem;
+      }
+    }
+    
+    .sidebar-menu {
+      .menu-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        
+        .menu-icon {
+          font-size: 1.2rem;
+          margin-right: 0.75rem;
+        }
+      }
+    }
+  }
+  
+  .main-content {
+    .content-header {
+      padding: 1rem;
+      
+      h1 {
+        font-size: 1.4rem;
+      }
+      
+      .breadcrumb {
+        font-size: 0.8rem;
       }
     }
   }

@@ -20,6 +20,10 @@ export class PricingComponent implements OnInit {
   editRate: number | null = null;
   editReservationFee: number | null = null;
 
+  // Properties for dropdown functionality
+  selectedRoomTypeId: number | null = null;
+  selectedRoomType: RoomType | null = null;
+
   loading = false;
   isLoading = true;
 
@@ -27,6 +31,16 @@ export class PricingComponent implements OnInit {
 
   ngOnInit() {
     this.fetchRoomTypes();
+    // Test calculation after data loads
+    setTimeout(() => {
+      console.log('Room types loaded:', this.roomTypes);
+      console.log('Testing calculation with first room type...');
+      if (this.roomTypes.length > 0) {
+        this.selectedRoomTypeId = this.roomTypes[0].id;
+        this.onRoomTypeChange();
+        console.log('Test calculation result:', this.getCalculatedReservationFee());
+      }
+    }, 1000);
   }
 
   fetchRoomTypes() {
@@ -94,5 +108,54 @@ export class PricingComponent implements OnInit {
     this.editingId = null;
     this.editRate = null;
     this.editReservationFee = null;
+  }
+
+  getAverageBasePrice(): string {
+    if (this.roomTypes.length === 0) return '0.00';
+    
+    const total = this.roomTypes.reduce((sum, roomType) => {
+      const price = roomType.rate || roomType.basePrice || 0;
+      return sum + price;
+    }, 0);
+    
+    const average = total / this.roomTypes.length;
+    return average.toFixed(2);
+  }
+
+  getAverageReservationFee(): string {
+    if (this.roomTypes.length === 0) return '0.00';
+    
+    const total = this.roomTypes.reduce((sum, roomType) => {
+      const fee = roomType.reservationFeePercentage || 0;
+      return sum + fee;
+    }, 0);
+    
+    const average = total / this.roomTypes.length;
+    return average.toFixed(2);
+  }
+
+  // Functions for dropdown functionality
+  onRoomTypeChange() {
+    console.log('Dropdown changed, selectedRoomTypeId:', this.selectedRoomTypeId);
+    if (this.selectedRoomTypeId) {
+      // Convert to number if it's a string
+      const roomId = typeof this.selectedRoomTypeId === 'string' ? parseInt(this.selectedRoomTypeId) : this.selectedRoomTypeId;
+      this.selectedRoomType = this.roomTypes.find(rt => rt.id === roomId) || null;
+      console.log('Selected room type:', this.selectedRoomType);
+    } else {
+      this.selectedRoomType = null;
+      console.log('No room type selected');
+    }
+  }
+
+  getCalculatedReservationFee(): string {
+    if (!this.selectedRoomType) return '0.00';
+    
+    const basePrice = this.selectedRoomType.rate || this.selectedRoomType.basePrice || 0;
+    const feePercentage = this.selectedRoomType.reservationFeePercentage || 0;
+    
+    const calculatedFee = (basePrice * feePercentage) / 100;
+    console.log('Calculating fee:', { basePrice, feePercentage, calculatedFee });
+    return calculatedFee.toFixed(2);
   }
 }

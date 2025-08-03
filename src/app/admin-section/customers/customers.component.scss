@@ -1,128 +1,351 @@
-:host {
-  display: block;
-  padding: 2rem;
-  font-family: Arial, sans-serif;
+.customers-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(180, 136, 77, 0.2);
+}
+
+.room-view-container {
+  background: rgba(11, 11, 49, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(180, 136, 77, 0.2);
+}
+
+.room-view-header {
+  padding: 20px;
+  background: linear-gradient(90deg, #b4884d 0%, #0b0b31 100%);
+  border-bottom: 1px solid rgba(180, 136, 77, 0.3);
+}
+
+.room-view-header select {
+  background: rgba(11, 11, 49, 0.9);
+  color: #f5f5f7;
+  border: 1px solid rgba(180, 136, 77, 0.3);
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.room-view-header select:focus {
+  outline: none;
+  border-color: #b4884d;
+  box-shadow: 0 0 0 2px rgba(180, 136, 77, 0.2);
 }
 
 .tables {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  color: var(--text-color);
-
-  th, td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  th {
-    font-weight: bold;
-  }
-
-  button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
+  background: rgba(11, 11, 49, 0.8);
 }
 
+.tables th {
+  background: linear-gradient(90deg, #b4884d 0%, #0b0b31 100%);
+  color: white;
+  padding: 18px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid rgba(180, 136, 77, 0.3);
+}
+
+.tables td {
+  padding: 18px 15px;
+  border-bottom: 1px solid rgba(180, 136, 77, 0.1);
+  color: #f5f5f7;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.tables tr:hover {
+  background: rgba(180, 136, 77, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.tables tr:last-child td {
+  border-bottom: none;
+}
+
+.tables button {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.tables button:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+// Popup Styles
 .popup-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .popup {
+  background: rgba(11, 11, 49, 0.95);
+  border: 1px solid rgba(180, 136, 77, 0.3);
   border-radius: 12px;
-  padding: 2rem;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   position: relative;
-  border: 2px solid #ddd;
 }
 
 .popup h3 {
-  background: linear-gradient(90deg, #4f46e5, #3b82f6);
-  color: #fff;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin: 0;
+  color: #b4884d;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid rgba(180, 136, 77, 0.3);
+  padding-bottom: 10px;
 }
 
 .popup p {
-  margin: 0.5rem 0;
-  color: #ffffff;
+  color: #f5f5f7;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  line-height: 1.5;
 }
 
 .popup h4 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
+  color: #b4884d;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 20px 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .room-card {
+  background: rgba(180, 136, 77, 0.1);
+  border: 1px solid rgba(180, 136, 77, 0.2);
   border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
 }
 
-.status-label {
-  display: inline-block;
-  padding: 0.3rem 0.6rem;
-  border-radius: 1rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+.room-card:hover {
+  background: rgba(180, 136, 77, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 136, 77, 0.2);
+}
 
-  &.Paid {
-    background: #dcfce7;
-    color: #16a34a;
-  }
+.room-card p {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
 
-  &.Unpaid {
-    background: #fef3c7;
-    color: #ca8a04;
-  }
-
-  &.Confirmed {
-    background: #dcfce7;
-    color: #16a34a;
-  }
-
-  &.Pending {
-    background: #fef3c7;
-    color: #ca8a04;
-  }
-
-  &.Occupied {
-    background: #f3e8ff;
-    color: #7c3aed;
-  }
+.room-card p:last-child {
+  margin-bottom: 0;
 }
 
 .popup button {
-  background: #3b82f6;
-  color: #fff;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 12px 24px;
   cursor: pointer;
-  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+  width: 100%;
+}
 
-  &:hover {
-    background: #2563eb;
+.popup button:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+// Enhanced Responsive Design for Customers Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .customers-container {
+    max-width: 1400px;
+    padding: 30px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 22px 20px;
+    font-size: 16px;
+  }
+  
+  .popup {
+    max-width: 600px;
+    padding: 40px;
+  }
+  
+  .popup h3 {
+    font-size: 2rem;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .customers-container {
+    max-width: 1300px;
+    padding: 25px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 20px 18px;
+    font-size: 15px;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .customers-container {
+    max-width: 1200px;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .customers-container {
+    max-width: 1100px;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .customers-container {
+    max-width: 95%;
+    padding: 20px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 15px 12px;
+    font-size: 13px;
+  }
+  
+  .popup {
+    max-width: 90%;
+    padding: 25px;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .customers-container {
+    max-width: 98%;
+    padding: 15px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .popup {
+    max-width: 95%;
+    padding: 20px;
+  }
+  
+  .popup h3 {
+    font-size: 1.5rem;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .customers-container {
+    max-width: 100%;
+    padding: 10px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 10px 6px;
+    font-size: 11px;
+  }
+  
+  .popup {
+    max-width: 98%;
+    padding: 15px;
+  }
+  
+  .popup h3 {
+    font-size: 1.3rem;
+  }
+  
+  .popup h4 {
+    font-size: 1.1rem;
+  }
+  
+  .room-card {
+    padding: 12px;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .customers-container {
+    padding: 8px;
+  }
+  
+  .tables th,
+  .tables td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+  
+  .popup {
+    padding: 12px;
+  }
+  
+  .popup h3 {
+    font-size: 1.2rem;
+  }
+  
+  .popup h4 {
+    font-size: 1rem;
+  }
+  
+  .room-card {
+    padding: 10px;
   }
 }
