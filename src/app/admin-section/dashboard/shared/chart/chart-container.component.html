@@ -1,0 +1,40 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="bg-gray-50 p-4 rounded-md h-96">
+    <div class="chart-header flex justify-between items-center mb-4">
+      <h3 class="text-xl font-semibold">Area Chart</h3>
+      <button class="text-blue-500 hover:text-blue-700 transition-colors" (click)="refreshChart()">
+        <i class="fas fa-sync-alt mr-1"></i> Refresh
+      </button>
+    </div>
+    <div class="w-full h-full">
+      <div *ngIf="isBrowser">
+        <highcharts-chart
+          [Highcharts]="Highcharts"
+          [options]="chartOptions"
+          class="w-full h-full block">
+        </highcharts-chart>
+      </div>
+      <div *ngIf="!isBrowser" class="w-full h-full flex items-center justify-center text-gray-400">
+        <p>Loading charts...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 p-4 rounded-md h-96">
+    <div class="chart-header flex justify-between items-center mb-4">
+      <h3 class="text-xl font-semibold">Pie Chart</h3>
+    </div>
+    <div class="w-full h-full">
+      <div *ngIf="isBrowser">
+        <highcharts-chart
+          [Highcharts]="Highcharts"
+          [options]="chartOptionsPie"
+          class="w-full h-full block">
+        </highcharts-chart>
+      </div>
+      <div *ngIf="!isBrowser" class="w-full h-full flex items-center justify-center text-gray-400">
+        <p>Loading charts...</p>
+      </div>
+    </div>
+  </div>
+</div>
