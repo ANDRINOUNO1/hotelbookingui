@@ -10,12 +10,18 @@
     <form (ngSubmit)="submit()" #reservationForm="ngForm">
       <div class="form-group">
         <label>Check In</label>
-        <input type="date" name="checkIn" class="form-control" required [(ngModel)]="booking.checkIn" />
+        <div class="input-wrapper">
+          <input type="date" name="checkIn" class="form-control" required [(ngModel)]="booking.checkIn" />
+          <i class="calendar-icon">📅</i>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Check Out</label>
-        <input type="date" name="checkOut" class="form-control" required [(ngModel)]="booking.checkOut" />
+        <div class="input-wrapper">
+          <input type="date" name="checkOut" class="form-control" required [(ngModel)]="booking.checkOut" />
+          <i class="calendar-icon">📅</i>
+        </div>
       </div>
 
       <div class="form-group">

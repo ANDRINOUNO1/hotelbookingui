@@ -2,30 +2,73 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
+  background: linear-gradient(135deg, #0b0b31 0%, #1a1a3a 50%, #0b0b31 100%);
+  position: relative;
+
+  // Animated background particles
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(180, 136, 77, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(180, 136, 77, 0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    z-index: 1;
+  }
 
   .reservation-left {
     flex: 1;
     position: relative;
+    z-index: 2;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      filter: brightness(0.8) contrast(1.1);
+      transition: all 0.3s ease;
     }
 
     .overlay {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(11, 11, 49, 0.3) 0%, rgba(180, 136, 77, 0.2) 100%);
+      backdrop-filter: blur(2px);
     }
   }
+
   input,
   textarea,
   select {
     color: #ffffff !important;
-    background: #0b0b31 !important;
+    background: rgba(11, 11, 49, 0.8) !important;
+    border: 2px solid rgba(180, 136, 77, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    
+    &:focus {
+      outline: none !important;
+      border-color: #b4884d !important;
+      box-shadow: 0 0 20px rgba(180, 136, 77, 0.3) !important;
+      transform: translateY(-2px) !important;
+    }
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
   }
-
 
   .reservation-right {
     flex: 1;
@@ -33,50 +76,197 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    z-index: 2;
 
     h1 {
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 2rem;
       color: white;
+      font-size: 2.5rem;
+      text-align: center;
+      background: linear-gradient(135deg, #ffffff 0%, #d4a574 50%, #b4884d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 8px rgba(23, 23, 37, 0.3);
+      animation: titleGlow 3s ease-in-out infinite;
     }
 
     form {
       display: flex;
       flex-direction: column;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 
+        0 20px 40px rgba(23, 23, 37, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      animation: slideInUp 0.6s ease-out;
 
       .form-group {
         display: flex;
         flex-direction: column;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
 
         label {
           font-size: 0.9rem;
-          margin-bottom: 0.3rem;
+          margin-bottom: 0.5rem;
+          color: #d4a574;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
+        }
+
+        .input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            position: relative;
+            width: 100%;
+            padding-right: 3rem; // Make room for the icon
+            
+            &:hover {
+              border-color: #b4884d;
+              transform: translateY(-1px);
+            }
+          }
+
+          .calendar-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #b4884d;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 3;
+            filter: drop-shadow(0 2px 4px rgba(23, 23, 37, 0.5));
+          }
+
+          &:hover .calendar-icon {
+            color: #d4a574;
+            transform: translateY(-50%) scale(1.1);
+          }
+
+          &:focus-within .calendar-icon {
+            color: #d4a574;
+            animation: iconPulse 0.6s ease-in-out;
+          }
         }
 
         input {
           padding: 0.75rem;
           border: 1px solid #ccc;
           border-radius: 4px;
+          position: relative;
+          
+          &:hover {
+            border-color: #b4884d;
+            transform: translateY(-1px);
+          }
+        }
+        
+        // Floating label effect
+        &:focus-within label {
+          color: #b4884d;
+          transform: translateY(-2px);
+          transition: all 0.3s ease;
         }
       }
 
       .submit-btn {
-        margin-top: 1.5rem;
-        background: linear-gradient(90deg, #ff00aa, #ff55dd);
+        margin-top: 2rem;
+        background: linear-gradient(135deg, #b4884d 0%, #d4a574 50%, #e6c088 100%);
         color: #fff;
-        padding: 0.75rem;
+        padding: 1rem 2rem;
         border: none;
-        border-radius: 25px;
-        font-weight: bold;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
         cursor: pointer;
-        transition: 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 
+          0 8px 24px rgba(180, 136, 77, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+          transition: left 0.5s ease;
+        }
 
         &:hover {
-          background: linear-gradient(90deg, #ff55dd, #ff00aa);
+          transform: translateY(-3px);
+          box-shadow: 
+            0 12px 32px rgba(180, 136, 77, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.3);
+          
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &:active {
+          transform: translateY(-1px);
         }
       }
     }
+  }
+}
+
+// Animations
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(1deg); }
+  66% { transform: translateY(10px) rotate(-1deg); }
+}
+
+@keyframes titleGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.3));
+  }
+  50% { 
+    filter: drop-shadow(0 0 20px rgba(212, 165, 116, 0.6));
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% { 
+    transform: translateY(-50%) scale(1);
+  }
+  50% { 
+    transform: translateY(-50%) scale(1.2);
   }
 }
 
@@ -94,6 +284,8 @@
       }
       
       form {
+        padding: 2.5rem;
+        
         .form-group {
           margin-bottom: 1.5rem;
           
@@ -105,6 +297,17 @@
           input {
             padding: 1rem;
             font-size: 1.1rem;
+          }
+          
+          .input-wrapper {
+            input {
+              padding-right: 3.5rem;
+            }
+            
+            .calendar-icon {
+              font-size: 1.4rem;
+              right: 16px;
+            }
           }
         }
         
@@ -138,6 +341,17 @@
             padding: 0.9rem;
             font-size: 1rem;
           }
+          
+          .input-wrapper {
+            input {
+              padding-right: 3.2rem;
+            }
+            
+            .calendar-icon {
+              font-size: 1.3rem;
+              right: 14px;
+            }
+          }
         }
         
         .submit-btn {
@@ -158,6 +372,21 @@
       h1 {
         font-size: 2.2rem;
       }
+      
+      form {
+        .form-group {
+          .input-wrapper {
+            input {
+              padding-right: 3rem;
+            }
+            
+            .calendar-icon {
+              font-size: 1.2rem;
+              right: 12px;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -170,6 +399,21 @@
       
       h1 {
         font-size: 2rem;
+      }
+      
+      form {
+        .form-group {
+          .input-wrapper {
+            input {
+              padding-right: 2.8rem;
+            }
+            
+            .calendar-icon {
+              font-size: 1.1rem;
+              right: 10px;
+            }
+          }
+        }
       }
     }
   }
@@ -197,6 +441,8 @@
       }
       
       form {
+        padding: 1.5rem;
+        
         .form-group {
           margin-bottom: 0.8rem;
           
@@ -207,6 +453,17 @@
           input {
             padding: 0.7rem;
             font-size: 0.9rem;
+          }
+          
+          .input-wrapper {
+            input {
+              padding-right: 2.5rem;
+            }
+            
+            .calendar-icon {
+              font-size: 1rem;
+              right: 8px;
+            }
           }
         }
         
@@ -242,6 +499,8 @@
       }
       
       form {
+        padding: 1.2rem;
+        
         .form-group {
           margin-bottom: 0.7rem;
           
@@ -253,6 +512,17 @@
           input {
             padding: 0.6rem;
             font-size: 0.85rem;
+          }
+          
+          .input-wrapper {
+            input {
+              padding-right: 2.2rem;
+            }
+            
+            .calendar-icon {
+              font-size: 0.9rem;
+              right: 6px;
+            }
           }
         }
         
@@ -288,6 +558,8 @@
       }
       
       form {
+        padding: 1rem;
+        
         .form-group {
           margin-bottom: 0.6rem;
           
@@ -299,6 +571,17 @@
           input {
             padding: 0.5rem;
             font-size: 0.8rem;
+          }
+          
+          .input-wrapper {
+            input {
+              padding-right: 2rem;
+            }
+            
+            .calendar-icon {
+              font-size: 0.8rem;
+              right: 5px;
+            }
           }
         }
         
@@ -328,6 +611,8 @@
       }
       
       form {
+        padding: 0.8rem;
+        
         .form-group {
           margin-bottom: 0.5rem;
           
@@ -338,6 +623,17 @@
           input {
             padding: 0.4rem;
             font-size: 0.75rem;
+          }
+          
+          .input-wrapper {
+            input {
+              padding-right: 1.8rem;
+            }
+            
+            .calendar-icon {
+              font-size: 0.75rem;
+              right: 4px;
+            }
           }
         }
         
