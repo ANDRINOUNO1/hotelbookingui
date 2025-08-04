@@ -46,7 +46,7 @@
           <td>{{ reservation.roomType }}</td>
           <td>{{ formatDate(reservation.checkIn) }}</td>
           <td>{{ formatDate(reservation.checkOut) }}</td>
-          <td>{{ formatCurrency(reservation.totalAmount) }}</td>
+          <td>{{ formatCurrency(calculateTotalAmount(reservation)) }}</td>
           <td class="actions">
             <button class="btn-extend" (click)="openExtendModal(reservation)">
               <i class="fa fa-calendar-plus"></i>
@@ -129,7 +129,7 @@
           <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
           <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
           <p><strong>Check-out Date:</strong> {{ selectedReservation ? formatDate(selectedReservation.checkOut) : '' }}</p>
-          <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(selectedReservation.totalAmount) : '' }}</p>
+          <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(calculateTotalAmount(selectedReservation)) : '' }}</p>
         </div>
 
         <div class="checkout-note">

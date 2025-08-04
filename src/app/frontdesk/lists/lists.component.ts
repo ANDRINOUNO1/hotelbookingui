@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface Reservation {
   id: number;
@@ -10,10 +11,19 @@ interface Reservation {
   guest_email: string;
   guest_phone: string;
   roomType: string;
+  roomTypeId?: number;
   checkIn: string;
   checkOut: string;
   totalAmount: number;
   status: string;
+  room_id?: number;
+}
+
+interface RoomType {
+  id: number;
+  type: string;
+  basePrice: number;
+  reservationFeePercentage: number;
 }
 
 @Component({
@@ -42,18 +52,47 @@ export class ListsComponent implements OnInit {
     this.loading = true;
     this.error = '';
     
-    this.http.get<Reservation[]>('https://capstone2backenddeployment-production.up.railway.app/bookings')
-      .subscribe({
-        next: (data) => {
-          this.reservations = data.filter(booking => booking.status !== 'archived');
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = 'Failed to load reservations';
-          this.loading = false;
-          console.error('Error loading reservations:', err);
-        }
-      });
+    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
+      next: (roomsData) => {
+        this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
+          next: (bookingsData) => {
+            this.reservations = bookingsData
+              .map(booking => {
+                const room = roomsData.find(r => r.id === booking.room_id);
+                if (room) {
+                  return {
+                    id: booking.id,
+                    guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
+                    guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
+                    guest_email: booking.guest?.email || booking.guest_email || '',
+                    guest_phone: booking.guest?.phone || booking.guest_phone || '',
+                    roomType: room.RoomType?.type || 'Classic',
+                    roomTypeId: room.room_type_id,
+                    checkIn: booking.availability?.checkIn || booking.checkIn || '',
+                    checkOut: booking.availability?.checkOut || booking.checkOut || '',
+                    totalAmount: booking.paidamount || booking.payment?.amount || 0,
+                    status: booking.pay_status ? 'active' : 'pending',
+                    room_id: booking.room_id
+                  };
+                }
+                return null;
+              })
+              .filter(reservation => reservation !== null);
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Failed to load reservations';
+            this.loading = false;
+            console.error('Error loading reservations:', err);
+          }
+        });
+      },
+      error: (err) => {
+        this.error = 'Failed to load room data';
+        this.loading = false;
+        console.error('Error loading rooms:', err);
+      }
+    });
   }
 
   openExtendModal(reservation: Reservation) {
@@ -74,7 +113,7 @@ export class ListsComponent implements OnInit {
       totalAmount: this.selectedReservation.totalAmount + (this.selectedReservation.totalAmount / this.getDaysBetween(this.selectedReservation.checkIn, this.selectedReservation.checkOut) * this.extendDays)
     };
 
-    this.http.put(`https://capstone2backenddeployment-production.up.railway.app/bookings/${this.selectedReservation.id}`, updatedReservation)
+    this.http.put(`${environment.apiUrl}/bookings/${this.selectedReservation.id}`, updatedReservation)
       .subscribe({
         next: () => {
           this.loadReservations();
@@ -96,8 +135,8 @@ export class ListsComponent implements OnInit {
   confirmCheckout() {
     if (!this.selectedReservation) return;
 
-    // Use the deleteBooking endpoint which already handles archiving
-    this.http.delete(`https://capstone2backenddeployment-production.up.railway.app/bookings/${this.selectedReservation.id}`)
+    // checkout reservation
+    this.http.delete(`${environment.apiUrl}/bookings/${this.selectedReservation.id}`)
       .subscribe({
         next: () => {
           this.loadReservations();
@@ -137,7 +176,19 @@ export class ListsComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return `₱${amount.toLocaleString()}`;
+    return `P${amount.toLocaleString()}`;
+  }
+
+  calculateTotalAmount(reservation: Reservation): number {
+    // Calculate days between check-in and check-out
+    const checkIn = new Date(reservation.checkIn);
+    const checkOut = new Date(reservation.checkOut);
+    const days = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // For now, use a default rate of 1500 per night if room type info is not available
+    const ratePerNight = 1500; // This should be fetched from room type data
+    
+    return days * ratePerNight;
   }
 
   getNewCheckoutDate(): string {
