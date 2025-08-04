@@ -20,30 +20,41 @@ export class AddAccountComponent implements OnInit {
   account: Account = new Account({ role: Role.frontdeskUser });
   error = '';
   success = false;
+  loading = false;
   Role = Role;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Component initialized without loading spinner
+    // Component initialized
   }
 
   addAccount() {
     this.error = '';
     this.success = false;
+    this.loading = true;
+
     this.http.post(`${environment.apiUrl}/accounts/register`, this.account).subscribe({
       next: () => {
         this.success = true;
+        this.loading = false;
         this.accountAdded.emit(this.account);
-        setTimeout(() => this.close(), 1000);
+        setTimeout(() => this.close(), 2000);
       },
       error: err => {
         this.error = err?.error?.message || 'Failed to add account.';
+        this.loading = false;
       }
     });
   }
 
   close() {
     this.closed.emit();
+  }
+
+  clearForm() {
+    this.account = new Account({ role: Role.frontdeskUser });
+    this.error = '';
+    this.success = false;
   }
 } 

@@ -95,10 +95,25 @@ export class ProcessComponent implements OnInit {
   // Format phone number input
   formatPhoneNumber(event: any) {
     let value = event.target.value.replace(/\D/g, '');
+    
+    // Auto-add "09" prefix if user starts typing without it
+    if (value.length > 0 && !value.startsWith('09')) {
+      if (value.length <= 9) {
+        value = '09' + value;
+      } else {
+        value = '09' + value.substring(0, 9);
+      }
+    }
+    
+    // Limit to 11 digits total
     if (value.length > 11) {
       value = value.substring(0, 11);
     }
+    
     event.target.value = value;
+    
+    // Update the form control
+    this.customerForm.patchValue({ phone: value });
   }
 
   // Format postal code input

@@ -64,6 +64,7 @@
             type="tel" 
             id="phone"
             formControlName="phone"
+            (input)="formatPhoneNumber($event)"
             [class.invalid]="isFieldInvalid('guest', 'phone')"
             placeholder="Enter phone number">
           <div *ngIf="getErrorMessage('guest', 'phone')" class="error-message">

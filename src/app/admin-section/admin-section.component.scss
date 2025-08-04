@@ -38,21 +38,8 @@
   --room-default: #b4884d;
   color: #fff;
   background: var(--main-bg);
-  --text-color: #ffffff;
-}
-/* ...existing code... */
-
-.admin-logo-bar {
-  width: 100%;
-  text-align: center;
-  padding: 1rem 0 0.5rem 0;
 }
 
-.admin-logo {
-  height: 60px;
-  width: auto;
-  display: inline-block;
-}
 .dashboard-container {
   display: flex;
   min-height: 100vh;
