@@ -57,7 +57,7 @@ export class AddbookingsComponent implements OnInit {
       payment: this.fb.group({
         paymentMode: ['', Validators.required],
         paymentMethod: [''],
-        amount: [null, [Validators.required]], // Initial validator
+        amount: [this.reservationFee, [Validators.required, Validators.min(this.reservationFee)]], // Set initial value
         mobileNumber: [''],
         cardNumber: [''],
         expiry: [''],
@@ -67,11 +67,7 @@ export class AddbookingsComponent implements OnInit {
       requests: ['']
     });
 
-    // Set default values after reservationFee is available
-    const amountControl = this.bookingForm.get('payment.amount');
-    amountControl?.setValue(this.reservationFee);
-    amountControl?.setValidators([Validators.required, Validators.min(this.reservationFee)]);
-    amountControl?.updateValueAndValidity();
+    // Amount is already set in the form initialization
 
     const today = new Date().toISOString().split('T')[0];
     this.bookingForm.get('availability.checkIn')?.setValue(today);
@@ -93,25 +89,22 @@ export class AddbookingsComponent implements OnInit {
       const cvvControl = this.bookingForm.get('payment.cvv');
       const paymentMethodControl = this.bookingForm.get('payment.paymentMethod');
 
+      // Clear all validators first
+      mobileNumberControl?.clearValidators();
+      cardNumberControl?.clearValidators();
+      expiryControl?.clearValidators();
+      cvvControl?.clearValidators();
+      paymentMethodControl?.clearValidators();
+
       if (mode === 'GCash' || mode === 'Maya') {
         mobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^\+?[\d\s\-\(\)]+$/)]);
-        cardNumberControl?.clearValidators();
-        expiryControl?.clearValidators();
-        cvvControl?.clearValidators();
-        paymentMethodControl?.clearValidators();
       } else if (mode === 'Card') {
-        mobileNumberControl?.clearValidators();
         cardNumberControl?.setValidators([Validators.required, Validators.pattern(/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/)]);
         expiryControl?.setValidators([Validators.required]);
         cvvControl?.setValidators([Validators.required, Validators.pattern(/^\d{3,4}$/)]);
         paymentMethodControl?.setValidators([Validators.required]);
-      } else {
-        mobileNumberControl?.clearValidators();
-        cardNumberControl?.clearValidators();
-        expiryControl?.clearValidators();
-        cvvControl?.clearValidators();
-        paymentMethodControl?.clearValidators();
       }
+      // For Cash mode, no additional validators needed
 
       mobileNumberControl?.updateValueAndValidity();
       cardNumberControl?.updateValueAndValidity();
@@ -281,5 +274,61 @@ export class AddbookingsComponent implements OnInit {
       : this.bookingForm.get(controlName);
     
     return !!(control?.invalid && control?.touched);
+  }
+
+  isFormValid(): boolean {
+    // Check if basic form is valid
+    if (this.bookingForm.invalid) {
+      console.log('Form is invalid:', this.bookingForm.errors);
+      this.logFormValidationErrors();
+      return false;
+    }
+    
+    // Check if at least one room type is selected
+    if (!this.hasSelectedRoomTypes()) {
+      console.log('No room types selected');
+      return false;
+    }
+    
+    // Check payment-specific validations
+    const paymentMode = this.bookingForm.get('payment.paymentMode')?.value;
+    const payment = this.bookingForm.get('payment');
+    
+    if (paymentMode === 'GCash' || paymentMode === 'Maya') {
+      const mobileNumber = payment?.get('mobileNumber')?.value;
+      if (!mobileNumber) {
+        console.log('Mobile number required for GCash/Maya');
+        return false;
+      }
+    } else if (paymentMode === 'Card') {
+      const cardNumber = payment?.get('cardNumber')?.value;
+      const expiry = payment?.get('expiry')?.value;
+      const cvv = payment?.get('cvv')?.value;
+      const paymentMethod = payment?.get('paymentMethod')?.value;
+      
+      if (!cardNumber || !expiry || !cvv || !paymentMethod) {
+        console.log('Card payment fields incomplete:', { cardNumber, expiry, cvv, paymentMethod });
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  logFormValidationErrors() {
+    console.log('Form validation errors:');
+    Object.keys(this.bookingForm.controls).forEach(key => {
+      const control = this.bookingForm.get(key);
+      if (control instanceof FormGroup) {
+        Object.keys(control.controls).forEach(nestedKey => {
+          const nestedControl = control.get(nestedKey);
+          if (nestedControl?.invalid) {
+            console.log(`${key}.${nestedKey}:`, nestedControl.errors);
+          }
+        });
+      } else if (control?.invalid) {
+        console.log(`${key}:`, control.errors);
+      }
+    });
   }
 }

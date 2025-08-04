@@ -21,6 +21,9 @@ export class CalendarComponent implements OnInit {
   selectedType: string = '';
 
   dates: Date[] = [];
+  currentDateRange: { start: Date; end: Date } = { start: new Date(), end: new Date() };
+  visibleDays = 14; // Number of days to show at once
+  currentStartIndex = 0; // Track the starting index for navigation
   
   // Modal state
   showModal = false;
@@ -39,13 +42,25 @@ export class CalendarComponent implements OnInit {
       this.loadRoomsAndBookings();
     }
 
+    this.initializeCalendar();
+  }
+
+  initializeCalendar() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    for (let i = 0; i < 14; i++) {
+    
+    // Generate dates for the next 90 days (3 months) to allow scrolling
+    this.dates = [];
+    for (let i = 0; i < 90; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       this.dates.push(date);
     }
+    
+    // Set initial visible range
+    this.currentDateRange.start = new Date(today);
+    this.currentDateRange.end = new Date(today);
+    this.currentDateRange.end.setDate(today.getDate() + this.visibleDays - 1);
   }
 
   loadRoomsAndBookings() {
@@ -110,7 +125,7 @@ export class CalendarComponent implements OnInit {
     const timeDiff = checkOut.getTime() - checkIn.getTime();
     const dayCount = Math.max((timeDiff / (1000 * 60 * 60 * 24)), 1);
 
-    return dayCount * (100 / this.dates.length);
+    return dayCount * (100 / this.visibleDates.length);
   }
 
   // Helper for colspan-based booking rendering
@@ -158,11 +173,12 @@ export class CalendarComponent implements OnInit {
     checkIn.setHours(0, 0, 0, 0);
     checkOut.setHours(0, 0, 0, 0);
     const days = Math.max((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24), 1);
-    // Limit colspan to not overflow the calendar
-    const startIdx = this.dates.findIndex(d => d.getTime() === checkIn.getTime());
-    const endIdx = this.dates.findIndex(d => d.getTime() === checkOut.getTime());
+    // Limit colspan to not overflow the visible calendar
+    const visibleDates = this.visibleDates;
+    const startIdx = visibleDates.findIndex(d => d.getTime() === checkIn.getTime());
+    const endIdx = visibleDates.findIndex(d => d.getTime() === checkOut.getTime());
     if (startIdx === -1) return days;
-    if (endIdx === -1) return this.dates.length - startIdx;
+    if (endIdx === -1) return visibleDates.length - startIdx;
     return endIdx - startIdx;
   }
 
@@ -171,8 +187,10 @@ export class CalendarComponent implements OnInit {
     const cells: Array<{ type: 'booking' | 'empty', colspan: number, booking?: Booking }> = [];
     let dateIdx = 0;
     const bookings = this.bookings.filter(b => b.room_id === room.id);
-    while (dateIdx < this.dates.length) {
-      const currentDate = this.dates[dateIdx];
+    const visibleDates = this.visibleDates;
+    
+    while (dateIdx < visibleDates.length) {
+      const currentDate = visibleDates[dateIdx];
       // Find a booking that overlaps with the current date and hasn't been rendered yet
       const booking = bookings.find(b => {
         const checkIn = new Date(b.availability.checkIn);
@@ -185,7 +203,7 @@ export class CalendarComponent implements OnInit {
         // Booking overlaps if current date is within [checkIn, checkOut)
         return current >= start && current < end &&
           // Only render at the first visible date for this booking
-          (dateIdx === 0 || this.dates[dateIdx - 1].getTime() < start);
+          (dateIdx === 0 || visibleDates[dateIdx - 1].getTime() < start);
       });
       if (booking) {
         // Calculate the visible start and end indices for the booking
@@ -193,10 +211,10 @@ export class CalendarComponent implements OnInit {
         const checkOut = new Date(booking.availability.checkOut);
         checkIn.setHours(0, 0, 0, 0);
         checkOut.setHours(0, 0, 0, 0);
-        const bookingStartIdx = this.dates.findIndex(d => d.getTime() === checkIn.getTime());
-        const bookingEndIdx = this.dates.findIndex(d => d.getTime() === checkOut.getTime());
+        const bookingStartIdx = visibleDates.findIndex(d => d.getTime() === checkIn.getTime());
+        const bookingEndIdx = visibleDates.findIndex(d => d.getTime() === checkOut.getTime());
         const startIdx = bookingStartIdx === -1 ? 0 : bookingStartIdx;
-        const endIdx = bookingEndIdx === -1 ? this.dates.length : bookingEndIdx;
+        const endIdx = bookingEndIdx === -1 ? visibleDates.length : bookingEndIdx;
         const colspan = endIdx - Math.max(dateIdx, startIdx);
         cells.push({ type: 'booking', colspan, booking });
         dateIdx += colspan;
@@ -262,6 +280,72 @@ export class CalendarComponent implements OnInit {
     const checkIn = new Date(booking.availability.checkIn);
     const checkOut = new Date(booking.availability.checkOut);
     return Math.max((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24), 1);
+  }
+
+  // Navigation methods
+  goToToday() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    this.currentStartIndex = this.dates.findIndex(date => date.getTime() === today.getTime());
+    if (this.currentStartIndex === -1) {
+      this.currentStartIndex = 0;
+    }
+    this.updateVisibleRange();
+  }
+
+  goToPrevious() {
+    if (this.currentStartIndex > 0) {
+      this.currentStartIndex = Math.max(0, this.currentStartIndex - this.visibleDays);
+      this.updateVisibleRange();
+    }
+  }
+
+  goToNext() {
+    if (this.currentStartIndex + this.visibleDays < this.dates.length) {
+      this.currentStartIndex = Math.min(this.dates.length - this.visibleDays, this.currentStartIndex + this.visibleDays);
+      this.updateVisibleRange();
+    }
+  }
+
+  updateVisibleRange() {
+    this.currentDateRange.start = new Date(this.dates[this.currentStartIndex]);
+    this.currentDateRange.end = new Date(this.dates[Math.min(this.currentStartIndex + this.visibleDays - 1, this.dates.length - 1)]);
+  }
+
+  get visibleDates(): Date[] {
+    return this.dates.slice(this.currentStartIndex, this.currentStartIndex + this.visibleDays);
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentStartIndex > 0;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentStartIndex + this.visibleDays < this.dates.length;
+  }
+
+  get currentDateRangeText(): string {
+    const startDate = this.currentDateRange.start;
+    const endDate = this.currentDateRange.end;
+    return `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+  }
+
+  // Handle keyboard navigation
+  onKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        this.goToPrevious();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this.goToNext();
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.goToToday();
+        break;
+    }
   }
 
   onDragEnd(event: CdkDragEnd, booking: Booking, room: Room) {

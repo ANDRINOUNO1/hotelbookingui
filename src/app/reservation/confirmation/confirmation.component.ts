@@ -126,7 +126,15 @@ export class ConfirmationComponent implements OnInit {
         rooms: this.reservationData?.rooms
       },
       requests: this.reservationData?.requests || '',
-      payment: { ...this.paymentDetails },
+      payment: {
+        paymentMode: this.paymentDetails.paymentMode,
+        paymentMethod: this.paymentDetails.paymentMethod,
+        mobileNumber: this.paymentDetails.mobileNumber,
+        amount: this.paymentDetails.amount,
+        cardNumber: this.paymentDetails.cardNumber,
+        expiry: this.paymentDetails.expiry,
+        cvv: this.paymentDetails.cvv
+      },
       pay_status: false,
       paidamount: this.paymentDetails.amount
     };

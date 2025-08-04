@@ -1,1 +1,184 @@
-<p>lists works!</p>
+<!-- Loading Spinner Overlay -->
+
+
+<!-- Content will show after loading -->
+<div class="booking-container">
+  <div class="room-view-header">
+    <select>
+      <option>Room View</option>
+      <option>List View</option>
+    </select>
+  </div>
+
+  <table class="tables">
+    <thead>
+      <tr>
+        <th>Room No.</th>
+        <th>Name</th>
+        <th>Room Type</th>
+        <th>Status</th>
+          <th>Payment Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of occupiedRooms">
+        <td>{{ room.number }}</td>
+        <td>{{ room.guest }}</td>
+        <td>{{ room.type }}</td>
+        <td>
+          <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
+        </td>
+        <td>
+          <span class="payment-status" [ngClass]="room.paymentStatus.toLowerCase()">{{ room.paymentStatus }}</span>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn-view" (click)="openViewPopup(room)">View</button>
+            <button class="btn-confirm-payment" (click)="confirmPayment(room)" *ngIf="!room.booking.pay_status">
+              Confirm Payment
+            </button>
+            <button class="btn-delete" (click)="deleteBooking(room.id)">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="popup-backdrop" *ngIf="selectedBooking">
+  <div class="popup">
+    <div class="popup-header">
+      <h3 style="font-size: 1.5rem;">Booking Details</h3>
+      <button (click)="toggleEditMode()">
+        {{ editMode ? 'Cancel' : 'Edit' }}
+      </button>
+      <button *ngIf="editMode" class="btn-save" (click)="updateBooking(selectedBooking.id, selectedBooking)">Save</button>
+      <button *ngIf="editMode" class="btn-delete" (click)="deleteBooking(selectedBooking.id)">Delete Booking</button>
+    </div>
+
+    <!-- Guest Details -->
+    <div class="form-group">
+      <label>First Name:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.first_name }}</span>
+      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.first_name" />
+    </div>
+
+    <div class="form-group">
+      <label>Last Name:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.last_name }}</span>
+      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.last_name" />
+    </div>
+
+    <div class="form-group">
+      <label>Email:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.email }}</span>
+      <input *ngIf="editMode" type="email" [(ngModel)]="selectedBooking.guest.email" />
+    </div>
+
+    <div class="form-group">
+      <label>Phone:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.phone }}</span>
+      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.phone" />
+    </div>
+
+    <div class="form-group">
+      <label>Address:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.address }}</span>
+      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.address" />
+    </div>
+
+    <div class="form-group">
+      <label>City:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.guest.city }}</span>
+      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.city" />
+    </div>
+
+    <!-- Availability -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Check In:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.availability.checkIn }}</span>
+        <input *ngIf="editMode" type="date" [(ngModel)]="selectedBooking.availability.checkIn" />
+      </div>
+      <div class="form-group">
+        <label>Check Out:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.availability.checkOut }}</span>
+        <input *ngIf="editMode" type="date" [(ngModel)]="selectedBooking.availability.checkOut" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Adults:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.availability.adults }}</span>
+        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.adults" />
+      </div>
+      <div class="form-group">
+        <label>Children:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.availability.children }}</span>
+        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.children" />
+      </div>
+      <div class="form-group">
+        <label>Rooms:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.availability.rooms }}</span>
+        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.rooms" />
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="form-group">
+      <label>Payment Status:</label>
+      <span *ngIf="!editMode">{{ selectedBooking.pay_status ? 'Paid' : 'Unpaid' }}</span>
+      <select *ngIf="editMode" [(ngModel)]="selectedBooking.pay_status">
+        <option [ngValue]="true">Paid</option>
+        <option [ngValue]="false">Unpaid</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Payment Method:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMode || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMode" placeholder="e.g. GCash, Maya, Card" />
+      </div>
+      <div class="form-group">
+        <label>Amount:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.amount || 0 }}</span>
+        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.payment.amount" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Card Number:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.cardNumber || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cardNumber" />
+      </div>
+      <div class="form-group">
+        <label>Expiry:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.expiry || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.expiry" placeholder="MM/YY" />
+      </div>
+      <div class="form-group">
+        <label>CVV:</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.cvv || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cvv" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number (for GCash/Maya):</label>
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.mobileNumber || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.mobileNumber" placeholder="09XXXXXXXXX" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="popup-actions">
+      
+      <button (click)="closePopup()">Close</button>
+      
+    </div>
+  </div>
+</div>
