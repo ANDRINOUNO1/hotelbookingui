@@ -29,19 +29,20 @@ export class ProcessComponent implements OnInit {
       firstName: ['', [Validators.required, this.lettersOnlyValidator()]],
       lastName: ['', [Validators.required, this.lettersOnlyValidator()]],
       email: ['', [Validators.required, this.gmailValidator()]],
-      phone: ['', [Validators.required, this.phoneValidator()]],
+      phone: ['09', [Validators.required, this.phoneValidator()]],
       address: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', [Validators.required, this.postalCodeValidator()]],
-      specialRequest: [''] // Optional field
+      specialRequest: [''] 
     });
 
     this.selectedRoomType = this.reservationDataService.getSelectedRoomType();
     
-    // Load saved customer details if available
     const savedDetails = this.reservationDataService.getCustomerDetails();
     if (savedDetails) {
       this.customerForm.patchValue(savedDetails);
+    } else {
+      this.customerForm.patchValue({ phone: '09' });
     }
 
     // Real-time validation feedback
@@ -96,12 +97,15 @@ export class ProcessComponent implements OnInit {
   formatPhoneNumber(event: any) {
     let value = event.target.value.replace(/\D/g, '');
     
-    // Auto-add "09" prefix if user starts typing without it
-    if (value.length > 0 && !value.startsWith('09')) {
-      if (value.length <= 9) {
-        value = '09' + value;
+    if (!value.startsWith('09')) {
+      if (value.length > 0) {
+        if (value.length <= 9) {
+          value = '09' + value;
+        } else {
+          value = '09' + value.substring(0, 9);
+        }
       } else {
-        value = '09' + value.substring(0, 9);
+        value = '09';
       }
     }
     
@@ -112,7 +116,6 @@ export class ProcessComponent implements OnInit {
     
     event.target.value = value;
     
-    // Update the form control
     this.customerForm.patchValue({ phone: value });
   }
 

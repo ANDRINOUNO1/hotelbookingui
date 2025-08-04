@@ -1,6 +1,6 @@
 .reservation-confirmation {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -61,8 +61,8 @@
     }
     
     .status-badge {
-      background: rgba(255, 193, 7, 0.9);
-      color: #000;
+      background: rgba(180, 136, 77, 0.9);
+      color: white;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 0.9rem;
@@ -71,29 +71,31 @@
     
     .payment-icon {
       font-size: 2rem;
+      color: #b4884d;
     }
   }
 
   // Containers
   .confirmation-container,
   .payment-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(11, 11, 49, 0.8);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(180, 136, 77, 0.3);
   }
 
   // Detail Cards
   .detail-card {
-    background: white;
+    background: rgba(11, 11, 49, 0.8);
     border-radius: 15px;
     margin-bottom: 20px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(180, 136, 77, 0.3);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
 
     &:hover {
       transform: translateY(-2px);
@@ -101,20 +103,21 @@
     }
 
     .card-header {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
       padding: 20px;
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid #e9ecef;
+      border-bottom: 1px solid rgba(180, 136, 77, 0.3);
 
       .card-icon {
         font-size: 1.5rem;
+        color: white;
       }
 
       h3 {
         margin: 0;
-        color: #495057;
+        color: white;
         font-size: 1.2rem;
         font-weight: 600;
       }
@@ -128,26 +131,26 @@
         justify-content: space-between;
         align-items: center;
         padding: 12px 0;
-        border-bottom: 1px solid #f8f9fa;
+        border-bottom: 1px solid rgba(180, 136, 77, 0.2);
 
         &:last-child {
           border-bottom: none;
         }
 
         .label {
-          color: #6c757d;
+          color: #d4a574;
           font-weight: 500;
           font-size: 0.95rem;
         }
 
         .value {
-          color: #495057;
+          color: #ffffff;
           font-weight: 600;
           text-align: right;
           max-width: 60%;
 
           &.price {
-            color: #28a745;
+            color: #b4884d;
             font-size: 1.1rem;
           }
         }
@@ -162,29 +165,35 @@
 
       label {
         display: block;
-        color: #495057;
+        color: #d4a574;
         font-weight: 600;
         margin-bottom: 8px;
         font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
 
       .form-control {
         width: 100%;
         padding: 15px;
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
+        border: 2px solid rgba(180, 136, 77, 0.3);
+        border-radius: 12px;
         font-size: 1rem;
         transition: all 0.3s ease;
-        background: white;
-
+        background: rgba(11, 11, 49, 0.8);
+        color: #ffffff;
+        backdrop-filter: blur(10px);
+        
         &:focus {
           outline: none;
-          border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          border-color: #b4884d;
+          box-shadow: 0 0 20px rgba(180, 136, 77, 0.3);
+          transform: translateY(-2px);
         }
-
+        
         &::placeholder {
-          color: #adb5bd;
+          color: rgba(255, 255, 255, 0.6);
         }
       }
     }
@@ -197,8 +206,8 @@
       margin-bottom: 20px;
 
       .payment-option {
-        background: white;
-        border: 2px solid #e9ecef;
+        background: rgba(11, 11, 49, 0.8);
+        border: 2px solid rgba(180, 136, 77, 0.3);
         border-radius: 12px;
         padding: 15px;
         text-align: center;
@@ -208,18 +217,20 @@
         flex-direction: column;
         align-items: center;
         gap: 8px;
+        backdrop-filter: blur(10px);
+        color: #ffffff;
 
         &:hover {
-          border-color: #667eea;
+          border-color: #b4884d;
           transform: translateY(-2px);
         }
 
         &.selected {
-          border-color: #667eea;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-color: #b4884d;
+          background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
           color: white;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+          box-shadow: 0 8px 20px rgba(23, 23, 37, 0.3);
         }
 
         .option-icon {
@@ -242,18 +253,34 @@
       .currency {
         position: absolute;
         left: 15px;
-        color: #6c757d;
+        color: rgba(255, 255, 255, 0.6);
         font-weight: 600;
         z-index: 1;
       }
 
       input {
         padding-left: 35px;
+        background: rgba(11, 11, 49, 0.8);
+        color: #ffffff;
+        border: 2px solid rgba(180, 136, 77, 0.3);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        
+        &:focus {
+          outline: none;
+          border-color: #b4884d;
+          box-shadow: 0 0 20px rgba(180, 136, 77, 0.3);
+          transform: translateY(-2px);
+        }
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+        }
       }
     }
 
     .help-text {
-      color: #6c757d;
+      color: #d4a574;
       font-size: 0.85rem;
       margin-top: 5px;
     }
@@ -267,10 +294,12 @@
 
     // Payment Fields
     .payment-fields {
-      background: #f8f9fa;
+      background: rgba(11, 11, 49, 0.8);
       border-radius: 15px;
       padding: 20px;
       margin-top: 20px;
+      border: 1px solid rgba(180, 136, 77, 0.3);
+      backdrop-filter: blur(10px);
     }
   }
 
@@ -304,7 +333,7 @@
   }
 
   .btn-confirm {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
     color: white;
     border: none;
     padding: 16px 32px;
@@ -322,7 +351,7 @@
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+      box-shadow: 0 8px 25px rgba(23, 23, 37, 0.3);
     }
 
     &:disabled {
