@@ -1,10 +1,22 @@
 :host {
   --main-background: #0b0b31;
-  --text-color: #222;
+  --text-color: #ffffff;
   --header-text-color: #fff;
-  --color-primary:  linear-gradient(90deg, #171725 0%, #b4884d 100%);
+  --color-primary: linear-gradient(90deg, #171725 0%, #b4884d 100%);
   --color-secondary: #2196f3;
   --sidebar-color: #222d35;
+  --card-bg: #181824;
+  --card-border: #23233a;
+  --input-bg: #0b0b31;
+  --input-text: #ffffff;
+  --input-border: #23233a;
+  --table-bg: #181824;
+  --table-border: #23233a;
+  --popup-bg: #181824;
+  --popup-border: #23233a;
+  --button-bg: #23233a;
+  --button-text: #ffffff;
+  --button-hover: #2d2d4a;
 }
 
 .superadmin-container {
@@ -47,6 +59,7 @@
     cursor: pointer;
   }
 }
+
 .logo {
   display: flex;
   align-items: center;
@@ -55,6 +68,7 @@
   color: #b4884d;
   letter-spacing: 0.5px;
 }
+
 .superadmin-sidebar {
   flex-direction: column;
   padding-top: 1rem;
@@ -64,14 +78,23 @@
   width: 220px;
   background: var(--sidebar-color);
   color: #fff;
-  ul { list-style: none; padding: 10px; }
+  
+  ul { 
+    list-style: none; 
+    padding: 10px; 
+  }
+  
   li {
     padding: 1rem;
     display: flex;
     align-items: center;
     gap: 0.7rem;
     cursor: pointer;
-    &:hover { background: #1a222b; }
+    
+    &:hover { 
+      background: #1a222b; 
+    }
+    
     &.active {
       background: var(--color-primary);
       color: #fff;
@@ -83,6 +106,7 @@
   flex: 1;
   background: var(--main-background);
   padding: 1rem;
+  color: var(--text-color);
 }
 
 // Responsive Design for Superadmin Component

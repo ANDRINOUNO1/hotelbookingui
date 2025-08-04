@@ -1,21 +1,26 @@
 .tables {
-    border-collapse: separate; /* Use 'separate' to apply border radius */
-        border-spacing: 0; /* Remove spacing between cells */
-        width: 100%;
-        text-align: left;
-        border: 1px solid var(--card-border);
-        border-radius: 10px; /* Rounded corners for the table */
-        overflow: hidden;
-        color: var(--text-color);
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--table-border);
+    border-radius: 10px;
+    overflow: hidden;
+    color: var(--text-color);
+    background: var(--table-bg);
 }
+
 .tables th,
 .tables td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border);
     padding: 8px;
+    background: var(--table-bg);
+    color: var(--text-color);
 }
 
 .tables th {
     font-weight: bold;
+    background: var(--card-bg);
 }
 
 .popup-backdrop {
@@ -24,11 +29,13 @@
   background: rgba(0,0,0,0.7);
   display: flex; justify-content: center; align-items: center;
   z-index: 1000;
+  
   input,
   textarea,
   select {
-    color: #ffffff !important;
-    background: #0b0b31 !important;
+    color: var(--input-text) !important;
+    background: var(--input-bg) !important;
+    border: 1px solid var(--input-border);
   }
 }
 
@@ -38,13 +45,15 @@
   max-width: 480px;
   margin: 2rem auto;
   border-radius: 10px;
-  border: 3px solid #ddd;
+  border: 3px solid var(--popup-border);
   max-height: 90vh;
   overflow-y: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  background: var(--popup-bg);
+  color: var(--text-color);
 }
 
 .form-group {
@@ -67,7 +76,9 @@
 input,
 select {
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 .popup-actions {

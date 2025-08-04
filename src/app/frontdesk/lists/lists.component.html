@@ -1,1 +1,150 @@
-<p>lists works!</p>
+<div class="lists-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Reservations List</h1>
+    <button class="refresh-btn" (click)="loadReservations()" [disabled]="loading">
+      <i class="fa fa-refresh"></i>
+      {{ loading ? 'Loading...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="error">
+    <i class="fa fa-exclamation-triangle"></i>
+    {{ error }}
+    <button (click)="error = ''" class="close-error">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading reservations...</p>
+  </div>
+
+  <!-- Reservations Table -->
+  <div class="table-container" *ngIf="!loading">
+    <table class="reservations-table">
+      <thead>
+        <tr>
+          <th>Guest Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Room Type</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Total Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations" class="reservation-row">
+          <td>{{ getGuestName(reservation) }}</td>
+          <td>{{ reservation.guest_email }}</td>
+          <td>{{ reservation.guest_phone }}</td>
+          <td>{{ reservation.roomType }}</td>
+          <td>{{ formatDate(reservation.checkIn) }}</td>
+          <td>{{ formatDate(reservation.checkOut) }}</td>
+          <td>{{ formatCurrency(reservation.totalAmount) }}</td>
+          <td class="actions">
+            <button class="btn-extend" (click)="openExtendModal(reservation)">
+              <i class="fa fa-calendar-plus"></i>
+              Extend
+            </button>
+            <button class="btn-checkout" (click)="openCheckoutModal(reservation)">
+              <i class="fa fa-sign-out-alt"></i>
+              Check Out
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="reservations.length === 0 && !loading">
+      <i class="fa fa-bed"></i>
+      <h3>No Active Reservations</h3>
+      <p>There are currently no active reservations to display.</p>
+    </div>
+  </div>
+
+  <!-- Extend Stay Modal -->
+  <div class="modal-overlay" *ngIf="showExtendModal" (click)="cancelExtend()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Extend Stay</h2>
+        <button class="close-btn" (click)="cancelExtend()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="guest-info">
+          <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
+          <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
+          <p><strong>Current Check-out:</strong> {{ selectedReservation ? formatDate(selectedReservation.checkOut) : '' }}</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="extendDays">Number of Days to Extend:</label>
+          <input 
+            type="number" 
+            id="extendDays"
+            [(ngModel)]="extendDays" 
+            min="1" 
+            max="30"
+            class="form-control"
+          >
+        </div>
+
+        <div class="new-dates" *ngIf="selectedReservation">
+          <p><strong>New Check-out Date:</strong> 
+            {{ getNewCheckoutDate() }}
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cancelExtend()">Cancel</button>
+        <button class="btn-confirm" (click)="extendStay()">Extend Stay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showCheckoutModal" (click)="cancelCheckout()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Confirm Checkout</h2>
+        <button class="close-btn" (click)="cancelCheckout()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-message">
+          <i class="fa fa-exclamation-triangle"></i>
+          <h3>Are you sure you want to check out this guest?</h3>
+        </div>
+        
+        <div class="guest-info">
+          <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
+          <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
+          <p><strong>Check-out Date:</strong> {{ selectedReservation ? formatDate(selectedReservation.checkOut) : '' }}</p>
+          <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(selectedReservation.totalAmount) : '' }}</p>
+        </div>
+
+        <div class="checkout-note">
+          <p><i class="fa fa-info-circle"></i> This action will:</p>
+          <ul>
+            <li>Move the booking to the archive section</li>
+            <li>Remove it from the active reservations list</li>
+            <li>Mark the room as available</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cancelCheckout()">No, Cancel</button>
+        <button class="btn-confirm" (click)="confirmCheckout()">Yes, Check Out</button>
+      </div>
+    </div>
+  </div>
+</div>
