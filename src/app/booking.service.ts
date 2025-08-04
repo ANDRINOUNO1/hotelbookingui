@@ -1,20 +1,44 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 import { Booking, Availability } from './_models/booking.model';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
+  private apiUrl = `${environment.apiUrl}/bookings`;
   private bookingStorageKey = 'bookings';
   private availabilityStorageKey = 'availabilities';
   bookings: Booking[] = [];
   availabilities: Availability[] = [];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private http: HttpClient
+  ) {
     this.loadBookings();
     this.loadAvailabilities();
   }
 
-  // Save Availability and return its ID
+  // API Methods
+  getBookingsFromAPI(): Observable<Booking[]> {
+    return this.http.get<Booking[]>(this.apiUrl);
+  }
+
+  createBooking(booking: Booking): Observable<Booking> {
+    return this.http.post<Booking>(this.apiUrl, booking);
+  }
+
+  updateBooking(id: number, booking: Booking): Observable<Booking> {
+    return this.http.put<Booking>(`${this.apiUrl}/${id}`, booking);
+  }
+
+  deleteBooking(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // Local Storage Methods (for fallback)
   addAvailability(availability: Availability): number {
     const id = this.availabilities.length + 1;
     const newAvailability = { ...availability, id };
