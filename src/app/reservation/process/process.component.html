@@ -51,6 +51,9 @@
           <div class="error-message" *ngIf="hasError('email')">
             {{ getErrorMessage('email') }}
           </div>
+          <div class="loading-message" *ngIf="customerForm.get('email')?.pending">
+            <i class="fa fa-spinner fa-spin"></i> Checking email availability...
+          </div>
         </div>
 
                 <div class="form-group">

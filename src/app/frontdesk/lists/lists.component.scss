@@ -341,11 +341,25 @@
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background: white;
+            color: #171725;
 
             &:focus {
               outline: none;
               border-color: #b4884d;
               box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
+            }
+
+            &[type="number"] {
+              -webkit-appearance: none;
+              -moz-appearance: textfield;
+              appearance: textfield;
+              
+              &::-webkit-outer-spin-button,
+              &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+              }
             }
           }
         }

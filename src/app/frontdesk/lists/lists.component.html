@@ -86,20 +86,37 @@
         </div>
         
         <div class="form-group">
-          <label for="extendDays">Number of Days to Extend:</label>
+          <label for="newCheckoutDate">New Checkout Date:</label>
           <input 
-            type="number" 
-            id="extendDays"
-            [(ngModel)]="extendDays" 
-            min="1" 
-            max="30"
+            type="date" 
+            id="newCheckoutDate"
+            [(ngModel)]="newCheckoutDate" 
             class="form-control"
+            [min]="getMinCheckoutDate()"
+            [max]="getMaxCheckoutDate()"
+            placeholder="YYYY-MM-DD"
+          >
+        </div>
+        
+        <!-- Fallback manual input if calendar doesn't work -->
+        <div class="form-group" *ngIf="!newCheckoutDate">
+          <label for="manualCheckoutDate">Or enter manually (YYYY-MM-DD):</label>
+          <input 
+            type="text" 
+            id="manualCheckoutDate"
+            [(ngModel)]="manualCheckoutDate" 
+            class="form-control"
+            placeholder="2024-01-15"
+            pattern="\d{4}-\d{2}-\d{2}"
           >
         </div>
 
-        <div class="new-dates" *ngIf="selectedReservation">
+        <div class="new-dates" *ngIf="selectedReservation && (newCheckoutDate || manualCheckoutDate)">
           <p><strong>New Check-out Date:</strong> 
-            {{ getNewCheckoutDate() }}
+            {{ formatDate(newCheckoutDate || manualCheckoutDate) }}
+          </p>
+          <p><strong>Additional Days:</strong> 
+            {{ getAdditionalDays() }} days
           </p>
         </div>
       </div>
