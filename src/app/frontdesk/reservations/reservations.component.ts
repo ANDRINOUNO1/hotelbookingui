@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Room, Booking } from '../../_models/booking.model';
+import { Booking } from '../../_models/booking.model';
+import { Room } from '../../_models/room.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 
@@ -41,13 +42,13 @@ occupiedRooms: any[] = [];
                 };
               }
 
-              grouped[guestEmail].rooms.push({
-                number: room?.roomNumber,
-                                 type: room?.RoomType?.type || '',
-                status: room?.status ? 'Available' : 'Occupied',
-                paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
-                booking
-              });
+                             grouped[guestEmail].rooms.push({
+                 number: room?.roomNumber,
+                 type: room?.roomType?.type || room?.RoomType?.type || '',
+                 status: room?.isAvailable ? 'Available' : 'Occupied',
+                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
+                 booking
+               });
             });
 
             this.occupiedRooms = Object.values(grouped);

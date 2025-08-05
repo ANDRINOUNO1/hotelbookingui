@@ -1,162 +1,426 @@
 .reservation-confirmation {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+  // Header Section
+  .confirmation-header {
+    text-align: center;
+    margin-bottom: 30px;
+    
+    .header-content {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      
+      h1 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      
+      p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        margin: 0;
+      }
+    }
+  }
+
+  // Main Content
+  .confirmation-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  // Section Headers
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    
+    h2 {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .status-badge {
+      background: rgba(180, 136, 77, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .payment-icon {
+      font-size: 2rem;
+      color: #b4884d;
+    }
+  }
+
+  // Containers
   .confirmation-container,
   .payment-container {
-    margin-top: 5px;
-    flex: 1 1 45%;
-    background: rgba(0,0,0,0.4);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    border: 1px solid #ccc;
+    background: rgba(11, 11, 49, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(180, 136, 77, 0.3);
   }
 
-  input,
-  textarea,
-  select {
-    color: #ffffff !important;
-    background: #0b0b31 !important;
+  // Detail Cards
+  .detail-card {
+    background: rgba(11, 11, 49, 0.8);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(180, 136, 77, 0.3);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(180, 136, 77, 0.3);
+
+      .card-icon {
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      h3 {
+        margin: 0;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+
+    .card-content {
+      padding: 20px;
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(180, 136, 77, 0.2);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .label {
+          color: #d4a574;
+          font-weight: 500;
+          font-size: 0.95rem;
+        }
+
+        .value {
+          color: #ffffff;
+          font-weight: 600;
+          text-align: right;
+          max-width: 60%;
+
+          &.price {
+            color: #b4884d;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
   }
 
-  .form-control-static {
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #ffffff;
-    background-color: #0b0b31;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    min-height: 38px;
+  // Payment Form
+  .payment-form {
+    .form-group {
+      margin-bottom: 25px;
+
+      label {
+        display: block;
+        color: #d4a574;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid rgba(180, 136, 77, 0.3);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(11, 11, 49, 0.8);
+        color: #ffffff;
+        backdrop-filter: blur(10px);
+        
+        &:focus {
+          outline: none;
+          border-color: #b4884d;
+          box-shadow: 0 0 20px rgba(180, 136, 77, 0.3);
+          transform: translateY(-2px);
+        }
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+    }
+
+    // Payment Options
+    .payment-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+
+      .payment-option {
+        background: rgba(11, 11, 49, 0.8);
+        border: 2px solid rgba(180, 136, 77, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        color: #ffffff;
+
+        &:hover {
+          border-color: #b4884d;
+          transform: translateY(-2px);
+        }
+
+        &.selected {
+          border-color: #b4884d;
+          background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
+          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(23, 23, 37, 0.3);
+        }
+
+        .option-icon {
+          font-size: 1.5rem;
+        }
+
+        .option-text {
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    // Amount Input
+    .amount-input {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .currency {
+        position: absolute;
+        left: 15px;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 600;
+        z-index: 1;
+      }
+
+      input {
+        padding-left: 35px;
+        background: rgba(11, 11, 49, 0.8);
+        color: #ffffff;
+        border: 2px solid rgba(180, 136, 77, 0.3);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        
+        &:focus {
+          outline: none;
+          border-color: #b4884d;
+          box-shadow: 0 0 20px rgba(180, 136, 77, 0.3);
+          transform: translateY(-2px);
+        }
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+    }
+
+    .help-text {
+      color: #d4a574;
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+
+    // Card Details Grid
+    .card-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    // Payment Fields
+    .payment-fields {
+      background: rgba(11, 11, 49, 0.8);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid rgba(180, 136, 77, 0.3);
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  // Buttons
+  .action-buttons {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background: #5a6268;
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      font-size: 1.1rem;
+    }
+  }
+
+  .btn-confirm {
+    background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-  }
-}
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
 
-// Responsive Design for Confirmation Component
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(23, 23, 37, 0.3);
+    }
 
-// Large Desktop (1920px and up)
-@media (min-width: 1920px) {
-  .reservation-confirmation {
-    gap: 3rem;
-    
-    .confirmation-container,
-    .payment-container {
-      padding: 3rem;
-      border-radius: 12px;
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-icon {
+      font-size: 1.2rem;
     }
   }
-}
 
-// Desktop (1600px - 1919px)
-@media (max-width: 1919px) and (min-width: 1600px) {
-  .reservation-confirmation {
-    gap: 2.5rem;
-    
-    .confirmation-container,
-    .payment-container {
-      padding: 2.5rem;
-    }
+  // Submit Section
+  .submit-section {
+    margin-top: 30px;
   }
 }
 
-// Large Tablet/Small Desktop (1400px - 1599px)
-@media (max-width: 1599px) and (min-width: 1400px) {
+// Responsive Design
+@media (max-width: 768px) {
   .reservation-confirmation {
-    gap: 2rem;
-    
-    .confirmation-container,
-    .payment-container {
-      padding: 2rem;
-    }
-  }
-}
+    padding: 15px;
 
-// Tablet Landscape (1200px - 1399px)
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .reservation-confirmation {
-    gap: 1.5rem;
-    
-    .confirmation-container,
-    .payment-container {
-      padding: 1.5rem;
-    }
-  }
-}
+    .confirmation-header .header-content {
+      padding: 20px;
 
-// Tablet Portrait (768px - 1199px)
-@media (max-width: 1199px) and (min-width: 768px) {
-  .reservation-confirmation {
-    gap: 1rem;
-    flex-direction: column;
-    
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .confirmation-content {
+      gap: 15px;
+    }
+
     .confirmation-container,
     .payment-container {
-      flex: 1 1 100%;
-      padding: 1.5rem;
+      padding: 20px;
+    }
+
+    .payment-form .payment-options {
+      grid-template-columns: 1fr;
+    }
+
+    .payment-form .card-details {
+      grid-template-columns: 1fr;
     }
   }
 }
 
-// Mobile Large (576px - 767px)
-@media (max-width: 767px) and (min-width: 576px) {
+@media (max-width: 480px) {
   .reservation-confirmation {
-    gap: 1rem;
-    flex-direction: column;
-    
-    .confirmation-container,
-    .payment-container {
-      flex: 1 1 100%;
-      padding: 1rem;
-      border-radius: 6px;
+    .confirmation-header .header-content h1 {
+      font-size: 1.8rem;
     }
-    
-    .form-control-static {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.9rem;
-      min-height: 32px;
-    }
-  }
-}
 
-// Mobile Small (up to 575px)
-@media (max-width: 575px) {
-  .reservation-confirmation {
-    gap: 0.75rem;
-    flex-direction: column;
-    
-    .confirmation-container,
-    .payment-container {
-      flex: 1 1 100%;
-      padding: 0.75rem;
-      border-radius: 4px;
+    .section-header h2 {
+      font-size: 1.5rem;
     }
-    
-    .form-control-static {
-      padding: 0.2rem 0.4rem;
-      font-size: 0.85rem;
-      min-height: 28px;
-    }
-  }
-}
 
-// Extra Small Mobile (up to 375px)
-@media (max-width: 375px) {
-  .reservation-confirmation {
-    gap: 0.5rem;
-    
-    .confirmation-container,
-    .payment-container {
-      padding: 0.5rem;
-    }
-    
-    .form-control-static {
-      padding: 0.15rem 0.3rem;
-      font-size: 0.8rem;
-      min-height: 24px;
+    .detail-card .card-content .detail-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+
+      .value {
+        max-width: 100%;
+        text-align: left;
+      }
     }
   }
 }

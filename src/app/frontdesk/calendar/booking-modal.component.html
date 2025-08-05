@@ -36,13 +36,13 @@
               <label>Room Number:</label>
               <span>{{ room?.roomNumber || 'N/A' }}</span>
             </div>
-            <div class="info-item">
+                        <div class="info-item">
               <label>Room Type:</label>
-                             <span>{{ room?.RoomType?.type || 'N/A' }}</span>
+              <span>{{ room?.roomType?.type || room?.RoomType?.type || 'N/A' }}</span>
             </div>
             <div class="info-item">
-              <label>Floor:</label>
-              <span>{{ room?.floor || 'N/A' }}</span>
+              <label>Price:</label>
+              <span>₱{{ room?.price || 'N/A' }}</span>
             </div>
           </div>
         </div>

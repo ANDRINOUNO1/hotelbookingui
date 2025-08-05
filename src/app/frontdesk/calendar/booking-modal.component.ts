@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Booking, Room } from '../../_models/booking.model';
+import { Booking } from '../../_models/booking.model';
+import { Room } from '../../_models/room.model';
 
 @Component({
   selector: 'app-booking-modal',

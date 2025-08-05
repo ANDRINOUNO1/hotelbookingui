@@ -1,184 +1,167 @@
-<!-- Loading Spinner Overlay -->
-
-
-<!-- Content will show after loading -->
-<div class="booking-container">
-  <div class="room-view-header">
-    <select>
-      <option>Room View</option>
-      <option>List View</option>
-    </select>
+<div class="lists-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Reservations List</h1>
+    <button class="refresh-btn" (click)="loadReservations()" [disabled]="loading">
+      <i class="fa fa-refresh"></i>
+      {{ loading ? 'Loading...' : 'Refresh' }}
+    </button>
   </div>
 
-  <table class="tables">
-    <thead>
-      <tr>
-        <th>Room No.</th>
-        <th>Name</th>
-        <th>Room Type</th>
-        <th>Status</th>
-          <th>Payment Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let room of occupiedRooms">
-        <td>{{ room.number }}</td>
-        <td>{{ room.guest }}</td>
-        <td>{{ room.type }}</td>
-        <td>
-          <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
-        </td>
-        <td>
-          <span class="payment-status" [ngClass]="room.paymentStatus.toLowerCase()">{{ room.paymentStatus }}</span>
-        </td>
-        <td>
-          <div class="action-buttons">
-            <button class="btn-view" (click)="openViewPopup(room)">View</button>
-            <button class="btn-confirm-payment" (click)="confirmPayment(room)" *ngIf="!room.booking.pay_status">
-              Confirm Payment
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="error">
+    <i class="fa fa-exclamation-triangle"></i>
+    {{ error }}
+    <button (click)="error = ''" class="close-error">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading reservations...</p>
+  </div>
+
+  <!-- Reservations Table -->
+  <div class="table-container" *ngIf="!loading">
+    <table class="reservations-table">
+      <thead>
+        <tr>
+          <th>Guest Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Room Type</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Total Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations" class="reservation-row">
+          <td>{{ getGuestName(reservation) }}</td>
+          <td>{{ reservation.guest_email }}</td>
+          <td>{{ reservation.guest_phone }}</td>
+          <td>{{ reservation.roomType }}</td>
+          <td>{{ formatDate(reservation.checkIn) }}</td>
+          <td>{{ formatDate(reservation.checkOut) }}</td>
+          <td>{{ formatCurrency(calculateTotalAmount(reservation)) }}</td>
+          <td class="actions">
+            <button class="btn-extend" (click)="openExtendModal(reservation)">
+              <i class="fa fa-calendar-plus"></i>
+              Extend
             </button>
-            <button class="btn-delete" (click)="deleteBooking(room.id)">
-              Delete
+            <button class="btn-checkout" (click)="openCheckoutModal(reservation)">
+              <i class="fa fa-sign-out-alt"></i>
+              Check Out
             </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-<div class="popup-backdrop" *ngIf="selectedBooking">
-  <div class="popup">
-    <div class="popup-header">
-      <h3 style="font-size: 1.5rem;">Booking Details</h3>
-      <button (click)="toggleEditMode()">
-        {{ editMode ? 'Cancel' : 'Edit' }}
-      </button>
-      <button *ngIf="editMode" class="btn-save" (click)="updateBooking(selectedBooking.id, selectedBooking)">Save</button>
-      <button *ngIf="editMode" class="btn-delete" (click)="deleteBooking(selectedBooking.id)">Delete Booking</button>
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="reservations.length === 0 && !loading">
+      <i class="fa fa-bed"></i>
+      <h3>No Active Reservations</h3>
+      <p>There are currently no active reservations to display.</p>
     </div>
+  </div>
 
-    <!-- Guest Details -->
-    <div class="form-group">
-      <label>First Name:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.first_name }}</span>
-      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.first_name" />
-    </div>
-
-    <div class="form-group">
-      <label>Last Name:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.last_name }}</span>
-      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.last_name" />
-    </div>
-
-    <div class="form-group">
-      <label>Email:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.email }}</span>
-      <input *ngIf="editMode" type="email" [(ngModel)]="selectedBooking.guest.email" />
-    </div>
-
-    <div class="form-group">
-      <label>Phone:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.phone }}</span>
-      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.phone" />
-    </div>
-
-    <div class="form-group">
-      <label>Address:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.address }}</span>
-      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.address" />
-    </div>
-
-    <div class="form-group">
-      <label>City:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.guest.city }}</span>
-      <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.guest.city" />
-    </div>
-
-    <!-- Availability -->
-    <div class="form-row">
-      <div class="form-group">
-        <label>Check In:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.availability.checkIn }}</span>
-        <input *ngIf="editMode" type="date" [(ngModel)]="selectedBooking.availability.checkIn" />
+  <!-- Extend Stay Modal -->
+  <div class="modal-overlay" *ngIf="showExtendModal" (click)="cancelExtend()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Extend Stay</h2>
+        <button class="close-btn" (click)="cancelExtend()">
+          <i class="fa fa-times"></i>
+        </button>
       </div>
-      <div class="form-group">
-        <label>Check Out:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.availability.checkOut }}</span>
-        <input *ngIf="editMode" type="date" [(ngModel)]="selectedBooking.availability.checkOut" />
-      </div>
-    </div>
+      <div class="modal-body">
+        <div class="guest-info">
+          <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
+          <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
+          <p><strong>Current Check-out:</strong> {{ selectedReservation ? formatDate(selectedReservation.checkOut) : '' }}</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="newCheckoutDate">New Checkout Date:</label>
+          <input 
+            type="date" 
+            id="newCheckoutDate"
+            [(ngModel)]="newCheckoutDate" 
+            class="form-control"
+            [min]="getMinCheckoutDate()"
+            [max]="getMaxCheckoutDate()"
+            placeholder="YYYY-MM-DD"
+          >
+        </div>
+        
+        <!-- Fallback manual input if calendar doesn't work -->
+        <div class="form-group" *ngIf="!newCheckoutDate">
+          <label for="manualCheckoutDate">Or enter manually (YYYY-MM-DD):</label>
+          <input 
+            type="text" 
+            id="manualCheckoutDate"
+            [(ngModel)]="manualCheckoutDate" 
+            class="form-control"
+            placeholder="2024-01-15"
+            pattern="\d{4}-\d{2}-\d{2}"
+          >
+        </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Adults:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.availability.adults }}</span>
-        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.adults" />
+        <div class="new-dates" *ngIf="selectedReservation && (newCheckoutDate || manualCheckoutDate)">
+          <p><strong>New Check-out Date:</strong> 
+            {{ formatDate(newCheckoutDate || manualCheckoutDate) }}
+          </p>
+          <p><strong>Additional Days:</strong> 
+            {{ getAdditionalDays() }} days
+          </p>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Children:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.availability.children }}</span>
-        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.children" />
-      </div>
-      <div class="form-group">
-        <label>Rooms:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.availability.rooms }}</span>
-        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.availability.rooms" />
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cancelExtend()">Cancel</button>
+        <button class="btn-confirm" (click)="extendStay()">Extend Stay</button>
       </div>
     </div>
+  </div>
 
-    <!-- Payment -->
-    <div class="form-group">
-      <label>Payment Status:</label>
-      <span *ngIf="!editMode">{{ selectedBooking.pay_status ? 'Paid' : 'Unpaid' }}</span>
-      <select *ngIf="editMode" [(ngModel)]="selectedBooking.pay_status">
-        <option [ngValue]="true">Paid</option>
-        <option [ngValue]="false">Unpaid</option>
-      </select>
-    </div>
+  <!-- Checkout Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showCheckoutModal" (click)="cancelCheckout()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Confirm Checkout</h2>
+        <button class="close-btn" (click)="cancelCheckout()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-message">
+          <i class="fa fa-exclamation-triangle"></i>
+          <h3>Are you sure you want to check out this guest?</h3>
+        </div>
+        
+        <div class="guest-info">
+          <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
+          <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
+          <p><strong>Check-out Date:</strong> {{ selectedReservation ? formatDate(selectedReservation.checkOut) : '' }}</p>
+          <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(calculateTotalAmount(selectedReservation)) : '' }}</p>
+        </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Payment Method:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMode || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMode" placeholder="e.g. GCash, Maya, Card" />
+        <div class="checkout-note">
+          <p><i class="fa fa-info-circle"></i> This action will:</p>
+          <ul>
+            <li>Move the booking to the archive section</li>
+            <li>Remove it from the active reservations list</li>
+            <li>Mark the room as available</li>
+          </ul>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Amount:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.amount || 0 }}</span>
-        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.payment.amount" />
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="cancelCheckout()">No, Cancel</button>
+        <button class="btn-confirm" (click)="confirmCheckout()">Yes, Check Out</button>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Card Number:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.cardNumber || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cardNumber" />
-      </div>
-      <div class="form-group">
-        <label>Expiry:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.expiry || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.expiry" placeholder="MM/YY" />
-      </div>
-      <div class="form-group">
-        <label>CVV:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.cvv || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cvv" />
-      </div>
-      <div class="form-group">
-        <label>Phone Number (for GCash/Maya):</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.mobileNumber || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.mobileNumber" placeholder="09XXXXXXXXX" />
-      </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="popup-actions">
-      
-      <button (click)="closePopup()">Close</button>
-      
     </div>
   </div>
 </div>

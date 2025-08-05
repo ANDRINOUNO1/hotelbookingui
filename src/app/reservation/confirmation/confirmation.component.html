@@ -1,116 +1,239 @@
 <div class="reservation-confirmation">
-  <div class="confirmation-container">
-    <h2 class="text-center mb-4">Reservation Confirmation</h2>
-
-    <div class="card p-4">
-      <h4>Selected Room Type</h4>
-      <p><strong>Room:</strong> {{ selectedRoomType?.type }}</p>
-      <p><strong>Rate:</strong> ₱{{ selectedRoomType?.rate }}</p>
-      <p *ngIf="selectedRoomType?.reservationFeePercentage"><strong>Reservation Fee:</strong> {{ selectedRoomType?.reservationFeePercentage }}%</p>
-      <p *ngIf="calculatedReservationFee"><strong>Reservation Fee Amount:</strong> ₱{{ calculatedReservationFee }}</p>
-
-      <hr>
-
-      <h4>Reservation Details</h4>
-      <p><strong>Check-In:</strong> {{ reservationData?.checkIn }}</p>
-      <p><strong>Check-Out:</strong> {{ reservationData?.checkOut }}</p>
-      <p><strong>Adults:</strong> {{ reservationData?.adults }}</p>
-      <p><strong>Children:</strong> {{ reservationData?.children }}</p>
-      <p><strong>Rooms:</strong> {{ reservationData?.rooms }}</p>
-
-      <hr>
-
-      <h4>Guest Details</h4>
-      <p><strong>First Name:</strong> {{ customerDetails?.firstName }}</p>
-      <p><strong>Last Name:</strong> {{ customerDetails?.lastName }}</p>
-      <p><strong>Email:</strong> {{ customerDetails?.email }}</p>
-      <p><strong>Phone:</strong> {{ customerDetails?.phone }}</p>
-      <p><strong>Address:</strong> {{ customerDetails?.address }}</p>
-      <p><strong>City:</strong> {{ customerDetails?.city }}</p>
-      <p><strong>Postal Code:</strong> {{ customerDetails?.postalCode }}</p>
-      <p><strong>Special Request:</strong> {{ customerDetails?.specialRequest || 'None' }}</p>
-    </div>
-
-    <div class="text-center mt-4">
-      <button type="button" (click)="goBack()" class="btn-secondary">Back</button>
+  <!-- Header Section -->
+  <div class="confirmation-header">
+    <div class="header-content">
+      <h1>🎉 Reservation Confirmation</h1>
+      <p>Please review your booking details and complete payment</p>
     </div>
   </div>
-  <div class="payment-container">
-    <h2 class="text-center mb-4">Payment Details</h2>
-    
-    <form (ngSubmit)="confirmBooking()" #paymentForm="ngForm">
-      <div class="form-group">
-        <label for="paymentMode">Payment Mode</label>
-        <select name="paymentMode" class="form-control" required [(ngModel)]="paymentDetails.paymentMode">
-          <option value="" disabled selected>Select Payment Mode</option>
-          <option value="GCash">GCash</option>
-          <option value="Maya">Maya</option>
-          <option value="Card">Card (Visa / MasterCard / AmEx)</option>
-        </select>
+
+  <div class="confirmation-content">
+    <!-- Left Side - Reservation Details -->
+    <div class="confirmation-container">
+      <div class="section-header">
+        <h2>📋 Reservation Summary</h2>
+        <div class="status-badge">Pending Payment</div>
       </div>
 
-      <div *ngIf="paymentDetails.paymentMode === 'GCash' || paymentDetails.paymentMode === 'Maya'">
-        <div class="form-group">
-          <label>Mobile Number</label>
-          <input type="tel" name="mobileNumber" class="form-control"
-                [(ngModel)]="paymentDetails.mobileNumber"
-                required />
+      <!-- Room Details Card -->
+      <div class="detail-card room-card">
+        <div class="card-header">
+          <span class="card-icon">🛏️</span>
+          <h3>Selected Room</h3>
         </div>
-        <div class="form-group">
-          <label>Amount</label>
-          <input type="number" name="amount" class="form-control"
-                [(ngModel)]="paymentDetails.amount"
-                [placeholder]="'Reservation fee: ₱' + reservationFee"
-                required />
-          <small class="text-muted">Reservation fee: ₱{{ reservationFee }}</small>
+        <div class="card-content">
+          <div class="detail-row">
+            <span class="label">Room Type:</span>
+            <span class="value">{{ selectedRoomType?.type }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Rate per Night:</span>
+            <span class="value price">₱{{ selectedRoomType?.rate }}</span>
+          </div>
+          <div class="detail-row" *ngIf="selectedRoomType?.reservationFeePercentage">
+            <span class="label">Reservation Fee:</span>
+            <span class="value">{{ selectedRoomType?.reservationFeePercentage }}%</span>
+          </div>
+          <div class="detail-row" *ngIf="calculatedReservationFee">
+            <span class="label">Fee Amount:</span>
+            <span class="value price">₱{{ calculatedReservationFee }}</span>
+          </div>
         </div>
       </div>
 
-      <div *ngIf="paymentDetails.paymentMode === 'Card'">
+      <!-- Stay Details Card -->
+      <div class="detail-card stay-card">
+        <div class="card-header">
+          <span class="card-icon">📅</span>
+          <h3>Stay Details</h3>
+        </div>
+        <div class="card-content">
+          <div class="detail-row">
+            <span class="label">Check-In:</span>
+            <span class="value">{{ reservationData?.checkIn | date:'mediumDate' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Check-Out:</span>
+            <span class="value">{{ reservationData?.checkOut | date:'mediumDate' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Adults:</span>
+            <span class="value">{{ reservationData?.adults }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Children:</span>
+            <span class="value">{{ reservationData?.children }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Rooms:</span>
+            <span class="value">{{ reservationData?.rooms }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guest Details Card -->
+      <div class="detail-card guest-card">
+        <div class="card-header">
+          <span class="card-icon">👤</span>
+          <h3>Guest Information</h3>
+        </div>
+        <div class="card-content">
+          <div class="detail-row">
+            <span class="label">Name:</span>
+            <span class="value">{{ customerDetails?.firstName }} {{ customerDetails?.lastName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Email:</span>
+            <span class="value">{{ customerDetails?.email }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Phone:</span>
+            <span class="value">{{ customerDetails?.phone }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Address:</span>
+            <span class="value">{{ customerDetails?.address }}, {{ customerDetails?.city }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Postal Code:</span>
+            <span class="value">{{ customerDetails?.postalCode }}</span>
+          </div>
+          <div class="detail-row" *ngIf="customerDetails?.specialRequest">
+            <span class="label">Special Request:</span>
+            <span class="value">{{ customerDetails?.specialRequest }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" (click)="goBack()" class="btn-secondary">
+          <span class="btn-icon">←</span>
+          Back to Details
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Side - Payment Form -->
+    <div class="payment-container">
+      <div class="section-header">
+        <h2>💳 Payment Details</h2>
+        <div class="payment-icon">💳</div>
+      </div>
+
+      <form (ngSubmit)="confirmBooking()" #paymentForm="ngForm" class="payment-form">
+        <!-- Payment Mode Selection -->
         <div class="form-group">
-          <label>Card Type</label>
-          <select name="cardType" class="form-control"
-                  required [(ngModel)]="paymentDetails.paymentMethod">
-            <option value="" disabled selected>Select Card Type</option>
-            <option value="Visa">Visa</option>
-            <option value="MasterCard">MasterCard</option>
-            <option value="AmEx">American Express</option>
+          <label for="paymentMode">Payment Method *</label>
+          <div class="payment-options">
+            <div class="payment-option" 
+                 [class.selected]="paymentDetails.paymentMode === 'GCash'"
+                 (click)="paymentDetails.paymentMode = 'GCash'">
+              <span class="option-icon">📱</span>
+              <span class="option-text">GCash</span>
+            </div>
+            <div class="payment-option" 
+                 [class.selected]="paymentDetails.paymentMode === 'Maya'"
+                 (click)="paymentDetails.paymentMode = 'Maya'">
+              <span class="option-icon">📱</span>
+              <span class="option-text">Maya</span>
+            </div>
+            <div class="payment-option" 
+                 [class.selected]="paymentDetails.paymentMode === 'Card'"
+                 (click)="paymentDetails.paymentMode = 'Card'">
+              <span class="option-icon">💳</span>
+              <span class="option-text">Card</span>
+            </div>
+          </div>
+          <select name="paymentMode" class="form-control" required [(ngModel)]="paymentDetails.paymentMode" style="display: none;">
+            <option value="" disabled selected>Select Payment Mode</option>
+            <option value="GCash">GCash</option>
+            <option value="Maya">Maya</option>
+            <option value="Card">Card (Visa / MasterCard / AmEx)</option>
           </select>
         </div>
 
-        <div class="form-group">
-          <label>Card Number</label>
-          <input type="text" name="cardNumber" class="form-control"
-                [(ngModel)]="paymentDetails.cardNumber"
-                required />
+        <!-- Mobile Payment Fields -->
+        <div *ngIf="paymentDetails.paymentMode === 'GCash' || paymentDetails.paymentMode === 'Maya'" class="payment-fields">
+          <div class="form-group">
+            <label for="mobileNumber">Mobile Number *</label>
+            <input type="tel" name="mobileNumber" class="form-control"
+                  [(ngModel)]="paymentDetails.mobileNumber"
+                  placeholder="Enter mobile number"
+                  required />
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount *</label>
+            <div class="amount-input">
+              <span class="currency">₱</span>
+              <input type="number" name="amount" class="form-control"
+                    [(ngModel)]="paymentDetails.amount"
+                    [placeholder]="'Reservation fee: ₱  ' + reservationFee"
+                    required />
+            </div>
+            <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Expiry Date</label>
-          <input type="month" name="expiryDate" class="form-control"
-                [(ngModel)]="paymentDetails.expiry"
-                required />
+        <!-- Card Payment Fields -->
+        <div *ngIf="paymentDetails.paymentMode === 'Card'" class="payment-fields">
+          <div class="form-group">
+            <label for="cardType">Card Type *</label>
+            <select name="cardType" class="form-control"
+                    required [(ngModel)]="paymentDetails.paymentMethod">
+              <option value="" disabled selected>Select Card Type</option>
+              <option value="Visa">Visa</option>
+              <option value="MasterCard">MasterCard</option>
+              <option value="AmEx">American Express</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cardNumber">Card Number *</label>
+            <input type="text" name="cardNumber" class="form-control"
+                  [(ngModel)]="paymentDetails.cardNumber"
+                  placeholder="1234 5678 9012 3456"
+                  required />
+          </div>
+
+          <div class="card-details">
+            <div class="form-group">
+              <label for="expiryDate">Expiry Date *</label>
+              <input type="month" name="expiryDate" class="form-control"
+                    [(ngModel)]="paymentDetails.expiry"
+                    required />
+            </div>
+
+            <div class="form-group">
+              <label for="cvv">CVV *</label>
+              <input type="text" name="cvv" class="form-control"
+                    [(ngModel)]="paymentDetails.cvv"
+                    placeholder="123"
+                    maxlength="4"
+                    required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Amount *</label>
+            <div class="amount-input">
+              <span class="currency">₱</span>
+              <input type="number" name="amount" class="form-control"
+                    [(ngModel)]="paymentDetails.amount"
+                    [placeholder]="'Reservation fee: ₱  ' + reservationFee"
+                    required />
+            </div>
+            <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>CVV</label>
-          <input type="text" name="cvv" class="form-control"
-                [(ngModel)]="paymentDetails.cvv"
-                required />
+        <!-- Submit Button -->
+        <div class="submit-section">
+          <button class="btn-confirm" type="submit" [disabled]="paymentForm.invalid">
+            <span class="btn-icon">✅</span>
+            Confirm Booking
+          </button>
         </div>
-
-        <div class="form-group">
-          <label>Amount</label>
-          <input type="number" name="amount" class="form-control"
-                [(ngModel)]="paymentDetails.amount"
-                [placeholder]="'Reservation fee: ₱' + reservationFee"
-                required />
-          <small class="text-muted">Reservation fee: ₱{{ reservationFee }}</small>
-        </div>
-      </div>
-
-      <button class="btn btn-success" type="submit">Confirm Booking</button>
-
-    </form> 
+      </form>
+    </div>
   </div>
 </div>

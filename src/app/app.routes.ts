@@ -30,7 +30,6 @@ import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.compon
 import { SuperhomeComponent } from './superadmin-sect/superhome.component';
 import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
-import { AddAccountsComponent } from './superadmin-sect/add-account.component';
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
 import path from 'path';
 
@@ -74,7 +73,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
       { path: 'account-list', component: AccountListComponent },
       { path: 'pending-accounts', component: PendingAccountsComponent },
-      { path: 'add-account', component: AddAccountsComponent },
+      { path: 'add-account', component: AddAccountComponent },
       { path: 'archives', component: ArchivesComponent},
       { path: 'pricing', component: PricingComponent }
     ]

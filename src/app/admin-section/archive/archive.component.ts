@@ -33,7 +33,7 @@ export class ArchiveComponent implements OnInit {
               return {
                 ...archive,
                 roomNumber: room?.roomNumber || 'N/A',
-                roomType: room?.RoomType?.type || 'N/A'
+                roomType: room?.roomType?.type || room?.RoomType?.type || 'N/A'
               };
             });
             this.isLoading = false;

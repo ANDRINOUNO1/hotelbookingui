@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { CommonModule } from '@angular/common';
 import { ReservationDataService, CustomerDetails } from '../../_services/reservation-data.service';
 import { RoomType } from '../../_models/booking.model';
+import { BookingService } from '../../_services/booking.service';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-process',
@@ -21,27 +23,29 @@ export class ProcessComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private reservationDataService: ReservationDataService
+    private reservationDataService: ReservationDataService,
+    private bookingService: BookingService
   ) {}
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
       firstName: ['', [Validators.required, this.lettersOnlyValidator()]],
       lastName: ['', [Validators.required, this.lettersOnlyValidator()]],
-      email: ['', [Validators.required, this.gmailValidator()]],
-      phone: ['', [Validators.required, this.phoneValidator()]],
+      email: ['', [Validators.required, this.gmailValidator()], [this.emailExistsValidator()]],
+      phone: ['09', [Validators.required, this.phoneValidator()]],
       address: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', [Validators.required, this.postalCodeValidator()]],
-      specialRequest: [''] // Optional field
+      specialRequest: [''] 
     });
 
     this.selectedRoomType = this.reservationDataService.getSelectedRoomType();
     
-    // Load saved customer details if available
     const savedDetails = this.reservationDataService.getCustomerDetails();
     if (savedDetails) {
       this.customerForm.patchValue(savedDetails);
+    } else {
+      this.customerForm.patchValue({ phone: '09' });
     }
 
     // Real-time validation feedback
@@ -85,20 +89,61 @@ export class ProcessComponent implements OnInit {
   postalCodeValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
-      const postalCode = control.value.toString().replace(/\D/g, ''); // Remove non-digits
+      const postalCode = control.value.toString().replace(/\D/g, ''); 
       const isValidLength = postalCode.length === 4;
       const isAllDigits = /^\d{4}$/.test(postalCode);
       return isValidLength && isAllDigits ? null : { invalidPostalCode: true };
     };
   }
 
+  // Checking if the email is already used in an active booking
+  emailExistsValidator() {
+    return (control: AbstractControl) => {
+      if (!control.value) return Promise.resolve(null);
+      
+      const email = control.value as string;
+      if (!email.endsWith('@gmail.com')) {
+        return Promise.resolve(null); // Only check Gmail addresses
+      }
+
+      return this.bookingService.checkEmailExists(email).pipe(
+        debounceTime(500), // Wait 500ms after user stops typing
+        distinctUntilChanged(), // Only check if email changed
+        switchMap(response => {
+          if (response.exists) {
+            return Promise.resolve({ emailExists: true });
+          } else {
+            return Promise.resolve(null);
+          }
+        })
+      );
+    };
+  }
+
   // Format phone number input
   formatPhoneNumber(event: any) {
     let value = event.target.value.replace(/\D/g, '');
+    
+    if (!value.startsWith('09')) {
+      if (value.length > 0) {
+        if (value.length <= 9) {
+          value = '09' + value;
+        } else {
+          value = '09' + value.substring(0, 9);
+        }
+      } else {
+        value = '09';
+      }
+    }
+    
+    // Limit to 11 digits total
     if (value.length > 11) {
       value = value.substring(0, 11);
     }
+    
     event.target.value = value;
+    
+    this.customerForm.patchValue({ phone: value });
   }
 
   // Format postal code input
@@ -129,6 +174,9 @@ export class ProcessComponent implements OnInit {
       case 'email':
         if (control.hasError('gmailOnly')) {
           return 'Email must be a valid Gmail address (@gmail.com)';
+        }
+        if (control.hasError('emailExists')) {
+          return 'This Gmail address is already associated with an active booking';
         }
         break;
       case 'phone':
