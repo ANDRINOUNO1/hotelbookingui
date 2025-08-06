@@ -2,16 +2,19 @@ import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, R
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 Swiper.use([Navigation, Autoplay]);
 import flatpickr from 'flatpickr';
 import { ReservationComponent } from '../reservation/reservation.component';
+import { ContactMessageService } from '../_services/contact-message.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -99,11 +102,28 @@ export class HomeComponent implements AfterViewInit {
 
   @ViewChild('navbar') navbar!: ElementRef;
 
+  // Contact Form Properties
+  contactFormData = {
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+    nameError: '',
+    emailError: '',
+    phoneError: '',
+    messageError: ''
+  };
+
+  isSubmitting = false;
+
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private renderer: Renderer2,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private contactMessageService: ContactMessageService
   ) {}
 
   toggleMenu() {
@@ -224,5 +244,119 @@ export class HomeComponent implements AfterViewInit {
         });
       }
     }
+  }
+
+  // Contact Form Methods
+  validatePhone(event: any) {
+    const phone = event.target.value;
+    const phoneRegex = /^09\d{9}$/;
+    
+    if (phone && !phoneRegex.test(phone)) {
+      this.contactFormData.phoneError = 'Phone number must start with 09 and be 11 digits';
+    } else {
+      this.contactFormData.phoneError = '';
+    }
+  }
+
+  validateForm(): boolean {
+    let isValid = true;
+    
+    // Reset errors
+    this.contactFormData.nameError = '';
+    this.contactFormData.emailError = '';
+    this.contactFormData.phoneError = '';
+    this.contactFormData.messageError = '';
+
+    // Validate name
+    if (!this.contactFormData.name.trim()) {
+      this.contactFormData.nameError = 'Name is required';
+      isValid = false;
+    } else if (this.contactFormData.name.trim().length < 2) {
+      this.contactFormData.nameError = 'Name must be at least 2 characters';
+      isValid = false;
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!this.contactFormData.email.trim()) {
+      this.contactFormData.emailError = 'Email is required';
+      isValid = false;
+    } else if (!emailRegex.test(this.contactFormData.email)) {
+      this.contactFormData.emailError = 'Please enter a valid email address';
+      isValid = false;
+    }
+
+    // Validate phone
+    const phoneRegex = /^09\d{9}$/;
+    if (!this.contactFormData.phone.trim()) {
+      this.contactFormData.phoneError = 'Phone number is required';
+      isValid = false;
+    } else if (!phoneRegex.test(this.contactFormData.phone)) {
+      this.contactFormData.phoneError = 'Phone number must start with 09 and be 11 digits';
+      isValid = false;
+    }
+
+    // Validate subject
+    if (!this.contactFormData.subject) {
+      isValid = false;
+    }
+
+    // Validate message
+    if (!this.contactFormData.message.trim()) {
+      this.contactFormData.messageError = 'Message is required';
+      isValid = false;
+    } else if (this.contactFormData.message.trim().length < 10) {
+      this.contactFormData.messageError = 'Message must be at least 10 characters';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  submitContactForm() {
+    if (!this.validateForm()) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const messageData = {
+      name: this.contactFormData.name.trim(),
+      email: this.contactFormData.email.trim(),
+      phone: this.contactFormData.phone.trim(),
+      subject: this.contactFormData.subject,
+      message: this.contactFormData.message.trim()
+    };
+
+    this.contactMessageService.submitMessage(messageData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Thank you for your message! We will get back to you within 24 hours.');
+          this.resetContactForm();
+        } else {
+          alert('Sorry, there was an error sending your message. Please try again.');
+        }
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        console.error('Error submitting contact message:', error);
+        alert('Sorry, there was an error sending your message. Please try again.');
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  resetContactForm() {
+    this.contactFormData = {
+      name: '',
+      email: '',
+      phone: '',
+      subject: '',
+      message: '',
+      nameError: '',
+      emailError: '',
+      phoneError: '',
+      messageError: ''
+    };
   }
 }

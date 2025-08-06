@@ -554,6 +554,17 @@ section.header {
    color: var(--main-color);
    background:var(--white);
    width: 100%;
+   transition: all 0.3s ease;
+   
+   &.error {
+     border-bottom: 2px solid #ef4444;
+     background: #fef2f2;
+   }
+   
+   &:focus {
+     border-bottom: 2px solid var(--accent-color);
+     background: #fafafa;
+   }
 }
 
 .contact .row form .box::placeholder{
@@ -563,6 +574,34 @@ section.header {
 .contact .row form textarea{
    height: 15rem;
    resize: none;
+}
+
+.contact .row form .error-message {
+   color: #ef4444;
+   font-size: 1.4rem;
+   margin-top: 0.5rem;
+   text-align: left;
+   padding-left: 0.5rem;
+}
+
+.contact .row form .form-footer {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-top: 1rem;
+}
+
+.contact .row form .char-count {
+   font-size: 1.4rem;
+   color: #6b7280;
+   font-style: italic;
+}
+
+.contact .row form .btn {
+   &:disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+   }
 }
 
 .contact .row .faq .title{

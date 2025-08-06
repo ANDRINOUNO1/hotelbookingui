@@ -16,6 +16,7 @@ import { PricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 import { ArchiveComponent } from './admin-section/archive/archive.component';
+import { ContactMessagesComponent } from './admin-section/contact-messages/contact-messages.component';
 
 //Frontdesk
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
@@ -50,7 +51,8 @@ export const routes: Routes = [
       { path: 'pricing', component: PricingComponent },
       { path: 'addaccount', component: AddAccountComponent },
       { path: 'allbooking', component: AllbookingsComponent },
-      { path: 'archive', component: ArchiveComponent }
+      { path: 'archive', component: ArchiveComponent },
+      { path: 'contact-messages', component: ContactMessagesComponent }
     ]
   },
   {
