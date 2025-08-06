@@ -8,19 +8,92 @@
 
 <!-- Content will show after loading -->
 <div *ngIf="!isLoading" class="dashboard-container">
-  <div class="dashboard-basic-info">
-    <div class="dashboard-title">
+  <!-- Dashboard Header -->
+  <div class="dashboard-title">
+    <h1>
       <i class="fa fa-chart-bar"></i>
-      <span class="info">Basic Information</span>
-    </div>
-    <div class="dashboard-cards">
-      <div *ngFor="let status of statusSummary" class="dashboard-card" [ngClass]="status.class">
-        <div class="dashboard-card-icon">
-          <i class="fa" [ngClass]="status.icon"></i>
-        </div>
-        <div class="dashboard-card-label">{{ status.label }}</div>
-        <div class="dashboard-card-value">{{ status.count }}</div>
+      <span>Basic Information</span>
+    </h1>
+    <p>Real-time Tracking and Insights Overview</p>
+  </div>
+
+  <!-- Analytics Cards -->
+  <div class="analytics-grid">
+    <div class="analytics-card blue">
+      <div class="icon-wrapper blue">
+        <i class="fa fa-bed"></i>
+      </div>
+      <div class="analytics-content">
+        <p class="label">Total Rooms</p>
+        <p class="value">{{ allCount }}</p>
       </div>
     </div>
+
+    <div class="analytics-card green">
+      <div class="icon-wrapper green">
+        <i class="fa fa-circle-check"></i>
+      </div>
+      <div class="analytics-content">
+        <p class="label">Available</p>
+        <p class="value">{{ vacantCount }}</p>
+      </div>
+    </div>
+
+    <div class="analytics-card yellow">
+      <div class="icon-wrapper yellow">
+        <i class="fa fa-calendar-check"></i>
+      </div>
+      <div class="analytics-content">
+        <p class="label">Reserved</p>
+        <p class="value">{{ reservedCount }}</p>
+      </div>
+    </div>
+
+    <div class="analytics-card red">
+      <div class="icon-wrapper red">
+        <i class="fa fa-door-closed"></i>
+      </div>
+      <div class="analytics-content">
+        <p class="label">Occupied</p>
+        <p class="value">{{ occupiedCount }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Metrics Cards -->
+  <div class="metrics-grid">
+    <div class="metrics-card">
+      <div class="metrics-content">
+        <p class="label">Total Revenue</p>
+        <p class="value">₱{{ totalRevenue | number:'1.0-0' }}</p>
+      </div>
+      <div class="icon-wrapper green">
+        <i class="fa fa-dollar-sign"></i>
+      </div>
+    </div>
+
+    <div class="metrics-card">
+      <div class="metrics-content">
+        <p class="label">Occupancy Rate</p>
+        <p class="value">{{ occupancyRate }}%</p>
+      </div>
+      <div class="icon-wrapper blue">
+        <i class="fa fa-percentage"></i>
+      </div>
+    </div>
+
+    <div class="metrics-card">
+      <div class="metrics-content">
+        <p class="label">Average Stay</p>
+        <p class="value">{{ averageStay }} days</p>
+      </div>
+      <div class="icon-wrapper purple">
+        <i class="fa fa-clock"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-basic-info">
+    <app-dashboardchartview></app-dashboardchartview>
   </div>
 </div>

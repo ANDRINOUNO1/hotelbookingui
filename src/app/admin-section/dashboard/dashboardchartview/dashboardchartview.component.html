@@ -1,0 +1,6 @@
+<div class="bg-white p-6 rounded-xl shadow-md">
+  <dashboard-ng19-charts *ngIf="isBrowser"></dashboard-ng19-charts>
+  <div *ngIf="!isBrowser" class="w-full h-96 flex items-center justify-center text-gray-400">
+    <p>Loading charts...</p>
+  </div>
+</div>

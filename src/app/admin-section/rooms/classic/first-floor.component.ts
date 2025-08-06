@@ -13,7 +13,6 @@ export class FirstFloorComponent {
   @Input() rooms: Room[] = [];
   @Input() bookings: Booking[] = [];
 
-  
   getGuestName(roomId: number): string {
     const booking = this.bookings.find(b => b.room_id === roomId);
     return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : '';

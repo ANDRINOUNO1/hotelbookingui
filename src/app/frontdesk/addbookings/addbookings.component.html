@@ -13,6 +13,17 @@
     <strong>Success:</strong> {{ successMessage }}
   </div>
 
+  <!-- Debug Information (remove in production) -->
+  <div class="debug-info mb-4" style="background: #f0f0f0; padding: 10px; border-radius: 5px; font-size: 12px;">
+    <strong>Debug Info:</strong><br>
+    Form Valid: {{ bookingForm.valid }}<br>
+    Form Invalid: {{ bookingForm.invalid }}<br>
+    Room Types Selected: {{ hasSelectedRoomTypes() }}<br>
+    Is Form Valid (Custom): {{ isFormValid() }}<br>
+    Payment Mode: {{ bookingForm.get('payment.paymentMode')?.value }}<br>
+    Amount: {{ bookingForm.get('payment.amount')?.value }}
+  </div>
+
   <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
     
     <!-- Guest Information Section -->
@@ -184,7 +195,7 @@
             <label [for]="'roomType' + roomType.id" class="room-type-label">
               <div class="room-type-info">
                 <h3 class="room-type-name">{{ roomType.type }}</h3>
-                <p class="room-type-rate">₱{{ roomType.rate }}/night</p>
+                <p class="room-type-rate">${{ roomType.rate }}/night</p>
               </div>
             </label>
           </div>
@@ -217,7 +228,7 @@
         </div>
 
         <div class="form-group">
-          <label for="amount">Amount (₱) *</label>
+          <label for="amount">Amount ($) *</label>
           <input 
             type="number" 
             id="amount"
@@ -330,7 +341,7 @@
       <button 
         type="submit" 
         class="btn btn-primary"
-        [disabled]="loading || bookingForm.invalid">
+        [disabled]="loading || !isFormValid()">
         <span *ngIf="loading" class="spinner"></span>
         {{ loading ? 'Creating Booking...' : 'Create Booking' }}
       </button>

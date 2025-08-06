@@ -1,11 +1,11 @@
 .frontdeskdashboard-container{
   max-width: 1200px;
-  height: 1000px;
+  height: 100%;
   margin: 0 auto;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #00002e, #4b3912);
+  background: linear-gradient(135deg, #23233a, #4b3912);
 }
 .roomview-header {
   display: flex;
@@ -23,13 +23,13 @@
     border: none;
     padding: 0.5rem 1.5rem;
     border-radius: 6px 6px 0 0;
-    font-size: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
     color: #333;
     transition: background 0.2s;
     &.active {
-      background-color: #030588;
-      border-bottom: 2px solid #3f43ff;
+      background-color: #23233a;
+      border-bottom: 2px solid #b4884d;
       color: #fff;
     }
     &:hover {
@@ -144,7 +144,7 @@
         }
 
         &.legend-occupied {
-          background: #10b981;
+          background: #ffffff;
         }
 
         &.legend-paid {

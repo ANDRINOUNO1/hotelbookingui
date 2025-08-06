@@ -36,7 +36,7 @@ export class FrontdeskdashboardComponent implements OnInit {
   loadRooms() {
     this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (data) => {
-        console.log('Frontdesk - Rooms data received:', data);
+        // Ensure compatibility: if roomType or RoomType is missing, fallback to grouping by roomTypeId
         this.rooms = data;
         this.roomTypes = this.getUniqueRoomTypes(data);
         this.selectedType = this.roomTypes.length ? this.roomTypes[0].type : '';
@@ -65,9 +65,15 @@ export class FrontdeskdashboardComponent implements OnInit {
   getUniqueRoomTypes(rooms: Room[]): RoomType[] {
     const types: { [key: string]: RoomType } = {};
     rooms.forEach(room => {
-      if ((room as any).roomType || room.RoomType) {
-        const roomType = (room as any).roomType || room.RoomType;
-        types[roomType.type] = roomType;
+      // Prefer roomType, then RoomType, fallback to roomTypeId/room_type_id
+      let roomTypeObj = (room as any).roomType || room.RoomType;
+      if (roomTypeObj && roomTypeObj.type) {
+        types[roomTypeObj.type] = roomTypeObj;
+      } else if ((room as any).roomTypeId || (room as any).room_type_id) {
+        // Fallback: create a pseudo type string
+        const id = (room as any).roomTypeId || (room as any).room_type_id;
+        const pseudoType = `Type ${id}`;
+        types[pseudoType] = { id, type: pseudoType } as RoomType;
       }
     });
     return Object.values(types);
@@ -76,9 +82,17 @@ export class FrontdeskdashboardComponent implements OnInit {
   buildRoomTypeMap() {
     this.roomsByType = {};
     this.roomTypes.forEach(type => {
-      this.roomsByType[type.type] = this.rooms.filter(r => 
-        ((r as any).roomType?.type === type.type) || (r.RoomType?.type === type.type)
-      );
+      this.roomsByType[type.type] = this.rooms.filter(r => {
+        const roomTypeObj = (r as any).roomType || r.RoomType;
+        if (roomTypeObj && roomTypeObj.type) {
+          return roomTypeObj.type === type.type;
+        } else if ((r as any).roomTypeId || (r as any).room_type_id) {
+          // Fallback: pseudo type
+          const id = (r as any).roomTypeId || (r as any).room_type_id;
+          return `Type ${id}` === type.type;
+        }
+        return false;
+      });
     });
   }
 

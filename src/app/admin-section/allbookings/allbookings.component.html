@@ -141,8 +141,8 @@
     <div class="form-row">
       <div class="form-group">
         <label>Payment Method:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMethod || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMethod" placeholder="e.g. GCash, Maya, Card" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMode || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMode" placeholder="e.g. GCash, Maya, Card" />
       </div>
       <div class="form-group">
         <label>Amount:</label>
