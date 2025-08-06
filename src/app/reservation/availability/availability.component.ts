@@ -22,28 +22,28 @@ export class AvailabilityComponent implements OnInit {
   // Multiple room images for each room type
   roomImages = {
     'Classic': [
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4cb84b?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=300&h=200&fit=crop'
+        'assets/images/Standard_Room1.jpg',
+        'assets/images/Pic_1.jpg',
+        'assets/images/Pic_2.jpg',
+        'assets/images/Pic_3.jpg',
     ],
     'Deluxe': [
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4cb84b?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=300&h=200&fit=crop'
+        'assets/images/Deluxe_rooms1.jpg',
+        'assets/images/Deluxe_tv.jpg',
+        'assets/images/Deluxe_view.jpg',
+        'assets/images/Deluxe_dressing.jpg',
     ],
     'Prestige': [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4cb84b?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop'
+        'assets/images/prestige_rooms.jpg',
+        'assets/images/view_room.jpg',
+        'assets/images/Prestige_Room.png',
+        'assets/images/Prestige_tv.png',
     ],
     'Luxury': [
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4cb84b?w=300&h=200&fit=crop'
+      'assets/images/Luxury_Rooms1.jpg',
+      'assets/images/tv_luxury.jpg',
+      'assets/images/bath_luxury.png',
+      'assets/images/balcony_luxury.png',
     ]
   };
 
