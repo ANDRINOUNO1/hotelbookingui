@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   fetchData() {
     this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (rooms) => {
+        console.log('Rooms data received:', rooms);
         this.rooms = rooms;
         this.checkLoadingComplete();
       },
@@ -36,6 +37,7 @@ export class DashboardComponent implements OnInit {
     });
     this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
       next: (bookings) => {
+        console.log('Bookings data received:', bookings);
         this.bookings = bookings;
         this.checkLoadingComplete();
       },
@@ -54,21 +56,30 @@ export class DashboardComponent implements OnInit {
   }
 
   get vacantCount() {
-    // Vacant: rooms with status true and not booked
-    return this.rooms.filter(room => room.status === true).length;
+    // Vacant: rooms with isAvailable true and not booked
+    const count = this.rooms.filter(room => room.isAvailable === true).length;
+    console.log('Vacant count:', count, 'Total rooms:', this.rooms.length);
+    return count;
   }
 
   get occupiedCount() {
-    // Occupied: rooms with status false or with a paid booking
-    return this.rooms.filter(room =>
-      room.status === false ||
-      this.bookings.some(b => b.room_id === room.id && b.pay_status == false)
+    // Occupied: rooms with isAvailable false or with a checked-in booking
+    const count = this.rooms.filter(room =>
+      room.isAvailable === false ||
+      this.bookings.some(b => b.room_id === room.id && b.status === 'checked_in')
     ).length;
+    console.log('Occupied count:', count);
+    return count;
   }
 
   get reservedCount() {
-    // Reserved: rooms with a booking that is not yet paid (pay_status === false)
-    return this.bookings.filter(b => !b.pay_status).length;
+    // Reserved: bookings with status 'reserved' or pay_status false
+    const count = this.bookings.filter(b => 
+      b.status === 'reserved' || 
+      (!b.status && !b.pay_status)
+    ).length;
+    console.log('Reserved count:', count, 'Total bookings:', this.bookings.length);
+    return count;
   }
 
   get allCount() {

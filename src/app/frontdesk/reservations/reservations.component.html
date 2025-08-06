@@ -1,12 +1,40 @@
 <div class="room-view-container">
   <div class="room-view-header">
-    <select>
-      <option>Room View</option>
-      <option>List View</option>
-    </select>
+    <div class="header-bar" style="display: flex; align-items: center; justify-content: space-between;">
+      <div class="left" style="flex: 1;">
+                 <div class="search-box">
+           <input 
+             type="text" 
+             placeholder="Search customers..." 
+             [(ngModel)]="searchTerm" 
+             (input)="onSearchTermChange()"
+             (keyup)="onSearchTermChange()"
+             (blur)="onSearchTermChange()"
+             autocomplete="off"
+             spellcheck="false">
+           <button 
+             *ngIf="searchTerm.trim()" 
+             (click)="clearSearch()" 
+             class="clear-search"
+             type="button">
+             ✕
+           </button>
+         </div>
+      </div>
+      <div class="right">
+        <select>
+          <option>Room View</option>
+          <option>List View</option>
+        </select>
+      </div>
+    </div>
   </div>
 
-  <table class="tables">
+  <div *ngIf="searchTerm.trim()" class="searched-name">
+    Searched: {{ searchTerm }}
+  </div>
+
+  <table class="tables" *ngIf="filteredRooms.length > 0">
     <thead>
       <tr>
         <th>Name</th>
@@ -16,7 +44,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let customer of occupiedRooms">
+      <tr *ngFor="let customer of filteredRooms">
         <td>{{ customer.guest.first_name }} {{ customer.guest.last_name }}</td>
         <td>{{ customer.guest.email }}</td>
         <td>{{ customer.rooms.length }}</td>
@@ -26,6 +54,12 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- No Results Message -->
+  <div *ngIf="searchTerm.trim() && filteredRooms.length === 0" class="no-results">
+    <p>No customers found matching "{{ searchTerm }}"</p>
+    <p>Try searching by name, email, phone, room type, or room number</p>
+  </div>
 </div>
 
 
@@ -42,6 +76,12 @@
       <p>Type: {{ room.type }}</p>
       <p>Status: {{ room.status }}</p>
       <p>Payment: {{ room.paymentStatus }}</p>
+      <button 
+        *ngIf="room.booking && (room.booking.status === 'reserved' || !room.booking.status)"
+        (click)="checkIn(room.booking.id)" 
+        class="check-in-btn">
+        Check In
+      </button>
     </div>
 
     <button (click)="closePopup()">Close</button>

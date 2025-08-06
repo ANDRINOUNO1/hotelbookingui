@@ -8,6 +8,33 @@
     </button>
   </div>
 
+  <!-- Search Bar -->
+  <div class="search-container">
+          <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="Search reservations..." 
+          [(ngModel)]="searchTerm" 
+          (input)="onSearchTermChange()"
+          (keyup)="onSearchTermChange()"
+          (blur)="onSearchTermChange()"
+          autocomplete="off"
+          spellcheck="false">
+        <button 
+          *ngIf="searchTerm.trim()" 
+          (click)="clearSearch()" 
+          class="clear-search"
+          type="button">
+          ✕
+        </button>
+      </div>
+  </div>
+
+  <!-- Search Results Info -->
+  <div *ngIf="searchTerm.trim()" class="searched-name">
+    Searched: {{ searchTerm }}
+  </div>
+
   <!-- Error Message -->
   <div class="error-message" *ngIf="error">
     <i class="fa fa-exclamation-triangle"></i>
@@ -39,7 +66,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let reservation of reservations" class="reservation-row">
+        <tr *ngFor="let reservation of filteredReservations" class="reservation-row">
           <td>{{ getGuestName(reservation) }}</td>
           <td>{{ reservation.guest_email }}</td>
           <td>{{ reservation.guest_phone }}</td>
@@ -62,10 +89,13 @@
     </table>
 
     <!-- Empty State -->
-    <div class="empty-state" *ngIf="reservations.length === 0 && !loading">
+    <div class="empty-state" *ngIf="filteredReservations.length === 0 && !loading">
       <i class="fa fa-bed"></i>
-      <h3>No Active Reservations</h3>
-      <p>There are currently no active reservations to display.</p>
+      <h3 *ngIf="searchTerm.trim()">No Search Results</h3>
+      <h3 *ngIf="!searchTerm.trim()">No Active Reservations</h3>
+      <p *ngIf="searchTerm.trim()">No reservations found matching "{{ searchTerm }}"</p>
+      <p *ngIf="!searchTerm.trim()">There are currently no active reservations to display.</p>
+      <p *ngIf="searchTerm.trim()" class="search-tips">Try searching by guest name, email, phone, or room type</p>
     </div>
   </div>
 

@@ -18,6 +18,7 @@ interface Reservation {
   totalAmount: number;
   status: string;
   room_id?: number;
+  bookingStatus?: string;
 }
 
 interface RoomType {
@@ -36,6 +37,8 @@ interface RoomType {
 })
 export class ListsComponent implements OnInit {
   reservations: Reservation[] = [];
+  filteredReservations: Reservation[] = [];
+  searchTerm: string = '';
   loading = false;
   error = '';
   showCheckoutModal = false;
@@ -76,10 +79,15 @@ export class ListsComponent implements OnInit {
               checkOut: checkOut,
               totalAmount: booking.paidamount || booking.payment?.amount || 0,
               status: booking.pay_status ? 'active' : 'pending',
-              room_id: booking.room_id
+              room_id: booking.room_id,
+              bookingStatus: booking.status || 'reserved'
             };
           })
-          .filter(reservation => reservation.status !== 'archived');
+          .filter(reservation => 
+            reservation.status !== 'archived' && 
+            reservation.bookingStatus === 'checked_in'
+          );
+        this.applySearch();
         this.loading = false;
       },
       error: (err) => {
@@ -88,6 +96,37 @@ export class ListsComponent implements OnInit {
         console.error('Error loading reservations:', err);
       }
     });
+  }
+
+  applySearch() {
+    const term = this.searchTerm.trim().toLowerCase();
+    
+    if (!term) {
+      this.filteredReservations = this.reservations;
+    } else {
+      this.filteredReservations = this.reservations.filter(reservation => {
+        const guestName = this.getGuestName(reservation).toLowerCase();
+        const email = reservation.guest_email?.toLowerCase() || '';
+        const phone = reservation.guest_phone?.toLowerCase() || '';
+        const roomType = reservation.roomType?.toLowerCase() || '';
+        const status = reservation.status?.toLowerCase() || '';
+        
+        return guestName.includes(term) || 
+               email.includes(term) || 
+               phone.includes(term) || 
+               roomType.includes(term) || 
+               status.includes(term);
+      });
+    }
+  }
+
+  onSearchTermChange() {
+    this.applySearch();
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.applySearch();
   }
 
   openExtendModal(reservation: Reservation) {
@@ -197,7 +236,7 @@ export class ListsComponent implements OnInit {
       guest_phone: this.selectedReservation!.guest_phone,
       checkIn: this.selectedReservation!.checkIn,
       roomType: this.selectedReservation!.roomType,
-      status: this.selectedReservation!.status
+      status: this.selectedReservation!.bookingStatus || 'checked_in'
     };
 
     this.http.patch(`${environment.apiUrl}/bookings/${this.selectedReservation!.id}/extend`, updatedReservation)
