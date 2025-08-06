@@ -13,7 +13,7 @@ $glass-bg: rgba(255, 255, 255, 0.1);
 $glass-border: rgba(255, 255, 255, 0.2);
 
 .progress {
-  background: linear-gradient(135deg, #0b0b31 0%, #1a1a3a 50%, #0b0b31 100%);
+  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
   min-height: 100vh;
   padding: 20px;
   position: relative;
@@ -276,7 +276,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 }
 
 body {
-  background: #0b0b31 !important;
+  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%) !important;
   font-family: 'Nunito', sans-serif;
   color: white;
 }

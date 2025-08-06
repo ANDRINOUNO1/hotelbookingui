@@ -25,6 +25,7 @@
     "express": "^4.18.2",
     "flatpickr": "^4.6.13",
     "highcharts": "^12.3.0",
+    "highcharts-angular": "^5.1.0",
     "ng-apexcharts": "^1.7.0",
     "rxjs": "~7.8.0",
     "swiper": "^11.2.8",

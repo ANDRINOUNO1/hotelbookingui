@@ -5,22 +5,22 @@
 @tailwind utilities;
 
 :root {
-  --main-color: #10101a;
+  --main-color: #0b0b31;
   --sub-color: #e5c07b;
   --accent-color: #b4884d;
   --white: #f5f5f7;
-  --dark-base: #181824;
-  --gradient-touch: linear-gradient(90deg, #171725 0%, #b4884d 100%);
+  --dark-base: #171725;
+  --gradient-touch: linear-gradient(90deg, #0b0b31 0%, #b4884d 100%);
   --border: .1rem solid rgba(229, 192, 123, 0.15);
 
-  --sidebar-bg: #181824;
-  --sidebar-active: #23233a;
+  --sidebar-bg: #0b0b31;
+  --sidebar-active: #171725;
   --sidebar-text: #e5c07b;
-  --main-bg: #10101a;
-  --header-bg: #23233a;
+  --main-bg: #0b0b31;
+  --header-bg: #171725;
   --header-text: #fff;
-  --card-bg: #181824;
-  --card-border: #23233a;
+  --card-bg: #0b0b31;
+  --card-border: #171725;
   --room-vacant: #e5c07b;
   --room-occupied: #ffe29a;
   --room-reserved: #4caf50;
@@ -68,7 +68,7 @@ html {
 body {
   margin: 0;
   font-family: var(--font-main);
-  background: var(--main-bg);
+  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
   color: var(--white);
 }
 
