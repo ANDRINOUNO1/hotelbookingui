@@ -1,4 +1,3 @@
-<!-- Loading Spinner Overlay -->
 <app-loading-spinner 
   *ngIf="isLoading" 
   [overlay]="true" 
@@ -6,47 +5,41 @@
   [size]="'large'">
 </app-loading-spinner>
 
-<!-- Content will show after loading -->
 <div *ngIf="!isLoading" class="rooms-container">
   <div class="room-view-header">
     <h2>Room Management</h2>
     <div class="header-info">
       <span>Total Rooms: {{ rooms.length }}</span>
-      <input type="date" value="2025-06-25" class="date-input">
     </div>
   </div>
-  
+
   <div class="room-tabs">
-    <button *ngFor="let tab of roomTabs; let i = index"
-            [class.active]="selectedTab === i"
-            (click)="selectedTab = i"
+    <button *ngFor="let type of roomTypes"
+            [class.active]="type.type === selectedType"
+            (click)="selectType(type.type)"
             class="tab-button">
-      {{ tab }} ({{ getRoomCount(i) }})
+      {{ type.type }}
     </button>
   </div>
-  
-  <div class="room-content">
-    <ng-container [ngSwitch]="selectedTab">
-      <app-first-floor
-        *ngSwitchCase="0"
-        [rooms]="classicRooms"
-        [bookings]="bookings">
-      </app-first-floor>
-      <app-second-floor
-        *ngSwitchCase="1"
-        [rooms]="deluxeRooms"
-        [bookings]="bookings">
-      </app-second-floor>
-      <app-third-floor
-        *ngSwitchCase="2"
-        [rooms]="prestigeRooms"
-        [bookings]="bookings">
-      </app-third-floor>
-      <app-fourth-floor
-        *ngSwitchCase="3"
-        [rooms]="luxuryRooms"
-        [bookings]="bookings">
-      </app-fourth-floor>
-    </ng-container>
+
+  <div class="room-table-wrapper">
+    <table class="tables">
+      <thead>
+        <tr>
+          <th>Room Number</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let room of getRoomsForSelectedType()">
+          <td>{{ room.roomNumber }}</td>
+          <td>
+            <span class="status-label" [ngClass]="getRoomStatus(room.id) | lowercase">
+              {{ getRoomStatus(room.id) }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

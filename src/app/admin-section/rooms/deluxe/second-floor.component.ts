@@ -19,8 +19,14 @@ export class SecondFloorComponent {
     return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : '';
   }
 
-  getRoomStatus(room: any): string {
-    return room.isAvailable === false ? 'Occupied' : 'Vacant';
+  getRoomStatus(room: Room): string {
+    const booking = this.bookings.find(b => b.room_id === room.id);
+
+    if (booking) {
+      return booking.pay_status ? 'Occupied' : 'Pending';
+    }
+
+    return room.status === false ? 'Occupied' : 'Vacant';
   }
 
   

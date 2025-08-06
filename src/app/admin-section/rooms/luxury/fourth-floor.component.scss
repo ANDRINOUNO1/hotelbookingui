@@ -1,24 +1,19 @@
 .tables {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    text-align: left;
-    border: 1px solid var(--table-border);
-    border-radius: 10px;
-    overflow: hidden;
-    color: var(--text-color);
-    background: var(--table-bg);
+    border-collapse: separate; /* Use 'separate' to apply border radius */
+        border-spacing: 0; /* Remove spacing between cells */
+        width: 100%;
+        text-align: left;
+        border: 1px solid #ddd;
+        border-radius: 10px; /* Rounded corners for the table */
+        overflow: hidden;
+        color: var(--text-color);
 }
-
 .tables th,
 .tables td {
-    border: 1px solid var(--table-border);
+    border: 1px solid #ddd;
     padding: 8px;
-    background: var(--table-bg);
-    color: var(--text-color);
 }
 
 .tables th {
     font-weight: bold;
-    background: var(--card-bg);
 }

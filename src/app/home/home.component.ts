@@ -6,7 +6,6 @@ import Swiper from 'swiper';
 import { Navigation, Autoplay } from 'swiper/modules';
 Swiper.use([Navigation, Autoplay]);
 import flatpickr from 'flatpickr';
-import { ReservationComponent } from '../reservation/reservation.component';
 
 @Component({
   selector: 'app-home',
@@ -29,10 +28,10 @@ export class HomeComponent implements AfterViewInit {
       tags: ['Cozy', 'Affordable', 'Single Bed'],
       link: '#',
       seasonalImages: [
-        'assets/images/pic-1.png',
-        'assets/images/pic-2.png',
-        'assets/images/pic-3.png',
-        'assets/images/pic-4.png'
+        'assets/images/bomboa.png',
+        'assets/images/hahha.png',
+        'assets/images/home-img-1.jpg',
+        'assets/images/crtwo.jpg'
       ]
     },
     {
@@ -44,25 +43,25 @@ export class HomeComponent implements AfterViewInit {
       tags: ['Spacious', 'View', 'Double Bed'],
       link: '#',
       seasonalImages: [
-        'assets/images/pic-5.png',
-        'assets/images/pic-6.png',
-        'assets/images/about-img-1.jpg',
-        'assets/images/about-img-2.jpg'
+        'assets/images/download.jpg',
+        'assets/images/prev.jpg',
+        'assets/images/crdeluxe.jpg',
+        'assets/images/deluxe.jpg'
       ]
     },
     {
       name: 'Prestige Room',
       description: 'Experience luxury in our premium suite with exclusive services.',
-      image: 'assets/images/gallery-img-3.webp',
+      image: 'assets/images/BEACH.jpg',
       price: 200,
       brand: 'Luxury',
       tags: ['Luxury', 'Suite', 'King Bed'],
       link: '#',
       seasonalImages: [
-        'assets/images/about-img-3.jpg',
-        'assets/images/home-img-1.jpg',
-        'assets/images/home-img-2.jpg',
-        'assets/images/home-img-3.jpg'
+        'assets/images/balconyy.jpg',
+        'assets/images/bombo.jpg',
+        'assets/images/familysuite.jpg',
+        'assets/images/HALLWAY.jpg'
       ]
     },
     {
@@ -74,10 +73,10 @@ export class HomeComponent implements AfterViewInit {
       tags: ['Luxury', 'Suite', 'King Bed'],
       link: '#',
       seasonalImages: [
-        'assets/images/about-img-3.jpg',
-        'assets/images/home-img-1.jpg',
-        'assets/images/home-img-2.jpg',
-        'assets/images/home-img-3.jpg'
+        'assets/images/luxurysuite.jpg',
+        'assets/images/BEACHVIEW.jpg',
+        'assets/images/HALLWAYIMAGE.jpg',
+        'assets/images/MainPICTURE.jpg'
       ]
     }
   ];
