@@ -1,0 +1,115 @@
+<div class="contact-messages-container">
+  <div class="header">
+    <h2>Contact Messages</h2>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="loadMessages()" [disabled]="isLoading">
+        <i class="fa fa-refresh" [class.fa-spin]="isLoading"></i> Refresh
+      </button>
+      <button class="btn btn-danger" (click)="clearAllMessages()" *ngIf="contactMessages.length > 0">
+        Clear All Messages
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage">
+    <i class="fa fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm"
+        (input)="onSearchTermChange()"
+        (keyup)="onSearchTermChange()"
+        (blur)="onSearchTermChange()"
+        placeholder="Search messages by name, email, subject, or message..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button 
+        class="clear-search" 
+        (click)="clearSearch()" 
+        *ngIf="searchTerm"
+        title="Clear search"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fa fa-spinner fa-spin"></i>
+      <p>Loading messages...</p>
+    </div>
+  </div>
+
+  <!-- Messages Count -->
+  <div class="messages-count" *ngIf="!isLoading">
+    <span *ngIf="filteredMessages.length === 0 && contactMessages.length > 0">
+      No messages match your search.
+    </span>
+    <span *ngIf="contactMessages.length === 0 && !errorMessage">
+      No contact messages received yet.
+    </span>
+    <span *ngIf="filteredMessages.length > 0">
+      Showing {{ filteredMessages.length }} of {{ contactMessages.length }} messages
+    </span>
+  </div>
+
+  <!-- Messages List -->
+  <div class="messages-list" *ngIf="filteredMessages.length > 0 && !isLoading">
+    <div class="message-card" *ngFor="let message of filteredMessages" [class]="getStatusClass(message.status)">
+      <div class="message-header">
+        <div class="message-info">
+          <h4>{{ message.name }}</h4>
+          <p class="email">{{ message.email }}</p>
+          <p class="phone">{{ message.phone }}</p>
+          <p class="subject">Subject: {{ message.subject }}</p>
+          <p class="status">Status: <span class="status-badge" [class]="getStatusClass(message.status)">{{ message.status }}</span></p>
+          <p class="timestamp">{{ formatDate(message.createdAt) }}</p>
+        </div>
+        <div class="message-actions">
+          <button 
+            class="btn btn-info btn-sm" 
+            (click)="markAsRead(message.id)"
+            *ngIf="message.status === 'unread'"
+            title="Mark as read"
+          >
+            <i class="fa fa-eye"></i>
+          </button>
+          <button 
+            class="btn btn-success btn-sm" 
+            (click)="markAsReplied(message.id)"
+            *ngIf="message.status !== 'replied'"
+            title="Mark as replied"
+          >
+            <i class="fa fa-reply"></i>
+          </button>
+          <button 
+            class="btn btn-danger btn-sm" 
+            (click)="deleteMessage(message.id)"
+            title="Delete message"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="message-content">
+        <p>{{ message.message }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="contactMessages.length === 0">
+    <div class="empty-icon">📧</div>
+    <h3>No Messages Yet</h3>
+    <p>Contact messages from the website will appear here once users start sending them.</p>
+  </div>
+</div> 

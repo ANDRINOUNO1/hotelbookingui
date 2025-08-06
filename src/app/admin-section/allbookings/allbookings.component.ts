@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Room, Booking } from '../../_models/booking.model';
+import { Booking } from '../../_models/booking.model';
+import { Room } from '../../_models/room.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 
@@ -38,7 +39,7 @@ export class AllbookingsComponent implements OnInit {
                     number: room.roomNumber || 'N/A',
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     address: `${booking.guest.address}, ${booking.guest.city}`,
-                    type: room.RoomType?.type || 'Classic',
+                    type: room.roomType?.type || room.RoomType?.type || 'Classic',
                     status: booking.pay_status ? 'paid' : 'occupied',
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking
@@ -69,7 +70,6 @@ export class AllbookingsComponent implements OnInit {
         (room.guest?.toLowerCase() || '').includes(term) ||
         (room.number?.toString() || '').includes(term) ||
         (room.type?.toLowerCase() || '').includes(term) ||
-        (room.status?.toLowerCase() || '').includes(term) ||
         (room.paymentStatus?.toLowerCase() || '').includes(term)
       );
     }

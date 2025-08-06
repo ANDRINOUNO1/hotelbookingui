@@ -16,6 +16,7 @@ import { PricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 import { ArchiveComponent } from './admin-section/archive/archive.component';
+import { ContactMessagesComponent } from './admin-section/contact-messages/contact-messages.component';
 
 //Frontdesk
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
@@ -30,7 +31,6 @@ import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.compon
 import { SuperhomeComponent } from './superadmin-sect/superhome.component';
 import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
-import { AddAccountsComponent } from './superadmin-sect/add-account.component';
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
 import path from 'path';
 
@@ -51,7 +51,8 @@ export const routes: Routes = [
       { path: 'pricing', component: PricingComponent },
       { path: 'addaccount', component: AddAccountComponent },
       { path: 'allbooking', component: AllbookingsComponent },
-      { path: 'archive', component: ArchiveComponent }
+      { path: 'archive', component: ArchiveComponent },
+      { path: 'contact-messages', component: ContactMessagesComponent }
     ]
   },
   {
@@ -74,7 +75,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
       { path: 'account-list', component: AccountListComponent },
       { path: 'pending-accounts', component: PendingAccountsComponent },
-      { path: 'add-account', component: AddAccountsComponent },
+      { path: 'add-account', component: AddAccountComponent },
       { path: 'archives', component: ArchivesComponent},
       { path: 'pricing', component: PricingComponent }
     ]

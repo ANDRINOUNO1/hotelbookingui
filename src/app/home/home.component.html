@@ -102,7 +102,7 @@
       <div class="content">
          <h3>swimming pool</h3>
          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi laborum maxime eius aliquid temporibus unde?</p>
-         <a href="#availability" class="btn">check availability</a>
+         <a routerLink="/reserve" class="btn">check availability</a>
       </div>
    </div>
 
@@ -225,36 +225,68 @@
 
    <div class="row">
 
-      <form action="" method="post">
+      <form (ngSubmit)="submitContactForm()" #contactForm="ngForm">
          <h3>send us message</h3>
-         <input type="text" name="name" required maxlength="50" placeholder="enter your name" class="box">
-         <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
-         <input type="number" name="number" required maxlength="10" min="0" max="9999999999" placeholder="enter your number" class="box">
-         <textarea name="msg" class="box" required maxlength="1000" placeholder="enter your message" cols="30" rows="10"></textarea>
-         <input type="submit" value="send message" name="send" class="btn">
+         <input type="text" name="name" [(ngModel)]="contactFormData.name" required maxlength="50" placeholder="enter your name" class="box" [class.error]="contactFormData.nameError">
+         <div class="error-message" *ngIf="contactFormData.nameError">{{ contactFormData.nameError }}</div>
+         
+         <input type="email" name="email" [(ngModel)]="contactFormData.email" required maxlength="50" placeholder="enter your email" class="box" [class.error]="contactFormData.emailError">
+         <div class="error-message" *ngIf="contactFormData.emailError">{{ contactFormData.emailError }}</div>
+         
+         <input type="tel" name="phone" [(ngModel)]="contactFormData.phone" required maxlength="11" placeholder="enter your number (09XXXXXXXXX)" class="box" [class.error]="contactFormData.phoneError" (input)="validatePhone($event)">
+         <div class="error-message" *ngIf="contactFormData.phoneError">{{ contactFormData.phoneError }}</div>
+         
+         <select name="subject" [(ngModel)]="contactFormData.subject" required class="box">
+            <option value="">Select your inquiry type</option>
+            <option value="booking">Booking Inquiry</option>
+            <option value="cancellation">Cancellation Request</option>
+            <option value="feedback">Feedback & Suggestions</option>
+            <option value="complaint">Complaint</option>
+            <option value="partnership">Partnership</option>
+            <option value="other">Other</option>
+         </select>
+         
+         <textarea name="message" [(ngModel)]="contactFormData.message" required maxlength="1000" placeholder="enter your message" cols="30" rows="8" class="box" [class.error]="contactFormData.messageError"></textarea>
+         <div class="error-message" *ngIf="contactFormData.messageError">{{ contactFormData.messageError }}</div>
+         
+         <div class="form-footer">
+            <span class="char-count">{{ contactFormData.message.length || 0 }}/1000</span>
+            <button type="submit" [disabled]="isSubmitting" class="btn">
+               <span *ngIf="!isSubmitting">send message</span>
+               <span *ngIf="isSubmitting">sending...</span>
+            </button>
+         </div>
       </form>
 
       <div class="faq">
          <h3 class="title">frequently asked questions</h3>
          <div class="box active">
             <h3>how to cancel?</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus sunt aspernatur excepturi eos! Quibusdam, sapiente.</p>
+            <p>You can cancel your reservation up to 24 hours before check-in for a full refund. Contact us via phone or email with your booking reference number. Cancellations within 24 hours may incur a partial charge.</p>
          </div>
          <div class="box">
             <h3>is there any vacancy?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ipsam neque quaerat mollitia ratione? Soluta!</p>
+            <p>Check real-time availability on our booking page. We update our room status continuously. For immediate assistance, call us directly and our staff will help you find the perfect room for your stay.</p>
          </div>
          <div class="box">
             <h3>what are payment methods?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ipsam neque quaerat mollitia ratione? Soluta!</p>
+            <p>We accept cash payments, credit/debit cards (Visa, Mastercard), GCash, PayMaya, and bank transfers. A 30% reservation fee is required to confirm your booking, with the remaining balance due upon check-in.</p>
          </div>
          <div class="box">
             <h3>how to claim coupons codes?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ipsam neque quaerat mollitia ratione? Soluta!</p>
+            <p>Enter your coupon code during the booking process in the "Promo Code" field. Valid codes will automatically apply the discount. Coupons cannot be combined and are subject to availability and terms.</p>
          </div>
          <div class="box">
             <h3>what are the age requirements?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa ipsam neque quaerat mollitia ratione? Soluta!</p>
+            <p>Guests must be 18 years or older to make a reservation. Minors must be accompanied by a parent or guardian. Valid government-issued ID is required for all guests upon check-in.</p>
+         </div>
+         <div class="box">
+            <h3>what are check-in/check-out times?</h3>
+            <p>Check-in time is 2:00 PM and check-out time is 12:00 PM. Early check-in and late check-out may be available upon request, subject to availability and additional charges.</p>
+         </div>
+         <div class="box">
+            <h3>do you offer parking?</h3>
+            <p>Yes, we provide free parking for all guests. Parking spaces are available on a first-come, first-served basis. Secure parking is available 24/7 with CCTV monitoring.</p>
          </div>
       </div>
 

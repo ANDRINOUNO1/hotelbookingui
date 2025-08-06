@@ -37,6 +37,7 @@ export class ConfirmationComponent implements OnInit {
 
   reservationFee: number = 0;
   calculatedReservationFee: number = 0;
+  mobileNumberError: string = '';
 
   constructor(
     private http: HttpClient,
@@ -50,6 +51,53 @@ export class ConfirmationComponent implements OnInit {
     this.customerDetails = this.reservationDataService.getCustomerDetails();
 
     this.calculateReservationFee();
+  }
+
+  validateMobileNumber(mobileNumber: string): boolean {
+    const cleanNumber = mobileNumber.replace(/\D/g, '');
+    if (!cleanNumber.startsWith('09')) {
+      this.mobileNumberError = 'Mobile number must start with "09"';
+      return false;
+    }
+    if (cleanNumber.length !== 11) {
+      this.mobileNumberError = 'Mobile number must be exactly 11 digits';
+      return false;
+    }
+    const mobileRegex = /^09\d{9}$/;
+    if (!mobileRegex.test(cleanNumber)) {
+      this.mobileNumberError = 'Please enter a valid Philippine mobile number';
+      return false;
+    }
+    this.mobileNumberError = '';
+    return true;
+  }
+
+    onMobileNumberInput(event: any) {
+    let value = event.target.value; 
+    value = value.replace(/\D/g, '');
+    
+    if (value.length > 11) {
+      value = value.substring(0, 11);
+    }  
+    this.paymentDetails.mobileNumber = value;
+    event.target.value = value;
+    
+    this.validateMobileNumber(value);
+  }
+
+  onMobileNumberBlur() {
+    if (this.paymentDetails.mobileNumber) {
+      this.validateMobileNumber(this.paymentDetails.mobileNumber);
+    }
+  }
+
+  onMobileNumberKeyPress(event: any) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   calculateReservationFee() {
@@ -94,6 +142,12 @@ export class ConfirmationComponent implements OnInit {
     if ((mode === 'GCash' || mode === 'Maya')) {
       if (!this.paymentDetails.mobileNumber) {
         alert('Mobile number is required for GCash/Maya payments.');
+        return;
+      }
+      
+      // Validate mobile number format
+      if (!this.validateMobileNumber(this.paymentDetails.mobileNumber)) {
+        alert(this.mobileNumberError || 'Please enter a valid mobile number.');
         return;
       }
     }
@@ -154,6 +208,7 @@ export class ConfirmationComponent implements OnInit {
       expiry: '',
       cvv: ''
     };
+    this.mobileNumberError = '';
   }
 
 

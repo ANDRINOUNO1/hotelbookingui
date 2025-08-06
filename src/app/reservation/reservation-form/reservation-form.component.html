@@ -11,7 +11,15 @@
       <div class="form-group">
         <label>Check In</label>
         <div class="input-wrapper">
-          <input type="date" name="checkIn" class="form-control" required [(ngModel)]="booking.checkIn" />
+          <input 
+            type="date" 
+            name="checkIn" 
+            class="form-control" 
+            required 
+            [(ngModel)]="booking.checkIn"
+            [min]="getTodayDate()"
+            [max]="getMaxDate()"
+          />
           <i class="calendar-icon">📅</i>
         </div>
       </div>
@@ -19,27 +27,38 @@
       <div class="form-group">
         <label>Check Out</label>
         <div class="input-wrapper">
-          <input type="date" name="checkOut" class="form-control" required [(ngModel)]="booking.checkOut" />
+          <input 
+            type="date" 
+            name="checkOut" 
+            class="form-control" 
+            required 
+            [(ngModel)]="booking.checkOut"
+            [min]="getMinCheckOutDate()"
+            [max]="getMaxDate()"
+          />
           <i class="calendar-icon">📅</i>
         </div>
       </div>
 
       <div class="form-group">
         <label>Adults</label>
-        <input type="number" name="adults" min="1" max="10" class="form-control"
-          placeholder="Number of adults" required [(ngModel)]="booking.adults" />
+        <input type="number" name="adults" min="1" max="8" class="form-control"
+          placeholder="Number of adults" required [(ngModel)]="booking.adults" 
+          (input)="limitInputLength($event, 2, 8)" />
       </div>
 
       <div class="form-group">
         <label>Children</label>
-        <input type="number" name="children" min="0" max="10" class="form-control"
-          placeholder="Number of children" required [(ngModel)]="booking.children" />
+        <input type="number" name="children" min="0" max="5" class="form-control"
+          placeholder="Number of children" required [(ngModel)]="booking.children" 
+          (input)="limitInputLength($event, 1, 5)" />
       </div>
 
       <div class="form-group">
         <label>Rooms</label>
-        <input type="number" name="rooms" min="1" max="10" class="form-control"
-          placeholder="Number of rooms" required [(ngModel)]="booking.rooms" />
+        <input type="number" name="rooms" min="1" max="5" class="form-control"
+          placeholder="Number of rooms" required [(ngModel)]="booking.rooms" 
+          (input)="limitInputLength($event, 1, 5)" />
       </div>
 
       <button type="submit" class="submit-btn" >Check Availability</button>

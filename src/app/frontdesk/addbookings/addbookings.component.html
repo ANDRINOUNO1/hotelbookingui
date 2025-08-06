@@ -64,6 +64,7 @@
             type="tel" 
             id="phone"
             formControlName="phone"
+            (input)="formatPhoneNumber($event)"
             [class.invalid]="isFieldInvalid('guest', 'phone')"
             placeholder="Enter phone number">
           <div *ngIf="getErrorMessage('guest', 'phone')" class="error-message">
@@ -183,7 +184,7 @@
             <label [for]="'roomType' + roomType.id" class="room-type-label">
               <div class="room-type-info">
                 <h3 class="room-type-name">{{ roomType.type }}</h3>
-                <p class="room-type-rate">${{ roomType.rate }}/night</p>
+                <p class="room-type-rate">₱{{ roomType.rate }}/night</p>
               </div>
             </label>
           </div>
@@ -216,7 +217,7 @@
         </div>
 
         <div class="form-group">
-          <label for="amount">Amount ($) *</label>
+          <label for="amount">Amount (₱) *</label>
           <input 
             type="number" 
             id="amount"

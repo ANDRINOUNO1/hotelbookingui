@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Room, Booking } from '../../_models/booking.model';
+import { Booking } from '../../_models/booking.model';
+import { Room } from '../../_models/room.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
@@ -38,7 +39,7 @@ export class BookingComponent implements OnInit {
                     id: booking.id,
                     number: room.roomNumber,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
-                    type: room.RoomType?.type || 'Classic',
+                    type: room.roomType?.type || room.RoomType?.type || 'Classic',
                     status: booking.pay_status ? 'paid' : 'occupied',
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking 

@@ -1,22 +1,57 @@
 .tables {
-    border-collapse: separate; /* Use 'separate' to apply border radius */
-        border-spacing: 0; /* Remove spacing between cells */
-        width: 100%;
-        text-align: left;
-        border: 1px solid var(--card-border);
-        border-radius: 10px; /* Rounded corners for the table */
-        overflow: hidden;
-        color: var(--text-color);
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--table-border);
+    border-radius: 10px;
+    overflow: hidden;
+    color: var(--text-color);
+    background: var(--table-bg);
 }
+
 .tables th,
 .tables td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border);
     padding: 8px;
+    background: var(--table-bg);
+    color: var(--text-color);
 }
 
 .tables th {
     font-weight: bold;
+    background: var(--card-bg);
 }
+
+.status-label {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.vacant {
+    background: #4caf50;
+    color: white;
+  }
+
+  &.occupied {
+    background: #d32f2f;
+    color: white;
+  }
+
+  &.reserved {
+    background: #ff9800;
+    color: white;
+  }
+
+  &.maintenance {
+    background: #9c27b0;
+    color: white;
+  }
+}
+
 .room-occupied {
   background: #d32f2f; // red for occupied
 }

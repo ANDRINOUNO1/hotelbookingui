@@ -13,6 +13,7 @@ export interface Booking {
   availability: Availability;
   payment?: PaymentDetails;
   pay_status: boolean;
+  status?: 'reserved' | 'checked_in' | 'checked_out';
   created_at?: string;
   updated_at?: string;
   room?: Room;
@@ -45,6 +46,7 @@ export interface Room {
   floor: number;
   status: boolean; // true for available, false for occupied
   RoomType?: RoomType; // Backend alias for room type
+  roomType?: RoomType; // Backend alias for room type (lowercase)
 }
 
 export interface PaymentDetails {

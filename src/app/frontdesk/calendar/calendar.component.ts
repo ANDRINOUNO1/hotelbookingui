@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { RoomType, Room, Booking } from '../../_models/booking.model';
+import { RoomType, Booking } from '../../_models/booking.model';
+import { Room } from '../../_models/room.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BookingModalComponent } from './booking-modal.component';
@@ -62,15 +63,19 @@ export class CalendarComponent implements OnInit {
   getUniqueRoomTypes(rooms: Room[]): RoomType[] {
     const types: { [key: string]: RoomType } = {};
     rooms.forEach(room => {
-      if (room.RoomType) {
-        types[room.RoomType.type] = room.RoomType;
+      const roomType = room.roomType || room.RoomType;
+      if (roomType) {
+        types[roomType.type] = roomType as RoomType;
       }
     });
     return Object.values(types);
   }
 
   get filteredRooms(): Room[] {
-    return this.allRooms.filter(r => r.RoomType?.type === this.selectedType);
+    return this.allRooms.filter(r => {
+      const roomType = r.roomType || r.RoomType;
+      return roomType?.type === this.selectedType;
+    });
   }
 
   getBookingsForRoomAndDate(roomId: number, date: Date) {

@@ -187,6 +187,30 @@
           font-weight: 600;
           text-shadow: 0 1px 2px rgba(23, 23, 37, 0.5);
         }
+
+        // Loading message styling
+        .loading-message {
+          color: #f59e0b;
+          font-size: 0.8rem;
+          margin-top: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(245, 158, 11, 0.1);
+          border: 1px solid rgba(245, 158, 11, 0.3);
+          border-radius: 8px;
+          backdrop-filter: blur(10px);
+          animation: slideInDown 0.3s ease-out;
+          font-weight: 600;
+          text-shadow: 0 1px 2px rgba(23, 23, 37, 0.5);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          i {
+            font-size: 0.9rem;
+          }
+        }
+
+        
       }
 
       .actions {

@@ -10,14 +10,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './archives.component.html',
   styleUrl: './archives.component.scss'
 })
-export class ArchivesComponent {
-archives: any[] = [];
+export class ArchivesComponent implements OnInit {
+  archives: any[] = [];
   selectedArchive: any = null;
   isLoading = false;
 
   constructor(
     private archiveService: ArchiveDataService,
-    private http: HttpClient // ✅ add this
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {

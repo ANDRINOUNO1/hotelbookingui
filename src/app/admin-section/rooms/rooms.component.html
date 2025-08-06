@@ -12,7 +12,11 @@
     <h2>Room Management</h2>
     <div class="header-info">
       <span>Total Rooms: {{ rooms.length }}</span>
-      <input type="date" value="2025-06-25" class="date-input">
+      <input 
+        type="date" 
+        [value]="selectedDate" 
+        (change)="onDateChange($event)"
+        class="date-input">
     </div>
   </div>
   
@@ -30,22 +34,22 @@
       <app-first-floor
         *ngSwitchCase="0"
         [rooms]="classicRooms"
-        [bookings]="bookings">
+        [bookings]="getBookingsForDate(selectedDate)">
       </app-first-floor>
       <app-second-floor
         *ngSwitchCase="1"
         [rooms]="deluxeRooms"
-        [bookings]="bookings">
+        [bookings]="getBookingsForDate(selectedDate)">
       </app-second-floor>
       <app-third-floor
         *ngSwitchCase="2"
         [rooms]="prestigeRooms"
-        [bookings]="bookings">
+        [bookings]="getBookingsForDate(selectedDate)">
       </app-third-floor>
       <app-fourth-floor
         *ngSwitchCase="3"
         [rooms]="luxuryRooms"
-        [bookings]="bookings">
+        [bookings]="getBookingsForDate(selectedDate)">
       </app-fourth-floor>
     </ng-container>
   </div>

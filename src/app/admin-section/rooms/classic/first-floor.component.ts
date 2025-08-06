@@ -19,17 +19,48 @@ export class FirstFloorComponent {
     return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : '';
   }
 
-  getRoomStatus(room: Room): string {
-    const booking = this.bookings.find(b => b.room_id === room.id);
+  getRoomStatus(room: any): string {
+    // Check if there's an active booking for this room
+    const activeBooking = this.bookings.find(b => 
+      b.room_id === room.id && 
+      b.status !== 'checked_out'
+    );
 
-    if (booking) {
-      return booking.pay_status ? 'Occupied' : 'Pending';
+    if (activeBooking) {
+      switch (activeBooking.status) {
+        case 'checked_in':
+          return 'Occupied';
+        case 'reserved':
+          return 'Reserved';
+        default:
+          return 'Occupied';
+      }
     }
 
-    return room.status === false ? 'Occupied' : 'Vacant';
+    // Check if room is marked as unavailable
+    if (room.isAvailable === false) {
+      return 'Maintenance';
+    }
+
+    return 'Vacant';
   }
 
   
+  getStatusClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'vacant':
+        return 'vacant';
+      case 'occupied':
+        return 'occupied';
+      case 'reserved':
+        return 'reserved';
+      case 'maintenance':
+        return 'maintenance';
+      default:
+        return 'vacant';
+    }
+  }
+
   getRoomClass(room: Room): string {
     const status = this.getRoomStatus(room).toLowerCase();
     return `room-${status}`; 
