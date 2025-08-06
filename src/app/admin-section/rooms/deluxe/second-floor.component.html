@@ -10,7 +10,7 @@
       <tr *ngFor="let room of rooms">
         <td>{{ room.roomNumber }}</td>
         <td>
-          <span class="status-label" [ngClass]="getRoomStatus(room) === 'Vacant' ? 'vacant' : 'occupied'">
+          <span class="status-label" [ngClass]="getStatusClass(getRoomStatus(room))">
             {{ getRoomStatus(room) }}
           </span>
         </td>
