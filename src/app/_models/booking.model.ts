@@ -13,6 +13,7 @@ export interface Booking {
   availability: Availability;
   payment?: PaymentDetails;
   pay_status: boolean;
+  status?: 'reserved' | 'checked_in' | 'checked_out';
   created_at?: string;
   updated_at?: string;
   room?: Room;

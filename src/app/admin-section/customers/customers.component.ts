@@ -5,8 +5,7 @@ import { Booking } from '../../_models/booking.model';
 import { Room } from '../../_models/room.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
-import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
-
+import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component'; 
 @Component({
   selector: 'app-customers',
   standalone: true,

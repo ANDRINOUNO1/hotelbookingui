@@ -70,7 +70,6 @@ export class AllbookingsComponent implements OnInit {
         (room.guest?.toLowerCase() || '').includes(term) ||
         (room.number?.toString() || '').includes(term) ||
         (room.type?.toLowerCase() || '').includes(term) ||
-        (room.status?.toLowerCase() || '').includes(term) ||
         (room.paymentStatus?.toLowerCase() || '').includes(term)
       );
     }
