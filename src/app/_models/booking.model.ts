@@ -53,6 +53,7 @@ export interface PaymentDetails {
   paymentMode: string;
   paymentMethod: string;
   amount: number;
+  mobileNumber: string;
   cardNumber: string;
   expiry: string;
   cvv: string;

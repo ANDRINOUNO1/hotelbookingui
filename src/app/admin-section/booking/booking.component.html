@@ -40,9 +40,6 @@
         <td>
           <div class="action-buttons">
             <button class="btn-view" (click)="openViewPopup(room)">View</button>
-            <button class="btn-confirm-payment" (click)="confirmPayment(room)" *ngIf="!room.booking.pay_status">
-              Confirm Payment
-            </button>
             <button class="btn-delete" (click)="deleteBooking(room.id)">
               Delete
             </button>
@@ -146,41 +143,44 @@
     <div class="form-row">
       <div class="form-group">
         <label>Payment Method:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.paymentMode || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.paidamount.paymentMode" placeholder="e.g. GCash, Maya, Card" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.paymentMode || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.paymentMode" placeholder="e.g. GCash, Maya, Card" />
       </div>
       <div class="form-group">
         <label>Amount:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.amount || 0 }}</span>
-        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.paidamount.amount" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.amount || 0 }}</span>
+        <input *ngIf="editMode" type="number" [(ngModel)]="selectedBooking.payment.amount" />
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label>Card Number:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.cardNumber || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.paidamount.cardNumber" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.cardNumber || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cardNumber" />
       </div>
       <div class="form-group">
         <label>Expiry:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.expiry || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.paidamount.expiry" placeholder="MM/YY" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.expiry || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.expiry" placeholder="MM/YY" />
       </div>
       <div class="form-group">
         <label>CVV:</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.cvv || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.paidamount.cvv" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.cvv || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.cvv" />
       </div>
       <div class="form-group">
         <label>Phone Number (for GCash/Maya):</label>
-        <span *ngIf="!editMode">{{ selectedBooking.paidamount?.mobileNumber || 'N/A' }}</span>
-        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.paidamount.mobileNumber" placeholder="09XXXXXXXXX" />
+        <span *ngIf="!editMode">{{ selectedBooking.payment?.mobileNumber || 'N/A' }}</span>
+        <input *ngIf="editMode" type="text" [(ngModel)]="selectedBooking.payment.mobileNumber" placeholder="09XXXXXXXXX" />
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="popup-actions">
+      
       <button (click)="closePopup()">Close</button>
+      
     </div>
   </div>
 </div>

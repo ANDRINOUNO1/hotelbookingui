@@ -138,6 +138,96 @@
   }
 }
 .calendar-content {
+  .calendar-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+
+    .nav-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      .nav-button {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #ffffff;
+        border-radius: 8px;
+        background: transparent;
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &:hover:not(:disabled) {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        &.today-button {
+          background: rgba(255, 255, 255, 0.2);
+          font-weight: 700;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+        }
+
+        i {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .date-range-display {
+      .date-range-text {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: center;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-width: 200px;
+      }
+    }
+
+    // Responsive design for mobile
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+
+      .nav-controls {
+        justify-content: center;
+        
+        .nav-button {
+          padding: 0.5rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      .date-range-display {
+        .date-range-text {
+          font-size: 1rem;
+          min-width: auto;
+        }
+      }
+    }
+  }
+
   .button-group {
     display: flex;
     gap: 1rem;
@@ -213,5 +303,5 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: #0b0b31;
+  background: linear-gradient(135deg, #23233a, #4b3912);
 }
