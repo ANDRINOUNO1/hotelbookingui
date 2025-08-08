@@ -1,8 +1,7 @@
 FIXING SYMBOLS AND MORE CHECK LINK : https://docs.google.com/document/d/1VYA8o7EeKLJBe5EeYGGsr5jmv_s45i9_/edit?usp=sharing&ouid=101516980731222368981&rtpof=true&sd=true
+PROGRESS ON OUR SYSTEM
 
-
-
-DOCUMENTATION UPDATES : 
+DOCUMENTATION UPDATES :
 
 ## 📊 Documentation Progress Tracker
 
