@@ -6,6 +6,15 @@
   [size]="'large'">
 </app-loading-spinner>
 
+<!-- Success Notification -->
+<div *ngIf="showSuccessMessage" class="success-notification">
+  <div class="notification-content">
+    <span class="notification-icon">✅</span>
+    <span class="notification-text">Payment confirmed and email sent successfully!</span>
+    <button class="notification-close" (click)="hideSuccessMessage()">×</button>
+  </div>
+</div>
+
 <!-- Content will show after loading -->
 <div *ngIf="!isLoading" class="booking-container">
   <div class="room-view-header">
@@ -40,6 +49,12 @@
         <td>
           <div class="action-buttons">
             <button class="btn-view" (click)="openViewPopup(room)">View</button>
+            <button 
+              *ngIf="!room.paymentStatus || room.paymentStatus === 'Unpaid'" 
+              class="btn-confirm-payment" 
+              (click)="confirmPayment(room)">
+              Confirm Payment
+            </button>
             <button class="btn-delete" (click)="deleteBooking(room.id)">
               Delete
             </button>
