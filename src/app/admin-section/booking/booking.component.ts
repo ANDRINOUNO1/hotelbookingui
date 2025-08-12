@@ -18,6 +18,7 @@ export class BookingComponent implements OnInit {
   occupiedRooms: any[] = [];
   selectedBooking: any = null;
   isLoading = true;
+  showSuccessMessage = false;
 
   constructor(private http: HttpClient) {}
 
@@ -112,19 +113,24 @@ export class BookingComponent implements OnInit {
   }
 
   confirmPayment(room: any) {
-    const updatedBooking = {
-      ...room.booking,
-      pay_status: true
-    };
+    if (confirm(`Are you sure you want to confirm payment for ${room.guest}? This will send a payment confirmation email.`)) {
+      const updatedBooking = {
+        ...room.booking,
+        pay_status: true
+      };
 
-    this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
-      next: (updatedBooking) => {
-        this.sendPaymentConfirmationEmail(updatedBooking);
-        this.loadOccupiedRooms();
-      },
-      error: (err) => {
-      }
-    });
+      this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
+        next: (updatedBooking) => {
+          console.log('✅ Payment confirmed successfully');
+          this.sendPaymentConfirmationEmail(updatedBooking);
+          this.loadOccupiedRooms();
+          this.displaySuccessMessage();
+        },
+        error: (err) => {
+          console.error('❌ Failed to confirm payment:', err);
+        }
+      });
+    }
   }
 
   deleteBooking(id: number) {
@@ -181,5 +187,16 @@ openViewPopup(room: any) {
   closePopup() {
     this.selectedBooking = null;
     this.editMode = false;
+  }
+
+  displaySuccessMessage() {
+    this.showSuccessMessage = true;
+    setTimeout(() => {
+      this.hideSuccessMessage();
+    }, 5000); // Auto hide after 5 seconds
+  }
+
+  hideSuccessMessage() {
+    this.showSuccessMessage = false;
   }
 }
