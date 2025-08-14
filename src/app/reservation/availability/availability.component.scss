@@ -270,14 +270,6 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     animation: slideInUp 0.6s ease-out;
 
-    &:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 
-        0 30px 60px rgba(23, 23, 37, 0.4),
-        inset 0 1px 2px rgba(255, 255, 255, 0.15);
-      border-color: rgba(180, 136, 77, 0.5);
-    }
-
     &:active {
       transform: translateY(-6px) scale(1.01);
       box-shadow: 
@@ -303,7 +295,6 @@
       transition: all 0.3s ease;
 
       &:hover {
-        transform: scale(1.1);
         box-shadow: 0 6px 20px rgba(180, 136, 77, 0.6);
       }
     }
@@ -533,9 +524,9 @@
 
     .price-circle {
       background: linear-gradient(135deg, #b4884d 0%, #d4a574 50%, #e6c088 100%);
-      color: #fff;
-      border-radius: 50%;
-      width: 3.5rem;
+      color: #312216;
+      border-radius: 30%;
+      width: 5.5rem;
       height: 3.5rem;
       display: flex;
       align-items: center;
@@ -897,7 +888,7 @@
       
       .price-circle {
         width: 3rem;
-        height: 3rem;
+        height: 5rem;
         font-size: 1rem;
       }
       
