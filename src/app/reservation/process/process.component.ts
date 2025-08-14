@@ -35,7 +35,7 @@ export class ProcessComponent implements OnInit {
       firstName: ['', [Validators.required, this.lettersOnlyValidator()]],
       lastName: ['', [Validators.required, this.lettersOnlyValidator()]],
       email: ['', [Validators.required, this.gmailValidator()], [this.emailExistsValidator()]],
-      phone: ['09', [Validators.required, this.phoneValidator()]],
+      phone: ['63+', [Validators.required, this.phoneValidator()]],
       address: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', [Validators.required, this.postalCodeValidator()]],
@@ -48,7 +48,7 @@ export class ProcessComponent implements OnInit {
     if (savedDetails) {
       this.customerForm.patchValue(savedDetails);
     } else {
-      this.customerForm.patchValue({ phone: '09' });
+      this.customerForm.patchValue({ phone: '63+' });
     }
 
     // Real-time validation feedback
@@ -98,7 +98,7 @@ export class ProcessComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
       const phone = control.value.toString().replace(/\D/g, ''); // Remove non-digits
-      const isValidLength = phone.length === 11;
+      const isValidLength = phone.length === 13;
       const isAllDigits = /^\d{11}$/.test(phone);
       return isValidLength && isAllDigits ? null : { invalidPhone: true };
     };
@@ -143,21 +143,21 @@ export class ProcessComponent implements OnInit {
   formatPhoneNumber(event: any) {
     let value = event.target.value.replace(/\D/g, '');
     
-    if (!value.startsWith('09')) {
+    if (!value.startsWith('9') && !value.startsWith('63')) {
       if (value.length > 0) {
-        if (value.length <= 9) {
-          value = '09' + value;
+        if (value.length <= 11) {
+          value = '63+' + value;
         } else {
-          value = '09' + value.substring(0, 9);
+          value = '63+' + value.substring(10);
         }
       } else {
-        value = '09';
+        value = '63+';
       }
     }
     
     // Limit to 11 digits total
-    if (value.length > 11) {
-      value = value.substring(0, 11);
+    if (value.length > 14) {
+      value = value.substring(0, 14);
     }
     
     event.target.value = value;

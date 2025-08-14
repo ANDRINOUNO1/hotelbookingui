@@ -1,6 +1,6 @@
-.availability-container {
+  .availability-container {
   text-align: center;
-  padding: 2rem;
+  padding: 1rem 1.5rem 2rem;
   position: relative;
   min-height: 100vh;
   background: linear-gradient(135deg, #0b0b31 0%, #1a1a3a 50%, #0b0b31 100%);
@@ -222,26 +222,45 @@
 
   .room-type-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-    max-width: 1600px;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
     margin: 0 auto;
     position: relative;
     z-index: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 78vh;
+
+    // Vertical scrollbar styling
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #b4884d 0%, #d4a574 100%);
+      border-radius: 6px;
+    }
   }
 
   .room-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    width: 400px;
-    min-width: 380px;
-    flex: 1;
-    max-width: 450px;
+    width: 100%;
+    min-width: auto;
+    flex: 0 0 auto;
+    max-width: none;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: stretch;
     padding: 1.5rem;
     position: relative;
     box-shadow: 
@@ -289,12 +308,30 @@
       }
     }
 
+    .room-card-content {
+      display: flex;
+      gap: 1.25rem;
+      width: 100%;
+    }
+
+    .room-media {
+      flex: 0 0 40%;
+      display: flex;
+      align-items: center;
+    }
+
+    .room-info {
+      flex: 1 1 60%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
     h3 {
-      margin-top: 2.5rem;
-      margin-bottom: 1.5rem;
+      margin: 0 0 0.75rem 0;
       font-size: 1.6rem;
       font-weight: 700;
-      text-align: center;
       color: #d4a574;
       text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       transition: all 0.3s ease;
@@ -306,7 +343,7 @@
       grid-template-rows: 1fr 1fr;
       gap: 0.5rem;
       width: 100%;
-      margin-bottom: 1rem;
+      margin: 0;
 
       img {
         width: 100%;
@@ -341,7 +378,7 @@
 
     .details-link {
       font-size: 0.85rem;
-      margin: 1rem 0;
+      margin: 0.75rem 0;
       text-transform: uppercase;
       font-weight: 700;
       color: #d4a574;
@@ -388,7 +425,7 @@
     // Room Details Dropdown
     .room-details-dropdown {
       width: 100%;
-      margin: 1rem 0;
+      margin: 0.5rem 0 0.75rem 0;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(180, 136, 77, 0.3);
       border-radius: 12px;
@@ -398,6 +435,9 @@
 
       .details-content {
         padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
 
         h4 {
           color: #d4a574;
@@ -501,7 +541,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin: 0 0 0.5rem 0;
       font-size: 1.1rem;
       transition: all 0.3s ease;
       box-shadow: 0 8px 24px rgba(180, 136, 77, 0.4);
@@ -531,7 +571,7 @@
 
     .reservation-fee-info {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       margin-bottom: 1rem;
       padding: 0.5rem 1rem;
@@ -563,6 +603,14 @@
         font-weight: 700;
         text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
+    }
+
+    .price-and-action {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: auto;
+      flex-wrap: wrap;
     }
 
     .select-indicator {
@@ -670,6 +718,18 @@
   &:active {
     transform: translateY(-1px);
   }
+}
+
+// for full width 
+.availability-container .room-type-list,
+.availability-container .room-card,
+.availability-container .room-card-content {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.availability-container .room-type-list {
+  max-width: none !important;
 }
 
 // Animations
@@ -810,13 +870,15 @@
     }
     
     .room-type-list {
-      max-width: 800px;
-      gap: 1rem;
+      max-width: 100%;
+      gap: 1.5rem;
+      overflow-x: auto;
     }
     
     .room-card {
-      max-width: 320px;
-      min-width: 280px;
+      max-width: 350px;
+      min-width: 320px;
+      flex: 0 0 auto;
       padding: 1rem;
       
       h3 {
@@ -871,8 +933,11 @@
     
     .room-type-list {
       flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
       gap: 1rem;
+      overflow-x: visible;
+      overflow-y: auto;
     }
     
     .room-card {
@@ -940,8 +1005,11 @@
     
     .room-type-list {
       flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
       gap: 0.75rem;
+      overflow-x: visible;
+      overflow-y: auto;
     }
     
     .room-card {
@@ -1024,6 +1092,14 @@
       font-size: 1.2rem;
     }
     
+    .room-type-list {
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 1rem;
+      overflow-x: visible;
+      overflow-y: auto;
+    }
+    
     .room-card {
       max-width: 320px;
       min-width: 260px;
@@ -1048,5 +1124,38 @@
   .back-button {
     padding: 0.4rem 0.8rem;
     font-size: 0.75rem;
+  }
+}
+
+// Tablet and smaller desktop adjustments for horizontal layout
+@media (max-width: 768px) {
+  .availability-container {
+    .room-type-list {
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      overflow-x: visible;
+      overflow-y: auto;
+    }
+    
+    .room-card {
+      width: 100%;
+      max-width: 500px;
+      min-width: auto;
+    }
+  }
+}
+
+// Medium screens - keep horizontal but adjust sizing
+@media (min-width: 769px) and (max-width: 1200px) {
+  .availability-container {
+    .room-type-list {
+      gap: 1.5rem;
+    }
+    
+    .room-card {
+      width: 350px;
+      min-width: 320px;
+    }
   }
 }
