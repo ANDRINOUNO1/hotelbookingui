@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ReservationDataService, CustomerDetails } from '../../_services/reservation-data.service';
 import { RoomType } from '../../_models/booking.model';
 import { BookingService } from '../../_services/booking.service';
@@ -9,7 +10,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-process',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.scss']
 })
@@ -20,6 +21,8 @@ export class ProcessComponent implements OnInit {
   customerForm!: FormGroup;
   selectedRoomType: RoomType | null = null;
   showErrors = false;
+  consentAccepted = false;
+  showConsentModal = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +55,22 @@ export class ProcessComponent implements OnInit {
     this.customerForm.valueChanges.subscribe(() => {
       this.showErrors = false;
     });
+
+    // Show consent modal when component initializes
+    this.showConsentModal = true;
+  }
+
+  showConsent() {
+    this.showConsentModal = true;
+  }
+
+  hideConsent() {
+    this.showConsentModal = false;
+  }
+
+  acceptConsent() {
+    this.consentAccepted = true;
+    this.showConsentModal = false;
   }
 
   // Custom validator for letters only

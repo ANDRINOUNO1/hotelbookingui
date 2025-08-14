@@ -2,7 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservationDataService } from '../../_services/reservation-data.service';
-import { RoomService, RoomType } from '../../_services/room.service';
+import { RoomService, RoomType, Room } from '../../_services/room.service';
+import { RoomAvailabilityService, RoomAvailability } from '../../_services/room-availability.service';
 
 @Component({
   selector: 'app-availability',
@@ -18,6 +19,10 @@ export class AvailabilityComponent implements OnInit {
   availableRoomTypes: RoomType[] = [];
   loading = false;
   error = '';
+  expandedRoomType: string | null = null;
+  selectedDates: { checkIn: string; checkOut: string } | null = null;
+  roomAvailabilityCounts: { [key: string]: { available: number; total: number } } = {};
+  roomAmenities: { [key: string]: string[] } = {};
 
   // Multiple room images for each room type
   roomImages = {
@@ -47,14 +52,25 @@ export class AvailabilityComponent implements OnInit {
   ]
 };
 
-
   constructor(
     private reservationDataService: ReservationDataService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private roomAvailabilityService: RoomAvailabilityService
   ) {}
 
   ngOnInit() {
+    this.loadSelectedDates();
     this.loadAvailableRoomTypes();
+  }
+
+  loadSelectedDates() {
+    const reservation = this.reservationDataService.getReservation();
+    if (reservation) {
+      this.selectedDates = {
+        checkIn: reservation.checkIn,
+        checkOut: reservation.checkOut
+      };
+    }
   }
 
   async loadAvailableRoomTypes() {
@@ -65,40 +81,188 @@ export class AvailabilityComponent implements OnInit {
       // Get room types from backend
       const roomTypes = await this.roomService.getRoomTypes().toPromise();
       
-      if (roomTypes) {
-        // Filter room types that have available rooms
+      if (roomTypes && roomTypes.length > 0) {
         this.availableRoomTypes = [];
         
+        // Process each room type
         for (const roomType of roomTypes) {
-          const availableRooms = await this.roomService.getAvailableRoomsByType(roomType.type).toPromise();
-          if (availableRooms && availableRooms.length > 0) {
-            // Add the room type with the first available room's price
+          // Get availability for the selected dates using enhanced API
+          const availability = await this.getRoomAvailabilityForDates(roomType.id);
+          
+          if (availability && availability.length > 0) {
+            // Try to get enhanced room type details from backend
+            let enhancedRoomType = roomType;
+            try {
+              const detailedRoomType = await this.roomService.getRoomTypeDetails(roomType.id).toPromise();
+              if (detailedRoomType) {
+                enhancedRoomType = detailedRoomType;
+              }
+            } catch (error) {
+              console.log('Using basic room type data:', error);
+            }
+
+            // Add the room type with pricing from availability
             this.availableRoomTypes.push({
-              ...roomType,
-              rate: availableRooms[0].price
+              ...enhancedRoomType,
+              rate: availability[0].price || enhancedRoomType.basePrice
             });
+
+            // Calculate availability counts
+            const totalRooms = await this.getTotalRoomsByType(roomType.id);
+            this.roomAvailabilityCounts[enhancedRoomType.type] = {
+              available: availability.length,
+              total: totalRooms
+            };
+
+            // Load amenities for this room type
+            await this.loadRoomAmenities(roomType.id);
           }
         }
+      } else {
+        this.error = 'No room types found.';
       }
     } catch (error) {
       console.error('Error loading room types:', error);
       this.error = 'Failed to load room types. Please try again.';
-      
-      // Fallback to static data if backend is not available
-      this.loadStaticRoomTypes();
     } finally {
       this.loading = false;
     }
   }
 
-  // Fallback to static data
-  loadStaticRoomTypes() {
-    this.availableRoomTypes = [
-      { id: 1, type: 'Classic', description: 'Comfortable and affordable accommodation', basePrice: 120, rate: 120, reservationFeePercentage: 10.00 },
-      { id: 2, type: 'Deluxe', description: 'Enhanced amenities and spacious rooms', basePrice: 200, rate: 200, reservationFeePercentage: 15.00 },
-      { id: 3, type: 'Prestige', description: 'Luxury accommodations with premium services', basePrice: 150, rate: 150, reservationFeePercentage: 12.50 },
-      { id: 4, type: 'Luxury', description: 'Ultimate luxury experience with top-tier amenities', basePrice: 80, rate: 80, reservationFeePercentage: 8.00 }
-    ];
+  async getRoomAvailabilityForDates(roomTypeId: number): Promise<Room[]> {
+    if (!this.selectedDates) {
+      return [];
+    }
+
+    try {
+      // First try the enhanced availability API with pricing
+      const enhancedAvailability = await this.roomService
+        .getRoomAvailabilityWithPricing(this.selectedDates.checkIn, this.selectedDates.checkOut, roomTypeId)
+        .toPromise();
+      
+      if (enhancedAvailability && enhancedAvailability.length > 0) {
+        return enhancedAvailability.map(room => ({
+          id: room.roomId || room.id,
+          roomNumber: room.roomNumber,
+          roomTypeId: roomTypeId,
+          price: room.price || room.rate || 0,
+          isAvailable: room.isAvailable !== false,
+          RoomType: this.availableRoomTypes.find(rt => rt.id === roomTypeId)
+        }));
+      }
+    } catch (error) {
+      console.error('Error getting enhanced room availability:', error);
+    }
+
+    try {
+      // Fallback to room availability service
+      const availableRooms = await this.roomAvailabilityService
+        .getAvailableRooms(this.selectedDates.checkIn, this.selectedDates.checkOut, roomTypeId)
+        .toPromise();
+      
+      if (availableRooms) {
+        // Convert RoomAvailability to Room format
+        return availableRooms.map(room => ({
+          id: room.roomId,
+          roomNumber: room.roomNumber,
+          roomTypeId: roomTypeId,
+          price: 0, // This will be set from the room type
+          isAvailable: room.isAvailable,
+          RoomType: this.availableRoomTypes.find(rt => rt.id === roomTypeId)
+        }));
+      }
+    } catch (error) {
+      console.error('Error getting room availability:', error);
+      // Final fallback to basic room service
+      try {
+        const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+        if (roomType) {
+          return await this.roomService.getAvailableRoomsByType(roomType.type).toPromise() || [];
+        }
+      } catch (fallbackError) {
+        console.error('Fallback error:', fallbackError);
+      }
+    }
+    
+    return [];
+  }
+
+  async getTotalRoomsByType(roomTypeId: number): Promise<number> {
+    try {
+      const allRooms = await this.roomService.getAllRooms().toPromise();
+      if (allRooms) {
+        return allRooms.filter(room => room.roomTypeId === roomTypeId).length;
+      }
+    } catch (error) {
+      console.error('Error getting total rooms:', error);
+    }
+    return 0;
+  }
+
+  async loadRoomAmenities(roomTypeId: number) {
+    try {
+      // Try to get amenities from backend first
+      const amenities = await this.roomService.getRoomAmenities(roomTypeId).toPromise();
+      if (amenities && amenities.length > 0) {
+        const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+        if (roomType) {
+          this.roomAmenities[roomType.type] = amenities;
+        }
+      } else {
+        // Fallback to static mapping if backend doesn't return amenities
+        const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+        if (roomType) {
+          this.roomAmenities[roomType.type] = this.getAmenitiesByRoomType(roomType.type);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading room amenities from backend:', error);
+      // Fallback to static mapping
+      const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+      if (roomType) {
+        this.roomAmenities[roomType.type] = this.getAmenitiesByRoomType(roomType.type);
+      }
+    }
+  }
+
+  getAmenitiesByRoomType(roomType: string): string[] {
+    // This could be fetched from backend, but for now using a mapping
+    const amenitiesMap: { [key: string]: string[] } = {
+      'Classic': [
+        'Air conditioning',
+        'Private bathroom',
+        'Free WiFi',
+        'TV',
+        'Daily housekeeping',
+        'Towels and linens'
+      ],
+      'Deluxe': [
+        'All Classic amenities',
+        'Premium bedding',
+        'Mini refrigerator',
+        'Coffee maker',
+        'Work desk',
+        'Enhanced toiletries'
+      ],
+      'Prestige': [
+        'All Deluxe amenities',
+        'Balcony/terrace',
+        'Premium toiletries',
+        'Room service',
+        'King-size bed',
+        'Ocean view option'
+      ],
+      'Luxury': [
+        'All Prestige amenities',
+        'Ocean view',
+        'Butler service',
+        'Premium dining access',
+        'Spa access',
+        'Concierge service'
+      ]
+    };
+    
+    return amenitiesMap[roomType] || [];
   }
 
   getRoomImage(roomType: string, viewNumber: number): string {
@@ -108,6 +272,38 @@ export class AvailabilityComponent implements OnInit {
     }
     // Fallback to first image of Classic room type
     return this.roomImages['Classic'][0];
+  }
+
+  toggleRoomDetails(roomType: string) {
+    if (this.expandedRoomType === roomType) {
+      this.expandedRoomType = null;
+    } else {
+      this.expandedRoomType = roomType;
+    }
+  }
+
+  getRoomDescription(roomType: string): string {
+    const roomTypeData = this.availableRoomTypes.find(rt => rt.type === roomType);
+    return roomTypeData?.description || 'No description available.';
+  }
+
+  getAvailabilityCount(roomType: string): { available: number; total: number } {
+    return this.roomAvailabilityCounts[roomType] || { available: 0, total: 0 };
+  }
+
+  getRoomAmenities(roomType: string): string[] {
+    return this.roomAmenities[roomType] || [];
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
   selectRoomType(roomType: RoomType) {

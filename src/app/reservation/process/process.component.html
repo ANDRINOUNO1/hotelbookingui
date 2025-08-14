@@ -1,4 +1,58 @@
-<div class="form-container">
+<!-- Consent Modal -->
+<div class="consent-modal" *ngIf="showConsentModal">
+  <div class="consent-content">
+    <h2>Data Collection Consent</h2>
+    <p>Before proceeding with your reservation, please read and accept our data collection policy:</p>
+    
+    <div class="consent-text">
+      <h3>Personal Information Collection:</h3>
+      <ul>
+        <li>We collect your personal information (name, email, phone, address) for reservation purposes.</li>
+        <li>Your contact information will be used to send booking confirmations and updates.</li>
+        <li>We may contact you regarding your stay or for customer service purposes.</li>
+        <li>Your information is stored securely and used only for hotel-related services.</li>
+      </ul>
+
+      <h3>Data Usage & Privacy:</h3>
+      <ul>
+        <li>Your personal data will be used solely for reservation and hotel service purposes.</li>
+        <li>We do not sell, trade, or share your personal information with third parties.</li>
+        <li>Your data may be shared with payment processors for transaction purposes only.</li>
+        <li>We retain your information for the duration of your stay and as required by law.</li>
+      </ul>
+
+      <h3>Your Rights:</h3>
+      <ul>
+        <li>You have the right to access, correct, or delete your personal information.</li>
+        <li>You can withdraw consent at any time by contacting our customer service.</li>
+        <li>You may request a copy of the data we hold about you.</li>
+        <li>We will notify you of any changes to our privacy policy.</li>
+      </ul>
+
+      <h3>Security Measures:</h3>
+      <ul>
+        <li>All personal data is encrypted and stored securely.</li>
+        <li>We implement industry-standard security measures to protect your information.</li>
+        <li>Access to your data is restricted to authorized personnel only.</li>
+        <li>Regular security audits are conducted to ensure data protection.</li>
+      </ul>
+    </div>
+
+    <div class="consent-checkbox">
+      <input type="checkbox" [(ngModel)]="consentAccepted" />
+      <span>I have read and agree to the <strong>Data Collection Policy</strong> and consent to the processing of my personal information.</span>
+    </div>
+
+    <div class="consent-actions">
+      <button class="btn btn-primary" (click)="acceptConsent()" [disabled]="!consentAccepted">
+        I Agree & Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main Form Container (only show if consent accepted) -->
+<div class="form-container" *ngIf="consentAccepted">
   <!-- Left Image Section -->
   <div class="left-side">
     <div class="overlay"></div>
