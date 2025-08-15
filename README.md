@@ -1,66 +1,28 @@
-# HotelReservationApp
+FIXING SYMBOLS AND MORE CHECK LINK : https://docs.google.com/document/d/1VYA8o7EeKLJBe5EeYGGsr5jmv_s45i9_/edit?usp=sharing&ouid=101516980731222368981&rtpof=true&sd=true
+PROGRESS ON OUR SYSTEM
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+DOCUMENTATION UPDATES :
 
-## Development server
+## 📊 Documentation Progress Tracker
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-
-## HONORABLE MENTION
-i install ni daan para larga na
-npm install --legacy-peer-deps
-
-GGS!
+| Section                               | Status / Notes                                                                |
+|---------------------------------------|-------------------------------------------------------------------------------|
+| ✔︎ Project Feasibility                 | Done(Need to Add Second Paragraph)                                           |
+| ✔︎ Work Breakdown Structure            | Done (awaiting final check by team leader)                                   |
+| ✔︎ Cost and Benefits                   | Done (prices still under review/discussion)                                  |
+| ✔︎ MOSCOW                              | Done (waiting for the added feature in the system)                           |
+| ✔︎ Gantt Chart                         | In Progress                                                                  |
+| 🔄 Critical Path                      | In progress                                                                  |
+| ✔︎ Data and Process Modeling           | In Progress                                                                  |
+| ✔︎ Existing Flowchart                  | In Progress                                                                  |
+| ✔︎ Proposed Flowchart                  | Done                                                                         |
+| ⏳ Use Case Diagram                   | Not started yet                                                              |
+| ✔︎ Narrative                           | Done (waiting for system other features)                                     |
+| ⛔ Activity Diagram                   | Not started yet (waiting for system completion)                              |
+| ⛔ State Chart Diagram                | Not started yet (waiting for system completion)                              |
+| ⚠️ Design                             | Inputted (will be updated as features are completed)                         |
+| ⏳ Entity Relationship Diagram (ERD)  | Waiting for database to be completed                                         |
+| ⛔ System Architecture                | Not yet started                                                              |
+| ⛔ Security                           | Done                                                                         |
+| ✔︎ Development                         | Done                                                                         |
+| ✔︎ Hardware Specification              | Done                                                                         |
