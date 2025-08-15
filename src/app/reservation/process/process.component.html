@@ -5,6 +5,7 @@
     <p>Before proceeding with your reservation, please read and accept our data collection policy:</p>
     
     <div class="consent-text">
+      <!-- same consent text as before -->
       <h3>Personal Information Collection:</h3>
       <ul>
         <li>We collect your personal information (name, email, phone, address) for reservation purposes.</li>
@@ -39,11 +40,14 @@
     </div>
 
     <div class="consent-checkbox">
-      <input type="checkbox" [(ngModel)]="consentAccepted" />
+      <input type="checkbox" [(ngModel)]="consentAccepted" (change)="onConsentChange()" />
       <span>I have read and agree to the <strong>Data Collection Policy</strong> and consent to the processing of my personal information.</span>
     </div>
 
     <div class="consent-actions">
+      <button class="btn btn-secondary" (click)="back.emit()">
+        Go Back
+      </button>
       <button class="btn btn-primary" (click)="acceptConsent()" [disabled]="!consentAccepted">
         I Agree & Continue
       </button>
@@ -67,115 +71,98 @@
         Selected Room: <strong>{{ selectedRoomType?.type }}</strong>
       </p>
 
-      <form [formGroup]="customerForm" (ngSubmit)="submitForm()">
+      <form [formGroup]="customerForm" (ngSubmit)="submitFormWithLoading()">
+        
+        <!-- First Name -->
         <div class="form-group">
-          <input 
-            type="text" 
-            placeholder="First Name" 
-            formControlName="firstName"
-            [class.error]="hasError('firstName')"
-            [class.valid]="isValid('firstName')"
-          />
-          <div class="error-message" *ngIf="hasError('firstName')">
-            {{ getErrorMessage('firstName') }}
-          </div>
+          <input type="text" placeholder="First Name" formControlName="firstName"
+            (focus)="onFieldFocus('firstName')" (blur)="onFieldBlur('firstName')" (input)="onFieldChange('firstName')"
+            [class.error]="hasError('firstName')" [class.valid]="isValid('firstName')" />
+          <div class="error-message" *ngIf="hasError('firstName')">{{ getErrorMessage('firstName') }}</div>
         </div>
 
+        <!-- Last Name -->
         <div class="form-group">
-          <input 
-            type="text" 
-            placeholder="Last Name" 
-            formControlName="lastName"
-            [class.error]="hasError('lastName')"
-            [class.valid]="isValid('lastName')"
-          />
-          <div class="error-message" *ngIf="hasError('lastName')">
-            {{ getErrorMessage('lastName') }}
-          </div>
+          <input type="text" placeholder="Last Name" formControlName="lastName"
+            (focus)="onFieldFocus('lastName')" (blur)="onFieldBlur('lastName')" (input)="onFieldChange('lastName')"
+            [class.error]="hasError('lastName')" [class.valid]="isValid('lastName')" />
+          <div class="error-message" *ngIf="hasError('lastName')">{{ getErrorMessage('lastName') }}</div>
         </div>
 
+        <!-- Email -->
         <div class="form-group">
-          <input 
-            type="email" 
-            placeholder="Email (Gmail only)" 
-            formControlName="email"
-            [class.error]="hasError('email')"
-            [class.valid]="isValid('email')"
-          />
-          <div class="error-message" *ngIf="hasError('email')">
-            {{ getErrorMessage('email') }}
-          </div>
+          <input type="email" placeholder="Email (Gmail only)" formControlName="email"
+            (focus)="onFieldFocus('email')" (blur)="onFieldBlur('email')" (input)="onFieldChange('email')"
+            [class.error]="hasError('email')" [class.valid]="isValid('email')" />
+          <div class="error-message" *ngIf="hasError('email')">{{ getErrorMessage('email') }}</div>
           <div class="loading-message" *ngIf="customerForm.get('email')?.pending">
             <i class="fa fa-spinner fa-spin"></i> Checking email availability...
           </div>
         </div>
 
-                <div class="form-group">
-          <input 
-            type="tel" 
-            placeholder="Contact Number (11 digits)" 
-            formControlName="phone"
-            (input)="formatPhoneNumber($event)"
-            maxlength="11"
-            [class.error]="hasError('phone')"
-            [class.valid]="isValid('phone')"
-          />
-          <div class="error-message" *ngIf="hasError('phone')">
-            {{ getErrorMessage('phone') }}
+        <!-- Phone Number with Veriphone Validation -->
+        <div class="form-group">
+          <input type="tel" placeholder="Contact Number (+63XXXXXXXXXX)" formControlName="phone"
+            (focus)="onFieldFocus('phone')" (blur)="onFieldBlur('phone')" (input)="formatPhoneNumber($event)"
+            maxlength="13"
+            [class.error]="hasError('phone')" [class.valid]="isValid('phone')" />
+          
+          <div class="error-message" *ngIf="hasError('phone')">{{ getErrorMessage('phone') }}</div>
+
+          <!-- Loading indicator -->
+          <div class="loading-message" *ngIf="phoneChecking">
+            <i class="fa fa-spinner fa-spin"></i> Validating phone number...
+          </div>
+
+          <!-- Validation result -->
+          <div class="success-message" *ngIf="phoneValid === true">
+            ✅ Phone number is valid
+          </div>
+          <div class="error-message" *ngIf="phoneValid === false">
+            ❌ Invalid phone number
           </div>
         </div>
 
+        <!-- Address -->
         <div class="form-group">
-          <input 
-            type="text" 
-            placeholder="Address" 
-            formControlName="address"
-            [class.error]="hasError('address')"
-            [class.valid]="isValid('address')"
-          />
-          <div class="error-message" *ngIf="hasError('address')">
-            {{ getErrorMessage('address') }}
-          </div>
+          <input type="text" placeholder="Address" formControlName="address"
+            (focus)="onFieldFocus('address')" (blur)="onFieldBlur('address')" (input)="onFieldChange('address')"
+            [class.error]="hasError('address')" [class.valid]="isValid('address')" />
+          <div class="error-message" *ngIf="hasError('address')">{{ getErrorMessage('address') }}</div>
         </div>
 
+        <!-- City -->
         <div class="form-group">
-          <input 
-            type="text" 
-            placeholder="City" 
-            formControlName="city"
-            [class.error]="hasError('city')"
-            [class.valid]="isValid('city')"
-          />
-          <div class="error-message" *ngIf="hasError('city')">
-            {{ getErrorMessage('city') }}
-          </div>
+          <input type="text" placeholder="City" formControlName="city"
+            (focus)="onFieldFocus('city')" (blur)="onFieldBlur('city')" (input)="onFieldChange('city')"
+            [class.error]="hasError('city')" [class.valid]="isValid('city')" />
+          <div class="error-message" *ngIf="hasError('city')">{{ getErrorMessage('city') }}</div>
         </div>
 
+        <!-- Postal Code -->
         <div class="form-group">
-          <input 
-            type="text" 
-            placeholder="Postal Code (4 digits)" 
-            formControlName="postalCode"
-            (input)="formatPostalCode($event)"
+          <input type="text" placeholder="Postal Code (4 digits)" formControlName="postalCode"
+            (focus)="onFieldFocus('postalCode')" (blur)="onFieldBlur('postalCode')" (input)="formatPostalCode($event)"
             maxlength="4"
-            [class.error]="hasError('postalCode')"
-            [class.valid]="isValid('postalCode')"
-          />
-          <div class="error-message" *ngIf="hasError('postalCode')">
-            {{ getErrorMessage('postalCode') }}
-          </div>
+            [class.error]="hasError('postalCode')" [class.valid]="isValid('postalCode')" />
+          <div class="error-message" *ngIf="hasError('postalCode')">{{ getErrorMessage('postalCode') }}</div>
         </div>
 
+        <!-- Special Request -->
         <div class="form-group">
-          <textarea 
-            placeholder="Special Request (Optional)" 
-            formControlName="specialRequest"
-          ></textarea>
+          <textarea placeholder="Special Request (Optional)" formControlName="specialRequest"
+            (focus)="onFieldFocus('specialRequest')" (blur)="onFieldBlur('specialRequest')" (input)="onFieldChange('specialRequest')"></textarea>
         </div>
 
+        <!-- Buttons -->
         <div class="actions">
-            <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
-            <button type="submit" class="btn-primary" [disabled]="!customerForm.valid">Submit Reservation</button>
+          <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
+          <button type="submit" class="btn-primary" [disabled]="!isFormValid() || isFormProcessing()">
+            <span *ngIf="isFormProcessing()">
+              <i class="fa fa-spinner fa-spin"></i> Processing...
+            </span>
+            <span *ngIf="!isFormProcessing()">Submit Reservation</span>
+          </button>
         </div>
 
       </form>
