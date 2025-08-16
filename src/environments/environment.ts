@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'deploymentbackend-production.up.railway.app'
+  apiUrl: 'https://deploymentbackend-production.up.railway.app'
 };
 
 /*
