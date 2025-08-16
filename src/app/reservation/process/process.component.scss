@@ -1,150 +1,4 @@
-// Consent Modal Styles
-.consent-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 9999;
-  overflow-y: auto;
 
-  .consent-content {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
-    padding: 40px;
-    max-width: 800px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    border: 2px solid #b4884d;
-
-    h2 {
-      color: #171725;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-align: center;
-      border-bottom: 3px solid #b4884d;
-      padding-bottom: 15px;
-    }
-
-    > p {
-      color: #555;
-      font-size: 16px;
-      margin-bottom: 30px;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .consent-text {
-      margin-bottom: 30px;
-
-      h3 {
-        color: #171725;
-        font-size: 20px;
-        font-weight: 600;
-        margin: 25px 0 15px 0;
-        border-left: 4px solid #b4884d;
-        padding-left: 15px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 20px 0;
-
-        li {
-          color: #555;
-          font-size: 14px;
-          margin-bottom: 8px;
-          padding-left: 20px;
-          position: relative;
-          line-height: 1.6;
-
-          &:before {
-            content: '•';
-            color: #b4884d;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-          }
-        }
-      }
-    }
-
-    .consent-checkbox {
-      margin: 30px 0;
-      text-align: center;
-      color: #555;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-
-      input[type="checkbox"] {
-        margin: 0;
-        transform: scale(1.2);
-        vertical-align: middle;
-        cursor: pointer;
-        accent-color: #b4884d;
-      }
-
-      span {
-        line-height: 1.5;
-      }
-    }
-
-    .consent-actions {
-      text-align: center;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-
-      .btn {
-        background: linear-gradient(135deg, #b4884d 0%, #d4a574 50%, #e6c088 100%);
-        color: #171725;
-        border: none;
-        padding: 15px 30px;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(180, 136, 77, 0.3);
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(180, 136, 77, 0.5);
-        }
-
-        &.btn-primary {
-          background: linear-gradient(135deg, #b4884d 0%, #d4a574 50%, #e6c088 100%);
-        }
-
-        &.btn-secondary {
-          background: rgba(255, 255, 255, 0.1);
-          color: #555;
-          border: 2px solid rgba(180, 136, 77, 0.3);
-          margin-right: 10px;
-        }
-
-        &:disabled {
-          background: #ccc;
-          color: #666;
-          cursor: not-allowed;
-          box-shadow: none;
-          transform: none;
-        }
-      }
-    }
-  }
-}
 
 .form-container {
   display: flex;
@@ -372,11 +226,54 @@
           display: flex;
           align-items: center;
           gap: 0.5rem;
-        }
-        
-      }
+                 }
+         
+         // Consent checkbox styling
+         .consent-checkbox {
+           margin: 20px 0;
+           text-align: center;
+           color: #ffffff;
+           font-size: 14px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 10px;
+           background: rgba(255, 255, 255, 0.05);
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           border-radius: 12px;
+           padding: 15px;
+           backdrop-filter: blur(10px);
 
-      .actions {
+           input[type="checkbox"] {
+             margin: 0;
+             transform: scale(1.2);
+             vertical-align: middle;
+             cursor: pointer;
+             accent-color: #b4884d;
+           }
+
+           span {
+             line-height: 1.5;
+             color: #ffffff;
+           }
+
+           .policy-link {
+             color: #b4884d;
+             text-decoration: underline;
+             cursor: pointer;
+             font-weight: 600;
+             transition: all 0.3s ease;
+
+             &:hover {
+               color: #d4a574;
+               text-decoration: none;
+             }
+           }
+         }
+         
+       }
+
+       .actions {
         display: flex;
         justify-content: space-between;
         align-items: center;

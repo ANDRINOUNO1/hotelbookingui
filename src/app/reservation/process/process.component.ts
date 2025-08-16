@@ -8,11 +8,13 @@ import { BookingService } from '../../_services/booking.service';
 import { debounceTime, distinctUntilChanged, switchMap, map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of, Subscription } from 'rxjs';
+import { ConsentPolicyModalComponent } from '../process/consent.modal';
+
 
 @Component({
   selector: 'app-process',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConsentPolicyModalComponent],
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.scss']
 })
@@ -27,6 +29,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   showConsentModal = false;
   phoneChecking = false;
   phoneValid: boolean | null = null;
+  showPolicyModal = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -41,7 +44,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.loadSavedData();
     this.setupFormSubscriptions();
-    this.showConsentModalIfNeeded();
   }
 
   private initializeForm(): void {
@@ -84,20 +86,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showConsentModalIfNeeded(): void {
-    // Show consent modal only if not already accepted
-    if (!this.consentAccepted) {
-      this.showConsentModal = true;
-    }
-  }
 
-
-  // ✅ Accept consent method
-  acceptConsent() {
-    if (this.consentAccepted) {
-      this.showConsentModal = false;
-    }
-  }
 
   // Method to handle consent checkbox changes
   onConsentChange() {
@@ -267,7 +256,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   submitForm() {
     if (!this.consentAccepted) {
       alert('Please accept the data collection consent before proceeding.');
-      this.showConsentModal = true;
       return;
     }
 
@@ -325,7 +313,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.customerForm.reset();
     this.resetFormState();
     this.consentAccepted = false;
-    this.showConsentModal = true;
   }
 
 
@@ -374,6 +361,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
     });
 
     return { valid, errors };
+  }
+
+  openPolicyModal() {
+    this.showPolicyModal = true;
+  }
+
+  closePolicyModal() {
+    this.showPolicyModal = false;
   }
 
   // Method to handle form field changes
