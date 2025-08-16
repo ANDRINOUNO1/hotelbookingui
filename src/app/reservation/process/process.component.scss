@@ -1,3 +1,5 @@
+
+
 .form-container {
   display: flex;
   height: 100vh;
@@ -209,11 +211,69 @@
             font-size: 0.9rem;
           }
         }
+        .success-message {
+          color: #16a34a;
+          font-size: 0.8rem;
+          margin-top: 0.5rem;
+          padding: 0.5rem;
+          background: rgba(22, 163, 74, 0.1);
+          border: 1px solid rgba(22, 163, 74, 0.3);
+          border-radius: 8px;
+          backdrop-filter: blur(10px);
+          animation: slideInDown 0.3s ease-out;
+          font-weight: 600;
+          text-shadow: 0 1px 2px rgba(23, 23, 37, 0.5);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+                 }
+         
+         // Consent checkbox styling
+         .consent-checkbox {
+           margin: 20px 0;
+           text-align: center;
+           color: #ffffff;
+           font-size: 14px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 10px;
+           background: rgba(255, 255, 255, 0.05);
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           border-radius: 12px;
+           padding: 15px;
+           backdrop-filter: blur(10px);
 
-        
-      }
+           input[type="checkbox"] {
+             margin: 0;
+             transform: scale(1.2);
+             vertical-align: middle;
+             cursor: pointer;
+             accent-color: #b4884d;
+           }
 
-      .actions {
+           span {
+             line-height: 1.5;
+             color: #ffffff;
+           }
+
+           .policy-link {
+             color: #b4884d;
+             text-decoration: underline;
+             cursor: pointer;
+             font-weight: 600;
+             transition: all 0.3s ease;
+
+             &:hover {
+               color: #d4a574;
+               text-decoration: none;
+             }
+           }
+         }
+         
+       }
+
+       .actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
