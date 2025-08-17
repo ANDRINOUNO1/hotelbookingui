@@ -131,7 +131,7 @@ export class ContentService {
       default: 'w_800,h_600,c_fill,q_auto'
     };
 
-    const transform = transformations[type] || transformations.default;
+    const transform = transformations[type] || transformations['default'];
     return `https://res.cloudinary.com/dsheuvqdc/image/upload/${transform}/${publicId}`;
   }
 

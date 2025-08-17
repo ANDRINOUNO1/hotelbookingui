@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ContentService, ContentItem, GalleryImage } from '../../_services/content.service';
 import { AlertService } from '../../_services/alert.service';
 
 @Component({
   selector: 'app-content-management',
   templateUrl: './content-management.component.html',
-  styleUrls: ['./content-management.component.scss']
+  styleUrls: ['./content-management.component.scss'],
+  imports: [CommonModule, FormsModule],
+  standalone: true
 })
 export class ContentManagementComponent implements OnInit {
   content: any = {};
@@ -16,6 +20,7 @@ export class ContentManagementComponent implements OnInit {
   selectedFile: File | null = null;
   selectedLogo: File | null = null;
   selectedGalleryFiles: File[] = [];
+  altText: string = '';
   
   // Text content
   textContent: { [key: string]: string } = {};
@@ -41,7 +46,7 @@ export class ContentManagementComponent implements OnInit {
   async loadContent(): Promise<void> {
     this.loading = true;
     try {
-      this.content = await this.contentService.getAllContent().toPromise();
+      this.content = await this.contentService.getAdminContent().toPromise(); // Use getAdminContent for admin view
       this.initializeTextContent();
     } catch (error) {
       this.alertService.error('Failed to load content');
@@ -188,11 +193,14 @@ export class ContentManagementComponent implements OnInit {
     return this.contentService.getOptimizedImageUrl(publicId, type);
   }
 
-  clearFileInput(input: HTMLInputElement): void {
-    input.value = '';
+  clearFileInput(input: HTMLInputElement | null): void {
+    if (input) {
+      input.value = '';
+    }
   }
 
-  getFileSize(file: File): string {
+  getFileSize(file: File | null): string {
+    if (!file) return '0 MB';
     const sizeInMB = file.size / (1024 * 1024);
     return sizeInMB.toFixed(2) + ' MB';
   }
