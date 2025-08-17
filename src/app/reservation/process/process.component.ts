@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, switchMap, map, catchError } from '
 import { HttpClient } from '@angular/common/http';
 import { of, Subscription } from 'rxjs';
 import { ConsentPolicyModalComponent } from '../process/consent.modal';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -95,7 +96,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
 
-  // ✅ Async Validator using Veriphone API
+  // ✅ Async Validator using Backend Phone Verification
   phoneApiValidator() {
     return (control: AbstractControl) => {
       const phone = control.value;
@@ -108,9 +109,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.phoneChecking = true;
       this.phoneValid = null;
       
-      return this.http.get<any>(
-        `https://api.veriphone.io/v2/verify?phone=${phone}&key=FF60BA24851348D2B361588DBC702CBA`
-      ).pipe(
+      // Use backend endpoint instead of direct API call
+      return this.http.post<any>(`${environment.apiUrl}/rooms/verify-phone`, { phone }).pipe(
         map((res) => {
           this.phoneChecking = false;
           this.phoneValid = res.phone_valid;
@@ -120,7 +120,18 @@ export class ProcessComponent implements OnInit, OnDestroy {
           this.phoneChecking = false;
           this.phoneValid = false;
           console.error('Phone validation error:', error);
-          return of({ invalidPhoneApi: true });
+          
+          // Fallback: Basic pattern validation if API fails
+          const phonePattern = /^\+63\d{10}$/;
+          const isValidFormat = phonePattern.test(phone);
+          
+          if (isValidFormat) {
+            // If format is correct but API failed, allow it (graceful degradation)
+            this.phoneValid = true;
+            return of (null);
+          } else {
+            return of({ invalidPhoneApi: true });
+          }
         })
       );
     };
