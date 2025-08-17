@@ -1,12 +1,3 @@
-:root {
-  --main-color: #0b0b31;
-  --sub-color: #e5c07b;
-  --accent-color: #b4884d;
-  --white: #f5f5f7;
-  --dark-base: #181824;
-  --gradient-touch: linear-gradient(90deg, #171725 0%, #b4884d 100%);
-  --border: .1rem solid rgba(229, 192, 123, 0.15);
-}
 
 .login-bg {
   min-height: 100vh;
@@ -36,7 +27,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem;
-  background: rgba(11, 11, 49, 0.95);
+  background: white;
   backdrop-filter: blur(10px);
 }
 
@@ -44,7 +35,7 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background: rgba(11, 11, 49, 0.8);
+  background: rgba(255, 166, 0, 63%);
   border-radius: 18px;
   backdrop-filter: blur(4px);
 }
@@ -92,27 +83,59 @@
 }
 
 .form-input {
+  position: relative;
+  display: block;
   width: 100%;
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  border: 1px solid rgba(229, 192, 123, 0.3);
-  background: #0b0b31;
-  color: #ffffff;
+  padding: 12px 14px;
+  border: 1px solid #f3f3f3;
+  border-radius: 10px;
+  background: transparent;
   font-size: 1rem;
+  color: #fff;
   outline: none;
-  transition: border 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+  box-shadow: 0 16px 16px -5px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 
+  &:focus {
+    border: 1.5px solid #b4884d;
+    box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
+    background: #01010123;
+  }
+
+  /* Hide native placeholder text */
+  &::placeholder {
+    color: transparent;
+  }
+
+
+  /* Floating label effect using placeholder text */
+  &[placeholder]::before {
+    content: attr(placeholder);
+    position: absolute;
+    left: 16px;
+    top: 12px;
+    color: #000000;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:focus::before,
+  &:not(:placeholder-shown)::before {
+    top: -10px;
+    left: 10px;
+    font-size: 0.85rem;
+    color: #b4884d;
+    background: #ffffff; /* dark form bg, can be replaced with var(--your-bg) */
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+}
 .form-input::placeholder {
-  color: #cccccc;
+  color: #020202;
 }
 
-.form-input:focus {
-  border: 1.5px solid #b4884d;
-  box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
-  background: #0b0b31;
-}
+
 
 .login-options {
   display: flex;
@@ -191,11 +214,11 @@
 
 .error-message {
   background: rgba(220, 38, 38, 0.1);
-  color: #fca5a5;
+  color: #ff0000;
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid rgba(220, 38, 38, 0.2);
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
 }
 
@@ -204,6 +227,7 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+  filter: blur(0.1px);
 }
 
 .image-container {
@@ -221,14 +245,24 @@
 
 .image-overlay {
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(11, 11, 49, 0.3) 0%, rgba(180, 136, 77, 0.2) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+  color: white;
+  font-weight: bold;
+  border: 3px solid #f1f1f1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 80%;
+  padding: 20px;
+  text-align: center;
 }
 
 .overlay-content {

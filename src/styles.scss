@@ -5,19 +5,19 @@
 @tailwind utilities;
 
 :root {
-  --main-color: #0b0b31;
+  --main-color: #10101a;
   --sub-color: #e5c07b;
   --accent-color: #b4884d;
   --white: #f5f5f7;
-  --dark-base: #171725;
-  --gradient-touch: linear-gradient(90deg, #0b0b31 0%, #b4884d 100%);
+  --dark-base: #181824;
+  --gradient-touch: linear-gradient(90deg, #171725 0%, #b4884d 100%);
   --border: .1rem solid rgba(229, 192, 123, 0.15);
 
-  --sidebar-bg: #0b0b31;
-  --sidebar-active: #171725;
+  --sidebar-bg: #181824;
+  --sidebar-active: #23233a;
   --sidebar-text: #e5c07b;
-  --main-bg: #0b0b31;
-  --header-bg: #171725;
+  --main-bg: #10101a;
+  --header-bg: #23233a;
   --header-text: #fff;
   --card-bg: #0b0b31;
   --card-border: #171725;
