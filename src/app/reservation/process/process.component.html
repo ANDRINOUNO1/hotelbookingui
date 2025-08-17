@@ -69,6 +69,11 @@
           <div class="error-message" *ngIf="phoneValid === false">
             ❌ Invalid phone number
           </div>
+          
+          <!-- Help text for mobile users -->
+          <div class="help-text" *ngIf="!phoneChecking && phoneValid === null">
+            <small>📱 Format: +63XXXXXXXXXX (10 digits after +63)</small>
+          </div>
         </div>
 
         <!-- Address -->
