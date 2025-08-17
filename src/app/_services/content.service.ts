@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface ContentItem {
@@ -39,17 +40,23 @@ export class ContentService {
 
   // Get all content
   getAllContent(): Observable<any> {
-    return this.http.get(this.apiUrl);
+    return this.http.get(this.apiUrl).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get content by section
   getSectionContent(section: string): Observable<ContentItem[]> {
-    return this.http.get<ContentItem[]>(`${this.apiUrl}/section/${section}`);
+    return this.http.get<ContentItem[]>(`${this.apiUrl}/section/${section}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get content by key
   getContentByKey(section: string, key: string): Observable<ContentItem> {
-    return this.http.get<ContentItem>(`${this.apiUrl}/${section}/${key}`);
+    return this.http.get<ContentItem>(`${this.apiUrl}/${section}/${key}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Upload image content
@@ -62,7 +69,9 @@ export class ContentService {
       formData.append('altText', altText);
     }
 
-    return this.http.post<ContentItem>(`${this.apiUrl}/upload-image`, formData);
+    return this.http.post<ContentItem>(`${this.apiUrl}/upload-image`, formData).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Update text content
@@ -71,7 +80,9 @@ export class ContentService {
       section,
       key,
       value
-    });
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Update logo
@@ -82,7 +93,9 @@ export class ContentService {
       formData.append('altText', altText);
     }
 
-    return this.http.post<ContentItem>(`${this.apiUrl}/logo`, formData);
+    return this.http.post<ContentItem>(`${this.apiUrl}/logo`, formData).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Update gallery
@@ -97,7 +110,9 @@ export class ContentService {
       }
     });
 
-    return this.http.post<ContentItem[]>(`${this.apiUrl}/gallery`, formData);
+    return this.http.post<ContentItem[]>(`${this.apiUrl}/gallery`, formData).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Reorder gallery items
@@ -105,17 +120,23 @@ export class ContentService {
     return this.http.put(`${this.apiUrl}/gallery/reorder`, {
       section,
       orderData
-    });
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Delete content
   deleteContent(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get admin content (all content including inactive)
   getAdminContent(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/all`);
+    return this.http.get(`${this.apiUrl}/admin/all`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Helper method to get optimized image URL
@@ -143,5 +164,25 @@ export class ContentService {
   // Helper method to get multiple content items by section
   getContentBySection(section: string): Observable<ContentItem[]> {
     return this.getSectionContent(section);
+  }
+
+  // Error handling method
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      if (error.status === 0) {
+        errorMessage = 'Unable to connect to the server. Please make sure the backend is running.';
+      } else {
+        errorMessage = `Server Error: ${error.status} - ${error.message}`;
+      }
+    }
+    
+    console.error('Content Service Error:', errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 }

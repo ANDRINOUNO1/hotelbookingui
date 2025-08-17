@@ -3,8 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
-  apiUrl: 'https://deploymentbackend-production.up.railway.app'
+  production: false,
+  apiUrl: 'http://localhost:4000',
+  cloudinary: {
+    cloudName: 'dsheuvqdc'
+  }
 };
 
 /*

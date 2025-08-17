@@ -46,11 +46,18 @@ export class ContentManagementComponent implements OnInit {
   async loadContent(): Promise<void> {
     this.loading = true;
     try {
-      this.content = await this.contentService.getAdminContent().toPromise(); // Use getAdminContent for admin view
+      this.content = await this.contentService.getAdminContent().toPromise();
       this.initializeTextContent();
-    } catch (error) {
-      this.alertService.error('Failed to load content');
+    } catch (error: any) {
       console.error('Error loading content:', error);
+      if (error.message && error.message.includes('Unable to connect to the server')) {
+        this.alertService.error('Backend server is not running. Please start the backend server first.');
+      } else {
+        this.alertService.error('Failed to load content: ' + (error.message || 'Unknown error'));
+      }
+      // Initialize with empty content to prevent further errors
+      this.content = {};
+      this.initializeTextContent();
     } finally {
       this.loading = false;
     }
@@ -114,9 +121,13 @@ export class ContentManagementComponent implements OnInit {
       this.alertService.success('Logo updated successfully');
       this.selectedLogo = null;
       await this.loadContent();
-    } catch (error) {
-      this.alertService.error('Failed to update logo');
+    } catch (error: any) {
       console.error('Error updating logo:', error);
+      if (error.message && error.message.includes('Unable to connect to the server')) {
+        this.alertService.error('Backend server is not running. Please start the backend server first.');
+      } else {
+        this.alertService.error('Failed to update logo: ' + (error.message || 'Unknown error'));
+      }
     } finally {
       this.uploading = false;
     }
