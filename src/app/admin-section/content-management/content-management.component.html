@@ -5,7 +5,7 @@
   </div>
 
   <!-- Backend Status Indicator -->
-  <div class="backend-status" *ngIf="!loading && (!content || Object.keys(content).length === 0 || (content.hero && content.hero.length === 0))">
+  <div class="backend-status" *ngIf="!loading && (!hasContent() || !hasHeroContent())">
     <div class="status-warning">
       <i class="fa fa-exclamation-triangle"></i>
       <p>Backend server is not running. Content management features will not work until the backend is started.</p>
@@ -101,10 +101,10 @@
       </div>
 
       <!-- Current Images Display -->
-      <div class="current-images-section" *ngIf="getContentBySection(section.id).some(item => item.type === 'image')">
+      <div class="current-images-section" *ngIf="hasImageContent(section.id)">
         <h3>Current Images</h3>
         <div class="current-images-grid">
-          <div class="current-image-item" *ngFor="let item of getContentBySection(section.id).filter(i => i.type === 'image')">
+          <div class="current-image-item" *ngFor="let item of getContentBySection(section.id).filter(item => item.type === 'image')">
             <img [src]="item.optimizedUrl || item.value" 
                  [alt]="item.altText || item.key"
                  class="current-image-preview">
@@ -150,7 +150,7 @@
       </div>
 
       <!-- Current Content Display -->
-      <div class="current-content">
+      <div class="current-content" *ngIf="hasSectionContent(section.id)">
         <h3>Current Content</h3>
         <div class="content-grid">
           <div class="content-item" *ngFor="let item of getContentBySection(section.id)">

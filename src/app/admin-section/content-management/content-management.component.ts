@@ -263,8 +263,31 @@ export class ContentManagementComponent implements OnInit {
     }
   }
 
+  // Helper methods for template safety
+  hasContent(): boolean {
+    return this.content && Object.keys(this.content).length > 0;
+  }
+
+  hasHeroContent(): boolean {
+    return this.content && this.content.hero && Array.isArray(this.content.hero) && this.content.hero.length > 0;
+  }
+
+  hasImageContent(section: string): boolean {
+    const sectionContent = this.getContentBySection(section);
+    return sectionContent.length > 0 && sectionContent.some(item => item.type === 'image');
+  }
+
+  hasSectionContent(section: string): boolean {
+    const sectionContent = this.getContentBySection(section);
+    return sectionContent.length > 0;
+  }
+
+  getContentKeys(): string[] {
+    return this.content ? Object.keys(this.content) : [];
+  }
+
   getContentBySection(section: string): ContentItem[] {
-    return this.content[section] || [];
+    return this.content && this.content[section] ? this.content[section] : [];
   }
 
   getContentByKey(section: string, key: string): ContentItem | null {
