@@ -1,5 +1,17 @@
 <div class="availability-container">
   <h2>Available Room Types</h2>
+  
+  <!-- Selected Dates Display -->
+  <div *ngIf="selectedDates" class="selected-dates">
+    <div class="date-info">
+      <span class="date-label">Check-in:</span>
+      <span class="date-value">{{ formatDate(selectedDates.checkIn) }}</span>
+    </div>
+    <div class="date-info">
+      <span class="date-label">Check-out:</span>
+      <span class="date-value">{{ formatDate(selectedDates.checkOut) }}</span>
+    </div>
+  </div>
 
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
@@ -16,34 +28,82 @@
   <!-- Room Types List -->
   <div *ngIf="!loading && !error && availableRoomTypes.length" class="room-type-list">
     <div *ngFor="let type of availableRoomTypes; index as i" 
-         class="room-card" 
-         (click)="selectRoomType(type)">
+         class="room-card">
       <div class="room-card-index">
         {{ (i + 1) | number: '2.0' }}
       </div>
 
-      <h3>{{ type.type }}</h3>
+      <div class="room-card-content">
+        <div class="room-media">
+          <div class="room-images-grid">
+            <img [src]="getRoomImage(type.type, 1)" [alt]="type.type + ' - View 1'">
+            <img [src]="getRoomImage(type.type, 2)" [alt]="type.type + ' - View 2'">
+            <img [src]="getRoomImage(type.type, 3)" [alt]="type.type + ' - View 3'">
+            <img [src]="getRoomImage(type.type, 4)" [alt]="type.type + ' - View 4'">
+          </div>
+        </div>
 
-      <div class="room-images-grid">
-        <img [src]="getRoomImage(type.type, 1)" [alt]="type.type + ' - View 1'">
-        <img [src]="getRoomImage(type.type, 2)" [alt]="type.type + ' - View 2'">
-        <img [src]="getRoomImage(type.type, 3)" [alt]="type.type + ' - View 3'">
-        <img [src]="getRoomImage(type.type, 4)" [alt]="type.type + ' - View 4'">
-      </div>
+        <div class="room-info">
+          <h3>{{ type.type }}</h3>
 
-      <p class="details-link">CLICK TO SEE DETAILS ▼</p>
+          <!-- Availability Count -->
+          <div class="availability-count">
+            <span class="count-label">Available:</span>
+            <span class="count-value">{{ getAvailabilityCount(type.type).available }}/{{ getAvailabilityCount(type.type).total }} rooms</span>
+          </div>
 
-      <div class="price-circle">
-        ₱{{ type.rate || type.basePrice }}
-      </div>
+          <!-- Room Details Inline -->
+          <div class="room-details-dropdown">
+            <div class="details-content">
+              <h4>Room Description</h4>
+              <p class="room-description">{{ getRoomDescription(type.type) }}</p>
+              
+              <div class="availability-details">
+                <h4>Availability for Selected Dates</h4>
+                <div class="availability-stats">
+                  <div class="stat-item">
+                    <span class="stat-label">Total Rooms:</span>
+                    <span class="stat-value">{{ getAvailabilityCount(type.type).total }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Available:</span>
+                    <span class="stat-value available">{{ getAvailabilityCount(type.type).available }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Occupied:</span>
+                    <span class="stat-value occupied">{{ getAvailabilityCount(type.type).total - getAvailabilityCount(type.type).available }}</span>
+                  </div>
+                </div>
+              </div>
 
-      <div class="reservation-fee-info" *ngIf="type.reservationFeePercentage">
-        <span class="fee-label">Reservation Fee:</span>
-        <span class="fee-percentage">{{ type.reservationFeePercentage }}%</span>
-      </div>
+              <div class="amenities-section">
+                <h4>Room Amenities</h4>
+                <ul class="amenities-list">
+                  <li *ngFor="let amenity of getRoomAmenities(type.type)">{{ amenity }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-      <div class="select-indicator">
-        SELECT ROOM
+          <div class="price-and-action">
+            <div class="price-circle">
+              ₱{{ type.rate || type.basePrice }}
+            </div>
+
+            <div class="reservation-fee-info" *ngIf="type.reservationFeePercentage">
+              <span class="fee-label">Reservation Fee:</span>
+              <span class="fee-percentage">{{ type.reservationFeePercentage }}%</span>
+            </div>
+
+            <button type="button"
+                  class="select-indicator"
+                  [class.unavailable]="getAvailabilityCount(type.type).available === 0"
+                  [disabled]="getAvailabilityCount(type.type).available === 0"
+                  (click)="selectRoomType(type)">
+              {{ getAvailabilityCount(type.type).available > 0 ? 'SELECT ROOM' : 'UNAVAILABLE' }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -53,6 +113,6 @@
     <p>No room types available for the selected dates.</p>
     <button (click)="loadAvailableRoomTypes()" class="refresh-btn">Refresh</button>
   </div>
+  
+  <button type="button" (click)="back.emit()" class="btn-secondary back-button">Back</button>
 </div>
-
-<button type="button" (click)="back.emit()" class="btn-secondary back-button">Back</button>

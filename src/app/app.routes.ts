@@ -38,7 +38,6 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'reserve', component: ReservationComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminSectionComponent },
   {
     path: 'admin',
     component: AdminSectionComponent,

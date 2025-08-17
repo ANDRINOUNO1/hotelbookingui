@@ -1,4 +1,4 @@
-import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef } from '@angular/core';
+import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -18,6 +18,7 @@ export class AdminSectionComponent implements OnInit {
   openMenu: string | null = null;
   userMenuOpen = false;
   isLoading = false;
+  isMobileMenuOpen = false;
 
   constructor(
     private renderer: Renderer2,
@@ -30,6 +31,8 @@ export class AdminSectionComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.showLoading();
+      // Close mobile menu on route change
+      this.closeMobileMenu();
     });
   }
 
@@ -38,6 +41,20 @@ export class AdminSectionComponent implements OnInit {
       const savedTheme = localStorage.getItem('admin-theme');
       this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
       this.applyTheme();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    // Close mobile menu when clicking outside
+    const target = event.target as HTMLElement;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    
+    if (this.isMobileMenuOpen && 
+        !sidebar?.contains(target) && 
+        !mobileToggle?.contains(target)) {
+      this.closeMobileMenu();
     }
   }
 
@@ -78,9 +95,40 @@ export class AdminSectionComponent implements OnInit {
   }
 
   toggleMobileMenu() {
-    const sidebar = document.querySelector('.sidebar');
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    const overlay = this.el.nativeElement.querySelector('.mobile-overlay');
+    
     if (sidebar) {
-      sidebar.classList.toggle('mobile-open');
+      if (this.isMobileMenuOpen) {
+        this.renderer.addClass(sidebar, 'mobile-open');
+        this.renderer.addClass(mobileToggle, 'active');
+        if (overlay) {
+          this.renderer.addClass(overlay, 'active');
+        }
+      } else {
+        this.renderer.removeClass(sidebar, 'mobile-open');
+        this.renderer.removeClass(mobileToggle, 'active');
+        if (overlay) {
+          this.renderer.removeClass(overlay, 'active');
+        }
+      }
+    }
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    const overlay = this.el.nativeElement.querySelector('.mobile-overlay');
+    
+    if (sidebar) {
+      this.renderer.removeClass(sidebar, 'mobile-open');
+      this.renderer.removeClass(mobileToggle, 'active');
+      if (overlay) {
+        this.renderer.removeClass(overlay, 'active');
+      }
     }
   }
 
@@ -103,9 +151,13 @@ export class AdminSectionComponent implements OnInit {
   }
 
   logout() {
+    // Clear any stored data
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('auth_token');
+      localStorage.removeItem('admin-theme');
+      sessionStorage.clear();
     }
-    this.router.navigate(['/']);
+    
+    // Navigate to login page
+    this.router.navigate(['/login']);
   }
 }
