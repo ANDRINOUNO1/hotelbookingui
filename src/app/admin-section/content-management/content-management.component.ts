@@ -22,6 +22,17 @@ export class ContentManagementComponent implements OnInit {
   selectedGalleryFiles: File[] = [];
   altText: string = '';
   
+  // Image size and cropping
+  selectedImageSize: string = 'medium';
+  customWidth: number = 800;
+  customHeight: number = 600;
+  showCropper: boolean = false;
+  croppedImage: string | null = null;
+  
+  // Backup system
+  private contentBackup: any = null;
+  private hasBackup: boolean = false;
+  
   // Text content
   textContent: { [key: string]: string } = {};
   
@@ -37,6 +48,86 @@ export class ContentManagementComponent implements OnInit {
   // Store original content values
   private originalContent: { [key: string]: string } = {};
 
+  // Size presets for different content types
+  readonly sizePresets = {
+    thumbnail: { width: 300, height: 200, label: 'Thumbnail (300x200)' },
+    medium: { width: 800, height: 600, label: 'Medium (800x600)' },
+    large: { width: 1920, height: 1080, label: 'Large (1920x1080)' },
+    custom: { width: 0, height: 0, label: 'Custom Size' }
+  };
+
+  // Get dimensions based on selected size
+  getImageDimensions(): { width: number, height: number } {
+    if (this.selectedImageSize === 'custom') {
+      return { width: this.customWidth, height: this.customHeight };
+    }
+    return this.sizePresets[this.selectedImageSize as keyof typeof this.sizePresets];
+  }
+
+  // Update custom dimensions
+  updateCustomDimensions(): void {
+    if (this.selectedImageSize === 'custom') {
+      // Maintain aspect ratio if possible
+      if (this.selectedFile) {
+        const img = new Image();
+        img.onload = () => {
+          const aspectRatio = img.width / img.height;
+          if (this.customWidth > 0) {
+            this.customHeight = Math.round(this.customWidth / aspectRatio);
+          } else if (this.customHeight > 0) {
+            this.customWidth = Math.round(this.customHeight * aspectRatio);
+          }
+        };
+        img.src = URL.createObjectURL(this.selectedFile);
+      }
+    }
+  }
+
+  // Create backup of current content
+  createBackup(): void {
+    this.contentBackup = JSON.parse(JSON.stringify(this.content));
+    this.hasBackup = true;
+    console.log('Content backup created');
+  }
+
+  // Restore content from backup
+  restoreFromBackup(): void {
+    if (this.contentBackup) {
+      this.content = JSON.parse(JSON.stringify(this.contentBackup));
+      this.initializeTextContent();
+      this.alertService.success('Content restored from backup');
+    }
+  }
+
+  // Global reset to original content
+  async globalReset(): Promise<void> {
+    if (!this.hasBackup) {
+      this.alertService.error('No backup available for reset');
+      return;
+    }
+
+    const confirmed = confirm(
+      '⚠️ WARNING: This will reset ALL content to its original state!\n\n' +
+      'This action cannot be undone. Are you sure you want to continue?'
+    );
+
+    if (confirmed) {
+      try {
+        this.loading = true;
+        // Restore from backup
+        this.restoreFromBackup();
+        // Reload content to ensure everything is fresh
+        await this.loadContent();
+        this.alertService.success('All content has been reset to original state');
+      } catch (error) {
+        this.alertService.error('Failed to reset content');
+        console.error('Reset error:', error);
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
+
   constructor(
     private contentService: ContentService,
     private alertService: AlertService
@@ -51,6 +142,11 @@ export class ContentManagementComponent implements OnInit {
     try {
       this.content = await this.contentService.getAdminContent().toPromise();
       this.initializeTextContent();
+      
+      // Create backup on first successful load if no backup exists
+      if (!this.hasBackup) {
+        this.createBackup();
+      }
     } catch (error: any) {
       console.error('Error loading content:', error);
       if (error.message && error.message.includes('Unable to connect to the server')) {
@@ -478,5 +574,23 @@ export class ContentManagementComponent implements OnInit {
   // Check if we should show sample content
   shouldShowSampleContent(section: string): boolean {
     return !this.hasCurrentContentToShow(section) && (section === 'hero' || section === 'about');
+  }
+
+  // Get current content for display with better formatting
+  getCurrentContentDisplay(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    const content = this.getCurrentContent(section, key, type);
+    if (content) {
+      return `Current: ${content}`;
+    }
+    return '';
+  }
+
+  // Get current text content for input placeholders
+  getCurrentTextPlaceholder(section: string, key: string): string {
+    const currentText = this.getCurrentContent(section, key, 'text');
+    if (currentText) {
+      return `Current: ${currentText}`;
+    }
+    return `Enter ${key}`;
   }
 }

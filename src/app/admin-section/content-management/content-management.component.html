@@ -8,6 +8,14 @@
         <h1>Content Management</h1>
         <p>Manage your landing page content, images, and text</p>
       </div>
+      <div class="header-actions">
+        <button type="button" 
+                (click)="globalReset()" 
+                class="global-reset-btn"
+                title="Reset all content to original state">
+          <i class="fa fa-undo"></i> Reset All Content
+        </button>
+      </div>
     </div>
   </div>
 
@@ -34,6 +42,47 @@
       </div>
 
       <div class="upload-section">
+        <h3>Upload New Logo</h3>
+        
+        <!-- Logo Size Selection -->
+        <div class="size-selection">
+          <h4>Select Logo Size:</h4>
+          <div class="size-options">
+            <div class="size-option" *ngFor="let size of sizePresets | keyvalue">
+              <input type="radio" 
+                     [id]="'logo-size-' + size.key" 
+                     name="logoSize" 
+                     [value]="size.key"
+                     [(ngModel)]="selectedImageSize"
+                     (change)="updateCustomDimensions()">
+              <label [for]="'logo-size-' + size.key">{{ size.value.label }}</label>
+            </div>
+          </div>
+          
+          <!-- Custom Size Inputs for Logo -->
+          <div class="custom-size-inputs" *ngIf="selectedImageSize === 'custom'">
+            <div class="dimension-input">
+              <label>Width (px):</label>
+              <input type="number" 
+                     [(ngModel)]="customWidth" 
+                     (input)="updateCustomDimensions()"
+                     min="50" 
+                     max="500">
+            </div>
+            <div class="dimension-input">
+              <label>Height (px):</label>
+              <input type="number" 
+                     [(ngModel)]="customHeight" 
+                     (input)="updateCustomDimensions()"
+                     min="50" 
+                     max="500">
+            </div>
+            <div class="dimension-preview">
+              <small>Final size: {{ customWidth }} × {{ customHeight }} pixels</small>
+            </div>
+          </div>
+        </div>
+        
         <div class="file-input-group">
           <label for="logo-upload">Select New Logo:</label>
           <input type="file" id="logo-upload" 
@@ -81,29 +130,30 @@
         <div class="text-inputs">
           <div class="input-group">
             <label>Title:</label>
-            <input type="text" 
-                   [(ngModel)]="textContent[section.id + '_title']" 
-                   [placeholder]="'Current: ' + getCurrentContent(section.id, 'title') || 'Enter title'"
+            <input type="text"
+                   [(ngModel)]="textContent[section.id + '_title']"
+                   [placeholder]="getCurrentTextPlaceholder(section.id, 'title')"
                    [value]="getCurrentTextValue(section.id, 'title')">
-            <button type="button" 
-                    (click)="updateText(section.id, 'title')" 
-                    [disabled]="uploading" 
-                    class="update-btn">
-              Update
-            </button>
+            <div class="current-content-hint" *ngIf="getCurrentContent(section.id, 'title')">
+              <strong>Current:</strong> {{ getCurrentContent(section.id, 'title') }}
+            </div>
+            <button type="button"
+                    (click)="updateText(section.id, 'title')"
+                    [disabled]="uploading"
+                    class="update-btn">Update</button>
           </div>
-          
           <div class="input-group">
             <label>Description:</label>
-            <textarea [(ngModel)]="textContent[section.id + '_description']" 
-                      [placeholder]="'Current: ' + getCurrentContent(section.id, 'description') || 'Enter description'"
+            <textarea [(ngModel)]="textContent[section.id + '_description']"
+                      [placeholder]="getCurrentTextPlaceholder(section.id, 'description')"
                       [value]="getCurrentTextValue(section.id, 'description')"></textarea>
-            <button type="button" 
-                    (click)="updateText(section.id, 'description')" 
-                    [disabled]="uploading" 
-                    class="update-btn">
-              Update
-            </button>
+            <div class="current-content-hint" *ngIf="getCurrentContent(section.id, 'description')">
+              <strong>Current:</strong> {{ getCurrentContent(section.id, 'description') }}
+            </div>
+            <button type="button"
+                    (click)="updateText(section.id, 'description')"
+                    [disabled]="uploading"
+                    class="update-btn">Update</button>
           </div>
         </div>
       </div>
@@ -127,6 +177,46 @@
       <!-- Image Upload -->
       <div class="image-upload-section">
         <h3>Images</h3>
+        
+        <!-- Image Size Selection -->
+        <div class="size-selection">
+          <h4>Select Image Size:</h4>
+          <div class="size-options">
+            <div class="size-option" *ngFor="let size of sizePresets | keyvalue">
+              <input type="radio" 
+                     [id]="'size-' + size.key" 
+                     name="imageSize" 
+                     [value]="size.key"
+                     [(ngModel)]="selectedImageSize"
+                     (change)="updateCustomDimensions()">
+              <label [for]="'size-' + size.key">{{ size.value.label }}</label>
+            </div>
+          </div>
+          
+          <!-- Custom Size Inputs -->
+          <div class="custom-size-inputs" *ngIf="selectedImageSize === 'custom'">
+            <div class="dimension-input">
+              <label>Width (px):</label>
+              <input type="number" 
+                     [(ngModel)]="customWidth" 
+                     (input)="updateCustomDimensions()"
+                     min="100" 
+                     max="3000">
+            </div>
+            <div class="dimension-input">
+              <label>Height (px):</label>
+              <input type="number" 
+                     [(ngModel)]="customHeight" 
+                     (input)="updateCustomDimensions()"
+                     min="100" 
+                     max="3000">
+            </div>
+            <div class="dimension-preview">
+              <small>Final size: {{ customWidth }} × {{ customHeight }} pixels</small>
+            </div>
+          </div>
+        </div>
+        
         <div class="upload-controls">
           <div class="file-input-group">
             <label [for]="'image-upload-' + section.id">Select Image:</label>
