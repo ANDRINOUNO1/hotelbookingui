@@ -128,7 +128,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
           if (isValidFormat) {
             // If format is correct but API failed, allow it (graceful degradation)
             this.phoneValid = true;
-            return null;
+            return of (null);
           } else {
             return of({ invalidPhoneApi: true });
           }
