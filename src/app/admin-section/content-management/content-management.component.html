@@ -4,6 +4,15 @@
     <p>Manage your landing page content, images, and text</p>
   </div>
 
+  <!-- Backend Status Indicator -->
+  <div class="backend-status" *ngIf="!loading && (!content || Object.keys(content).length === 0 || (content.hero && content.hero.length === 0))">
+    <div class="status-warning">
+      <i class="fa fa-exclamation-triangle"></i>
+      <p>Backend server is not running. Content management features will not work until the backend is started.</p>
+      <p><strong>To fix this:</strong> Start your backend server by running <code>npm start</code> in the <code>deploymentbackend</code> directory.</p>
+    </div>
+  </div>
+
   <div class="loading-spinner" *ngIf="loading">
     <div class="spinner"></div>
     <p>Loading content...</p>
@@ -17,10 +26,9 @@
         <p>Update your website logo</p>
       </div>
       
-      <div class="current-logo" *ngIf="getContentByKey('header', 'main-logo')">
+      <div class="current-logo" *ngIf="getCurrentLogo()">
         <h3>Current Logo:</h3>
-        <img [src]="getContentByKey('header', 'main-logo')?.optimizedUrl || getContentByKey('header', 'main-logo')?.value" 
-             alt="Current Logo" class="logo-preview">
+        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
       </div>
 
       <div class="upload-section">
@@ -56,12 +64,20 @@
       <!-- Text Content -->
       <div class="text-content-section">
         <h3>Text Content</h3>
+        <div class="text-actions">
+          <button type="button" 
+                  (click)="resetTextContent()" 
+                  class="reset-btn"
+                  title="Reset to current values">
+            <i class="fa fa-undo"></i> Reset to Current
+          </button>
+        </div>
         <div class="text-inputs">
           <div class="input-group">
             <label>Title:</label>
             <input type="text" 
                    [(ngModel)]="textContent[section.id + '_title']" 
-                   placeholder="Enter title">
+                   [placeholder]="'Current: ' + getCurrentContent(section.id, 'title') || 'Enter title'">
             <button type="button" 
                     (click)="updateText(section.id, 'title')" 
                     [disabled]="uploading" 
@@ -73,13 +89,29 @@
           <div class="input-group">
             <label>Description:</label>
             <textarea [(ngModel)]="textContent[section.id + '_description']" 
-                      placeholder="Enter description"></textarea>
+                      [placeholder]="'Current: ' + getCurrentContent(section.id, 'description') || 'Enter description'"></textarea>
             <button type="button" 
                     (click)="updateText(section.id, 'description')" 
                     [disabled]="uploading" 
                     class="update-btn">
               Update
             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Images Display -->
+      <div class="current-images-section" *ngIf="getContentBySection(section.id).some(item => item.type === 'image')">
+        <h3>Current Images</h3>
+        <div class="current-images-grid">
+          <div class="current-image-item" *ngFor="let item of getContentBySection(section.id).filter(i => i.type === 'image')">
+            <img [src]="item.optimizedUrl || item.value" 
+                 [alt]="item.altText || item.key"
+                 class="current-image-preview">
+            <div class="image-info">
+              <span class="image-key">{{ item.key }}</span>
+              <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
+            </div>
           </div>
         </div>
       </div>

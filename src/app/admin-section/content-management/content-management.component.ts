@@ -55,8 +55,15 @@ export class ContentManagementComponent implements OnInit {
       } else {
         this.alertService.error('Failed to load content: ' + (error.message || 'Unknown error'));
       }
-      // Initialize with empty content to prevent further errors
-      this.content = {};
+      // Initialize with empty content structure to prevent further errors
+      this.content = {
+        hero: [],
+        about: [],
+        services: [],
+        rooms: [],
+        contact: [],
+        header: []
+      };
       this.initializeTextContent();
     } finally {
       this.loading = false;
@@ -66,14 +73,79 @@ export class ContentManagementComponent implements OnInit {
   initializeTextContent(): void {
     // Initialize text content from loaded data
     this.sections.forEach(section => {
-      if (this.content[section.id]) {
+      if (this.content && this.content[section.id] && Array.isArray(this.content[section.id])) {
         this.content[section.id].forEach((item: ContentItem) => {
-          if (item.type === 'text') {
-            this.textContent[`${section.id}_${item.key}`] = item.value || '';
+          if (item && item.type === 'text') {
+            const key = `${section.id}_${item.key}`;
+            // Only set if not already set (to preserve user input)
+            if (!this.textContent[key]) {
+              this.textContent[key] = item.value || '';
+            }
           }
         });
       }
     });
+  }
+
+  // Reset text content to current values
+  resetTextContent(): void {
+    this.sections.forEach(section => {
+      if (this.content && this.content[section.id] && Array.isArray(this.content[section.id])) {
+        this.content[section.id].forEach((item: ContentItem) => {
+          if (item && item.type === 'text') {
+            const key = `${section.id}_${item.key}`;
+            this.textContent[key] = item.value || '';
+          }
+        });
+      }
+    });
+  }
+
+  // Get current content value for display
+  getCurrentContent(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    if (!this.content || !this.content[section]) return '';
+    
+    const sectionContent = this.content[section];
+    const item = sectionContent.find((content: ContentItem) => content.key === key && content.type === type);
+    
+    if (item) {
+      if (type === 'text') {
+        return item.value || '';
+      } else if (type === 'image' || type === 'logo') {
+        return item.optimizedUrl || item.value || '';
+      }
+    }
+    
+    return '';
+  }
+
+  // Get current content for specific sections
+  getCurrentLogo(): string {
+    return this.getCurrentContent('header', 'main-logo', 'logo');
+  }
+
+  getCurrentHeroImages(): string[] {
+    if (!this.content || !this.content['hero']) return [];
+    
+    return this.content['hero']
+      .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
+      .map((item: ContentItem) => item.optimizedUrl || item.value)
+      .filter(Boolean);
+  }
+
+  getCurrentAboutImages(): { [key: string]: string } {
+    const images: { [key: string]: string } = {};
+    
+    if (this.content && this.content['about']) {
+      this.content['about'].forEach((item: ContentItem) => {
+        if (item.type === 'image') {
+          const key = item.key.replace('-image', '');
+          images[key] = item.optimizedUrl || item.value || '';
+        }
+      });
+    }
+    
+    return images;
   }
 
   onFileSelected(event: any, type: 'image' | 'logo' | 'gallery'): void {
