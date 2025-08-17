@@ -282,6 +282,20 @@ export class ContentManagementComponent implements OnInit {
     return sectionContent.length > 0;
   }
 
+  getImageContent(section: string): ContentItem[] {
+    const sectionContent = this.getContentBySection(section);
+    return sectionContent.filter(item => item.type === 'image');
+  }
+
+  getTextContent(section: string): ContentItem[] {
+    const sectionContent = this.getContentBySection(section);
+    return sectionContent.filter(item => item.type === 'text');
+  }
+
+  getAllContent(section: string): ContentItem[] {
+    return this.getContentBySection(section);
+  }
+
   getContentKeys(): string[] {
     return this.content ? Object.keys(this.content) : [];
   }
