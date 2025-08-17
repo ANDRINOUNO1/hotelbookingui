@@ -333,6 +333,18 @@ export class ContentManagementComponent implements OnInit {
     return this.contentService.getOptimizedImageUrl(publicId, type);
   }
 
+  // Get section location description
+  getSectionLocation(sectionId: string): string {
+    const locations: { [key: string]: string } = {
+      'hero': 'Hero section (main banner at top of page)',
+      'about': 'About section (below hero, shows staff, food, pool info)',
+      'services': 'Services section (amenities and features)',
+      'rooms': 'Rooms section (room showcase and gallery)',
+      'contact': 'Contact section (contact information and form)'
+    };
+    return locations[sectionId] || 'Main content area';
+  }
+
   clearFileInput(input: HTMLInputElement | null): void {
     if (input) {
       input.value = '';

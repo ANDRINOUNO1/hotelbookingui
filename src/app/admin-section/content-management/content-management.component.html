@@ -1,15 +1,13 @@
 <div class="content-management-container">
   <div class="header">
-    <h1>Content Management</h1>
-    <p>Manage your landing page content, images, and text</p>
-  </div>
-
-  <!-- Backend Status Indicator -->
-  <div class="backend-status" *ngIf="!loading && (!hasContent() || !hasHeroContent())">
-    <div class="status-warning">
-      <i class="fa fa-exclamation-triangle"></i>
-      <p>Backend server is not running. Content management features will not work until the backend is started.</p>
-      <p><strong>To fix this:</strong> Start your backend server by running <code>npm start</code> in the <code>deploymentbackend</code> directory.</p>
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="header-logo">
+      </div>
+      <div class="title-section">
+        <h1>Content Management</h1>
+        <p>Manage your landing page content, images, and text</p>
+      </div>
     </div>
   </div>
 
@@ -24,6 +22,10 @@
       <div class="section-header">
         <h2>Logo Management</h2>
         <p>Update your website logo</p>
+        <div class="section-location">
+          <i class="fa fa-map-marker-alt"></i>
+          <span>Located in: Header section (top of website)</span>
+        </div>
       </div>
       
       <div class="current-logo" *ngIf="getCurrentLogo()">
@@ -59,6 +61,10 @@
       <div class="section-header">
         <h2>{{ section.name }}</h2>
         <p>{{ section.description }}</p>
+        <div class="section-location">
+          <i class="fa fa-map-marker-alt"></i>
+          <span>Located in: {{ getSectionLocation(section.id) }}</span>
+        </div>
       </div>
 
       <!-- Text Content -->
