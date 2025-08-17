@@ -32,7 +32,7 @@
                  class="file-input">
           <div class="file-info" *ngIf="selectedLogo">
             <span>{{ selectedLogo.name }} ({{ getFileSize(selectedLogo) }})</span>    
-            <button type="button" (click)="selectedLogo = null; clearFileInput($event.target as HTMLInputElement)" class="clear-btn">Clear</button>
+            <button type="button" (click)="selectedLogo = null; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
           </div>
         </div>
         
@@ -97,7 +97,7 @@
                    class="file-input">
             <div class="file-info" *ngIf="selectedFile">
               <span>{{ selectedFile.name }} ({{ getFileSize(selectedFile) }})</span>  
-              <button type="button" (click)="selectedFile = null; clearFileInput($event.target as HTMLInputElement)" class="clear-btn">Clear</button>
+              <button type="button" (click)="selectedFile = null; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
             </div>
           </div>
           
@@ -166,7 +166,7 @@
                    class="file-input">
             <div class="file-info" *ngIf="selectedGalleryFiles.length > 0">
               <span>{{ selectedGalleryFiles.length }} file(s) selected</span>
-              <button type="button" (click)="selectedGalleryFiles = []; clearFileInput($event.target as HTMLInputElement)" class="clear-btn">Clear</button>
+              <button type="button" (click)="selectedGalleryFiles = []; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
             </div>
           </div>
           

@@ -199,6 +199,13 @@ export class ContentManagementComponent implements OnInit {
     }
   }
 
+  clearFileInputFromEvent(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      target.value = '';
+    }
+  }
+
   getFileSize(file: File | null): string {
     if (!file) return '0 MB';
     const sizeInMB = file.size / (1024 * 1024);
