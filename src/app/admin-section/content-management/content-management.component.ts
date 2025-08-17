@@ -34,6 +34,9 @@ export class ContentManagementComponent implements OnInit {
     { id: 'contact', name: 'Contact Section', description: 'Contact information' }
   ];
 
+  // Store original content values
+  private originalContent: { [key: string]: string } = {};
+
   constructor(
     private contentService: ContentService,
     private alertService: AlertService
@@ -70,6 +73,7 @@ export class ContentManagementComponent implements OnInit {
     }
   }
 
+  // Initialize text content from loaded data
   initializeTextContent(): void {
     // Initialize text content from loaded data
     this.sections.forEach(section => {
@@ -77,32 +81,43 @@ export class ContentManagementComponent implements OnInit {
         this.content[section.id].forEach((item: ContentItem) => {
           if (item && item.type === 'text') {
             const key = `${section.id}_${item.key}`;
-           
+            // Always set the current value to ensure input fields are populated
             this.textContent[key] = item.value || '';
+            // Store original value for reset functionality
+            this.originalContent[key] = item.value || '';
           }
         });
       }
       
-      
+      // Initialize with default values if no content exists
       if (!this.textContent[`${section.id}_title`]) {
         this.textContent[`${section.id}_title`] = '';
+        this.originalContent[`${section.id}_title`] = '';
       }
       if (!this.textContent[`${section.id}_description`]) {
         this.textContent[`${section.id}_description`] = '';
+        this.originalContent[`${section.id}_description`] = '';
       }
     });
   }
 
-  // Reset text content to current values
+  // Reset text content to original values
   resetTextContent(): void {
     this.sections.forEach(section => {
-      if (this.content && this.content[section.id] && Array.isArray(this.content[section.id])) {
-        this.content[section.id].forEach((item: ContentItem) => {
-          if (item && item.type === 'text') {
-            const key = `${section.id}_${item.key}`;
-            this.textContent[key] = item.value || '';
-          }
-        });
+      const titleKey = `${section.id}_title`;
+      const descKey = `${section.id}_description`;
+      
+      // Reset to original values if they exist, otherwise to current content
+      if (this.originalContent[titleKey] !== undefined) {
+        this.textContent[titleKey] = this.originalContent[titleKey];
+      } else {
+        this.textContent[titleKey] = this.getCurrentContent(section.id, 'title') || '';
+      }
+      
+      if (this.originalContent[descKey] !== undefined) {
+        this.textContent[descKey] = this.originalContent[descKey];
+      } else {
+        this.textContent[descKey] = this.getCurrentContent(section.id, 'description') || '';
       }
     });
   }
@@ -297,9 +312,33 @@ export class ContentManagementComponent implements OnInit {
   // Check if there's current content to display
   hasCurrentContentToShow(section: string): boolean {
     const sectionContent = this.getContentBySection(section);
-    return sectionContent.length > 0 && sectionContent.some(item => 
-      item.type === 'image' || item.type === 'logo' || item.type === 'text'
-    );
+    return sectionContent.length > 0;
+  }
+
+  // Check if there's any content in the system
+  hasAnyContent(): boolean {
+    return this.content && Object.keys(this.content).length > 0 && 
+           Object.values(this.content).some(section => Array.isArray(section) && section.length > 0);
+  }
+
+  // Get current content for display with better fallback
+  getCurrentContentForDisplay(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    if (!this.content || !this.content[section]) return '';
+    
+    const sectionContent = this.content[section];
+    if (!Array.isArray(sectionContent)) return '';
+    
+    const item = sectionContent.find((content: ContentItem) => content.key === key && content.type === type);
+    
+    if (item) {
+      if (type === 'text') {
+        return item.value || '';
+      } else if (type === 'image' || type === 'logo') {
+        return item.optimizedUrl || item.value || '';
+      }
+    }
+    
+    return '';
   }
 
   getImageContent(section: string): ContentItem[] {
@@ -366,5 +405,78 @@ export class ContentManagementComponent implements OnInit {
 
   isImageFile(file: File): boolean {
     return file.type.startsWith('image/');
+  }
+
+  // Get sample content for demonstration when no real content exists
+  getSampleContent(section: string): ContentItem[] {
+    const sampleContent: { [key: string]: ContentItem[] } = {
+      'hero': [
+        {
+          id: 1,
+          section: 'hero',
+          type: 'text',
+          key: 'title',
+          value: 'Welcome to BC Flats',
+          publicId: undefined,
+          altText: undefined,
+          order: 1,
+          isActive: true,
+          metadata: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: 2,
+          section: 'hero',
+          type: 'text',
+          key: 'description',
+          value: 'Experience luxury and comfort in our premium accommodations',
+          publicId: undefined,
+          altText: undefined,
+          order: 2,
+          isActive: true,
+          metadata: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      ],
+      'about': [
+        {
+          id: 3,
+          section: 'about',
+          type: 'text',
+          key: 'title',
+          value: 'About BC Flats',
+          publicId: undefined,
+          altText: undefined,
+          order: 1,
+          isActive: true,
+          metadata: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: 4,
+          section: 'about',
+          type: 'text',
+          key: 'description',
+          value: 'We provide exceptional service and unforgettable experiences',
+          publicId: undefined,
+          altText: undefined,
+          order: 2,
+          isActive: true,
+          metadata: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      ]
+    };
+    
+    return sampleContent[section] || [];
+  }
+
+  // Check if we should show sample content
+  shouldShowSampleContent(section: string): boolean {
+    return !this.hasCurrentContentToShow(section) && (section === 'hero' || section === 'about');
   }
 }

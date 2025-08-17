@@ -261,7 +261,8 @@
           border-radius: 6px;
           font-size: 1rem;
           transition: border-color 0.3s ease;
-          background: #fafafa;
+          background: #ffffff;
+          color: #000000;
           
           &:focus {
             outline: none;
@@ -342,11 +343,18 @@
           border: 2px solid #e9ecef;
           border-radius: 6px;
           font-size: 1rem;
+          background: #ffffff;
+          color: #000000;
           
           &:focus {
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+          }
+          
+          &::placeholder {
+            color: #95a5a6;
+            font-style: italic;
           }
         }
       }
@@ -564,6 +572,35 @@
             font-weight: 600;
             color: #495057;
           }
+        }
+      }
+    }
+
+    .sample-content {
+      margin-top: 2rem;
+      
+      h3 {
+        font-size: 1.3rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-style: italic;
+      }
+      
+      .sample-item {
+        opacity: 0.7;
+        border-style: dashed;
+        
+        .sample-type {
+          background: #6c757d;
+        }
+        
+        .sample-label {
+          display: block;
+          color: #6c757d;
+          font-size: 0.8rem;
+          font-style: italic;
+          margin-top: 0.25rem;
         }
       }
     }

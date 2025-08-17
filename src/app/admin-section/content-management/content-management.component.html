@@ -192,8 +192,28 @@
         </div>
       </div>
 
+      <!-- Sample Content Display -->
+      <div class="sample-content" *ngIf="shouldShowSampleContent(section.id)">
+        <h3>Sample Content (Demo)</h3>
+        <div class="content-grid">
+          <div class="content-item sample-item" *ngFor="let item of getSampleContent(section.id)">
+            <div class="content-preview">
+              <div *ngIf="item.type === 'text'" class="text-preview">
+                <strong>{{ item.key }}:</strong> {{ item.value }}
+              </div>
+            </div>
+            
+            <div class="content-info">
+              <span class="content-type sample-type">{{ item.type }}</span>
+              <span class="content-key">{{ item.key }}</span>
+              <span class="sample-label">Sample Content</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- No Content Message -->
-      <div class="no-content-message" *ngIf="!hasCurrentContentToShow(section.id)">
+      <div class="no-content-message" *ngIf="!hasCurrentContentToShow(section.id) && !shouldShowSampleContent(section.id)">
         <div class="message-box">
           <i class="fa fa-info-circle"></i>
           <p>No content has been added to this section yet.</p>
