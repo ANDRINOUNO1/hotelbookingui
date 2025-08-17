@@ -22,13 +22,6 @@ export class ContentManagementComponent implements OnInit {
   selectedGalleryFiles: File[] = [];
   altText: string = '';
   
-  // Image size and cropping
-  selectedImageSize: string = 'medium';
-  customWidth: number = 800;
-  customHeight: number = 600;
-  showCropper: boolean = false;
-  croppedImage: string | null = null;
-  
   // Backup system
   private contentBackup: any = null;
   private hasBackup: boolean = false;
@@ -48,41 +41,6 @@ export class ContentManagementComponent implements OnInit {
   // Store original content values
   private originalContent: { [key: string]: string } = {};
 
-  // Size presets for different content types
-  readonly sizePresets = {
-    thumbnail: { width: 300, height: 200, label: 'Thumbnail (300x200)' },
-    medium: { width: 800, height: 600, label: 'Medium (800x600)' },
-    large: { width: 1920, height: 1080, label: 'Large (1920x1080)' },
-    custom: { width: 0, height: 0, label: 'Custom Size' }
-  };
-
-  // Get dimensions based on selected size
-  getImageDimensions(): { width: number, height: number } {
-    if (this.selectedImageSize === 'custom') {
-      return { width: this.customWidth, height: this.customHeight };
-    }
-    return this.sizePresets[this.selectedImageSize as keyof typeof this.sizePresets];
-  }
-
-  // Update custom dimensions
-  updateCustomDimensions(): void {
-    if (this.selectedImageSize === 'custom') {
-      // Maintain aspect ratio if possible
-      if (this.selectedFile) {
-        const img = new Image();
-        img.onload = () => {
-          const aspectRatio = img.width / img.height;
-          if (this.customWidth > 0) {
-            this.customHeight = Math.round(this.customWidth / aspectRatio);
-          } else if (this.customHeight > 0) {
-            this.customWidth = Math.round(this.customHeight * aspectRatio);
-          }
-        };
-        img.src = URL.createObjectURL(this.selectedFile);
-      }
-    }
-  }
-
   // Create backup of current content
   createBackup(): void {
     this.contentBackup = JSON.parse(JSON.stringify(this.content));
@@ -90,35 +48,113 @@ export class ContentManagementComponent implements OnInit {
     console.log('Content backup created');
   }
 
-  // Restore content from backup
-  restoreFromBackup(): void {
-    if (this.contentBackup) {
-      this.content = JSON.parse(JSON.stringify(this.contentBackup));
-      this.initializeTextContent();
-      this.alertService.success('Content restored from backup');
-    }
-  }
-
-  // Global reset to original content
+  // Global reset to original content - this will reset the home page to show original content
   async globalReset(): Promise<void> {
-    if (!this.hasBackup) {
-      this.alertService.error('No backup available for reset');
-      return;
-    }
-
     const confirmed = confirm(
       '⚠️ WARNING: This will reset ALL content to its original state!\n\n' +
+      'This will restore the home page to show:\n' +
+      '• Original BC logo (assets/images/bcflats.png)\n' +
+      '• Original hero images and text\n' +
+      '• Original about section content\n' +
+      '• Original services and room images\n' +
+      '• All other content to default values\n\n' +
       'This action cannot be undone. Are you sure you want to continue?'
     );
 
     if (confirmed) {
       try {
         this.loading = true;
-        // Restore from backup
-        this.restoreFromBackup();
-        // Reload content to ensure everything is fresh
-        await this.loadContent();
-        this.alertService.success('All content has been reset to original state');
+        
+        // Reset to original default content
+        this.content = {
+          header: [
+            {
+              id: 1,
+              section: 'header',
+              type: 'logo',
+              key: 'main-logo',
+              value: 'assets/images/bcflats.png',
+              publicId: null,
+              altText: 'BC Flats Logo',
+              order: 1,
+              isActive: true,
+              metadata: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          ],
+          hero: [
+            {
+              id: 2,
+              section: 'hero',
+              type: 'text',
+              key: 'title',
+              value: 'Welcome to BC Flats',
+              publicId: null,
+              altText: null,
+              order: 1,
+              isActive: true,
+              metadata: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            },
+            {
+              id: 3,
+              section: 'hero',
+              type: 'text',
+              key: 'description',
+              value: 'Experience luxury and comfort in our premium accommodations',
+              publicId: null,
+              altText: null,
+              order: 2,
+              isActive: true,
+              metadata: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          ],
+          about: [
+            {
+              id: 4,
+              section: 'about',
+              type: 'text',
+              key: 'title',
+              value: 'About BC Flats',
+              publicId: null,
+              altText: null,
+              order: 1,
+              isActive: true,
+              metadata: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            },
+            {
+              id: 5,
+              section: 'about',
+              type: 'text',
+              key: 'description',
+              value: 'We provide exceptional service and unforgettable experiences',
+              publicId: null,
+              altText: null,
+              order: 2,
+              isActive: true,
+              metadata: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          ],
+          services: [],
+          rooms: [],
+          contact: []
+        };
+
+        // Update text content to reflect the reset
+        this.initializeTextContent();
+        
+        // Create new backup of the reset content
+        this.createBackup();
+        
+        this.alertService.success('All content has been reset to original state! The home page will now show the original BC logo and default content.');
       } catch (error) {
         this.alertService.error('Failed to reset content');
         console.error('Reset error:', error);

@@ -44,45 +44,6 @@
       <div class="upload-section">
         <h3>Upload New Logo</h3>
         
-        <!-- Logo Size Selection -->
-        <div class="size-selection">
-          <h4>Select Logo Size:</h4>
-          <div class="size-options">
-            <div class="size-option" *ngFor="let size of sizePresets | keyvalue">
-              <input type="radio" 
-                     [id]="'logo-size-' + size.key" 
-                     name="logoSize" 
-                     [value]="size.key"
-                     [(ngModel)]="selectedImageSize"
-                     (change)="updateCustomDimensions()">
-              <label [for]="'logo-size-' + size.key">{{ size.value.label }}</label>
-            </div>
-          </div>
-          
-          <!-- Custom Size Inputs for Logo -->
-          <div class="custom-size-inputs" *ngIf="selectedImageSize === 'custom'">
-            <div class="dimension-input">
-              <label>Width (px):</label>
-              <input type="number" 
-                     [(ngModel)]="customWidth" 
-                     (input)="updateCustomDimensions()"
-                     min="50" 
-                     max="500">
-            </div>
-            <div class="dimension-input">
-              <label>Height (px):</label>
-              <input type="number" 
-                     [(ngModel)]="customHeight" 
-                     (input)="updateCustomDimensions()"
-                     min="50" 
-                     max="500">
-            </div>
-            <div class="dimension-preview">
-              <small>Final size: {{ customWidth }} × {{ customHeight }} pixels</small>
-            </div>
-          </div>
-        </div>
-        
         <div class="file-input-group">
           <label for="logo-upload">Select New Logo:</label>
           <input type="file" id="logo-upload" 
@@ -177,45 +138,6 @@
       <!-- Image Upload -->
       <div class="image-upload-section">
         <h3>Images</h3>
-        
-        <!-- Image Size Selection -->
-        <div class="size-selection">
-          <h4>Select Image Size:</h4>
-          <div class="size-options">
-            <div class="size-option" *ngFor="let size of sizePresets | keyvalue">
-              <input type="radio" 
-                     [id]="'size-' + size.key" 
-                     name="imageSize" 
-                     [value]="size.key"
-                     [(ngModel)]="selectedImageSize"
-                     (change)="updateCustomDimensions()">
-              <label [for]="'size-' + size.key">{{ size.value.label }}</label>
-            </div>
-          </div>
-          
-          <!-- Custom Size Inputs -->
-          <div class="custom-size-inputs" *ngIf="selectedImageSize === 'custom'">
-            <div class="dimension-input">
-              <label>Width (px):</label>
-              <input type="number" 
-                     [(ngModel)]="customWidth" 
-                     (input)="updateCustomDimensions()"
-                     min="100" 
-                     max="3000">
-            </div>
-            <div class="dimension-input">
-              <label>Height (px):</label>
-              <input type="number" 
-                     [(ngModel)]="customHeight" 
-                     (input)="updateCustomDimensions()"
-                     min="100" 
-                     max="3000">
-            </div>
-            <div class="dimension-preview">
-              <small>Final size: {{ customWidth }} × {{ customHeight }} pixels</small>
-            </div>
-          </div>
-        </div>
         
         <div class="upload-controls">
           <div class="file-input-group">

@@ -358,94 +358,6 @@
         font-weight: 600;
       }
 
-      .size-selection {
-        margin-bottom: 1.5rem;
-        padding: 1.5rem;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border: 1px solid #e9ecef;
-        
-        h4 {
-          font-size: 1.1rem;
-          color: #2c3e50;
-          margin-bottom: 1rem;
-          font-weight: 600;
-        }
-        
-        .size-options {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          margin-bottom: 1rem;
-          
-          .size-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            
-            input[type="radio"] {
-              margin: 0;
-            }
-            
-            label {
-              font-weight: 500;
-              color: #495057;
-              cursor: pointer;
-              font-size: 0.95rem;
-            }
-          }
-        }
-        
-        .custom-size-inputs {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-          margin-top: 1rem;
-          padding-top: 1rem;
-          border-top: 1px solid #dee2e6;
-          
-          .dimension-input {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            
-            label {
-              font-weight: 600;
-              color: #2c3e50;
-              font-size: 0.9rem;
-            }
-            
-            input {
-              padding: 0.5rem;
-              border: 2px solid #e9ecef;
-              border-radius: 4px;
-              font-size: 0.9rem;
-              background: white;
-              color: #000000;
-              
-              &:focus {
-                outline: none;
-                border-color: #3498db;
-                box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
-              }
-            }
-          }
-          
-          .dimension-preview {
-            grid-column: 1 / -1;
-            text-align: center;
-            
-            small {
-              color: #6c757d;
-              font-style: italic;
-              background: #e9ecef;
-              padding: 0.25rem 0.5rem;
-              border-radius: 4px;
-            }
-          }
-        }
-      }
-      
       .upload-controls {
         display: flex;
         flex-direction: column;
@@ -751,18 +663,6 @@
       
       .content-grid {
         grid-template-columns: 1fr;
-      }
-
-      .size-selection {
-        .size-options {
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        
-        .custom-size-inputs {
-          grid-template-columns: 1fr;
-          gap: 0.75rem;
-        }
       }
     }
   }
