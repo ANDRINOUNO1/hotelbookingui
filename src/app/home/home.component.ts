@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, Renderer2, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ Swiper.use([Navigation, Autoplay]);
 import flatpickr from 'flatpickr';
 import { ReservationComponent } from '../reservation/reservation.component';
 import { ContactMessageService } from '../_services/contact-message.service';
+import { ContentService, ContentItem } from '../_services/content.service';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,7 @@ import { ContactMessageService } from '../_services/contact-message.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements AfterViewInit, OnInit {
   title = 'hotel-reservation-app';
   isDarkMode = false;
 
@@ -118,12 +119,27 @@ export class HomeComponent implements AfterViewInit {
   isSubmitting = false;
 
 
+  // Content management properties
+  content: any = {};
+  logoUrl: string = 'assets/images/bcflats.png';
+  heroImages: string[] = [
+    'assets/images/Pool_home.jpg',
+    'assets/images/Beach_view.jpg',
+    'assets/images/Front_desk.jpg'
+  ];
+  aboutImages: { [key: string]: string } = {
+    staff: 'assets/images/Staff.jpg',
+    foods: 'assets/images/Foods.jpg',
+    pool: 'assets/images/Pool.jpg'
+  };
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private renderer: Renderer2,
     private router: Router,
     private http: HttpClient,
-    private contactMessageService: ContactMessageService
+    private contactMessageService: ContactMessageService,
+    private contentService: ContentService
   ) {}
 
   toggleMenu() {
@@ -138,6 +154,51 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngOnInit() {
+    this.loadContent();
+  }
+
+  async loadContent() {
+    try {
+      this.content = await this.contentService.getAllContent().toPromise();
+      
+      // Load logo
+      const logoContent = this.contentService.getContent('header', 'main-logo');
+      if (logoContent) {
+        this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
+      }
+      
+      // Load hero images
+      const heroContent = this.content['hero'] || [];
+      if (heroContent.length > 0) {
+        this.heroImages = heroContent
+          .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
+          .map((item: ContentItem) => item.optimizedUrl || item.value)
+          .filter(Boolean);
+      }
+      
+      // Load about section images
+      const aboutContent = this.content['about'] || [];
+      aboutContent.forEach((item: ContentItem) => {
+        if (item.type === 'image') {
+          this.aboutImages[item.key] = item.optimizedUrl || item.value;
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error loading content:', error);
+      // Fallback to default images if content loading fails
+    }
+  }
+
+  getHeroTitle(index: number): string {
+    const titles = ['luxurious rooms', 'foods and drinks', 'luxurious halls'];
+    return titles[index] || 'Welcome';
+  }
+
+  getContentText(section: string, key: string): string {
+    const sectionContent = this.content[section] || [];
+    const contentItem = sectionContent.find((item: ContentItem) => item.key === key && item.type === 'text');
+    return contentItem ? contentItem.value : '';
   }
 
   toggleDarkMode() {

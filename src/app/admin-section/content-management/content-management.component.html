@@ -1,0 +1,184 @@
+<div class="content-management-container">
+  <div class="header">
+    <h1>Content Management</h1>
+    <p>Manage your landing page content, images, and text</p>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading content...</p>
+  </div>
+
+  <div class="content-sections" *ngIf="!loading">
+    <!-- Logo Management -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Logo Management</h2>
+        <p>Update your website logo</p>
+      </div>
+      
+      <div class="current-logo" *ngIf="getContentByKey('header', 'main-logo')">
+        <h3>Current Logo:</h3>
+        <img [src]="getContentByKey('header', 'main-logo')?.optimizedUrl || getContentByKey('header', 'main-logo')?.value" 
+             alt="Current Logo" class="logo-preview">
+      </div>
+
+      <div class="upload-section">
+        <div class="file-input-group">
+          <label for="logo-upload">Select New Logo:</label>
+          <input type="file" id="logo-upload" 
+                 (change)="onFileSelected($event, 'logo')" 
+                 accept="image/*" 
+                 class="file-input">
+          <div class="file-info" *ngIf="selectedLogo">
+            <span>{{ selectedLogo.name }} ({{ getFileSize(selectedLogo) }})</span>
+            <button type="button" (click)="selectedLogo = null; clearFileInput($event.target)" class="clear-btn">Clear</button>
+          </div>
+        </div>
+        
+        <button type="button" 
+                (click)="uploadLogo()" 
+                [disabled]="!selectedLogo || uploading" 
+                class="upload-btn">
+          <span *ngIf="!uploading">Upload Logo</span>
+          <span *ngIf="uploading">Uploading...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section Management -->
+    <div class="section-card" *ngFor="let section of sections">
+      <div class="section-header">
+        <h2>{{ section.name }}</h2>
+        <p>{{ section.description }}</p>
+      </div>
+
+      <!-- Text Content -->
+      <div class="text-content-section">
+        <h3>Text Content</h3>
+        <div class="text-inputs">
+          <div class="input-group">
+            <label>Title:</label>
+            <input type="text" 
+                   [(ngModel)]="textContent[section.id + '_title']" 
+                   placeholder="Enter title">
+            <button type="button" 
+                    (click)="updateText(section.id, 'title')" 
+                    [disabled]="uploading" 
+                    class="update-btn">
+              Update
+            </button>
+          </div>
+          
+          <div class="input-group">
+            <label>Description:</label>
+            <textarea [(ngModel)]="textContent[section.id + '_description']" 
+                      placeholder="Enter description"></textarea>
+            <button type="button" 
+                    (click)="updateText(section.id, 'description')" 
+                    [disabled]="uploading" 
+                    class="update-btn">
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="image-upload-section">
+        <h3>Images</h3>
+        <div class="upload-controls">
+          <div class="file-input-group">
+            <label [for]="'image-upload-' + section.id">Select Image:</label>
+            <input type="file" 
+                   [id]="'image-upload-' + section.id"
+                   (change)="onFileSelected($event, 'image')" 
+                   accept="image/*" 
+                   class="file-input">
+            <div class="file-info" *ngIf="selectedFile">
+              <span>{{ selectedFile.name }} ({{ getFileSize(selectedFile) }})</span>
+              <button type="button" (click)="selectedFile = null; clearFileInput($event.target)" class="clear-btn">Clear</button>
+            </div>
+          </div>
+          
+          <div class="upload-actions">
+            <input type="text" 
+                   [(ngModel)]="altText" 
+                   placeholder="Alt text (optional)" 
+                   class="alt-text-input">
+            <button type="button" 
+                    (click)="uploadImage(section.id, 'main-image', altText)" 
+                    [disabled]="!selectedFile || uploading" 
+                    class="upload-btn">
+              <span *ngIf="!uploading">Upload Image</span>
+              <span *ngIf="uploading">Uploading...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Content Display -->
+      <div class="current-content">
+        <h3>Current Content</h3>
+        <div class="content-grid">
+          <div class="content-item" *ngFor="let item of getContentBySection(section.id)">
+            <div class="content-preview">
+              <img *ngIf="item.type === 'image' || item.type === 'logo'" 
+                   [src]="item.optimizedUrl || item.value" 
+                   [alt]="item.altText || item.key"
+                   class="content-image">
+              <div *ngIf="item.type === 'text'" class="text-preview">
+                <strong>{{ item.key }}:</strong> {{ item.value }}
+              </div>
+            </div>
+            
+            <div class="content-info">
+              <span class="content-type">{{ item.type }}</span>
+              <span class="content-key">{{ item.key }}</span>
+              <span class="content-date" *ngIf="item.updatedAt">
+                Updated: {{ item.updatedAt | date:'short' }}
+              </span>
+            </div>
+            
+            <div class="content-actions">
+              <button type="button" 
+                      (click)="deleteContent(item.id!)" 
+                      class="delete-btn"
+                      title="Delete content">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery Upload (for specific sections) -->
+      <div class="gallery-section" *ngIf="section.id === 'hero' || section.id === 'rooms'">
+        <h3>Gallery Images</h3>
+        <div class="gallery-upload">
+          <div class="file-input-group">
+            <label [for]="'gallery-upload-' + section.id">Select Multiple Images:</label>
+            <input type="file" 
+                   [id]="'gallery-upload-' + section.id"
+                   (change)="onFileSelected($event, 'gallery')" 
+                   accept="image/*" 
+                   multiple 
+                   class="file-input">
+            <div class="file-info" *ngIf="selectedGalleryFiles.length > 0">
+              <span>{{ selectedGalleryFiles.length }} files selected</span>
+              <button type="button" (click)="selectedGalleryFiles = []; clearFileInput($event.target)" class="clear-btn">Clear</button>
+            </div>
+          </div>
+          
+          <button type="button" 
+                  (click)="uploadGallery(section.id)" 
+                  [disabled]="selectedGalleryFiles.length === 0 || uploading" 
+                  class="upload-btn">
+            <span *ngIf="!uploading">Upload Gallery</span>
+            <span *ngIf="uploading">Uploading...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
