@@ -122,12 +122,13 @@ export class ContentService {
   getOptimizedImageUrl(publicId: string, type: string = 'default'): string {
     if (!publicId) return '';
     
-    const transformations = {
+    const transformations: { [key: string]: string } = {
       hero: 'w_1920,h_1080,c_fill,q_auto',
       thumbnail: 'w_300,h_200,c_fill,q_auto',
       room: 'w_800,h_600,c_fill,q_auto',
       logo: 'w_200,h_100,c_fit,q_auto',
-      gallery: 'w_600,h_400,c_fill,q_auto'
+      gallery: 'w_600,h_400,c_fill,q_auto',
+      default: 'w_800,h_600,c_fill,q_auto'
     };
 
     const transform = transformations[type] || transformations.default;

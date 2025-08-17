@@ -58,7 +58,7 @@
 
    <div class="row">
       <div class="image">
-         <img [src]="aboutImages.staff" alt="Best Staff">
+         <img [src]="aboutImages['staff']" alt="Best Staff">
       </div>
       <div class="content">
          <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
@@ -69,7 +69,7 @@
 
    <div class="row revers">
       <div class="image">
-         <img [src]="aboutImages.foods" alt="Best Foods">
+         <img [src]="aboutImages['foods']" alt="Best Foods">
       </div>
       <div class="content">
          <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
@@ -80,7 +80,7 @@
 
    <div class="row">
       <div class="image">
-         <img [src]="aboutImages.pool" alt="Swimming Pool">
+         <img [src]="aboutImages['pool']" alt="Swimming Pool">
       </div>
       <div class="content">
          <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>

@@ -162,7 +162,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
       this.content = await this.contentService.getAllContent().toPromise();
       
       // Load logo
-      const logoContent = this.contentService.getContent('header', 'main-logo');
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
       if (logoContent) {
         this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
       }
@@ -180,7 +180,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
       const aboutContent = this.content['about'] || [];
       aboutContent.forEach((item: ContentItem) => {
         if (item.type === 'image') {
-          this.aboutImages[item.key] = item.optimizedUrl || item.value;
+          const key = item.key.replace('-image', '');
+          const imageUrl = item.optimizedUrl || item.value;
+          if (imageUrl) {
+            this.aboutImages[key] = imageUrl;
+          }
         }
       });
       
