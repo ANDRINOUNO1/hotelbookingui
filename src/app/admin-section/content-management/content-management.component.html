@@ -77,7 +77,8 @@
             <label>Title:</label>
             <input type="text" 
                    [(ngModel)]="textContent[section.id + '_title']" 
-                   [placeholder]="'Current: ' + getCurrentContent(section.id, 'title') || 'Enter title'">
+                   [placeholder]="'Current: ' + getCurrentContent(section.id, 'title') || 'Enter title'"
+                   [value]="getCurrentTextValue(section.id, 'title')">
             <button type="button" 
                     (click)="updateText(section.id, 'title')" 
                     [disabled]="uploading" 
@@ -89,7 +90,8 @@
           <div class="input-group">
             <label>Description:</label>
             <textarea [(ngModel)]="textContent[section.id + '_description']" 
-                      [placeholder]="'Current: ' + getCurrentContent(section.id, 'description') || 'Enter description'"></textarea>
+                      [placeholder]="'Current: ' + getCurrentContent(section.id, 'description') || 'Enter description'"
+                      [value]="getCurrentTextValue(section.id, 'description')"></textarea>
             <button type="button" 
                     (click)="updateText(section.id, 'description')" 
                     [disabled]="uploading" 
@@ -150,7 +152,7 @@
       </div>
 
       <!-- Current Content Display -->
-      <div class="current-content" *ngIf="hasSectionContent(section.id)">
+      <div class="current-content" *ngIf="hasCurrentContentToShow(section.id)">
         <h3>Current Content</h3>
         <div class="content-grid">
           <div class="content-item" *ngFor="let item of getAllContent(section.id)">
@@ -160,7 +162,7 @@
                    [alt]="item.altText || item.key"
                    class="content-image">
               <div *ngIf="item.type === 'text'" class="text-preview">
-                <strong>{{ item.key }}:</strong> {{ item.value }}
+                <strong>{{ item.key }}:</strong> {{ item.value || 'No content' }}
               </div>
             </div>
             
@@ -181,6 +183,15 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- No Content Message -->
+      <div class="no-content-message" *ngIf="!hasCurrentContentToShow(section.id)">
+        <div class="message-box">
+          <i class="fa fa-info-circle"></i>
+          <p>No content has been added to this section yet.</p>
+          <p>Use the forms above to add text content and images.</p>
         </div>
       </div>
 

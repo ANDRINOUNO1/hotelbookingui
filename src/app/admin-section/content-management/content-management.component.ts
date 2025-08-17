@@ -77,12 +77,18 @@ export class ContentManagementComponent implements OnInit {
         this.content[section.id].forEach((item: ContentItem) => {
           if (item && item.type === 'text') {
             const key = `${section.id}_${item.key}`;
-            // Only set if not already set (to preserve user input)
-            if (!this.textContent[key]) {
-              this.textContent[key] = item.value || '';
-            }
+           
+            this.textContent[key] = item.value || '';
           }
         });
+      }
+      
+      
+      if (!this.textContent[`${section.id}_title`]) {
+        this.textContent[`${section.id}_title`] = '';
+      }
+      if (!this.textContent[`${section.id}_description`]) {
+        this.textContent[`${section.id}_description`] = '';
       }
     });
   }
@@ -117,6 +123,12 @@ export class ContentManagementComponent implements OnInit {
     }
     
     return '';
+  }
+
+  // Get current text content value for input fields
+  getCurrentTextValue(section: string, key: string): string {
+    const textKey = `${section}_${key}`;
+    return this.textContent[textKey] || '';
   }
 
   // Get current content for specific sections
@@ -280,6 +292,14 @@ export class ContentManagementComponent implements OnInit {
   hasSectionContent(section: string): boolean {
     const sectionContent = this.getContentBySection(section);
     return sectionContent.length > 0;
+  }
+
+  // Check if there's current content to display
+  hasCurrentContentToShow(section: string): boolean {
+    const sectionContent = this.getContentBySection(section);
+    return sectionContent.length > 0 && sectionContent.some(item => 
+      item.type === 'image' || item.type === 'logo' || item.type === 'text'
+    );
   }
 
   getImageContent(section: string): ContentItem[] {

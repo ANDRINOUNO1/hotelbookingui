@@ -524,6 +524,36 @@
         gap: 1rem;
       }
     }
+
+    .no-content-message {
+      margin-top: 2rem;
+      
+      .message-box {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        
+        i {
+          color: #6c757d;
+          font-size: 2rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+        
+        p {
+          color: #6c757d;
+          margin: 0.5rem 0;
+          font-size: 1rem;
+          
+          &:first-of-type {
+            font-weight: 600;
+            color: #495057;
+          }
+        }
+      }
+    }
   }
 }
 
