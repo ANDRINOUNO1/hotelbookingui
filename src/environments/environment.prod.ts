@@ -1,4 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4000'
+  apiUrl: 'https://deploymentbackend-production.up.railway.app',
+  cloudinary: {
+    cloudName: 'dsheuvqdc'
+  }
 };
