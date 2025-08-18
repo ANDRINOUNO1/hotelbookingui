@@ -139,6 +139,13 @@ export class ContentService {
     );
   }
 
+  // Reset all content to defaults (admin only)
+  resetAll(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-all`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Helper method to get optimized image URL
   getOptimizedImageUrl(publicId: string, type: string = 'default'): string {
     if (!publicId) return '';

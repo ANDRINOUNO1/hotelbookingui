@@ -65,6 +65,22 @@ export class ContentManagementComponent implements OnInit {
     );
 
     if (confirmed) {
+      this.loading = true;
+      this.contentService.resetAll().subscribe({
+        next: (data) => {
+          this.content = data || {};
+          this.initializeTextContent();
+          this.createBackup();
+          this.alertService.success('All content has been reset to original defaults and saved. Visit the home page to see the original logo, slider images, about images, services text, rooms, and FAQ restored.');
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Reset error:', err);
+          this.alertService.error('Failed to reset content. Please ensure you are logged in as admin and the backend is running.');
+          this.loading = false;
+        }
+      });
+      return;
       try {
         this.loading = true;
         
