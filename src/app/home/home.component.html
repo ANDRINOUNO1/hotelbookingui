@@ -4,7 +4,7 @@
 <section class="header">
   <div class="header-bar">
     <a href="#home" class="logo">
-      <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
+      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
     </a>
     <nav>
       <a href="#home">Home</a>
@@ -34,27 +34,10 @@
 
       <div class="swiper-wrapper">
 
-         <div class="box swiper-slide">
-            <img src="assets/images/home-img-1.jpg" alt="">
+         <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
+            <img [src]="image" [alt]="'Hero image ' + (i + 1)">
             <div class="flex">
-               <h3>luxurious rooms</h3>
-               
-            </div>
-         </div>
-
-         <div class="box swiper-slide">
-            <img src="assets/images/home-img-2.jpg" alt="">
-            <div class="flex">
-               <h3>foods and drinks</h3>
-               
-            </div>
-         </div>
-
-         <div class="box swiper-slide">
-            <img src="assets/images/home-img-3.jpg" alt="">
-            <div class="flex">
-               <h3>luxurious halls</h3>
-               
+               <h3>{{ getHeroTitle(i) }}</h3>
             </div>
          </div>
 
@@ -75,33 +58,33 @@
 
    <div class="row">
       <div class="image">
-         <img src="assets/images/about-img-1.jpg" alt="">
+         <img [src]="aboutImages['staff']" alt="Best Staff">
       </div>
       <div class="content">
-         <h3>best staff</h3>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi laborum maxime eius aliquid temporibus unde?</p>
+         <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
+         <p>{{ getContentText('about', 'staff-description') || 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.' }}</p>
          <a routerLink="/reserve" class="btn">make a reservation</a>
       </div>
    </div>
 
    <div class="row revers">
       <div class="image">
-         <img src="assets/images/about-img-2.jpg" alt="">
+         <img [src]="aboutImages['foods']" alt="Best Foods">
       </div>
       <div class="content">
-         <h3>best foods</h3>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi laborum maxime eius aliquid temporibus unde?</p>
-         <a href="#contact" class="btn">contact us</a>
+         <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
+         <p>{{ getContentText('about', 'foods-description') || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.' }}</p>
+         <a href="#footer" class="btn">contact us</a>
       </div>
    </div>
 
    <div class="row">
       <div class="image">
-         <img src="assets/images/about-img-3.jpg" alt="">
+         <img [src]="aboutImages['pool']" alt="Swimming Pool">
       </div>
       <div class="content">
-         <h3>swimming pool</h3>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi laborum maxime eius aliquid temporibus unde?</p>
+         <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
+         <p>{{ getContentText('about', 'pool-description') || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.' }}</p>
          <a href="#availability" class="btn">check availability</a>
       </div>
    </div>
