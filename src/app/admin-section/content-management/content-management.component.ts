@@ -29,6 +29,9 @@ export class ContentManagementComponent implements OnInit {
   // Text content
   textContent: { [key: string]: string } = {};
   
+  // Tab management
+  private activeTabs: { [key: string]: string } = {};
+  
   // Sections
   sections = [
     { id: 'hero', name: 'Hero Section', description: 'Main banner images and text' },
@@ -40,6 +43,43 @@ export class ContentManagementComponent implements OnInit {
 
   // Store original content values
   private originalContent: { [key: string]: string } = {};
+
+  // Text field definitions for each section
+  private textFields = {
+    hero: [
+      { key: 'title', label: 'Hero Title', type: 'input', placeholder: 'Enter hero title' },
+      { key: 'subtitle', label: 'Hero Subtitle', type: 'input', placeholder: 'Enter hero subtitle' }
+    ],
+    about: [
+      { key: 'staff-title', label: 'Staff Title', type: 'input', placeholder: 'Enter staff section title' },
+      { key: 'staff-description', label: 'Staff Description', type: 'textarea', placeholder: 'Enter staff description' },
+      { key: 'foods-title', label: 'Foods Title', type: 'input', placeholder: 'Enter foods section title' },
+      { key: 'foods-description', label: 'Foods Description', type: 'textarea', placeholder: 'Enter foods description' },
+      { key: 'pool-title', label: 'Pool Title', type: 'input', placeholder: 'Enter pool section title' },
+      { key: 'pool-description', label: 'Pool Description', type: 'textarea', placeholder: 'Enter pool description' }
+    ],
+    services: [
+      { key: 'food-drinks-title', label: 'Food & Drinks Title', type: 'input', placeholder: 'Enter food & drinks title' },
+      { key: 'food-drinks-description', label: 'Food & Drinks Description', type: 'textarea', placeholder: 'Enter food & drinks description' },
+      { key: 'outdoor-dining-title', label: 'Outdoor Dining Title', type: 'input', placeholder: 'Enter outdoor dining title' },
+      { key: 'outdoor-dining-description', label: 'Outdoor Dining Description', type: 'textarea', placeholder: 'Enter outdoor dining description' },
+      { key: 'beach-view-title', label: 'Beach View Title', type: 'input', placeholder: 'Enter beach view title' },
+      { key: 'beach-view-description', label: 'Beach View Description', type: 'textarea', placeholder: 'Enter beach view description' },
+      { key: 'decorations-title', label: 'Decorations Title', type: 'input', placeholder: 'Enter decorations title' },
+      { key: 'decorations-description', label: 'Decorations Description', type: 'textarea', placeholder: 'Enter decorations description' },
+      { key: 'swimming-pool-title', label: 'Swimming Pool Title', type: 'input', placeholder: 'Enter swimming pool title' },
+      { key: 'swimming-pool-description', label: 'Swimming Pool Description', type: 'textarea', placeholder: 'Enter swimming pool description' },
+      { key: 'resort-beach-title', label: 'Resort Beach Title', type: 'input', placeholder: 'Enter resort beach title' },
+      { key: 'resort-beach-description', label: 'Resort Beach Description', type: 'textarea', placeholder: 'Enter resort beach description' }
+    ],
+    contact: [
+      { key: 'contact-title', label: 'Contact Title', type: 'input', placeholder: 'Enter contact section title' },
+      { key: 'contact-subtitle', label: 'Contact Subtitle', type: 'input', placeholder: 'Enter contact section subtitle' },
+      { key: 'contact-address', label: 'Contact Address', type: 'input', placeholder: 'Enter contact address' },
+      { key: 'contact-phone', label: 'Contact Phone', type: 'input', placeholder: 'Enter contact phone number' },
+      { key: 'contact-email', label: 'Contact Email', type: 'input', placeholder: 'Enter contact email' }
+    ]
+  };
 
   // Create backup of current content
   createBackup(): void {
@@ -893,6 +933,7 @@ export class ContentManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContent();
+    this.initializeTabs();
   }
 
   async loadContent(): Promise<void> {
@@ -1674,22 +1715,6 @@ export class ContentManagementComponent implements OnInit {
             publicId: null,
             altText: null,
             order: 15,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        ],
-        header: [
-          {
-            id: 55,
-            section: 'header',
-            type: 'logo',
-            key: 'main-logo',
-            value: 'assets/images/bcflats.png',
-            publicId: null,
-            altText: 'BC Flats Logo',
-            order: 1,
             isActive: true,
             metadata: null,
             createdAt: new Date().toISOString(),
@@ -2832,5 +2857,163 @@ export class ContentManagementComponent implements OnInit {
       return `Current: ${currentText}`;
     }
     return `Enter ${key}`;
+  }
+
+  // Initialize tabs for each section
+  private initializeTabs(): void {
+    this.sections.forEach(section => {
+      this.activeTabs[section.id] = 'text';
+    });
+  }
+
+  // Tab management methods
+  setActiveTab(sectionId: string, tabName: string): void {
+    this.activeTabs[sectionId] = tabName;
+  }
+
+  getActiveTab(sectionId: string): string {
+    return this.activeTabs[sectionId] || 'text';
+  }
+
+  // Helper methods for the new interface
+  getSectionIcon(sectionId: string): string {
+    const icons: { [key: string]: string } = {
+      'hero': 'fa fa-star',
+      'about': 'fa fa-info-circle',
+      'services': 'fa fa-cogs',
+      'rooms': 'fa fa-bed',
+      'contact': 'fa fa-envelope'
+    };
+    return icons[sectionId] || 'fa fa-file';
+  }
+
+  getSectionLocation(sectionId: string): string {
+    const locations: { [key: string]: string } = {
+      'hero': 'Main banner at top of page',
+      'about': 'About section below hero',
+      'services': 'Services section with icons',
+      'rooms': 'Rooms showcase section',
+      'contact': 'Contact form and information'
+    };
+    return locations[sectionId] || 'Website section';
+  }
+
+  getSectionStatus(sectionId: string): string {
+    const sectionContent = this.content[sectionId] || [];
+    if (sectionContent.length === 0) return 'Empty';
+    if (sectionContent.some((item: any) => item.isActive)) return 'Active';
+    return 'Inactive';
+  }
+
+  getSectionStatusClass(sectionId: string): string {
+    const status = this.getSectionStatus(sectionId);
+    switch (status) {
+      case 'Active': return 'status-active';
+      case 'Inactive': return 'status-inactive';
+      default: return 'status-empty';
+    }
+  }
+
+  getTextFields(sectionId: string): any[] {
+    return this.textFields[sectionId as keyof typeof this.textFields] || [];
+  }
+
+  // File management methods
+  clearLogoSelection(): void {
+    this.selectedLogo = null;
+    this.clearFileInput('logo-upload');
+  }
+
+  clearFileSelection(): void {
+    this.selectedFile = null;
+    this.altText = '';
+  }
+
+  clearGallerySelection(): void {
+    this.selectedGalleryFiles = [];
+  }
+
+  private clearFileInput(inputId: string): void {
+    const input = document.getElementById(inputId) as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  // Content management methods
+  refreshContent(): void {
+    this.loadContent();
+  }
+
+  exportContent(): void {
+    const dataStr = JSON.stringify(this.content, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'content-export.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Section-specific methods
+  resetSectionText(sectionId: string): void {
+    const fields = this.getTextFields(sectionId);
+    fields.forEach(field => {
+      const key = sectionId + '_' + field.key;
+      const currentValue = this.getCurrentContent(sectionId, field.key);
+      this.textContent[key] = currentValue || '';
+    });
+  }
+
+  saveAllText(sectionId: string): void {
+    const fields = this.getTextFields(sectionId);
+    let savedCount = 0;
+    
+    fields.forEach(field => {
+      const key = sectionId + '_' + field.key;
+      const value = this.textContent[key];
+      if (value && value.trim()) {
+        this.updateText(sectionId, field.key);
+        savedCount++;
+      }
+    });
+
+    if (savedCount > 0) {
+      this.alertService.success(`Successfully saved ${savedCount} text field(s)`);
+    } else {
+      this.alertService.warning('No text content to save');
+    }
+  }
+
+  uploadSectionImage(sectionId: string): void {
+    if (this.selectedFile) {
+      this.uploadImage(sectionId, 'main-image', this.altText);
+    }
+  }
+
+  uploadGalleryImages(sectionId: string): void {
+    if (this.selectedGalleryFiles.length > 0) {
+      this.uploadGallery(sectionId);
+    }
+  }
+
+  // Utility methods
+  trackBySection(index: number, section: any): string {
+    return section.id;
+  }
+
+  formatImageKey(key: string): string {
+    return key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  hasGalleryContent(sectionId: string): boolean {
+    const sectionContent = this.content[sectionId] || [];
+    return sectionContent.some((item: any) => item.type === 'gallery');
+  }
+
+  getGalleryContent(sectionId: string): any[] {
+    const sectionContent = this.content[sectionId] || [];
+    return sectionContent.filter((item: any) => item.type === 'gallery');
   }
 }
