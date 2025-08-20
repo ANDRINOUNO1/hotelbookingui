@@ -24,7 +24,7 @@ export class ContentManagementComponent implements OnInit {
   
   // Backup system
   private contentBackup: any = null;
-  private hasBackup: boolean = false;
+  public hasBackup: boolean = false;
   
   // Text content
   textContent: { [key: string]: string } = {};
@@ -2027,23 +2027,7 @@ export class ContentManagementComponent implements OnInit {
     return this.contentService.getOptimizedImageUrl(publicId, type);
   }
 
-  // Get section location description
-  getSectionLocation(sectionId: string): string {
-    const locations: { [key: string]: string } = {
-      'hero': 'Hero section (main banner at top of page)',
-      'about': 'About section (below hero, shows staff, food, pool info)',
-      'services': 'Services section (amenities and features)',
-      'rooms': 'Rooms section (room showcase and gallery)',
-      'contact': 'Contact section (contact information and form)'
-    };
-    return locations[sectionId] || 'Main content area';
-  }
 
-  clearFileInput(input: HTMLInputElement | null): void {
-    if (input) {
-      input.value = '';
-    }
-  }
 
   clearFileInputFromEvent(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -2982,7 +2966,7 @@ export class ContentManagementComponent implements OnInit {
     if (savedCount > 0) {
       this.alertService.success(`Successfully saved ${savedCount} text field(s)`);
     } else {
-      this.alertService.warning('No text content to save');
+      this.alertService.error('No text content to save');
     }
   }
 
