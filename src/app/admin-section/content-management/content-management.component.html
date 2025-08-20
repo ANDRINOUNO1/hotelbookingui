@@ -1,263 +1,431 @@
 <div class="content-management-container">
+  <!-- Header Section -->
   <div class="header">
     <div class="header-content">
       <div class="logo-section">
         <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="header-logo">
       </div>
       <div class="title-section">
-        <h1>Content Management</h1>
-        <p>Manage your landing page content, images, and text</p>
+        <h1>Content Management Dashboard</h1>
+        <p>Manage your website content, images, and text from one central location</p>
       </div>
       <div class="header-actions">
+        <button type="button" 
+                (click)="createBackup()" 
+                class="backup-btn"
+                [disabled]="!hasBackup"
+                title="Create backup of current content">
+          <i class="fa fa-save"></i> Backup Content
+        </button>
         <button type="button" 
                 (click)="globalReset()" 
                 class="global-reset-btn"
                 title="Reset all content to original state">
-          <i class="fa fa-undo"></i> Reset All Content
+          <i class="fa fa-undo"></i> Reset All
         </button>
       </div>
     </div>
   </div>
 
+  <!-- Loading State -->
   <div class="loading-spinner" *ngIf="loading">
     <div class="spinner"></div>
-    <p>Loading content...</p>
+    <p>Loading your content...</p>
   </div>
 
+  <!-- Main Content -->
   <div class="content-sections" *ngIf="!loading">
-    <!-- Logo Management -->
-    <div class="section-card">
+    
+    <!-- Quick Actions Bar -->
+    <div class="quick-actions-bar">
+      <div class="quick-actions-content">
+        <div class="quick-actions-info">
+          <i class="fa fa-lightbulb"></i>
+          <span>Quick Actions: Use these tools to manage your content efficiently</span>
+        </div>
+        <div class="quick-actions-buttons">
+          <button type="button" 
+                  (click)="refreshContent()" 
+                  class="quick-btn refresh-btn"
+                  title="Refresh content">
+            <i class="fa fa-refresh"></i> Refresh
+          </button>
+          <button type="button" 
+                  (click)="exportContent()" 
+                  class="quick-btn export-btn"
+                  title="Export content data">
+            <i class="fa fa-download"></i> Export
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo Management Section -->
+    <div class="section-card logo-section-card">
       <div class="section-header">
-        <h2>Logo Management</h2>
-        <p>Update your website logo</p>
-        <div class="section-location">
-          <i class="fa fa-map-marker-alt"></i>
-          <span>Located in: Header section (top of website)</span>
+        <div class="section-icon">
+          <i class="fa fa-image"></i>
+        </div>
+        <div class="section-title">
+          <h2>Website Logo</h2>
+          <p>Update your main website logo that appears in the header</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Website header (top of every page)</span>
+          </div>
         </div>
       </div>
       
-      <div class="current-logo" *ngIf="getCurrentLogo()">
-        <h3>Current Logo:</h3>
-        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
-      </div>
-
-      <div class="upload-section">
-        <h3>Upload New Logo</h3>
-        
-        <div class="file-input-group">
-          <label for="logo-upload">Select New Logo:</label>
-          <input type="file" id="logo-upload" 
-                 (change)="onFileSelected($event, 'logo')" 
-                 accept="image/*" 
-                 class="file-input">
-          <div class="file-info" *ngIf="selectedLogo">
-            <span>{{ selectedLogo.name }} ({{ getFileSize(selectedLogo) }})</span>    
-            <button type="button" (click)="selectedLogo = null; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
-          </div>
-        </div>
-        
-        <button type="button" 
-                (click)="uploadLogo()" 
-                [disabled]="!selectedLogo || uploading" 
-                class="upload-btn">
-          <span *ngIf="!uploading">Upload Logo</span>
-          <span *ngIf="uploading">Uploading...</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Section Management -->
-    <div class="section-card" *ngFor="let section of sections">
-      <div class="section-header">
-        <h2>{{ section.name }}</h2>
-        <p>{{ section.description }}</p>
-        <div class="section-location">
-          <i class="fa fa-map-marker-alt"></i>
-          <span>Located in: {{ getSectionLocation(section.id) }}</span>
-        </div>
-      </div>
-
-      <!-- Text Content -->
-      <div class="text-content-section">
-        <h3>Text Content</h3>
-        <div class="text-actions">
-          <button type="button" 
-                  (click)="resetTextContent()" 
-                  class="reset-btn"
-                  title="Reset to current values">
-            <i class="fa fa-undo"></i> Reset to Current
-          </button>
-        </div>
-        <div class="text-inputs">
-          <div class="input-group">
-            <label>Title:</label>
-            <input type="text"
-                   [(ngModel)]="textContent[section.id + '_title']"
-                   [placeholder]="getCurrentTextPlaceholder(section.id, 'title')"
-                   [value]="getCurrentTextValue(section.id, 'title')">
-            <div class="current-content-hint" *ngIf="getCurrentContent(section.id, 'title')">
-              <strong>Current:</strong> {{ getCurrentContent(section.id, 'title') }}
-            </div>
-            <button type="button"
-                    (click)="updateText(section.id, 'title')"
-                    [disabled]="uploading"
-                    class="update-btn">Update</button>
-          </div>
-          <div class="input-group">
-            <label>Description:</label>
-            <textarea [(ngModel)]="textContent[section.id + '_description']"
-                      [placeholder]="getCurrentTextPlaceholder(section.id, 'description')"
-                      [value]="getCurrentTextValue(section.id, 'description')"></textarea>
-            <div class="current-content-hint" *ngIf="getCurrentContent(section.id, 'description')">
-              <strong>Current:</strong> {{ getCurrentContent(section.id, 'description') }}
-            </div>
-            <button type="button"
-                    (click)="updateText(section.id, 'description')"
-                    [disabled]="uploading"
-                    class="update-btn">Update</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Current Images Display -->
-      <div class="current-images-section" *ngIf="hasImageContent(section.id)">
-        <h3>Current Images</h3>
-        <div class="current-images-grid">
-          <div class="current-image-item" *ngFor="let item of getImageContent(section.id)">
-            <img [src]="item.optimizedUrl || item.value" 
-                 [alt]="item.altText || item.key"
-                 class="current-image-preview">
-            <div class="image-info">
-              <span class="image-key">{{ item.key }}</span>
-              <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
+      <div class="logo-content">
+        <!-- Current Logo Display -->
+        <div class="current-logo-display" *ngIf="getCurrentLogo()">
+          <h3>Current Logo</h3>
+          <div class="logo-preview-container">
+            <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
+            <div class="logo-info">
+              <span class="logo-status active">Active</span>
+              <span class="logo-size">Displayed on all pages</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Image Upload -->
-      <div class="image-upload-section">
-        <h3>Images</h3>
-        
-        <div class="upload-controls">
-          <div class="file-input-group">
-            <label [for]="'image-upload-' + section.id">Select Image:</label>
-            <input type="file" 
-                   [id]="'image-upload-' + section.id"
-                   (change)="onFileSelected($event, 'image')" 
-                   accept="image/*" 
-                   class="file-input">
-            <div class="file-info" *ngIf="selectedFile">
-              <span>{{ selectedFile.name }} ({{ getFileSize(selectedFile) }})</span>  
-              <button type="button" (click)="selectedFile = null; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
+        <!-- Logo Upload -->
+        <div class="logo-upload-container">
+          <h3>Update Logo</h3>
+          <div class="upload-instructions">
+            <i class="fa fa-info-circle"></i>
+            <span>Recommended: PNG or JPG format, max 2MB, transparent background preferred</span>
+          </div>
+          
+          <div class="file-upload-area">
+            <div class="file-input-wrapper">
+              <input type="file" 
+                     id="logo-upload" 
+                     (change)="onFileSelected($event, 'logo')" 
+                     accept="image/*" 
+                     class="file-input">
+              <label for="logo-upload" class="file-input-label">
+                <i class="fa fa-cloud-upload"></i>
+                <span>Choose Logo File</span>
+              </label>
+            </div>
+            
+            <div class="file-selected-info" *ngIf="selectedLogo">
+              <div class="file-details">
+                <i class="fa fa-file-image-o"></i>
+                <div class="file-info-text">
+                  <span class="file-name">{{ selectedLogo.name }}</span>
+                  <span class="file-size">{{ getFileSize(selectedLogo) }}</span>
+                </div>
+              </div>
+              <button type="button" 
+                      (click)="clearLogoSelection()" 
+                      class="clear-selection-btn"
+                      title="Clear selected file">
+                <i class="fa fa-times"></i>
+              </button>
             </div>
           </div>
           
           <div class="upload-actions">
-            <input type="text" 
-                   [(ngModel)]="altText" 
-                   placeholder="Alt text (optional)" 
-                   class="alt-text-input">
             <button type="button" 
-                    (click)="uploadImage(section.id, 'main-image', altText)" 
-                    [disabled]="!selectedFile || uploading" 
-                    class="upload-btn">
-              <span *ngIf="!uploading">Upload Image</span>
+                    (click)="uploadLogo()" 
+                    [disabled]="!selectedLogo || uploading" 
+                    class="primary-btn upload-btn">
+              <i class="fa fa-upload"></i>
+              <span *ngIf="!uploading">Upload New Logo</span>
               <span *ngIf="uploading">Uploading...</span>
             </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Current Content Display -->
-      <div class="current-content" *ngIf="hasCurrentContentToShow(section.id)">
-        <h3>Current Content</h3>
-        <div class="content-grid">
-          <div class="content-item" *ngFor="let item of getAllContent(section.id)">
-            <div class="content-preview">
-              <img *ngIf="item.type === 'image' || item.type === 'logo'" 
-                   [src]="item.optimizedUrl || item.value" 
-                   [alt]="item.altText || item.key"
-                   class="content-image">
-              <div *ngIf="item.type === 'text'" class="text-preview">
-                <strong>{{ item.key }}:</strong> {{ item.value || 'No content' }}
-              </div>
-            </div>
-            
-            <div class="content-info">
-              <span class="content-type">{{ item.type }}</span>
-              <span class="content-key">{{ item.key }}</span>
-              <span class="content-date" *ngIf="item.updatedAt">
-                Updated: {{ item.updatedAt | date:'short' }}
-              </span>
-            </div>
-            
-            <div class="content-actions">
-              <button type="button" 
-                      (click)="deleteContent(item.id!)" 
-                      class="delete-btn"
-                      title="Delete content">
-                Delete
-              </button>
-            </div>
+    <!-- Content Sections -->
+    <div class="section-card" *ngFor="let section of sections; trackBy: trackBySection">
+      <div class="section-header">
+        <div class="section-icon">
+          <i [class]="getSectionIcon(section.id)"></i>
+        </div>
+        <div class="section-title">
+          <h2>{{ section.name }}</h2>
+          <p>{{ section.description }}</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: {{ getSectionLocation(section.id) }}</span>
           </div>
+        </div>
+        <div class="section-status">
+          <span class="status-badge" [class]="getSectionStatusClass(section.id)">
+            {{ getSectionStatus(section.id) }}
+          </span>
         </div>
       </div>
 
-      <!-- Sample Content Display -->
-      <div class="sample-content" *ngIf="shouldShowSampleContent(section.id)">
-        <h3>Sample Content (Demo)</h3>
-        <div class="content-grid">
-          <div class="content-item sample-item" *ngFor="let item of getSampleContent(section.id)">
-            <div class="content-preview">
-              <div *ngIf="item.type === 'text'" class="text-preview">
-                <strong>{{ item.key }}:</strong> {{ item.value }}
-              </div>
-            </div>
-            
-            <div class="content-info">
-              <span class="content-type sample-type">{{ item.type }}</span>
-              <span class="content-key">{{ item.key }}</span>
-              <span class="sample-label">Sample Content</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- No Content Message -->
-      <div class="no-content-message" *ngIf="!hasCurrentContentToShow(section.id) && !shouldShowSampleContent(section.id)">
-        <div class="message-box">
-          <i class="fa fa-info-circle"></i>
-          <p>No content has been added to this section yet.</p>
-          <p>Use the forms above to add text content and images.</p>
-        </div>
-      </div>
-
-      <!-- Gallery Upload (for specific sections) -->
-      <div class="gallery-section" *ngIf="section.id === 'hero' || section.id === 'rooms'">
-        <h3>Gallery Images</h3>
-        <div class="gallery-upload">
-          <div class="file-input-group">
-            <label [for]="'gallery-upload-' + section.id">Select Multiple Images:</label>
-            <input type="file" 
-                   [id]="'gallery-upload-' + section.id"
-                   (change)="onFileSelected($event, 'gallery')" 
-                   accept="image/*" 
-                   multiple 
-                   class="file-input">
-            <div class="file-info" *ngIf="selectedGalleryFiles.length > 0">
-              <span>{{ selectedGalleryFiles.length }} file(s) selected</span>
-              <button type="button" (click)="selectedGalleryFiles = []; clearFileInputFromEvent($event)" class="clear-btn">Clear</button>
-            </div>
-          </div>
-          
+      <!-- Section Content Tabs -->
+      <div class="section-tabs">
+        <div class="tab-buttons">
           <button type="button" 
-                  (click)="uploadGallery(section.id)" 
-                  [disabled]="selectedGalleryFiles.length === 0 || uploading" 
-                  class="upload-btn">
-            <span *ngIf="!uploading">Upload Gallery</span>
-            <span *ngIf="uploading">Uploading...</span>
+                  class="tab-btn active" 
+                  (click)="setActiveTab(section.id, 'text')"
+                  [class.active]="getActiveTab(section.id) === 'text'">
+            <i class="fa fa-font"></i> Text Content
           </button>
+          <button type="button" 
+                  class="tab-btn" 
+                  (click)="setActiveTab(section.id, 'images')"
+                  [class.active]="getActiveTab(section.id) === 'images'">
+            <i class="fa fa-image"></i> Images
+          </button>
+          <button type="button" 
+                  class="tab-btn" 
+                  (click)="setActiveTab(section.id, 'gallery')"
+                  [class.active]="getActiveTab(section.id) === 'gallery'"
+                  *ngIf="section.id === 'hero' || section.id === 'rooms'">
+            <i class="fa fa-th"></i> Gallery
+          </button>
+        </div>
+
+        <!-- Text Content Tab -->
+        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'text'">
+          <div class="text-content-editor">
+            <div class="editor-header">
+              <h3>Edit Text Content</h3>
+              <div class="editor-actions">
+                <button type="button" 
+                        (click)="resetSectionText(section.id)" 
+                        class="secondary-btn reset-btn"
+                        title="Reset to current values">
+                  <i class="fa fa-undo"></i> Reset
+                </button>
+                <button type="button" 
+                        (click)="saveAllText(section.id)" 
+                        class="primary-btn save-btn"
+                        [disabled]="uploading"
+                        title="Save all changes">
+                  <i class="fa fa-save"></i> Save All
+                </button>
+              </div>
+            </div>
+
+            <div class="text-inputs-grid">
+              <div class="text-input-group" *ngFor="let field of getTextFields(section.id)">
+                <label [for]="'text-' + section.id + '-' + field.key">{{ field.label }}</label>
+                <div class="input-wrapper">
+                  <input *ngIf="field.type === 'input'" 
+                         type="text"
+                         [id]="'text-' + section.id + '-' + field.key"
+                         [(ngModel)]="textContent[section.id + '_' + field.key]"
+                         [placeholder]="field.placeholder"
+                         class="text-input">
+                  <textarea *ngIf="field.type === 'textarea'" 
+                           [id]="'text-' + section.id + '-' + field.key"
+                           [(ngModel)]="textContent[section.id + '_' + field.key]"
+                           [placeholder]="field.placeholder"
+                           rows="3"
+                           class="text-textarea"></textarea>
+                  
+                  <div class="current-value-hint" *ngIf="getCurrentContent(section.id, field.key)">
+                    <i class="fa fa-eye"></i>
+                    <span><strong>Current:</strong> {{ getCurrentContent(section.id, field.key) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'images'">
+          <div class="images-manager">
+            <div class="images-header">
+              <h3>Manage Images</h3>
+              <div class="images-actions">
+                <button type="button" 
+                        (click)="uploadSectionImage(section.id)" 
+                        class="primary-btn upload-btn"
+                        [disabled]="!selectedFile || uploading">
+                  <i class="fa fa-upload"></i> Upload Image
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Images -->
+            <div class="current-images" *ngIf="hasImageContent(section.id)">
+              <h4>Current Images</h4>
+              <div class="images-grid">
+                <div class="image-item" *ngFor="let item of getImageContent(section.id)">
+                  <div class="image-preview">
+                    <img [src]="item.optimizedUrl || item.value" 
+                         [alt]="item.altText || item.key"
+                         class="content-image">
+                    <div class="image-overlay">
+                      <button type="button" 
+                              (click)="deleteContent(item.id!)" 
+                              class="delete-image-btn"
+                              title="Delete image">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="image-details">
+                    <span class="image-key">{{ formatImageKey(item.key) }}</span>
+                    <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="image-upload-area">
+              <h4>Upload New Image</h4>
+              <div class="upload-instructions">
+                <i class="fa fa-info-circle"></i>
+                <span>Select an image file to upload for this section</span>
+              </div>
+              
+              <div class="file-upload-controls">
+                <div class="file-input-wrapper">
+                  <input type="file" 
+                         [id]="'image-upload-' + section.id"
+                         (change)="onFileSelected($event, 'image')" 
+                         accept="image/*" 
+                         class="file-input">
+                  <label [for]="'image-upload-' + section.id" class="file-input-label">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span>Choose Image</span>
+                  </label>
+                </div>
+                
+                <div class="file-selected-info" *ngIf="selectedFile">
+                  <div class="file-details">
+                    <i class="fa fa-file-image-o"></i>
+                    <div class="file-info-text">
+                      <span class="file-name">{{ selectedFile.name }}</span>
+                      <span class="file-size">{{ getFileSize(selectedFile) }}</span>
+                    </div>
+                  </div>
+                  <button type="button" 
+                          (click)="clearFileSelection()" 
+                          class="clear-selection-btn"
+                          title="Clear selected file">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="upload-form" *ngIf="selectedFile">
+                <div class="form-group">
+                  <label for="alt-text">Alt Text (Optional)</label>
+                  <input type="text" 
+                         id="alt-text"
+                         [(ngModel)]="altText" 
+                         placeholder="Describe the image for accessibility" 
+                         class="alt-text-input">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'gallery' && (section.id === 'hero' || section.id === 'rooms')">
+          <div class="gallery-manager">
+            <div class="gallery-header">
+              <h3>Gallery Management</h3>
+              <div class="gallery-actions">
+                <button type="button" 
+                        (click)="uploadGalleryImages(section.id)" 
+                        class="primary-btn upload-btn"
+                        [disabled]="selectedGalleryFiles.length === 0 || uploading">
+                  <i class="fa fa-upload"></i> Upload Images
+                </button>
+              </div>
+            </div>
+
+            <!-- Gallery Upload -->
+            <div class="gallery-upload-area">
+              <h4>Upload Multiple Images</h4>
+              <div class="upload-instructions">
+                <i class="fa fa-info-circle"></i>
+                <span>Select multiple images to create a gallery for this section</span>
+              </div>
+              
+              <div class="file-upload-controls">
+                <div class="file-input-wrapper">
+                  <input type="file" 
+                         [id]="'gallery-upload-' + section.id"
+                         (change)="onFileSelected($event, 'gallery')" 
+                         accept="image/*" 
+                         multiple 
+                         class="file-input">
+                  <label [for]="'gallery-upload-' + section.id" class="file-input-label">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span>Choose Multiple Images</span>
+                  </label>
+                </div>
+                
+                <div class="files-selected-info" *ngIf="selectedGalleryFiles.length > 0">
+                  <div class="files-summary">
+                    <i class="fa fa-images"></i>
+                    <span>{{ selectedGalleryFiles.length }} image(s) selected</span>
+                  </div>
+                  <button type="button" 
+                          (click)="clearGallerySelection()" 
+                          class="clear-selection-btn"
+                          title="Clear selected files">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Current Gallery -->
+            <div class="current-gallery" *ngIf="hasGalleryContent(section.id)">
+              <h4>Current Gallery</h4>
+              <div class="gallery-grid">
+                <div class="gallery-item" *ngFor="let item of getGalleryContent(section.id)">
+                  <div class="gallery-preview">
+                    <img [src]="item.optimizedUrl || item.value" 
+                         [alt]="item.altText || item.key"
+                         class="gallery-image">
+                    <div class="gallery-overlay">
+                      <button type="button" 
+                              (click)="deleteContent(item.id!)" 
+                              class="delete-gallery-btn"
+                              title="Delete image">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="gallery-details">
+                    <span class="gallery-order">#{{ item.order || 1 }}</span>
+                    <span class="gallery-alt" *ngIf="item.altText">{{ item.altText }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Section -->
+    <div class="help-section">
+      <div class="help-content">
+        <div class="help-icon">
+          <i class="fa fa-question-circle"></i>
+        </div>
+        <div class="help-text">
+          <h3>Need Help?</h3>
+          <p>Here are some tips to help you manage your content effectively:</p>
+          <ul class="help-tips">
+            <li><strong>Text Content:</strong> Update titles, descriptions, and other text elements</li>
+            <li><strong>Images:</strong> Upload new images to replace existing ones</li>
+            <li><strong>Gallery:</strong> Manage multiple images for hero and rooms sections</li>
+            <li><strong>Logo:</strong> Update your website logo from the top section</li>
+            <li><strong>Reset:</strong> Use the reset button to restore original content</li>
+          </ul>
         </div>
       </div>
     </div>
