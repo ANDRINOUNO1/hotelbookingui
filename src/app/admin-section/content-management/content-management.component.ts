@@ -21,6 +21,9 @@ export class ContentManagementComponent implements OnInit {
   selectedLogo: File | null = null;
   selectedGalleryFiles: File[] = [];
   altText: string = '';
+  // Preview URLs for selected files (used in template)
+  selectedPreviewUrl: string | null = null;
+  selectedLogoPreviewUrl: string | null = null;
   
   // Backup system
   private contentBackup: any = null;
@@ -31,6 +34,7 @@ export class ContentManagementComponent implements OnInit {
   
   // Tab management
   private activeTabs: { [key: string]: string } = {};
+  private readonly TAB_STORAGE_KEY = 'cm_active_tabs_v1';
   
   // Sections
   sections = [
@@ -1841,12 +1845,15 @@ export class ContentManagementComponent implements OnInit {
   }
 
   getCurrentHeroImages(): string[] {
-    if (!this.content || !this.content['hero']) return [];
-    
-    return this.content['hero']
-      .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
-      .map((item: ContentItem) => item.optimizedUrl || item.value)
-      .filter(Boolean);
+    const hero = this.getSectionItemsSafe('hero');
+    const urls: string[] = [];
+    hero.forEach((item: ContentItem) => {
+      if (item && (item.type === 'image' || item.type === 'gallery')) {
+        const u = (item as any).optimizedUrl || item.value;
+        if (typeof u === 'string' && u.length > 0) urls.push(u);
+      }
+    });
+    return urls;
   }
 
   getCurrentAboutImages(): { [key: string]: string } {
@@ -1869,8 +1876,12 @@ export class ContentManagementComponent implements OnInit {
     if (file) {
       if (type === 'image') {
         this.selectedFile = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+        (this as any).selectedPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'logo') {
         this.selectedLogo = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+        (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'gallery') {
         this.selectedGalleryFiles = Array.from(event.target.files);
       }
@@ -1929,9 +1940,9 @@ export class ContentManagementComponent implements OnInit {
 
     this.uploading = true;
     try {
-      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map(file => ({
+      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map((file, index) => ({
         file,
-        altText: ''
+        altText: `Image ${index + 1}`
       }));
 
       await this.contentService.updateGallery(section, galleryImages).toPromise();
@@ -1948,7 +1959,7 @@ export class ContentManagementComponent implements OnInit {
 
   async updateText(section: string, key: string): Promise<void> {
     const value = this.textContent[`${section}_${key}`];
-    if (!value) {
+    if (value === undefined || value === null) {
       this.alertService.error('Please enter text content');
       return;
     }
@@ -1964,6 +1975,15 @@ export class ContentManagementComponent implements OnInit {
     } finally {
       this.uploading = false;
     }
+  }
+
+  // Replace an existing image by key using currently selected file
+  async replaceImage(section: string, key: string): Promise<void> {
+    if (!this.selectedFile) {
+      this.alertService.error('Choose an image first');
+      return;
+    }
+    await this.uploadImage(section, key, this.altText);
   }
 
   async deleteContent(id: number): Promise<void> {
@@ -2044,6 +2064,12 @@ export class ContentManagementComponent implements OnInit {
     return this.getContentBySection(section);
   }
 
+  // Return content or fallback to sample data so admins see current context
+  getSectionContentOrSample(section: string): ContentItem[] {
+    const items = this.getAllContent(section);
+    return items && items.length > 0 ? items : this.getSampleContent(section);
+  }
+
   getContentKeys(): string[] {
     return this.content ? Object.keys(this.content) : [];
   }
@@ -2059,6 +2085,17 @@ export class ContentManagementComponent implements OnInit {
 
   getOptimizedImageUrl(publicId: string, type: string = 'default'): string {
     return this.contentService.getOptimizedImageUrl(publicId, type);
+  }
+
+  // Current value with fallback to sample content when none saved yet
+  getCurrentContentWithFallback(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    const live = this.getCurrentContent(section, key, type);
+    if (live) return live;
+    const sampleList = this.getSampleContent(section) || [];
+    const sample = sampleList.find((c: ContentItem) => c.key === key && c.type === type);
+    if (!sample) return '';
+    if (type === 'text') return sample.value || '';
+    return (sample as any).optimizedUrl || sample.value || '';
   }
 
 
@@ -2879,14 +2916,19 @@ export class ContentManagementComponent implements OnInit {
 
   // Initialize tabs for each section
   private initializeTabs(): void {
+    try {
+      const saved = localStorage.getItem(this.TAB_STORAGE_KEY);
+      if (saved) this.activeTabs = JSON.parse(saved);
+    } catch {}
     this.sections.forEach(section => {
-      this.activeTabs[section.id] = 'text';
+      if (!this.activeTabs[section.id]) this.activeTabs[section.id] = 'text';
     });
   }
 
   // Tab management methods
   setActiveTab(sectionId: string, tabName: string): void {
     this.activeTabs[sectionId] = tabName;
+    try { localStorage.setItem(this.TAB_STORAGE_KEY, JSON.stringify(this.activeTabs)); } catch {}
   }
 
   getActiveTab(sectionId: string): string {
@@ -2948,11 +2990,15 @@ export class ContentManagementComponent implements OnInit {
   clearLogoSelection(): void {
     this.selectedLogo = null;
     this.clearFileInput('logo-upload');
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
   }
 
   clearFileSelection(): void {
     this.selectedFile = null;
     this.altText = '';
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
   }
 
   clearGallerySelection(): void {
@@ -2967,6 +3013,25 @@ export class ContentManagementComponent implements OnInit {
   }
 
   // Content management methods
+  onDragOver(event: DragEvent): void { event.preventDefault(); }
+  onDropFile(event: DragEvent, type: 'image' | 'logo' | 'gallery'): void {
+    event.preventDefault();
+    const dt = event.dataTransfer;
+    if (!dt || !dt.files?.length) return;
+    if (type === 'gallery') {
+      this.selectedGalleryFiles = Array.from(dt.files);
+    } else if (type === 'image') {
+      const file = dt.files[0];
+      this.selectedFile = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+      (this as any).selectedPreviewUrl = URL.createObjectURL(file);
+    } else {
+      const file = dt.files[0];
+      this.selectedLogo = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+      (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
+    }
+  }
   refreshContent(): void {
     this.loadContent();
   }
