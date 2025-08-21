@@ -17,7 +17,7 @@ export interface Room {
   roomNumber: string;
   roomTypeId: number;
   price: number;
-  isAvailable: boolean;
+  roomStatus: string;
   RoomType?: RoomType;
 }
 
@@ -80,13 +80,13 @@ export class RoomService {
   }
 
   // Update room availability
-  updateRoomAvailability(id: number, isAvailable: boolean): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/availability`, { isAvailable });
+  updateRoomAvailability(id: number, roomStatus: boolean): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/availability`, { roomStatus });
   }
 
   // Bulk update room availability
-  bulkUpdateAvailability(roomIds: number[], isAvailable: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/bulk-availability`, { roomIds, isAvailable });
+  bulkUpdateAvailability(roomIds: number[], roomStatus: boolean): Observable<any> {
+    return this.http.post(`${this.apiUrl}/bulk-availability`, { roomIds, roomStatus });
   }
 
   // Delete room
@@ -136,5 +136,9 @@ export class RoomService {
   // Get room statistics for specific dates
   getRoomStatsForDates(checkIn: string, checkOut: string): Observable<RoomStats> {
     return this.http.get<RoomStats>(`${this.apiUrl}/stats/dates?checkIn=${checkIn}&checkOut=${checkOut}`);
+  }
+
+  bulkUpdateRoomStatus(status: string): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/rooms/reset-status`, { roomStatus: status });
   }
 } 

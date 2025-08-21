@@ -98,23 +98,54 @@ export class DashboardService {
 
   // Calculate room status from actual rooms and bookings data
   private calculateRoomStatusFromData(): Observable<ChartDataItem[]> {
-    return forkJoin({
-      rooms: this.http.get<Room[]>(`${environment.apiUrl}/rooms`),
-      bookings: this.http.get<Booking[]>(`${environment.apiUrl}/bookings`)
-    }).pipe(
-      map(({ rooms, bookings }) => {
-        const totalRooms = rooms.length;
-        const occupiedBookings = bookings.filter(b => b.pay_status === true);
-        const reservedBookings = bookings.filter(b => b.pay_status === false);
-        const vacantRooms = totalRooms - occupiedBookings.length - reservedBookings.length;
-
-        return [
-          { name: 'Vacant', count: Math.max(0, vacantRooms) },
-          { name: 'Reserved', count: reservedBookings.length },
-          { name: 'Occupied', count: occupiedBookings.length }
-        ];
+    return this.http.get<Room[]>(`${environment.apiUrl}/rooms`).pipe(
+      map(rooms => {
+        const statusCounts: { [key: string]: number } = {};
+        rooms.forEach(room => {
+          const status = room.roomStatus || 'Unknown';
+          if (!statusCounts[status]) {
+            statusCounts[status] = 0;
+          }
+          statusCounts[status]++;
+        });
+        return Object.keys(statusCounts).map(status => ({
+          name: status,
+          count: statusCounts[status]
+        }));
       }),
       catchError(() => of(this.getMockRoomStatus()))
+    );
+  }
+  getRoomStatusSummary(): Observable<{ total: number, available: number, reserved: number, occupied: number }> {
+    return this.http.get<Room[]>(`${environment.apiUrl}/rooms`).pipe(
+      map(rooms => {
+        const availableStatuses = ['Vacant and Ready', 'Vacant and Clean'];
+        const reservedStatuses = ['Reserved - Guaranteed', 'Reserved - Not Guaranteed'];
+        const occupiedStatuses = [
+          'Occupied', 'Stay Over', 'On Change', 'Do Not Disturb', 'Cleaning in Progress',
+          'Sleep Out', 'On Queue', 'Skipper', 'Lockout', 'Did Not Check Out',
+          'Due Out', 'Check Out', 'Early Check In'
+        ];
+
+        let available = 0, reserved = 0, occupied = 0;
+        rooms.forEach(room => {
+          const status = room.roomStatus || '';
+          if (availableStatuses.includes(status)) {
+            available++;
+          } else if (reservedStatuses.includes(status)) {
+            reserved++;
+          } else if (occupiedStatuses.includes(status)) {
+            occupied++;
+          }
+        });
+
+        return {
+          total: rooms.length,
+          available,
+          reserved,
+          occupied
+        };
+      })
     );
   }
 

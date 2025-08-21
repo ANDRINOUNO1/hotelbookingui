@@ -79,6 +79,11 @@
             <i class="fa fa-bed"></i> Room List
           </a>
         </div>
+        <div class="submenu" *ngIf="openMenu === 'rooms'">
+          <a routerLink="roomstatus" routerLinkActive="active" (click)="closeMobileMenu()">
+            <i class="fa fa-cogs"></i> Room Status
+          </a>
+        </div>
       </div>
 
       <div class="sidebar-group" [class.open]="openMenu === 'staff'">

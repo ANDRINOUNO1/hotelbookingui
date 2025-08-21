@@ -191,82 +191,77 @@ export class AddbookingsComponent implements OnInit {
   }
 
   onSubmit() {
-  if (this.bookingForm.invalid) {
-    this.markFormGroupTouched();
-    this.errorMessage = 'Please fill all required fields correctly.';
-    return;
+    if (this.bookingForm.invalid || !this.hasSelectedRoomTypes()) {
+      this.markFormGroupTouched();
+      this.errorMessage = 'Please fill all required fields correctly and select at least one room type.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const formValue = this.bookingForm.value;
+    const selectedRoomTypes = this.getSelectedRoomTypes();
+    const payment = formValue.payment;
+
+    // Create booking payloads
+    const bookingPayloads = selectedRoomTypes.map(roomType => ({
+      roomTypeId: roomType.id,
+      guest: formValue.guest,
+      roomsCount: formValue.availability.rooms,
+      availability: formValue.availability,
+      requests: formValue.requests || '',
+      payment: {
+        ...payment,
+        amount: Number(payment.amount)
+      },
+      pay_status: true,
+      paidamount: payment.amount,
+      createdBy: 'Frontdesk'
+    }));
+
+    // Send booking creation requests
+    const postRequests = bookingPayloads.map(payload =>
+      this.http.post(`${environment.apiUrl}/bookings/frontdesk`, payload).toPromise()
+    );
+
+    Promise.all(postRequests)
+      .then(async results => {
+        // ✅ Update room and booking status after successful creation
+        for (const res of results) {
+          const booking: any = Array.isArray(res) ? res[0] : res; // backend may return array or single
+          if (booking && booking.room_id) {
+            await this.updateRoomAndBookingStatus(booking.room_id, booking.id);
+          }
+        }
+
+        this.successMessage = `Successfully created ${results.length} booking(s) and checked-in!`;
+        this.bookingForm.reset();
+        this.selectedRoomTypes = {};
+        this.roomTypes.forEach(rt => this.selectedRoomTypes[rt.id] = false);
+        this.initForm();
+
+        setTimeout(() => this.router.navigate(['/frontdesk/frontdeskdashboard']), 2000);
+      })
+      .catch(err => {
+        this.errorMessage = err.error?.message || 'Failed to create booking.';
+      })
+      .finally(() => this.loading = false);
   }
 
-  if (!this.hasSelectedRoomTypes()) {
-    this.errorMessage = 'Please select at least one room type.';
-    return;
+  private async updateRoomAndBookingStatus(roomId: number, bookingId: number) {
+    try {
+      // Update room status to "Occupied"
+      await this.http.patch(`${environment.apiUrl}/rooms/${roomId}/status`, { roomStatus: 'Occupied' }).toPromise();
+
+      // Update booking status to "checked_in"
+      await this.http.patch(`${environment.apiUrl}/bookings/${bookingId}/check-in`, {}).toPromise();
+    } catch (err) {
+      console.error('Error updating room or booking status:', err);
+    }
   }
-
-  this.loading = true;
-  this.errorMessage = '';
-  this.successMessage = '';
-
-  const formValue = this.bookingForm.value;
-  const selectedRoomTypes = this.getSelectedRoomTypes();
-
-  // Basic validation for payment details
-  const payment = formValue.payment;
-  if (Number(payment.amount) < this.reservationFee) {
-    this.loading = false;
-    this.errorMessage = `Reservation fee must be at least ₱${this.reservationFee}.`;
-    return;
-  }
-
-  const mode = payment.paymentMode;
-  if ((mode === 'GCash' || mode === 'Maya') && !payment.mobileNumber) {
-    this.loading = false;
-    this.errorMessage = 'Mobile number is required for GCash/Maya payments.';
-    return;
-  }
-  if (mode === 'Card' &&
-      (!payment.paymentMethod || !payment.cardNumber || !payment.expiry || !payment.cvv)) {
-    this.loading = false;
-    this.errorMessage = 'Please fill in all required card payment fields.';
-    return;
-  }
-
-  const bookingPayloads = selectedRoomTypes.map(roomType => ({
-    roomTypeId: roomType.id,
-    guest: formValue.guest,
-    roomsCount: formValue.availability.rooms,
-    availability: formValue.availability,
-    requests: formValue.requests || '',
-    payment: {
-      ...payment,
-      amount: Number(payment.amount)
-    },
-    pay_status: true,
-    paidamount: payment.amount
-  }));
-
-  const postRequests = bookingPayloads.map(payload =>
-    this.http.post(`${environment.apiUrl}/bookings`, payload).toPromise()
-  );
-
-  Promise.all(postRequests)
-    .then(results => {
-      this.successMessage = `Successfully created ${results.length} booking(s)!`;
-      this.bookingForm.reset();
-      this.selectedRoomTypes = {};
-      this.roomTypes.forEach(roomType => this.selectedRoomTypes[roomType.id] = false);
-      this.initForm();
-      setTimeout(() => {
-        this.router.navigate(['/frontdesk/frontdeskdashboard']);
-      }, 2000);
-    })
-    .catch(err => {
-      this.errorMessage = err.error?.message || 'Failed to create booking.';
-    })
-    .finally(() => {
-      this.loading = false;
-    });
-}
-
+  
   markFormGroupTouched() {
     Object.keys(this.bookingForm.controls).forEach(key => {
       const control = this.bookingForm.get(key);

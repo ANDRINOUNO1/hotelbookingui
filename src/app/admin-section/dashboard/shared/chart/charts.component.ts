@@ -163,13 +163,30 @@ export class ChartsComponent implements OnInit, OnDestroy {
   }
 
   private getColorForStatus(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'vacant': return '#10B981';
-      case 'reserved': return '#3B82F6';
-      case 'occupied': return '#F59E0B';
-      default: return '#6B7280';
-    }
+  // Optionally, assign custom colors for each status
+  switch (status) {
+    case 'Vacant and Ready': return '#10B981';
+    case 'Occupied': return '#f53a0bff';
+    case 'Stay Over': return '#8b00adff';
+    case 'On Change': return '#00c9bfff';
+    case 'Do Not Disturb': return '#6b0225ff';
+    case 'Cleaning in Progress': return '#04a1fcff';
+    case 'Sleep Out': return '#fb9e24ff';
+    case 'On Queue': return '#98da00ff';
+    case 'Skipper': return '#000000ff';
+    case 'Vacant and Clean': return '#91ff91ff';
+    case 'Out of Order': return '#525252ff';
+    case 'Out of Service': return '#bbbbbbff';
+    case 'Lockout': return '#DC2626';
+    case 'Did Not Check Out': return '#91194bff';
+    case 'Due Out': return '#ff82b6ff';
+    case 'Check Out': return '#2b4403ff';
+    case 'Early Check In': return '#81b89cff';
+    case 'Reserved - Guaranteed': return '#fc8f00ff';
+    case 'Reserved - Not Guaranteed': return '#aa7e04ff';
+    default: return '#10B981';
   }
+}
 
   createLineChart(data: ChartDataItem[]): void {
     const chartData = data.map(item => item.count);

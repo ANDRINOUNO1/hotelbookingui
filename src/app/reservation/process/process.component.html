@@ -109,7 +109,7 @@
 
         <!-- Consent Checkbox -->
         <div class="consent-checkbox">
-          <input type="checkbox" [(ngModel)]="consentAccepted" (change)="onConsentChange()" />
+          <input type="checkbox" formControlName="consentAccepted" (change)="onConsentChange()" />
           <span>
             I have read and agree to the 
             <strong class="policy-link" (click)="openPolicyModal()">Data Collection Policy</strong>

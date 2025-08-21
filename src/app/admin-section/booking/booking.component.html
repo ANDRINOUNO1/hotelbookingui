@@ -41,7 +41,7 @@
         <td>{{ room.guest }}</td>
         <td>{{ room.type }}</td>
         <td>
-          <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
+          <span class="status-label" [ngClass]="getStatusClass(room.status)">{{ room.status | titlecase }}</span>
         </td>
         <td>
           <span class="payment-status" [ngClass]="room.paymentStatus.toLowerCase()">{{ room.paymentStatus }}</span>
