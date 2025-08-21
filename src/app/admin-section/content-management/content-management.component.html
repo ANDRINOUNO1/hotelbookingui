@@ -69,8 +69,8 @@
         <div class="section-title">
           <h2>Website Logo</h2>
           <p>Update your main website logo that appears in the header</p>
-          <div class="section-location">
-            <i class="fa fa-map-marker-alt"></i>
+        <div class="section-location">
+          <i class="fa fa-map-marker-alt"></i>
             <span>Appears in: Website header (top of every page)</span>
           </div>
         </div>
@@ -81,13 +81,13 @@
         <div class="current-logo-display" *ngIf="getCurrentLogo()">
           <h3>Current Logo</h3>
           <div class="logo-preview-container">
-            <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
+        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
             <div class="logo-info">
               <span class="logo-status active">Active</span>
               <span class="logo-size">Displayed on all pages</span>
             </div>
           </div>
-        </div>
+      </div>
 
         <!-- Logo Upload -->
         <div class="logo-upload-container">
@@ -101,9 +101,9 @@
             <div class="file-input-wrapper">
               <input type="file" 
                      id="logo-upload" 
-                     (change)="onFileSelected($event, 'logo')" 
-                     accept="image/*" 
-                     class="file-input">
+                 (change)="onFileSelected($event, 'logo')" 
+                 accept="image/*" 
+                 class="file-input">
               <label for="logo-upload" class="file-input-label">
                 <i class="fa fa-cloud-upload"></i>
                 <span>Choose Logo File</span>
@@ -124,18 +124,18 @@
                       title="Clear selected file">
                 <i class="fa fa-times"></i>
               </button>
-            </div>
           </div>
-          
+        </div>
+        
           <div class="upload-actions">
-            <button type="button" 
-                    (click)="uploadLogo()" 
-                    [disabled]="!selectedLogo || uploading" 
+        <button type="button" 
+                (click)="uploadLogo()" 
+                [disabled]="!selectedLogo || uploading" 
                     class="primary-btn upload-btn">
               <i class="fa fa-upload"></i>
               <span *ngIf="!uploading">Upload New Logo</span>
-              <span *ngIf="uploading">Uploading...</span>
-            </button>
+          <span *ngIf="uploading">Uploading...</span>
+        </button>
           </div>
         </div>
       </div>
@@ -148,10 +148,10 @@
           <i [class]="getSectionIcon(section.id)"></i>
         </div>
         <div class="section-title">
-          <h2>{{ section.name }}</h2>
-          <p>{{ section.description }}</p>
-          <div class="section-location">
-            <i class="fa fa-map-marker-alt"></i>
+        <h2>{{ section.name }}</h2>
+        <p>{{ section.description }}</p>
+        <div class="section-location">
+          <i class="fa fa-map-marker-alt"></i>
             <span>Appears in: {{ getSectionLocation(section.id) }}</span>
           </div>
         </div>
@@ -205,7 +205,7 @@
             <div class="edit-block">
               <h4>Edit</h4>
             </div>
-          </div>
+            </div>
           <div class="text-content-editor">
             <div class="editor-header">
               <h3>Edit Text Content</h3>
@@ -216,10 +216,10 @@
                         title="Reset to current values">
                   <i class="fa fa-undo"></i> Reset
                 </button>
-                <button type="button" 
+            <button type="button"
                         (click)="saveAllText(section.id)" 
                         class="primary-btn save-btn"
-                        [disabled]="uploading"
+                    [disabled]="uploading"
                         title="Save all changes">
                   <i class="fa fa-save"></i> Save All
                 </button>
@@ -247,11 +247,11 @@
                     <i class="fa fa-eye"></i>
                     <span><strong>Current:</strong> {{ getCurrentContent(section.id, field.key) }}</span>
                   </div>
-                </div>
-              </div>
+          </div>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- Images Tab -->
         <div class="tab-content" *ngIf="getActiveTab(section.id) === 'images'">
@@ -275,8 +275,8 @@
               <div class="images-grid">
                 <div class="image-item" *ngFor="let item of getImageContent(section.id)">
                   <div class="image-preview">
-                    <img [src]="item.optimizedUrl || item.value" 
-                         [alt]="item.altText || item.key"
+            <img [src]="item.optimizedUrl || item.value" 
+                 [alt]="item.altText || item.key"
                          class="content-image">
                     <div class="image-overlay">
                       <button type="button" 
@@ -295,13 +295,13 @@
                   </div>
                   <div class="image-details">
                     <span class="image-key">{{ formatImageKey(item.key) }}</span>
-                    <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
-                  </div>
-                </div>
-              </div>
+              <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Image Upload -->
+      <!-- Image Upload -->
             <div class="image-upload-area" (dragover)="onDragOver($event)" (drop)="onDropFile($event, 'image')">
               <h4>Upload New Image</h4>
               <div class="upload-instructions">
@@ -311,11 +311,11 @@
               
               <div class="file-upload-controls">
                 <div class="file-input-wrapper">
-                  <input type="file" 
-                         [id]="'image-upload-' + section.id"
-                         (change)="onFileSelected($event, 'image')" 
-                         accept="image/*" 
-                         class="file-input">
+            <input type="file" 
+                   [id]="'image-upload-' + section.id"
+                   (change)="onFileSelected($event, 'image')" 
+                   accept="image/*" 
+                   class="file-input">
                   <label [for]="'image-upload-' + section.id" class="file-input-label">
                     <i class="fa fa-cloud-upload"></i>
                     <span>Choose Image</span>
@@ -328,18 +328,18 @@
                     <div class="file-info-text">
                       <span class="file-name">{{ selectedFile.name }}</span>
                       <span class="file-size">{{ getFileSize(selectedFile) }}</span>
-                    </div>
-                  </div>
+            </div>
+          </div>
                   <img *ngIf="selectedPreviewUrl" [src]="selectedPreviewUrl" class="preview-thumb" alt="Preview"/>
-                  <button type="button" 
+            <button type="button" 
                           (click)="clearFileSelection()" 
                           class="clear-selection-btn"
                           title="Clear selected file">
                     <i class="fa fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              
+            </button>
+        </div>
+      </div>
+
               <div class="upload-form" *ngIf="selectedFile">
                 <div class="form-group">
                   <label for="alt-text">Alt Text (Optional)</label>
@@ -348,10 +348,10 @@
                          [(ngModel)]="altText" 
                          placeholder="Describe the image for accessibility" 
                          class="alt-text-input">
-                </div>
-              </div>
             </div>
           </div>
+        </div>
+      </div>
 
           <!-- Hero specific trio editor with fixed keys -->
           <div *ngIf="section.id === 'hero'" class="hero-trio-editor">
@@ -376,13 +376,13 @@
                     <div class="file-input-wrapper">
                       <input type="file" (change)="onFileSelected($event, 'image')" accept="image/*" class="file-input">
                       <label class="file-input-label"><i class="fa fa-cloud-upload"></i><span>Choose Image</span></label>
-                    </div>
-                  </div>
-                </div>
               </div>
+            </div>
+                </div>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- Gallery Tab -->
         <div class="tab-content" *ngIf="getActiveTab(section.id) === 'gallery' && (section.id === 'hero' || section.id === 'rooms')">
@@ -396,8 +396,8 @@
                         [disabled]="selectedGalleryFiles.length === 0 || uploading">
                   <i class="fa fa-upload"></i> Upload Images
                 </button>
-              </div>
-            </div>
+        </div>
+      </div>
 
             <!-- Gallery Upload -->
             <div class="gallery-upload-area">
@@ -409,29 +409,29 @@
               
               <div class="file-upload-controls">
                 <div class="file-input-wrapper">
-                  <input type="file" 
-                         [id]="'gallery-upload-' + section.id"
-                         (change)="onFileSelected($event, 'gallery')" 
-                         accept="image/*" 
-                         multiple 
-                         class="file-input">
+            <input type="file" 
+                   [id]="'gallery-upload-' + section.id"
+                   (change)="onFileSelected($event, 'gallery')" 
+                   accept="image/*" 
+                   multiple 
+                   class="file-input">
                   <label [for]="'gallery-upload-' + section.id" class="file-input-label">
                     <i class="fa fa-cloud-upload"></i>
                     <span>Choose Multiple Images</span>
                   </label>
-                </div>
-                
+          </div>
+          
                 <div class="files-selected-info" *ngIf="selectedGalleryFiles.length > 0">
                   <div class="files-summary">
                     <i class="fa fa-images"></i>
                     <span>{{ selectedGalleryFiles.length }} image(s) selected</span>
                   </div>
-                  <button type="button" 
+          <button type="button" 
                           (click)="clearGallerySelection()" 
                           class="clear-selection-btn"
                           title="Clear selected files">
                     <i class="fa fa-times"></i>
-                  </button>
+          </button>
                 </div>
               </div>
             </div>

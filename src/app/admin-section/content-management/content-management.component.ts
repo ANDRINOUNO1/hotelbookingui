@@ -1843,10 +1843,14 @@ export class ContentManagementComponent implements OnInit {
 
   getCurrentHeroImages(): string[] {
     const hero = this.getSectionItemsSafe('hero');
-    return hero
-      .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
-      .map((item: ContentItem) => item.optimizedUrl || item.value)
-      .filter(Boolean);
+    const urls: string[] = [];
+    hero.forEach((item: ContentItem) => {
+      if (item && (item.type === 'image' || item.type === 'gallery')) {
+        const u = (item as any).optimizedUrl || item.value;
+        if (typeof u === 'string' && u.length > 0) urls.push(u);
+      }
+    });
+    return urls;
   }
 
   getCurrentAboutImages(): { [key: string]: string } {
@@ -1869,8 +1873,12 @@ export class ContentManagementComponent implements OnInit {
     if (file) {
       if (type === 'image') {
         this.selectedFile = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+        (this as any).selectedPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'logo') {
         this.selectedLogo = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+        (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'gallery') {
         this.selectedGalleryFiles = Array.from(event.target.files);
       }
@@ -2962,11 +2970,15 @@ export class ContentManagementComponent implements OnInit {
   clearLogoSelection(): void {
     this.selectedLogo = null;
     this.clearFileInput('logo-upload');
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
   }
 
   clearFileSelection(): void {
     this.selectedFile = null;
     this.altText = '';
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
   }
 
   clearGallerySelection(): void {
@@ -2981,6 +2993,25 @@ export class ContentManagementComponent implements OnInit {
   }
 
   // Content management methods
+  onDragOver(event: DragEvent): void { event.preventDefault(); }
+  onDropFile(event: DragEvent, type: 'image' | 'logo' | 'gallery'): void {
+    event.preventDefault();
+    const dt = event.dataTransfer;
+    if (!dt || !dt.files?.length) return;
+    if (type === 'gallery') {
+      this.selectedGalleryFiles = Array.from(dt.files);
+    } else if (type === 'image') {
+      const file = dt.files[0];
+      this.selectedFile = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+      (this as any).selectedPreviewUrl = URL.createObjectURL(file);
+    } else {
+      const file = dt.files[0];
+      this.selectedLogo = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+      (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
+    }
+  }
   refreshContent(): void {
     this.loadContent();
   }
