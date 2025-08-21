@@ -57,7 +57,6 @@
             <i class="fa fa-download"></i> Export
           </button>
         </div>
-      </div>
     </div>
 
     <!-- Logo Management Section -->
@@ -188,11 +187,11 @@
 
         <!-- Text Content Tab -->
         <div class="tab-content" *ngIf="getActiveTab(section.id) === 'text'">
-          <div class="current-vs-edit" *ngIf="hasSectionContent(section.id)">
+          <div class="current-vs-edit">
             <div class="current-block">
               <h4>Current Content</h4>
               <div class="content-grid">
-                <div class="content-item" *ngFor="let item of getAllContent(section.id)">
+                <div class="content-item" *ngFor="let item of getSectionContentOrSample(section.id)">
                   <img *ngIf="item.type === 'image' || item.type === 'logo'" [src]="item.optimizedUrl || item.value" class="content-image"/>
                   <div *ngIf="item.type === 'text'" class="text-preview">
                     <strong>{{ item.key }}</strong>
@@ -202,9 +201,7 @@
                 </div>
               </div>
             </div>
-            <div class="edit-block">
-              <h4>Edit</h4>
-            </div>
+            
             </div>
           <div class="text-content-editor">
             <div class="editor-header">
@@ -230,6 +227,10 @@
               <div class="text-input-group" *ngFor="let field of getTextFields(section.id)">
                 <label [for]="'text-' + section.id + '-' + field.key">{{ field.label }}</label>
                 <div class="input-wrapper">
+                  <div class="current-value-pill" *ngIf="getCurrentContentWithFallback(section.id, field.key)">
+                    <i class="fa fa-eye"></i>
+                    <span><strong>Current:</strong> {{ getCurrentContentWithFallback(section.id, field.key) }}</span>
+                  </div>
                   <input *ngIf="field.type === 'input'" 
                          type="text"
                          [id]="'text-' + section.id + '-' + field.key"
@@ -243,11 +244,9 @@
                            rows="3"
                            class="text-textarea"></textarea>
                   
-                  <div class="current-value-hint" *ngIf="getCurrentContent(section.id, field.key)">
-                    <i class="fa fa-eye"></i>
-                    <span><strong>Current:</strong> {{ getCurrentContent(section.id, field.key) }}</span>
-                  </div>
-          </div>
+                  
+                </div>
+              </div>
             </div>
           </div>
         </div>

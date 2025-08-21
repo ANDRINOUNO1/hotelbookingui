@@ -21,6 +21,9 @@ export class ContentManagementComponent implements OnInit {
   selectedLogo: File | null = null;
   selectedGalleryFiles: File[] = [];
   altText: string = '';
+  // Preview URLs for selected files (used in template)
+  selectedPreviewUrl: string | null = null;
+  selectedLogoPreviewUrl: string | null = null;
   
   // Backup system
   private contentBackup: any = null;
@@ -2061,6 +2064,12 @@ export class ContentManagementComponent implements OnInit {
     return this.getContentBySection(section);
   }
 
+  // Return content or fallback to sample data so admins see current context
+  getSectionContentOrSample(section: string): ContentItem[] {
+    const items = this.getAllContent(section);
+    return items && items.length > 0 ? items : this.getSampleContent(section);
+  }
+
   getContentKeys(): string[] {
     return this.content ? Object.keys(this.content) : [];
   }
@@ -2076,6 +2085,17 @@ export class ContentManagementComponent implements OnInit {
 
   getOptimizedImageUrl(publicId: string, type: string = 'default'): string {
     return this.contentService.getOptimizedImageUrl(publicId, type);
+  }
+
+  // Current value with fallback to sample content when none saved yet
+  getCurrentContentWithFallback(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    const live = this.getCurrentContent(section, key, type);
+    if (live) return live;
+    const sampleList = this.getSampleContent(section) || [];
+    const sample = sampleList.find((c: ContentItem) => c.key === key && c.type === type);
+    if (!sample) return '';
+    if (type === 'text') return sample.value || '';
+    return (sample as any).optimizedUrl || sample.value || '';
   }
 
 
