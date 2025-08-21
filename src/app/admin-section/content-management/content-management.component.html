@@ -188,6 +188,24 @@
 
         <!-- Text Content Tab -->
         <div class="tab-content" *ngIf="getActiveTab(section.id) === 'text'">
+          <div class="current-vs-edit" *ngIf="hasSectionContent(section.id)">
+            <div class="current-block">
+              <h4>Current Content</h4>
+              <div class="content-grid">
+                <div class="content-item" *ngFor="let item of getAllContent(section.id)">
+                  <img *ngIf="item.type === 'image' || item.type === 'logo'" [src]="item.optimizedUrl || item.value" class="content-image"/>
+                  <div *ngIf="item.type === 'text'" class="text-preview">
+                    <strong>{{ item.key }}</strong>
+                    <div>{{ item.value }}</div>
+                  </div>
+                  <div class="meta">Key: {{ item.key }} | Type: {{ item.type }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="edit-block">
+              <h4>Edit</h4>
+            </div>
+          </div>
           <div class="text-content-editor">
             <div class="editor-header">
               <h3>Edit Text Content</h3>
@@ -237,8 +255,9 @@
 
         <!-- Images Tab -->
         <div class="tab-content" *ngIf="getActiveTab(section.id) === 'images'">
+          <div class="hint">Select a file to replace an existing image or click Upload Image to add one. Keys are shown on each tile.</div>
           <div class="images-manager">
-            <div class="images-header">
+            <div class="images-header" (dragover)="onDragOver($event)" (drop)="onDropFile($event, 'image')">
               <h3>Manage Images</h3>
               <div class="images-actions">
                 <button type="button" 
@@ -261,6 +280,12 @@
                          class="content-image">
                     <div class="image-overlay">
                       <button type="button" 
+                              (click)="replaceImage(section.id, item.key)"
+                              class="delete-image-btn"
+                              title="Replace with selected file" [disabled]="!selectedFile || uploading">
+                        <i class="fa fa-refresh"></i>
+                      </button>
+                      <button type="button" 
                               (click)="deleteContent(item.id!)" 
                               class="delete-image-btn"
                               title="Delete image">
@@ -277,7 +302,7 @@
             </div>
 
             <!-- Image Upload -->
-            <div class="image-upload-area">
+            <div class="image-upload-area" (dragover)="onDragOver($event)" (drop)="onDropFile($event, 'image')">
               <h4>Upload New Image</h4>
               <div class="upload-instructions">
                 <i class="fa fa-info-circle"></i>
@@ -305,6 +330,7 @@
                       <span class="file-size">{{ getFileSize(selectedFile) }}</span>
                     </div>
                   </div>
+                  <img *ngIf="selectedPreviewUrl" [src]="selectedPreviewUrl" class="preview-thumb" alt="Preview"/>
                   <button type="button" 
                           (click)="clearFileSelection()" 
                           class="clear-selection-btn"
@@ -322,6 +348,36 @@
                          [(ngModel)]="altText" 
                          placeholder="Describe the image for accessibility" 
                          class="alt-text-input">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero specific trio editor with fixed keys -->
+          <div *ngIf="section.id === 'hero'" class="hero-trio-editor">
+            <h4>Hero Slides (Fixed Keys)</h4>
+            <div class="images-grid">
+              <div class="image-item" *ngFor="let idx of [1,2,3]">
+                <div class="image-preview">
+                  <img [src]="getCurrentContent('hero', 'hero-image-' + idx, 'image') || 'assets/images/placeholder.jpg'" class="content-image"/>
+                  <div class="image-overlay">
+                    <button type="button" 
+                            (click)="replaceImage('hero', 'hero-image-' + idx)"
+                            class="delete-image-btn"
+                            [disabled]="!selectedFile || uploading"
+                            title="Replace hero-image-{{idx}} with selected file">
+                      <i class="fa fa-refresh"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="image-details">
+                  <span class="image-key">hero-image-{{idx}}</span>
+                  <div class="file-upload-controls small">
+                    <div class="file-input-wrapper">
+                      <input type="file" (change)="onFileSelected($event, 'image')" accept="image/*" class="file-input">
+                      <label class="file-input-label"><i class="fa fa-cloud-upload"></i><span>Choose Image</span></label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -31,6 +31,7 @@ export class ContentManagementComponent implements OnInit {
   
   // Tab management
   private activeTabs: { [key: string]: string } = {};
+  private readonly TAB_STORAGE_KEY = 'cm_active_tabs_v1';
   
   // Sections
   sections = [
@@ -1841,9 +1842,8 @@ export class ContentManagementComponent implements OnInit {
   }
 
   getCurrentHeroImages(): string[] {
-    if (!this.content || !this.content['hero']) return [];
-    
-    return this.content['hero']
+    const hero = this.getSectionItemsSafe('hero');
+    return hero
       .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
       .map((item: ContentItem) => item.optimizedUrl || item.value)
       .filter(Boolean);
@@ -1929,9 +1929,9 @@ export class ContentManagementComponent implements OnInit {
 
     this.uploading = true;
     try {
-      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map(file => ({
+      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map((file, index) => ({
         file,
-        altText: ''
+        altText: `Image ${index + 1}`
       }));
 
       await this.contentService.updateGallery(section, galleryImages).toPromise();
@@ -1948,7 +1948,7 @@ export class ContentManagementComponent implements OnInit {
 
   async updateText(section: string, key: string): Promise<void> {
     const value = this.textContent[`${section}_${key}`];
-    if (!value) {
+    if (value === undefined || value === null) {
       this.alertService.error('Please enter text content');
       return;
     }
@@ -1964,6 +1964,15 @@ export class ContentManagementComponent implements OnInit {
     } finally {
       this.uploading = false;
     }
+  }
+
+  // Replace an existing image by key using currently selected file
+  async replaceImage(section: string, key: string): Promise<void> {
+    if (!this.selectedFile) {
+      this.alertService.error('Choose an image first');
+      return;
+    }
+    await this.uploadImage(section, key, this.altText);
   }
 
   async deleteContent(id: number): Promise<void> {
@@ -2879,14 +2888,19 @@ export class ContentManagementComponent implements OnInit {
 
   // Initialize tabs for each section
   private initializeTabs(): void {
+    try {
+      const saved = localStorage.getItem(this.TAB_STORAGE_KEY);
+      if (saved) this.activeTabs = JSON.parse(saved);
+    } catch {}
     this.sections.forEach(section => {
-      this.activeTabs[section.id] = 'text';
+      if (!this.activeTabs[section.id]) this.activeTabs[section.id] = 'text';
     });
   }
 
   // Tab management methods
   setActiveTab(sectionId: string, tabName: string): void {
     this.activeTabs[sectionId] = tabName;
+    try { localStorage.setItem(this.TAB_STORAGE_KEY, JSON.stringify(this.activeTabs)); } catch {}
   }
 
   getActiveTab(sectionId: string): string {
