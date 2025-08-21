@@ -949,6 +949,23 @@ export class ContentManagementComponent implements OnInit {
     try {
       this.content = await this.contentService.getAdminContent().toPromise();
       this.initializeTextContent();
+
+      const headerItems = (this.content && Array.isArray((this.content as any)['header'])) ? (this.content as any)['header'] : [];
+      const hasLogo = headerItems.some((i: any) => i.type === 'logo' && i.key === 'main-logo');
+      if (!hasLogo) {
+        (this.content as any)['header'] = headerItems.concat([{
+          id: 0,
+          section: 'header',
+          type: 'logo',
+          key: 'main-logo',
+          value: 'assets/images/bcflats.png',
+          publicId: null,
+          altText: 'BC Flats Logo',
+          order: 1,
+          isActive: true,
+          optimizedUrl: 'assets/images/bcflats.png'
+        }]);
+      }
       
       // Create backup on first successful load if no backup exists
       if (!this.hasBackup) {
@@ -1811,7 +1828,7 @@ export class ContentManagementComponent implements OnInit {
 
   // Get current content for specific sections
   getCurrentLogo(): string {
-    return this.getCurrentContent('header', 'main-logo', 'logo');
+    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
   }
 
   getCurrentHeroImages(): string[] {
