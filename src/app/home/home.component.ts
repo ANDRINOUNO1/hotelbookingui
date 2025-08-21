@@ -132,6 +132,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
     foods: 'assets/images/Foods.jpg',
     pool: 'assets/images/Pool.jpg'
   };
+  // Add services content properties
+  servicesContent: { [key: string]: any } = {};
+  contactContent: { [key: string]: any } = {};
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -159,12 +162,19 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   async loadContent() {
     try {
+      console.log('Loading content from CMS...');
       this.content = await this.contentService.getAllContent().toPromise();
+      console.log('Content loaded:', this.content);
       
       // Load logo
-      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
-      if (logoContent) {
-        this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
+      try {
+        const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+        if (logoContent) {
+          this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
+          console.log('Logo loaded:', this.logoUrl);
+        }
+      } catch (logoError) {
+        console.warn('Failed to load logo:', logoError);
       }
       
       // Load hero images
@@ -174,6 +184,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
           .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
           .map((item: ContentItem) => item.optimizedUrl || item.value)
           .filter(Boolean);
+        console.log('Hero images loaded:', this.heroImages);
       }
       
       // Load about section images
@@ -187,6 +198,25 @@ export class HomeComponent implements AfterViewInit, OnInit {
           }
         }
       });
+      console.log('About images loaded:', this.aboutImages);
+
+      // Load services content
+      const servicesContent = this.content['services'] || [];
+      servicesContent.forEach((item: ContentItem) => {
+        if (item.type === 'text') {
+          this.servicesContent[item.key] = item.value;
+        }
+      });
+      console.log('Services content loaded:', this.servicesContent);
+
+      // Load contact content
+      const contactContent = this.content['contact'] || [];
+      contactContent.forEach((item: ContentItem) => {
+        if (item.type === 'text') {
+          this.contactContent[item.key] = item.value;
+        }
+      });
+      console.log('Contact content loaded:', this.contactContent);
       
     } catch (error) {
       console.error('Error loading content:', error);
@@ -203,6 +233,44 @@ export class HomeComponent implements AfterViewInit, OnInit {
     const sectionContent = this.content[section] || [];
     const contentItem = sectionContent.find((item: ContentItem) => item.key === key && item.type === 'text');
     return contentItem ? contentItem.value : '';
+  }
+
+  // Add helper methods for services and contact content
+  getServiceContent(key: string): string {
+    return this.servicesContent[key] || this.getDefaultServiceContent(key);
+  }
+
+  getContactContent(key: string): string {
+    return this.contactContent[key] || this.getDefaultContactContent(key);
+  }
+
+  private getDefaultServiceContent(key: string): string {
+    const defaults: { [key: string]: string } = {
+      'food-drinks-title': 'food & drinks',
+      'food-drinks-description': 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+      'outdoor-dining-title': 'outdoor dining',
+      'outdoor-dining-description': 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+      'beach-view-title': 'beach view',
+      'beach-view-description': 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+      'decorations-title': 'decorations',
+      'decorations-description': 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+      'swimming-pool-title': 'swimming pool',
+      'swimming-pool-description': 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+      'resort-beach-title': 'resort beach',
+      'resort-beach-description': 'Step into paradise on our private beach, where golden sands meet turquoise waters.'
+    };
+    return defaults[key] || '';
+  }
+
+  private getDefaultContactContent(key: string): string {
+    const defaults: { [key: string]: string } = {
+      'contact-title': 'Contact Us',
+      'contact-subtitle': 'Get in touch with us',
+      'contact-address': '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
+      'contact-phone': '+123-456-7890',
+      'contact-email': 'BCflats.edu.ph'
+    };
+    return defaults[key] || '';
   }
 
   toggleDarkMode() {
