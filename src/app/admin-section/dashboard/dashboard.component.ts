@@ -6,6 +6,7 @@ import { LoadingSpinnerComponent } from '../../_components/loading-spinner.compo
 import { DashboardchartviewComponent } from './dashboardchartview/dashboardchartview.component';
 import { SharedService, DashboardAnalytics } from '../../_services/shared.service';
 import { catchError, of } from 'rxjs';
+import { DashboardService } from '../../_services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,10 +22,28 @@ export class DashboardComponent implements OnInit {
   bookings: any[] = [];
   analytics: DashboardAnalytics | null = null;
   private dataLoaded = false;
+  totalRooms = 0;
+  availableRooms = 0;
+  reservedRooms = 0;
+  occupiedRooms = 0;
+  otherRooms = 0;
+
+  dropdownOpen = {
+    available: false,
+    reserved: false,
+    occupied: false,
+    other: false
+  };
+
+  availableBreakdown: { name: string, count: number }[] = [];
+  reservedBreakdown: { name: string, count: number }[] = [];
+  occupiedBreakdown: { name: string, count: number }[] = [];
+  otherBreakdown: { name: string, count: number }[] = [];
 
   constructor(
     private http: HttpClient,
     private sharedService: SharedService,
+    private dashboardService: DashboardService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -32,6 +51,33 @@ export class DashboardComponent implements OnInit {
     if (isPlatformBrowser(this.platformId) && !this.dataLoaded) {
       this.fetchData();
     }
+    this.dashboardService.getRoomStatusDistribution().subscribe(data => {
+      // Room status categories
+      const availableStatuses = ['Vacant and Ready', 'Vacant and Clean'];
+      const reservedStatuses = ['Reserved - Guaranteed', 'Reserved - Not Guaranteed'];
+      const occupiedStatuses = [
+        'Occupied', 'Stay Over', 'On Change', 'Do Not Disturb', 'Cleaning in Progress',
+        'Sleep Out', 'On Queue', 'Skipper', 'Lockout', 'Did Not Check Out',
+        'Due Out', 'Check Out', 'Early Check In'
+      ];
+
+      // Breakdown arrays
+      this.availableBreakdown = data.filter(item => availableStatuses.includes(item.name));
+      this.reservedBreakdown = data.filter(item => reservedStatuses.includes(item.name));
+      this.occupiedBreakdown = data.filter(item => occupiedStatuses.includes(item.name));
+      this.otherBreakdown = data.filter(item =>
+        !availableStatuses.includes(item.name) &&
+        !reservedStatuses.includes(item.name) &&
+        !occupiedStatuses.includes(item.name)
+      );
+
+      // Totals
+      this.availableRooms = this.availableBreakdown.reduce((sum, item) => sum + item.count, 0);
+      this.reservedRooms = this.reservedBreakdown.reduce((sum, item) => sum + item.count, 0);
+      this.occupiedRooms = this.occupiedBreakdown.reduce((sum, item) => sum + item.count, 0);
+      this.otherRooms = this.otherBreakdown.reduce((sum, item) => sum + item.count, 0);
+      this.totalRooms = data.reduce((sum, item) => sum + item.count, 0);
+    });
   }
 
   fetchData() {
@@ -110,6 +156,10 @@ export class DashboardComponent implements OnInit {
 
   get allCount() {
     return this.rooms.length;
+  }
+
+  toggleDropdown(type: 'available' | 'reserved' | 'occupied' | 'other') {
+    this.dropdownOpen[type] = !this.dropdownOpen[type];
   }
 
   get statusSummary() {

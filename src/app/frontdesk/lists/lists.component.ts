@@ -264,20 +264,43 @@ export class ListsComponent implements OnInit {
   confirmCheckout() {
     if (!this.selectedReservation) return;
 
-    // checkout reservation
+    const roomId = this.selectedReservation.room_id; // get the room id from the booking
+
+    // Step 1: delete the booking (checkout)
     this.http.delete(`${environment.apiUrl}/bookings/${this.selectedReservation.id}`)
       .subscribe({
         next: () => {
-          this.loadReservations();
-          this.showCheckoutModal = false;
-          this.selectedReservation = null;
+          console.log('✅ Booking checked out successfully');
+
+          // Step 2: update the room status back to Vacant and Ready
+          if (roomId) {
+            this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Vacant and Ready' })
+              .subscribe({
+                next: () => {
+                  console.log('✅ Room status updated to Vacant and Ready');
+                  this.loadReservations();
+                  this.showCheckoutModal = false;
+                  this.selectedReservation = null;
+                },
+                error: (err) => {
+                  console.error('❌ Failed to update room status:', err);
+                  this.error = 'Booking was checked out but failed to update room status.';
+                }
+              });
+          } else {
+            // fallback if no room_id found
+            this.loadReservations();
+            this.showCheckoutModal = false;
+            this.selectedReservation = null;
+          }
         },
         error: (err) => {
-          console.error('Error completing checkout:', err);
+          console.error('❌ Error completing checkout:', err);
           this.error = 'Failed to complete checkout';
         }
       });
   }
+
 
   cancelCheckout() {
     this.showCheckoutModal = false;
@@ -447,7 +470,6 @@ export class ListsComponent implements OnInit {
 
   getMinCheckoutDate(): string {
     if (!this.selectedReservation || !this.selectedReservation.checkOut) return '';
-    
     try {
       const currentCheckout = new Date(this.selectedReservation.checkOut);
       if (isNaN(currentCheckout.getTime())) return '';
@@ -463,12 +485,9 @@ export class ListsComponent implements OnInit {
 
   getMaxCheckoutDate(): string {
     if (!this.selectedReservation || !this.selectedReservation.checkOut) return '';
-    
     try {
       const currentCheckout = new Date(this.selectedReservation.checkOut);
       if (isNaN(currentCheckout.getTime())) return '';
-      
-      // Maximum date is current checkout date + 30 days (reasonable limit)
       const maxDate = new Date(currentCheckout);
       maxDate.setDate(currentCheckout.getDate() + 30);
       return maxDate.toISOString().split('T')[0];
@@ -480,7 +499,6 @@ export class ListsComponent implements OnInit {
   getAdditionalDays(): number {
     const checkoutDate = this.newCheckoutDate || this.manualCheckoutDate;
     if (!this.selectedReservation || !checkoutDate) return 0;
-    
     try {
       const currentCheckout = new Date(this.selectedReservation.checkOut);
       const newCheckout = new Date(checkoutDate);

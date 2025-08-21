@@ -5,10 +5,11 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 
 export interface RoomAvailability {
+  price: number;
   roomId: number;
   roomNumber: string;
   roomType: string;
-  isAvailable: boolean;
+  roomStatus: string;
   occupancy?: RoomOccupancy[];
 }
 

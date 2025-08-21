@@ -26,7 +26,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   customerForm!: FormGroup;
   selectedRoomType: RoomType | null = null;
   showErrors = false;
-  consentAccepted = false;
   showConsentModal = false;
   phoneChecking = false;
   phoneValid: boolean | null = null;
@@ -60,7 +59,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
       address: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', [Validators.required, this.postalCodeValidator()]],
-      specialRequest: ['']
+      specialRequest: [''],
+      consentAccepted: [false, Validators.requiredTrue]
     });
   }
 
@@ -91,8 +91,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   // Method to handle consent checkbox changes
   onConsentChange() {
-    // Additional logic for consent changes if needed
-    console.log('Consent changed:', this.consentAccepted);
+    const consent = this.customerForm.get('consentAccepted')?.value;
+    console.log('Consent changed:', consent);
   }
 
 
@@ -265,7 +265,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    if (!this.consentAccepted) {
+    // Use the form control value instead of this.consentAccepted
+    if (!this.customerForm.get('consentAccepted')?.value) {
       alert('Please accept the data collection consent before proceeding.');
       return;
     }
@@ -303,7 +304,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   isFormValid(): boolean {
-    return this.customerForm.valid && this.consentAccepted;
+    return this.customerForm.valid && this.customerForm.get('consentAccepted')?.value;
   }
 
 
@@ -323,7 +324,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   resetForm() {
     this.customerForm.reset();
     this.resetFormState();
-    this.consentAccepted = false;
   }
 
 

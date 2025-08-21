@@ -47,7 +47,7 @@ export class CustomersComponent implements OnInit {
               grouped[guestEmail].rooms.push({
                 number: room?.roomNumber,
                 type: room?.roomType?.type || room?.RoomType?.type || '',
-                status: room?.isAvailable ? 'Available' : 'Occupied',
+                status: room?.roomStatus ? 'Vacant and Ready' : 'Occupied',
                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                 booking
               });

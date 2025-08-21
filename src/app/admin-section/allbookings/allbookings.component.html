@@ -34,14 +34,18 @@
         <td>{{ room.guest }}</td>
         <td>{{ room.type }}</td>
         <td>
-          <span class="status-label" [ngClass]="room.status">{{ room.status | titlecase }}</span>
+          <span class="status-label" [ngClass]="room.statusClass">
+            {{ room.statusText }}
+          </span>
         </td>
         <td>
-            <span class="status-label" [ngClass]="room.paymentStatus">{{ room.paymentStatus }}</span>
+          <span class="status-label" [ngClass]="getPaymentClass(room.paymentStatus)">
+            {{ room.paymentStatus }}
+          </span>
         </td>
-                 <td>
-           <button class="btn-view" (click)="openViewPopup(room)">View</button>
-         </td>
+        <td>
+          <button class="btn-view" (click)="openViewPopup(room)">View</button>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -124,7 +124,7 @@ export class ConfirmationComponent implements OnInit {
     });
   }
 
-  confirmBooking() {
+  async confirmBooking() {
     // Basic fee check
     if (this.paymentDetails.amount < this.reservationFee) {
       alert(`Reservation fee must be at least ₱${this.reservationFee}.`);
@@ -160,6 +160,23 @@ export class ConfirmationComponent implements OnInit {
       }
     }
 
+    // 1. Fetch all rooms from backend
+    const allRooms: any[] = (await this.http.get<any[]>(`${environment.apiUrl}/rooms`).toPromise()) ?? [];
+
+    // 2. Filter rooms by selected type and status
+    const availableRooms = allRooms.filter(room =>
+      room.roomTypeId === this.selectedRoomType?.id &&
+      (room.roomStatus === 'Vacant and Ready' || room.roomStatus === 'Vacant and Clean')
+    );
+
+    if (!availableRooms.length) {
+      alert('No available rooms for the selected type.');
+      return;
+    }
+
+  // 3. Select the first available room (or more if needed)
+  const selectedRoom = availableRooms[0];
+
     // Payload
     const bookingPayload = {
       roomTypeId: this.selectedRoomType?.id,
@@ -192,6 +209,11 @@ export class ConfirmationComponent implements OnInit {
       pay_status: false,
       paidamount: this.paymentDetails.amount
     };
+
+    await this.http.put(
+      `${environment.apiUrl}/rooms/${selectedRoom.id}`,
+      { roomStatus: 'Reserved - Not Guaranteed' }
+    ).toPromise();
 
     // Submit booking
     this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({

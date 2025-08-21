@@ -10,58 +10,64 @@ import { Room, Booking } from '../../../_models/booking.model';
   styleUrl: './fourth-floor.component.scss'
 })
 export class FourthFloorComponent {
-  @Input() rooms: Room[] = [];
+    @Input() rooms: Room[] = [];
   @Input() bookings: Booking[] = [];
 
-  
   getGuestName(roomId: number): string {
     const booking = this.bookings.find(b => b.room_id === roomId);
     return booking ? `${booking.guest.first_name} ${booking.guest.last_name}` : '';
   }
 
-  getRoomStatus(room: any): string {
-    // Check if there's an active booking for this room
-    const activeBooking = this.bookings.find(b => 
-      b.room_id === room.id && 
-      b.status !== 'checked_out'
-    );
-
-    if (activeBooking) {
-      switch (activeBooking.status) {
-        case 'checked_in':
-          return 'Occupied';
-        case 'reserved':
-          return 'Reserved';
-        default:
-          return 'Occupied';
-      }
-    }
-
-    // Check if room is marked as unavailable
-    if (room.isAvailable === false) {
-      return 'Maintenance';
-    }
-
-    return 'Vacant';
+  /** ✅ Now we just use the backend's roomStatus field directly */
+  getRoomStatus(room: Room): string {
+    return room.roomStatus || 'Unknown';
   }
 
+  /** ✅ Add classes for each backend status */
   getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'vacant':
-        return 'vacant';
-      case 'occupied':
-        return 'occupied';
-      case 'reserved':
-        return 'reserved';
-      case 'maintenance':
-        return 'maintenance';
+    switch (status) {
+      case 'Occupied':
+      case 'Stay Over':
+      case 'Skipper':
+        return 'status-occupied';
+
+      case 'On Change':
+      case 'Cleaning in Progress':
+        return 'status-cleaning';
+
+      case 'Do Not Disturb':
+      case 'Sleep Out':
+      case 'On Queue':
+      case 'Lockout':
+        return 'status-warning';
+
+      case 'Vacant and Ready':
+      case 'Vacant and Clean':
+      case 'Early Check In':
+      case 'Check Out':
+      case 'Due Out':
+        return 'status-vacant';
+
+      case 'Out of Order':
+      case 'Out of Service':
+        return 'status-out';
+
+      case 'Did Not Check Out':
+        return 'status-critical';
+
+      case 'Reserved - Guaranteed':
+        return 'status-reserved-guaranteed';
+
+      case 'Reserved - Not Guaranteed':
+        return 'status-reserved-not';
+
       default:
-        return 'vacant';
+        return 'status-default';
     }
   }
 
   getRoomClass(room: Room): string {
     const status = this.getRoomStatus(room).toLowerCase();
-    return `room-${status}`; 
+    return `room-${status.replace(/\s+/g, '-')}`; // e.g. "room-vacant-and-ready"
   }
 }

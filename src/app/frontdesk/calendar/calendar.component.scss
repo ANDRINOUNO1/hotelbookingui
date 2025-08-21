@@ -305,3 +305,17 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background: linear-gradient(135deg, #23233a, #4b3912);
 }
+
+.out-of-service-row {
+  background-color: #f2f2f2;
+}
+
+.out-of-service-label {
+  text-align: center;
+  font-weight: bold;
+  color: #757575;
+  background-color: #e0e0e0;
+  border: 1px dashed #bdbdbd;
+  height: 50px;
+  vertical-align: middle;
+}

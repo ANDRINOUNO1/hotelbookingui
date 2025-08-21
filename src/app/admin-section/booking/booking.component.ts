@@ -33,6 +33,7 @@ export class BookingComponent implements OnInit {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
           next: (bookingsData) => {
             this.occupiedRooms = bookingsData
+              .filter(booking => booking.status === 'reserved')
               .map(booking => {
                 const room = roomsData.find(r => r.id === booking.room_id);
                 if (room) {
@@ -41,7 +42,7 @@ export class BookingComponent implements OnInit {
                     number: room.roomNumber,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     type: room.roomType?.type || room.RoomType?.type || 'Classic',
-                    status: booking.pay_status ? 'paid' : 'occupied',
+                    status: booking.pay_status ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed',
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking 
                   };
@@ -65,6 +66,21 @@ export class BookingComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Reserved - Guaranteed':
+        return 'reserved-guaranteed';
+      case 'Reserved - Not Guaranteed':
+        return 'reserved-not-guaranteed';
+      case 'Occupied':
+        return 'occupied';
+      case 'Vacant':
+        return 'vacant';
+      default:
+        return 'default';
+    }
   }
 
   addBooking(newBooking: Booking) {
@@ -112,6 +128,20 @@ export class BookingComponent implements OnInit {
     });
   }
 
+  updateRoomStatus(roomId: number, guaranteed: boolean) {
+  const newStatus = guaranteed ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed';
+
+    this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: newStatus }).subscribe({
+      next: () => {
+        console.log(`✅ Room status updated to ${newStatus}`);
+        this.loadOccupiedRooms();
+      },
+      error: (err) => {
+        console.error('❌ Failed to update room status:', err);
+      }
+    });
+  }
+
   confirmPayment(room: any) {
     if (confirm(`Are you sure you want to confirm payment for ${room.guest}? This will send a payment confirmation email.`)) {
       const updatedBooking = {
@@ -123,6 +153,7 @@ export class BookingComponent implements OnInit {
         next: (updatedBooking) => {
           console.log('✅ Payment confirmed successfully');
           this.sendPaymentConfirmationEmail(updatedBooking);
+          this.updateRoomStatus(room.booking.room_id, true);
           this.loadOccupiedRooms();
           this.displaySuccessMessage();
         },
