@@ -168,9 +168,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
       
       // Load logo
       try {
-        const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
-        if (logoContent) {
-          this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+      if (logoContent) {
+        this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
           console.log('Logo loaded:', this.logoUrl);
         }
       } catch (logoError) {
