@@ -948,9 +948,18 @@ export class ContentManagementComponent implements OnInit {
     this.loading = true;
     try {
       this.content = await this.contentService.getAdminContent().toPromise();
+     
+      if (!this.content || typeof this.content !== 'object') {
+        this.content = {} as any;
+      }
+      ['header','hero','about','services','rooms','contact'].forEach(key => {
+        if (!Array.isArray((this.content as any)[key])) {
+          (this.content as any)[key] = [];
+        }
+      });
       this.initializeTextContent();
 
-      const headerItems = (this.content && Array.isArray((this.content as any)['header'])) ? (this.content as any)['header'] : [];
+      const headerItems = Array.isArray((this.content as any)['header']) ? (this.content as any)['header'] : [];
       const hasLogo = headerItems.some((i: any) => i.type === 'logo' && i.key === 'main-logo');
       if (!hasLogo) {
         (this.content as any)['header'] = headerItems.concat([{
