@@ -934,6 +934,14 @@ export class ContentManagementComponent implements OnInit {
   ngOnInit(): void {
     this.loadContent();
     this.initializeTabs();
+
+    
+    this.content = this.content || {};
+    ['hero','about','services','rooms','contact','header'].forEach(key => {
+      if (!Array.isArray((this.content as any)[key])) {
+        (this.content as any)[key] = [];
+      }
+    });
   }
 
   async loadContent(): Promise<void> {
@@ -2883,7 +2891,7 @@ export class ContentManagementComponent implements OnInit {
   }
 
   getSectionStatus(sectionId: string): string {
-    const sectionContent = this.content[sectionId] || [];
+    const sectionContent = this.getSectionItemsSafe(sectionId);
     if (sectionContent.length === 0) return 'Empty';
     if (sectionContent.some((item: any) => item.isActive)) return 'Active';
     return 'Inactive';
@@ -2900,6 +2908,14 @@ export class ContentManagementComponent implements OnInit {
 
   getTextFields(sectionId: string): any[] {
     return this.textFields[sectionId as keyof typeof this.textFields] || [];
+  }
+
+  // Safely get items for a section even if content is not yet loaded
+  private getSectionItemsSafe(sectionId: string): any[] {
+    const content: any = this.content;
+    if (!content || typeof content !== 'object') return [];
+    const items = content[sectionId];
+    return Array.isArray(items) ? items : [];
   }
 
   // File management methods
@@ -2992,12 +3008,12 @@ export class ContentManagementComponent implements OnInit {
   }
 
   hasGalleryContent(sectionId: string): boolean {
-    const sectionContent = this.content[sectionId] || [];
+    const sectionContent = this.getSectionItemsSafe(sectionId);
     return sectionContent.some((item: any) => item.type === 'gallery');
   }
 
   getGalleryContent(sectionId: string): any[] {
-    const sectionContent = this.content[sectionId] || [];
+    const sectionContent = this.getSectionItemsSafe(sectionId);
     return sectionContent.filter((item: any) => item.type === 'gallery');
   }
 }

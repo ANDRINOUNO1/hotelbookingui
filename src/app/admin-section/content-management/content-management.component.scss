@@ -8,64 +8,64 @@
 }
 
 // Header Section
-.header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  .header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 30px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  color: white;
+    color: white;
 
-  .header-content {
-    display: flex;
-    align-items: center;
+    .header-content {
+      display: flex;
+      align-items: center;
     gap: 30px;
 
-    .logo-section {
-      .header-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 12px;
+      .logo-section {
+        .header-logo {
+          width: 80px;
+          height: 80px;
+          border-radius: 12px;
         background: white;
         padding: 10px;
+        }
       }
-    }
 
-    .title-section {
+      .title-section {
       flex: 1;
 
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
+        h1 {
+          font-size: 2.5rem;
+          font-weight: 700;
         margin: 0 0 8px 0;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+          font-size: 1.1rem;
+          margin: 0;
+          opacity: 0.9;
+        }
       }
 
-      p {
-        font-size: 1.1rem;
-        margin: 0;
-        opacity: 0.9;
-      }
-    }
-
-    .header-actions {
+      .header-actions {
       display: flex;
       gap: 15px;
-
+        
       .backup-btn, .global-reset-btn {
         padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
         display: flex;
         align-items: center;
         gap: 8px;
         font-size: 0.95rem;
-
-        &:hover {
-          transform: translateY(-2px);
+          
+          &:hover {
+            transform: translateY(-2px);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
@@ -125,7 +125,7 @@
     }
 
     .quick-actions-buttons {
-      display: flex;
+    display: flex;
       gap: 12px;
 
       .quick-btn {
@@ -171,8 +171,8 @@
 }
 
 // Section Cards
-.section-card {
-  background: white;
+  .section-card {
+    background: white;
   border-radius: 16px;
   margin-bottom: 30px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -188,7 +188,7 @@
     border-left: 5px solid #007bff;
   }
 
-  .section-header {
+    .section-header {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 25px 30px;
     border-bottom: 1px solid #dee2e6;
@@ -214,7 +214,7 @@
 
     .section-title {
       flex: 1;
-
+      
       h2 {
         font-size: 1.8rem;
         font-weight: 700;
@@ -315,7 +315,7 @@
 // Text Content Editor
 .text-content-editor {
   .editor-header {
-    display: flex;
+      display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
@@ -324,21 +324,21 @@
 
     h3 {
       font-size: 1.4rem;
-      font-weight: 600;
+        font-weight: 600;
       margin: 0;
       color: #212529;
-    }
-
+      }
+      
     .editor-actions {
       display: flex;
       gap: 12px;
-
+        
       .reset-btn, .save-btn {
         padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
+          border: none;
+          border-radius: 6px;
         font-weight: 500;
-        cursor: pointer;
+          cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
@@ -348,8 +348,8 @@
       .reset-btn {
         background: #6c757d;
         color: white;
-
-        &:hover {
+          
+          &:hover {
           background: #5a6268;
         }
       }
@@ -376,14 +376,14 @@
     gap: 25px;
 
     .text-input-group {
-      label {
+        label {
         display: block;
-        font-weight: 600;
+          font-weight: 600;
         margin-bottom: 8px;
         color: #495057;
-        font-size: 0.95rem;
-      }
-
+          font-size: 0.95rem;
+        }
+        
       .input-wrapper {
         .text-input, .text-textarea {
           width: 100%;
@@ -393,18 +393,18 @@
           font-size: 0.95rem;
           transition: all 0.2s ease;
           font-family: inherit;
-
+          
           &:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
           }
-
+          
           &::placeholder {
             color: #adb5bd;
           }
         }
-
+        
         .text-textarea {
           resize: vertical;
           min-height: 80px;
@@ -451,34 +451,34 @@
       .upload-btn {
         padding: 10px 20px;
         background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
+          color: white;
+          border: none;
+          border-radius: 6px;
         font-weight: 500;
-        cursor: pointer;
+          cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
         gap: 6px;
-
-        &:hover:not(:disabled) {
+          
+          &:hover:not(:disabled) {
           background: #0056b3;
-        }
-
-        &:disabled {
+          }
+          
+          &:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
+            cursor: not-allowed;
+          }
         }
       }
     }
-  }
 
   .current-images {
     margin-bottom: 30px;
 
     h4 {
       font-size: 1.1rem;
-      font-weight: 600;
+        font-weight: 600;
       margin: 0 0 20px 0;
       color: #495057;
     }
@@ -517,7 +517,7 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
-            display: flex;
+        display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
@@ -595,7 +595,7 @@
       margin-bottom: 20px;
 
       .file-input-wrapper {
-        .file-input {
+      .file-input {
           display: none;
         }
 
@@ -604,14 +604,14 @@
           align-items: center;
           gap: 8px;
           padding: 12px 24px;
-          background: #f8f9fa;
+        background: #f8f9fa;
           border: 2px dashed #dee2e6;
           border-radius: 8px;
-          cursor: pointer;
+        cursor: pointer;
           transition: all 0.2s ease;
           color: #6c757d;
-
-          &:hover {
+        
+        &:hover {
             background: #e9ecef;
             border-color: #adb5bd;
             color: #495057;
@@ -666,7 +666,7 @@
           height: 32px;
           cursor: pointer;
           transition: all 0.2s ease;
-
+          
           &:hover {
             background: #5a6268;
             transform: scale(1.1);
@@ -722,26 +722,26 @@
     }
 
     .gallery-actions {
-      .upload-btn {
+    .upload-btn {
         padding: 10px 20px;
         background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 6px;
+      color: white;
+      border: none;
+      border-radius: 6px;
         font-weight: 500;
-        cursor: pointer;
+      cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
         gap: 6px;
-
-        &:hover:not(:disabled) {
+      
+      &:hover:not(:disabled) {
           background: #218838;
-        }
-
-        &:disabled {
+      }
+      
+      &:disabled {
           opacity: 0.6;
-          cursor: not-allowed;
+        cursor: not-allowed;
         }
       }
     }
@@ -752,7 +752,7 @@
 
     h4 {
       font-size: 1.1rem;
-      font-weight: 600;
+        font-weight: 600;
       margin: 0 0 20px 0;
       color: #495057;
     }
@@ -796,7 +796,7 @@
 
         .clear-selection-btn {
           background: #6c757d;
-          color: white;
+            color: white;
           border: none;
           border-radius: 50%;
           width: 32px;
@@ -816,7 +816,7 @@
   .current-gallery {
     h4 {
       font-size: 1.1rem;
-      font-weight: 600;
+            font-weight: 600;
       margin: 0 0 20px 0;
       color: #495057;
     }
@@ -863,15 +863,15 @@
 
             .delete-gallery-btn {
               background: #dc3545;
-              color: white;
-              border: none;
+            color: white;
+            border: none;
               border-radius: 50%;
               width: 36px;
               height: 36px;
-              cursor: pointer;
+            cursor: pointer;
               transition: all 0.2s ease;
-
-              &:hover {
+            
+            &:hover {
                 background: #c82333;
                 transform: scale(1.1);
               }
@@ -888,7 +888,7 @@
 
           .gallery-order {
             display: block;
-            font-weight: 600;
+        font-weight: 600;
             color: #007bff;
             margin-bottom: 4px;
             font-size: 0.9rem;
@@ -1160,9 +1160,9 @@
       flex: 1;
       min-width: 120px;
       padding: 12px 16px;
-      font-size: 0.9rem;
-    }
-  }
+          font-size: 0.9rem;
+        }
+      }
 
   .tab-content {
     padding: 20px 15px;
