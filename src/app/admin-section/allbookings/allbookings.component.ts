@@ -25,6 +25,27 @@ export class AllbookingsComponent implements OnInit {
     this.loadOccupiedRooms();
   }
 
+  getStatusClass(booking: Booking): string {
+    switch (booking.status) {
+      case 'reserved':
+        return booking.pay_status
+          ? 'status-guaranteed'
+          : 'status-not-guaranteed';
+      case 'checked_in':
+        return 'status-checked-in';
+      case 'checked_out':
+        return 'status-checked-out';
+      default:
+        return 'status-unknown';
+    }
+  }
+
+  getPaymentClass(paymentStatus: string): string {
+    return paymentStatus.toLowerCase() === 'paid'
+      ? 'payment-paid'
+      : 'payment-unpaid';
+  }
+
   loadOccupiedRooms() {
     this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (roomsData) => {
@@ -40,7 +61,16 @@ export class AllbookingsComponent implements OnInit {
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     address: `${booking.guest.address}, ${booking.guest.city}`,
                     type: room.roomType?.type || room.RoomType?.type || 'Classic',
-                    status: booking.pay_status ? 'paid' : 'occupied',
+                    statusText: booking.status === 'reserved'
+                      ? (booking.pay_status ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed')
+                      : booking.status === 'checked_in'
+                        ? 'Checked In'
+                        : booking.status === 'checked_out'
+                          ? 'Checked Out'
+                          : booking.status === 'cancelled'
+                            ? 'Cancelled'
+                            : 'Unknown',
+                    statusClass: this.getStatusClass(booking),
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking
                   };
@@ -70,7 +100,8 @@ export class AllbookingsComponent implements OnInit {
         (room.guest?.toLowerCase() || '').includes(term) ||
         (room.number?.toString() || '').includes(term) ||
         (room.type?.toLowerCase() || '').includes(term) ||
-        (room.paymentStatus?.toLowerCase() || '').includes(term)
+        (room.paymentStatus?.toLowerCase() || '').includes(term) ||
+        (room.status?.toLowerCase() || '').includes(term) 
       );
     }
   }

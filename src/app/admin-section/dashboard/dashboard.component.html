@@ -34,8 +34,18 @@
         <i class="fa fa-circle-check"></i>
       </div>
       <div class="analytics-content">
-        <p class="label">Available</p>
-        <p class="value">{{ vacantCount }}</p>
+        <p class="label">
+          Available
+          <button class="dropdown-btn" (click)="toggleDropdown('available')" aria-label="Show breakdown">▼</button>
+        </p>
+        <p class="value">{{ availableRooms }}</p>
+        <div class="dropdown">
+          <ul *ngIf="dropdownOpen.available">
+            <li *ngFor="let item of availableBreakdown">
+              {{ item.name }}: {{ item.count }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -44,8 +54,18 @@
         <i class="fa fa-calendar-check"></i>
       </div>
       <div class="analytics-content">
-        <p class="label">Reserved</p>
-        <p class="value">{{ reservedCount }}</p>
+        <p class="label">
+          Reserved
+          <button class="dropdown-btn" (click)="toggleDropdown('reserved')" aria-label="Show breakdown">▼</button>
+        </p>
+        <p class="value">{{ reservedRooms }}</p>
+        <div class="dropdown">
+          <ul *ngIf="dropdownOpen.reserved">
+            <li *ngFor="let item of reservedBreakdown">
+              {{ item.name }}: {{ item.count }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -54,8 +74,38 @@
         <i class="fa fa-door-closed"></i>
       </div>
       <div class="analytics-content">
-        <p class="label">Occupied</p>
-        <p class="value">{{ occupiedCount }}</p>
+        <p class="label">
+          Occupied
+          <button class="dropdown-btn" (click)="toggleDropdown('occupied')" aria-label="Show breakdown">▼</button>
+        </p>
+        <p class="value">{{ occupiedRooms }}</p>
+        <div class="dropdown">
+          <ul *ngIf="dropdownOpen.occupied">
+            <li *ngFor="let item of occupiedBreakdown">
+              {{ item.name }}: {{ item.count }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-card gray">
+      <div class="icon-wrapper gray">
+        <i class="fa fa-question-circle"></i>
+      </div>
+      <div class="analytics-content">
+        <p class="label">
+          Other
+          <button class="dropdown-btn" (click)="toggleDropdown('other')" aria-label="Show breakdown">▼</button>
+        </p>
+        <p class="value">{{ otherRooms }}</p>
+        <div class="dropdown">
+          <ul *ngIf="dropdownOpen.other">
+            <li *ngFor="let item of otherBreakdown">
+              {{ item.name }}: {{ item.count }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

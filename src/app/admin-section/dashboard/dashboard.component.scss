@@ -76,6 +76,63 @@
         }
       }
     }
+    .analytics-card.gray {
+      border-left-color: #6b7280;
+      .icon-wrapper.gray {
+        background-color: #f3f4f6;
+        color: #6b7280;
+      }
+    }
+
+    // Dropdown styles for breakdowns
+    .analytics-content {
+      position: relative;
+
+      .dropdown {
+        margin-top: 0.5rem;
+        display: inline-block;
+
+        button {
+          background: #f3f4f6;
+          border: none;
+          color: #374151;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 0.2rem 0.7rem;
+          border-radius: 0.3rem;
+          transition: background 0.2s;
+          margin-bottom: 0.2rem;
+          &:hover {
+            background: #e5e7eb;
+          }
+        }
+
+        ul {
+          background: #fff;
+          border-radius: 0.5rem;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          padding: 0.5rem 1rem;
+          margin: 0.3rem 0 0 0;
+          list-style: none;
+          color: #374151;
+          font-size: 0.95rem;
+          position: absolute;
+          z-index: 10;
+          min-width: 160px;
+          left: 0;
+          top: 2.2rem;
+          border: 1px solid #e5e7eb;
+        }
+
+        li {
+          padding: 0.2rem 0;
+          border-bottom: 1px solid #e5e7eb;
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
   }
 
   .metrics-grid {

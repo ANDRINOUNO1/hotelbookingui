@@ -359,25 +359,30 @@ button {
   letter-spacing: 0.5px;
   display: inline-block;
   transition: all 0.3s ease;
-  
+
   &.occupied {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     color: white;
   }
-  
-  &.paid {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    color: white;
-  }
-  
+
   &.vacant {
     background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
     color: white;
   }
-  
-  &.reserved {
+
+  &.reserved-guaranteed {
+    background: linear-gradient(135deg, #e5ff00 0%, #fffb1d 100%);
+    color: rgb(0, 0, 0);
+  }
+
+  &.reserved-not-guaranteed {
     background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
     color: white;
+  }
+
+  &.default {
+    background: #bdc3c7;
+    color: #2c3e50;
   }
 }
 

@@ -387,32 +387,31 @@
 
     // Availability Count
     .availability-count {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      padding: 0.5rem 1rem;
-      background: rgba(22, 163, 74, 0.1);
-      border: 1px solid rgba(22, 163, 74, 0.3);
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
+      font-size: 14px;
+      margin-top: 8px;
+
+      &.low-availability {
+        .warning-text {
+          color: #d32f2f;
+          font-weight: bold;
+          padding: 4px 8px;
+          border-radius: 4px;
+          display: inline-block;
+        }
+      }
 
       .count-label {
-        color: #16a34a;
-        font-size: 0.8rem;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
       }
 
       .count-value {
-        color: black;
+        color: #ffffff;
         font-size: 0.9rem;
         font-weight: 700;
         text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
     }
+
 
     // Room Details Dropdown
     .room-details-dropdown {

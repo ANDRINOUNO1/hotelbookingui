@@ -53,15 +53,15 @@
     <div class="calendar-legend">
       <div class="legend-item">
         <span class="legend-color legend-reserved"></span>
-        <span class="legend-text">Reserved (Unpaid)</span>
+        <span class="legend-text">Reserved (Guaranteed / Not Guaranteed)</span>
       </div>
       <div class="legend-item">
         <span class="legend-color legend-occupied"></span>
-        <span class="legend-text">Occupied (Paid)</span>
+        <span class="legend-text">Occupied</span>
       </div>
       <div class="legend-item">
         <span class="legend-color legend-maintenance"></span>
-        <span class="legend-text">Maintenance</span>
+        <span class="legend-text">Others</span>
       </div>
     </div>
 
@@ -77,32 +77,42 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let room of filteredRooms">
+        <tr *ngFor="let room of filteredRooms" 
+            [class.out-of-service-row]="isRoomOutOfService(room)">
+
           <td class="calendar-cell room-info">
             Room {{ room.roomNumber }}
           </td>
-          <ng-container *ngFor="let cell of getRowCells(room)">
-            <td *ngIf="cell.type === 'empty'" class="calendar-cell booking-cell"></td>
-            <td *ngIf="cell.type === 'booking'"
-                class="calendar-cell booking-cell"
-                [attr.colspan]="cell.colspan">
-              <div class="booking-block"
-                cdkDrag
-                (cdkDragEnded)="onDragEnd($event, cell.booking!, room)"
-                (mousedown)="dragStart = true"
-                (mouseup)="onClickBooking(cell.booking, room)"
-                [ngClass]="{
-                  'booking-reserved': cell.booking && !cell.booking.pay_status,
-                  'booking-occupied': cell.booking && cell.booking.pay_status,
-                  'booking-maintenance': isMaintenance(cell)
-                }"
-                style="cursor: pointer;">
-              {{ cell.booking?.guest?.first_name || '' }} {{ cell.booking?.guest?.last_name || cell.booking?.requests || '' }}
-            </div>
 
+          <ng-container *ngIf="isRoomOutOfService(room); else calendarCells">
+            <td class="calendar-cell out-of-service-label" [attr.colspan]="visibleDates.length">
+              {{ room.roomStatus }}
             </td>
           </ng-container>
-        </tr>
+
+          <ng-template #calendarCells>
+            <ng-container *ngFor="let cell of getRowCells(room)">
+              <td *ngIf="cell.type === 'empty'" class="calendar-cell booking-cell"></td>
+              <td *ngIf="cell.type === 'booking'"
+                  class="calendar-cell booking-cell"
+                  [attr.colspan]="cell.colspan">
+                <div class="booking-block"
+                    cdkDrag
+                    (cdkDragEnded)="onDragEnd($event, cell.booking!, room)"
+                    (mousedown)="dragStart = true"
+                    (mouseup)="onClickBooking(cell.booking, room)"
+                    [ngClass]="{
+                      'booking-reserved': cell.booking && !cell.booking.pay_status,
+                      'booking-occupied': cell.booking && cell.booking.pay_status,
+                      'booking-maintenance': isMaintenance(cell)
+                    }"
+                    style="cursor: pointer;">
+                  {{ cell.booking?.guest?.first_name || '' }} {{ cell.booking?.guest?.last_name || cell.booking?.requests || '' }}
+                </div>
+              </td>
+            </ng-container>
+          </ng-template>
+          </tr>
       </tbody>
     </table>
   </div>

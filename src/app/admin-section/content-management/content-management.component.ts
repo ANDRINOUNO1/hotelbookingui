@@ -21,13 +21,20 @@ export class ContentManagementComponent implements OnInit {
   selectedLogo: File | null = null;
   selectedGalleryFiles: File[] = [];
   altText: string = '';
+  // Preview URLs for selected files (used in template)
+  selectedPreviewUrl: string | null = null;
+  selectedLogoPreviewUrl: string | null = null;
   
   // Backup system
   private contentBackup: any = null;
-  private hasBackup: boolean = false;
+  public hasBackup: boolean = false;
   
   // Text content
   textContent: { [key: string]: string } = {};
+  
+  // Tab management
+  private activeTabs: { [key: string]: string } = {};
+  private readonly TAB_STORAGE_KEY = 'cm_active_tabs_v1';
   
   // Sections
   sections = [
@@ -40,6 +47,43 @@ export class ContentManagementComponent implements OnInit {
 
   // Store original content values
   private originalContent: { [key: string]: string } = {};
+
+  // Text field definitions for each section
+  private textFields = {
+    hero: [
+      { key: 'title', label: 'Hero Title', type: 'input', placeholder: 'Enter hero title' },
+      { key: 'subtitle', label: 'Hero Subtitle', type: 'input', placeholder: 'Enter hero subtitle' }
+    ],
+    about: [
+      { key: 'staff-title', label: 'Staff Title', type: 'input', placeholder: 'Enter staff section title' },
+      { key: 'staff-description', label: 'Staff Description', type: 'textarea', placeholder: 'Enter staff description' },
+      { key: 'foods-title', label: 'Foods Title', type: 'input', placeholder: 'Enter foods section title' },
+      { key: 'foods-description', label: 'Foods Description', type: 'textarea', placeholder: 'Enter foods description' },
+      { key: 'pool-title', label: 'Pool Title', type: 'input', placeholder: 'Enter pool section title' },
+      { key: 'pool-description', label: 'Pool Description', type: 'textarea', placeholder: 'Enter pool description' }
+    ],
+    services: [
+      { key: 'food-drinks-title', label: 'Food & Drinks Title', type: 'input', placeholder: 'Enter food & drinks title' },
+      { key: 'food-drinks-description', label: 'Food & Drinks Description', type: 'textarea', placeholder: 'Enter food & drinks description' },
+      { key: 'outdoor-dining-title', label: 'Outdoor Dining Title', type: 'input', placeholder: 'Enter outdoor dining title' },
+      { key: 'outdoor-dining-description', label: 'Outdoor Dining Description', type: 'textarea', placeholder: 'Enter outdoor dining description' },
+      { key: 'beach-view-title', label: 'Beach View Title', type: 'input', placeholder: 'Enter beach view title' },
+      { key: 'beach-view-description', label: 'Beach View Description', type: 'textarea', placeholder: 'Enter beach view description' },
+      { key: 'decorations-title', label: 'Decorations Title', type: 'input', placeholder: 'Enter decorations title' },
+      { key: 'decorations-description', label: 'Decorations Description', type: 'textarea', placeholder: 'Enter decorations description' },
+      { key: 'swimming-pool-title', label: 'Swimming Pool Title', type: 'input', placeholder: 'Enter swimming pool title' },
+      { key: 'swimming-pool-description', label: 'Swimming Pool Description', type: 'textarea', placeholder: 'Enter swimming pool description' },
+      { key: 'resort-beach-title', label: 'Resort Beach Title', type: 'input', placeholder: 'Enter resort beach title' },
+      { key: 'resort-beach-description', label: 'Resort Beach Description', type: 'textarea', placeholder: 'Enter resort beach description' }
+    ],
+    contact: [
+      { key: 'contact-title', label: 'Contact Title', type: 'input', placeholder: 'Enter contact section title' },
+      { key: 'contact-subtitle', label: 'Contact Subtitle', type: 'input', placeholder: 'Enter contact section subtitle' },
+      { key: 'contact-address', label: 'Contact Address', type: 'input', placeholder: 'Enter contact address' },
+      { key: 'contact-phone', label: 'Contact Phone', type: 'input', placeholder: 'Enter contact phone number' },
+      { key: 'contact-email', label: 'Contact Email', type: 'input', placeholder: 'Enter contact email' }
+    ]
+  };
 
   // Create backup of current content
   createBackup(): void {
@@ -893,13 +937,48 @@ export class ContentManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContent();
+    this.initializeTabs();
+
+    
+    this.content = this.content || {};
+    ['hero','about','services','rooms','contact','header'].forEach(key => {
+      if (!Array.isArray((this.content as any)[key])) {
+        (this.content as any)[key] = [];
+      }
+    });
   }
 
   async loadContent(): Promise<void> {
     this.loading = true;
     try {
       this.content = await this.contentService.getAdminContent().toPromise();
+     
+      if (!this.content || typeof this.content !== 'object') {
+        this.content = {} as any;
+      }
+      ['header','hero','about','services','rooms','contact'].forEach(key => {
+        if (!Array.isArray((this.content as any)[key])) {
+          (this.content as any)[key] = [];
+        }
+      });
       this.initializeTextContent();
+
+      const headerItems = Array.isArray((this.content as any)['header']) ? (this.content as any)['header'] : [];
+      const hasLogo = headerItems.some((i: any) => i.type === 'logo' && i.key === 'main-logo');
+      if (!hasLogo) {
+        (this.content as any)['header'] = headerItems.concat([{
+          id: 0,
+          section: 'header',
+          type: 'logo',
+          key: 'main-logo',
+          value: 'assets/images/bcflats.png',
+          publicId: null,
+          altText: 'BC Flats Logo',
+          order: 1,
+          isActive: true,
+          optimizedUrl: 'assets/images/bcflats.png'
+        }]);
+      }
       
       // Create backup on first successful load if no backup exists
       if (!this.hasBackup) {
@@ -1679,22 +1758,6 @@ export class ContentManagementComponent implements OnInit {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           }
-        ],
-        header: [
-          {
-            id: 55,
-            section: 'header',
-            type: 'logo',
-            key: 'main-logo',
-            value: 'assets/images/bcflats.png',
-            publicId: null,
-            altText: 'BC Flats Logo',
-            order: 1,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
         ]
       };
       this.initializeTextContent();
@@ -1778,16 +1841,19 @@ export class ContentManagementComponent implements OnInit {
 
   // Get current content for specific sections
   getCurrentLogo(): string {
-    return this.getCurrentContent('header', 'main-logo', 'logo');
+    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
   }
 
   getCurrentHeroImages(): string[] {
-    if (!this.content || !this.content['hero']) return [];
-    
-    return this.content['hero']
-      .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
-      .map((item: ContentItem) => item.optimizedUrl || item.value)
-      .filter(Boolean);
+    const hero = this.getSectionItemsSafe('hero');
+    const urls: string[] = [];
+    hero.forEach((item: ContentItem) => {
+      if (item && (item.type === 'image' || item.type === 'gallery')) {
+        const u = (item as any).optimizedUrl || item.value;
+        if (typeof u === 'string' && u.length > 0) urls.push(u);
+      }
+    });
+    return urls;
   }
 
   getCurrentAboutImages(): { [key: string]: string } {
@@ -1810,8 +1876,12 @@ export class ContentManagementComponent implements OnInit {
     if (file) {
       if (type === 'image') {
         this.selectedFile = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+        (this as any).selectedPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'logo') {
         this.selectedLogo = file;
+        try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+        (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
       } else if (type === 'gallery') {
         this.selectedGalleryFiles = Array.from(event.target.files);
       }
@@ -1870,9 +1940,9 @@ export class ContentManagementComponent implements OnInit {
 
     this.uploading = true;
     try {
-      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map(file => ({
+      const galleryImages: GalleryImage[] = this.selectedGalleryFiles.map((file, index) => ({
         file,
-        altText: ''
+        altText: `Image ${index + 1}`
       }));
 
       await this.contentService.updateGallery(section, galleryImages).toPromise();
@@ -1889,7 +1959,7 @@ export class ContentManagementComponent implements OnInit {
 
   async updateText(section: string, key: string): Promise<void> {
     const value = this.textContent[`${section}_${key}`];
-    if (!value) {
+    if (value === undefined || value === null) {
       this.alertService.error('Please enter text content');
       return;
     }
@@ -1905,6 +1975,15 @@ export class ContentManagementComponent implements OnInit {
     } finally {
       this.uploading = false;
     }
+  }
+
+  // Replace an existing image by key using currently selected file
+  async replaceImage(section: string, key: string): Promise<void> {
+    if (!this.selectedFile) {
+      this.alertService.error('Choose an image first');
+      return;
+    }
+    await this.uploadImage(section, key, this.altText);
   }
 
   async deleteContent(id: number): Promise<void> {
@@ -1985,6 +2064,12 @@ export class ContentManagementComponent implements OnInit {
     return this.getContentBySection(section);
   }
 
+  // Return content or fallback to sample data so admins see current context
+  getSectionContentOrSample(section: string): ContentItem[] {
+    const items = this.getAllContent(section);
+    return items && items.length > 0 ? items : this.getSampleContent(section);
+  }
+
   getContentKeys(): string[] {
     return this.content ? Object.keys(this.content) : [];
   }
@@ -2002,23 +2087,18 @@ export class ContentManagementComponent implements OnInit {
     return this.contentService.getOptimizedImageUrl(publicId, type);
   }
 
-  // Get section location description
-  getSectionLocation(sectionId: string): string {
-    const locations: { [key: string]: string } = {
-      'hero': 'Hero section (main banner at top of page)',
-      'about': 'About section (below hero, shows staff, food, pool info)',
-      'services': 'Services section (amenities and features)',
-      'rooms': 'Rooms section (room showcase and gallery)',
-      'contact': 'Contact section (contact information and form)'
-    };
-    return locations[sectionId] || 'Main content area';
+  // Current value with fallback to sample content when none saved yet
+  getCurrentContentWithFallback(section: string, key: string, type: 'text' | 'image' | 'logo' = 'text'): string {
+    const live = this.getCurrentContent(section, key, type);
+    if (live) return live;
+    const sampleList = this.getSampleContent(section) || [];
+    const sample = sampleList.find((c: ContentItem) => c.key === key && c.type === type);
+    if (!sample) return '';
+    if (type === 'text') return sample.value || '';
+    return (sample as any).optimizedUrl || sample.value || '';
   }
 
-  clearFileInput(input: HTMLInputElement | null): void {
-    if (input) {
-      input.value = '';
-    }
-  }
+
 
   clearFileInputFromEvent(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -2832,5 +2912,199 @@ export class ContentManagementComponent implements OnInit {
       return `Current: ${currentText}`;
     }
     return `Enter ${key}`;
+  }
+
+  // Initialize tabs for each section
+  private initializeTabs(): void {
+    try {
+      const saved = localStorage.getItem(this.TAB_STORAGE_KEY);
+      if (saved) this.activeTabs = JSON.parse(saved);
+    } catch {}
+    this.sections.forEach(section => {
+      if (!this.activeTabs[section.id]) this.activeTabs[section.id] = 'text';
+    });
+  }
+
+  // Tab management methods
+  setActiveTab(sectionId: string, tabName: string): void {
+    this.activeTabs[sectionId] = tabName;
+    try { localStorage.setItem(this.TAB_STORAGE_KEY, JSON.stringify(this.activeTabs)); } catch {}
+  }
+
+  getActiveTab(sectionId: string): string {
+    return this.activeTabs[sectionId] || 'text';
+  }
+
+  // Helper methods for the new interface
+  getSectionIcon(sectionId: string): string {
+    const icons: { [key: string]: string } = {
+      'hero': 'fa fa-star',
+      'about': 'fa fa-info-circle',
+      'services': 'fa fa-cogs',
+      'rooms': 'fa fa-bed',
+      'contact': 'fa fa-envelope'
+    };
+    return icons[sectionId] || 'fa fa-file';
+  }
+
+  getSectionLocation(sectionId: string): string {
+    const locations: { [key: string]: string } = {
+      'hero': 'Main banner at top of page',
+      'about': 'About section below hero',
+      'services': 'Services section with icons',
+      'rooms': 'Rooms showcase section',
+      'contact': 'Contact form and information'
+    };
+    return locations[sectionId] || 'Website section';
+  }
+
+  getSectionStatus(sectionId: string): string {
+    const sectionContent = this.getSectionItemsSafe(sectionId);
+    if (sectionContent.length === 0) return 'Empty';
+    if (sectionContent.some((item: any) => item.isActive)) return 'Active';
+    return 'Inactive';
+  }
+
+  getSectionStatusClass(sectionId: string): string {
+    const status = this.getSectionStatus(sectionId);
+    switch (status) {
+      case 'Active': return 'status-active';
+      case 'Inactive': return 'status-inactive';
+      default: return 'status-empty';
+    }
+  }
+
+  getTextFields(sectionId: string): any[] {
+    return this.textFields[sectionId as keyof typeof this.textFields] || [];
+  }
+
+  // Safely get items for a section even if content is not yet loaded
+  private getSectionItemsSafe(sectionId: string): any[] {
+    const content: any = this.content;
+    if (!content || typeof content !== 'object') return [];
+    const items = content[sectionId];
+    return Array.isArray(items) ? items : [];
+  }
+
+  // File management methods
+  clearLogoSelection(): void {
+    this.selectedLogo = null;
+    this.clearFileInput('logo-upload');
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+  }
+
+  clearFileSelection(): void {
+    this.selectedFile = null;
+    this.altText = '';
+    // Cleanup preview URL if any (future-proof)
+    try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+  }
+
+  clearGallerySelection(): void {
+    this.selectedGalleryFiles = [];
+  }
+
+  private clearFileInput(inputId: string): void {
+    const input = document.getElementById(inputId) as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  // Content management methods
+  onDragOver(event: DragEvent): void { event.preventDefault(); }
+  onDropFile(event: DragEvent, type: 'image' | 'logo' | 'gallery'): void {
+    event.preventDefault();
+    const dt = event.dataTransfer;
+    if (!dt || !dt.files?.length) return;
+    if (type === 'gallery') {
+      this.selectedGalleryFiles = Array.from(dt.files);
+    } else if (type === 'image') {
+      const file = dt.files[0];
+      this.selectedFile = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+      (this as any).selectedPreviewUrl = URL.createObjectURL(file);
+    } else {
+      const file = dt.files[0];
+      this.selectedLogo = file;
+      try { (window as any).URL?.revokeObjectURL?.((this as any).selectedLogoPreviewUrl); } catch {}
+      (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
+    }
+  }
+  refreshContent(): void {
+    this.loadContent();
+  }
+
+  exportContent(): void {
+    const dataStr = JSON.stringify(this.content, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'content-export.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Section-specific methods
+  resetSectionText(sectionId: string): void {
+    const fields = this.getTextFields(sectionId);
+    fields.forEach(field => {
+      const key = sectionId + '_' + field.key;
+      const currentValue = this.getCurrentContent(sectionId, field.key);
+      this.textContent[key] = currentValue || '';
+    });
+  }
+
+  saveAllText(sectionId: string): void {
+    const fields = this.getTextFields(sectionId);
+    let savedCount = 0;
+    
+    fields.forEach(field => {
+      const key = sectionId + '_' + field.key;
+      const value = this.textContent[key];
+      if (value && value.trim()) {
+        this.updateText(sectionId, field.key);
+        savedCount++;
+      }
+    });
+
+    if (savedCount > 0) {
+      this.alertService.success(`Successfully saved ${savedCount} text field(s)`);
+    } else {
+      this.alertService.error('No text content to save');
+    }
+  }
+
+  uploadSectionImage(sectionId: string): void {
+    if (this.selectedFile) {
+      this.uploadImage(sectionId, 'main-image', this.altText);
+    }
+  }
+
+  uploadGalleryImages(sectionId: string): void {
+    if (this.selectedGalleryFiles.length > 0) {
+      this.uploadGallery(sectionId);
+    }
+  }
+
+  // Utility methods
+  trackBySection(index: number, section: any): string {
+    return section.id;
+  }
+
+  formatImageKey(key: string): string {
+    return key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  hasGalleryContent(sectionId: string): boolean {
+    const sectionContent = this.getSectionItemsSafe(sectionId);
+    return sectionContent.some((item: any) => item.type === 'gallery');
+  }
+
+  getGalleryContent(sectionId: string): any[] {
+    const sectionContent = this.getSectionItemsSafe(sectionId);
+    return sectionContent.filter((item: any) => item.type === 'gallery');
   }
 }

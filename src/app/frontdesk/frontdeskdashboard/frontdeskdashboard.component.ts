@@ -21,8 +21,13 @@ export class FrontdeskdashboardComponent implements OnInit {
   roomTypes: RoomType[] = [];
   roomsByType: { [key: string]: Room[] } = {};
   selectedType: string = '';
+  availableRooms = 0;
+  occupiedRooms = 0;
+  reservedRooms = 0;
+  otherRooms = 0;
 
-  
+  isDropdownOpen = false;
+
   statusSummary: { label: string; count: number; class: string; icon: string }[] = [];
 
   constructor(private http: HttpClient) {}
@@ -32,11 +37,14 @@ export class FrontdeskdashboardComponent implements OnInit {
     this.getBookings();
   }
 
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
   /** ✅ Get rooms from backend */
   loadRooms() {
     this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (data) => {
-        // Ensure compatibility: if roomType or RoomType is missing, fallback to grouping by roomTypeId
         this.rooms = data;
         this.roomTypes = this.getUniqueRoomTypes(data);
         this.selectedType = this.roomTypes.length ? this.roomTypes[0].type : '';
@@ -65,12 +73,10 @@ export class FrontdeskdashboardComponent implements OnInit {
   getUniqueRoomTypes(rooms: Room[]): RoomType[] {
     const types: { [key: string]: RoomType } = {};
     rooms.forEach(room => {
-      // Prefer roomType, then RoomType, fallback to roomTypeId/room_type_id
       let roomTypeObj = (room as any).roomType || room.RoomType;
       if (roomTypeObj && roomTypeObj.type) {
         types[roomTypeObj.type] = roomTypeObj;
       } else if ((room as any).roomTypeId || (room as any).room_type_id) {
-        // Fallback: create a pseudo type string
         const id = (room as any).roomTypeId || (room as any).room_type_id;
         const pseudoType = `Type ${id}`;
         types[pseudoType] = { id, type: pseudoType } as RoomType;
@@ -87,7 +93,6 @@ export class FrontdeskdashboardComponent implements OnInit {
         if (roomTypeObj && roomTypeObj.type) {
           return roomTypeObj.type === type.type;
         } else if ((r as any).roomTypeId || (r as any).room_type_id) {
-          // Fallback: pseudo type
           const id = (r as any).roomTypeId || (r as any).room_type_id;
           return `Type ${id}` === type.type;
         }
@@ -101,44 +106,52 @@ export class FrontdeskdashboardComponent implements OnInit {
   }
 
   updateStatusSummary() {
-    const total = this.rooms.length;
-    const reserved = this.bookings.filter(b => 
-      b.status === 'reserved' || 
-      (!b.status && !b.pay_status)
-    ).length;
-    const occupied = this.bookings.filter(b => 
-      b.status === 'checked_in' || 
-      (b.pay_status && b.status !== 'reserved')
-    ).length;
-    const available = total - reserved - occupied;
+    const availableStatuses = ['Vacant and Ready', 'Vacant and Clean'];
+    const reservedStatuses = ['Reserved - Guaranteed', 'Reserved - Not Guaranteed'];
+    const occupiedStatuses = [
+      'Occupied', 'Stay Over', 'On Change', 'Do Not Disturb', 'Cleaning in Progress',
+      'Sleep Out', 'On Queue', 'Skipper', 'Lockout', 'Did Not Check Out',
+      'Due Out', 'Check Out', 'Early Check In'
+    ];
 
-    console.log('Frontdesk Status Summary:', {
-      total,
-      reserved,
-      occupied,
-      available,
-      totalBookings: this.bookings.length
-    });
+    this.availableRooms = this.rooms.filter(
+      r => availableStatuses.includes(r.roomStatus)
+    ).length;
+
+    this.reservedRooms = this.rooms.filter(
+      r => reservedStatuses.includes(r.roomStatus)
+    ).length;
+
+    this.occupiedRooms = this.rooms.filter(
+      r => occupiedStatuses.includes(r.roomStatus)
+    ).length;
+
+    this.otherRooms = this.rooms.filter(
+      r => !availableStatuses.includes(r.roomStatus) &&
+           !reservedStatuses.includes(r.roomStatus) &&
+           !occupiedStatuses.includes(r.roomStatus)
+    ).length;
 
     this.statusSummary = [
-      { label: 'Available', count: available, class: 'card-available', icon: 'fa-circle-check' },
-      { label: 'Reserved', count: reserved, class: 'card-reserved', icon: 'fa-calendar-check' },
-      { label: 'Occupied', count: occupied, class: 'card-occupied', icon: 'fa-door-closed' }
+      { label: 'Available', count: this.availableRooms, class: 'card-available', icon: 'fa-circle-check' },
+      { label: 'Reserved', count: this.reservedRooms, class: 'card-reserved', icon: 'fa-calendar-check' },
+      { label: 'Occupied', count: this.occupiedRooms, class: 'card-occupied', icon: 'fa-door-closed' },
+      { label: 'Other', count: this.otherRooms, class: 'card-other', icon: 'fa-question-circle' }
     ];
   }
 
-  getRoomStatusClass(roomId: number): string {
-    const booking = this.bookings.find(b => b.room_id === roomId);
-    if (booking) {
-      if (booking.status === 'checked_in') {
-        return 'occupied'; // checked-in = fully occupied (red)
-      } else if (booking.status === 'reserved' || !booking.pay_status) {
-        return 'reserved'; // reserved or unpaid = reserved (yellow/orange)
-      } else {
-        return 'occupied'; // paid but not checked-in = occupied (red)
-      }
-    }
-    return 'available'; 
+  getRoomType(room: any): string {
+    return (room as any).roomType?.type || room.RoomType?.type || 'Unknown';
+  }
+
+  getRoomStatusClass(status: string): string {
+    if (!status) return '';
+
+    return status
+      .toLowerCase()
+      .replace(/\s*-\s*/g, '-')   // fix " - " into "-"
+      .replace(/\s+/g, '-')       // replace spaces with single dash
+      .trim();
   }
 
   getGuestName(roomId: number): string {
@@ -148,8 +161,17 @@ export class FrontdeskdashboardComponent implements OnInit {
     }
     return '';
   }
+  getBookingStatusClass(status: string): string {
+    switch (status) {
+      case 'reserved': return 'status-reserved';
+      case 'checked_in': return 'status-checked-in';
+      case 'checked_out': return 'status-checked-out';
+      case 'cancelled': return 'status-cancelled';
+      default: return '';
+    }
+  }
 
-  getRoomType(room: any): string {
-    return (room as any).roomType?.type || room.RoomType?.type || 'Unknown';
+  getPaymentStatusClass(isPaid: boolean): string {
+    return isPaid ? 'payment-paid' : 'payment-unpaid';
   }
 }

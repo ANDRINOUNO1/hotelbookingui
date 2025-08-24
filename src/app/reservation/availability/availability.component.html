@@ -46,10 +46,11 @@
         <div class="room-info">
           <h3>{{ type.type }}</h3>
 
-          <!-- Availability Count -->
-          <div class="availability-count">
-            <span class="count-label">Available:</span>
-            <span class="count-value">{{ getAvailabilityCount(type.type).available }}/{{ getAvailabilityCount(type.type).total }} rooms</span>
+          <div class="availability-count low-availability" 
+              *ngIf="isLowAvailability(type.type)">
+            <span class="warning-text">
+              ⚠ Only a few rooms left! ({{ getAvailabilityCount(type.type).available }} available)
+            </span>
           </div>
 
           <!-- Room Details Inline -->

@@ -78,7 +78,7 @@
       <p>Payment: {{ room.paymentStatus }}</p>
       <button 
         *ngIf="room.booking && (room.booking.status === 'reserved' || !room.booking.status)"
-        (click)="checkIn(room.booking.id)" 
+        (click)="checkIn(room.booking.id, room.booking.room_id)" 
         class="check-in-btn">
         Check In
       </button>
