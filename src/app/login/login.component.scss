@@ -3,6 +3,7 @@
   min-height: 100vh;
   width: 100vw;
   background: url('/assets/images/log-in.jpg') center center/cover no-repeat;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,6 +12,7 @@
 
 .login-container {
   display: flex;
+  z-index: 5;
   width: 90%;
   max-width: 1200px;
   height: 600px;
@@ -35,7 +37,7 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background: rgba(255, 166, 0, 63%);
+  background: rgb(123, 161, 249); 
   border-radius: 18px;
   backdrop-filter: blur(4px);
 }
@@ -69,7 +71,7 @@
   display: block;
   height: 3px;
   width: 100%;
-  background: var(--sub-color);
+  background: rgb(43, 101, 236); 
   border-radius: 2px;
   position: absolute;
   left: 0;
@@ -97,7 +99,7 @@
   transition: border 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
-    border: 1.5px solid #b4884d;
+    border: 1.5px solid rgb(43, 101, 236); 
     box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
     background: #01010123;
   }
@@ -125,7 +127,7 @@
     top: -10px;
     left: 10px;
     font-size: 0.85rem;
-    color: #b4884d;
+    color: rgb(43, 101, 236); 
     background: #ffffff; /* dark form bg, can be replaced with var(--your-bg) */
     padding: 0 4px;
     border-radius: 4px;
@@ -155,7 +157,7 @@
 }
 
 .checkbox-input {
-  accent-color: var(--sub-color);
+  accent-color: rgb(150, 178, 244); 
   margin-right: 0.75rem;
   transform: scale(1.2);
 }
@@ -165,7 +167,7 @@
   padding: 1rem;
   border-radius: 12px;
   border: none;
-  background: var(--sub-color);
+  background: rgb(43, 101, 236); 
   color: var(--main-color);
   font-weight: 700;
   font-size: 1.1rem;
