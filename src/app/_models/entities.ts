@@ -45,7 +45,7 @@ ROOM_TYPES.forEach(roomType => {
          roomNumber,
          room_type_id: roomType.id,
          floor,
-         status: true,
+         roomStatus: 'Vacant and Ready', // Default status
          RoomType: roomType
        });
     }

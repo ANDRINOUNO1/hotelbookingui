@@ -77,16 +77,99 @@
     }
 
     // Status color indicators
-    &.vacant {
-      border-left: 10px solid #46db2f; // Green
+    &.occupied,
+    &.Occupied {
+      border-left-color: #e74c3c; // Red
     }
 
-    &.reserved {
-      border-left: 10px solid #fbbf24; // Yellow/Orange
+    &.stay-over,
+    &.Stay\ Over {
+      border-left-color: #d35400; // Orange-brown
     }
 
-    &.occupied {
-      border-left: 10px solid rgb(229, 43, 52); // Red
+    &.on-change,
+    &.On\ Change {
+      border-left-color: #f39c12; // Yellow-orange
+    }
+
+    &.do-not-disturb,
+    &.Do\ Not\ Disturb {
+      border-left-color: #8e44ad; // Purple
+    }
+
+    &.cleaning-in-progress,
+    &.Cleaning\ in\ Progress {
+      border-left-color: #3498db; // Blue
+    }
+
+    &.sleep-out,
+    &.Sleep\ Out {
+      border-left-color: #16a085; // Teal
+    }
+
+    &.on-queue,
+    &.On\ Queue {
+      border-left-color: #95a5a6; // Grey
+    }
+
+    &.skipper,
+    &.Skipper {
+      border-left-color: #2c3e50; // Dark gray
+    }
+
+    &.vacant-and-ready,
+    &.Vacant\ and\ Ready {
+      border-left-color: #27ae60; // Green
+    }
+
+    &.vacant-and-clean,
+    &.Vacant\ and\ Clean {
+      border-left-color: #2ecc71; // Light green
+    }
+
+    &.out-of-order,
+    &.Out\ of\ Order {
+      border-left-color: #5a5a5a; // Dark red
+    }
+
+    &.out-of-service,
+    &.Out\ of\ Service {
+      border-left-color: #383838; // Orange
+    }
+
+    &.lockout,
+    &.Lockout {
+      border-left-color: #34495e; // Navy
+    }
+
+    &.did-not-checkout,
+    &.Did\ Not\ Check\ Out {
+      border-left-color: #9b59b6; // Purple
+    }
+
+    &.due-out,
+    &.Due\ Out {
+      border-left-color: #f1c40f; // Yellow
+    }
+
+    &.check-out,
+    &.Check\ Out {
+      border-left-color: #2980b9; // Blue
+    }
+
+    &.early-checkin,
+    &.Early\ Check\ In {
+      border-left-color: #1abc9c; // Aqua
+    }
+
+    &.reserved-guaranteed,
+    &.Reserved\ -\ Guaranteed {
+      border-left-color: #f1c40f; // Bright yellow
+    }
+
+    &.reserved-not-guaranteed,
+    &.Reserved\ -\ Not\ Guaranteed {
+      border-left-color: #f39c12; // Orange-yellow
     }
   }
 }
@@ -113,51 +196,6 @@
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 2px solid #f3f4f6;
-
-  h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-  }
-  .calendar-legend {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #ffffff;
-      font-weight: 500;
-
-      .legend-color {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        border: 2px solid #ffffff;
-
-        &.legend-reserved {
-          background: #fbbf24;
-        }
-
-        &.legend-occupied {
-          background: #ffffff;
-        }
-
-        &.legend-paid {
-          background: #ef4444;
-        }
-      }
-
-      .legend-text {
-        font-size: 0.95rem;
-      }
-    }
-  }
-
 }
 .dashboard-basic-info {
   margin: 2rem 0;
@@ -228,5 +266,164 @@
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 0.5rem;
+}
+
+/* Legend color box base */
+.legend-color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 6px;
+  border: 2px solid #ccc; /* fallback border */
+}
+
+/* Match legend colors to status colors */
+.legend-color.occupied {
+  background-color: #e74c3c; /* Red */
+  border-color: #e74c3c;
+}
+
+.legend-color.stay-over {
+  background-color: #d35400; /* Orange-brown */
+  border-color: #d35400;
+}
+
+.legend-color.on-change {
+  background-color: #f39c12; /* Yellow-orange */
+  border-color: #f39c12;
+}
+
+.legend-color.do-not-disturb {
+  background-color: #8e44ad; /* Purple */
+  border-color: #8e44ad;
+}
+
+.legend-color.cleaning-in-progress {
+  background-color: #3498db; /* Blue */
+  border-color: #3498db;
+}
+
+.legend-color.sleep-out {
+  background-color: #16a085; /* Teal */
+  border-color: #16a085;
+}
+
+.legend-color.on-queue {
+  background-color: #95a5a6; /* Grey */
+  border-color: #95a5a6;
+}
+
+.legend-color.skipper {
+  background-color: #2c3e50; /* Dark gray */
+  border-color: #2c3e50;
+}
+
+.legend-color.vacant-ready {
+  background-color: #27ae60; /* Green */
+  border-color: #27ae60;
+}
+
+.legend-color.vacant-clean {
+  background-color: #2ecc71; /* Light green */
+  border-color: #2ecc71;
+}
+
+.legend-color.out-of-order {
+  background-color: #5a5a5a; /* Dark red */
+  border-color: #5a5a5a;
+}
+
+.legend-color.out-of-service {
+  background-color: #383838; /* Orange-ish */
+  border-color: #383838;
+}
+
+.legend-color.lockout {
+  background-color: #34495e; /* Navy */
+  border-color: #34495e;
+}
+
+.legend-color.did-not-checkout {
+  background-color: #9b59b6; /* Purple */
+  border-color: #9b59b6;
+}
+
+.legend-color.due-out {
+  background-color: #f1c40f; /* Yellow */
+  border-color: #f1c40f;
+}
+
+.legend-color.check-out {
+  background-color: #2980b9; /* Blue */
+  border-color: #2980b9;
+}
+
+.legend-color.early-checkin {
+  background-color: #1abc9c; /* Aqua */
+  border-color: #1abc9c;
+}
+
+.legend-color.reserved-guaranteed {
+  background-color: #f1c40f; /* Bright yellow */
+  border-color: #f1c40f;
+}
+
+.legend-color.reserved-not-guaranteed {
+  background-color: #f39c12; /* Orange-yellow */
+  border-color: #f39c12;
+}
+
+/* Dropdown styles */
+.status-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  padding: 8px 14px;
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* Show when active */
+.status-dropdown.open .dropdown-menu {
+  display: block;
+}
+
+/* Legend item layout inside dropdown */
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  margin-right: 8px;
 }
 

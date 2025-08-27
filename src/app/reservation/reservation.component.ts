@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ReservationFormComponent } from './reservation-form/reservation-form.component';
 import { AvailabilityComponent } from './availability/availability.component';
 import { ProcessComponent } from './process/process.component';
@@ -16,7 +17,8 @@ import { RoomType } from '../_models/booking.model';
     ReservationFormComponent,
     AvailabilityComponent,
     ProcessComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    FormsModule
   ],
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.scss'
@@ -24,8 +26,32 @@ import { RoomType } from '../_models/booking.model';
 export class ReservationComponent {
   steps = ['Reservation', 'Availability', 'Guest Details', 'Confirmation'];
   currentStep = 1;
+  termsAccepted = false;
+  showTermsModal = false;
+  termsChecked = false;
 
-  constructor(private reservationDataService: ReservationDataService) {}
+  constructor(
+    private reservationDataService: ReservationDataService,
+    private router: Router
+  ) {}
+
+  goToHome() {
+    this.router.navigate(['/']);
+  }
+
+  showTerms() {
+    this.showTermsModal = true;
+  }
+
+  hideTerms() {
+    this.showTermsModal = false;
+  }
+
+  acceptTerms() {
+    this.termsAccepted = true;
+    this.showTermsModal = false;
+    this.termsAccepted = true
+  }
 
   goToStep(step: number) {
     // Validate current step before allowing navigation

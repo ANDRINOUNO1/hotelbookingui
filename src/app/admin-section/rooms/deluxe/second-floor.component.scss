@@ -26,23 +26,48 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  &.vacant {
-    background: #4caf50;
+  &.status-vacant {
+    background: #4caf50; 
     color: white;
   }
 
-  &.occupied {
-    background: #d32f2f;
+  &.status-occupied {
+    background: #d32f2f; 
     color: white;
   }
 
-  &.reserved {
-    background: #ff9800;
+  &.status-cleaning {
+    background: #2196f3; 
     color: white;
   }
 
-  &.maintenance {
-    background: #9c27b0;
+  &.status-warning {
+    background: #ff9800; 
+    color: white;
+  }
+
+  &.status-out {
+    background: #9c27b0; 
+    color: white;
+  }
+
+  &.status-critical {
+    background: #000000; 
+    color: white;
+  }
+
+  &.status-reserved-guaranteed {
+    background: #795548; 
+    color: white;
+  }
+
+  &.status-reserved-not {
+    background: #607d8b; 
+    color: white;
+  }
+
+  &.status-default {
+    background: #9e9e9e; 
     color: white;
   }
 }

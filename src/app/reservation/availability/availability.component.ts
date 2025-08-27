@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservationDataService } from '../../_services/reservation-data.service';
-import { RoomService, RoomType } from '../../_services/room.service';
+import { RoomService, RoomType, Room } from '../../_services/room.service';
 
 @Component({
   selector: 'app-availability',
@@ -18,35 +18,37 @@ export class AvailabilityComponent implements OnInit {
   availableRoomTypes: RoomType[] = [];
   loading = false;
   error = '';
+  expandedRoomType: string | null = null;
+  selectedDates: { checkIn: string; checkOut: string } | null = null;
+  roomAvailabilityCounts: { [key: string]: { available: number; total: number } } = {};
+  roomAmenities: { [key: string]: string[] } = {};
 
-  // Multiple room images for each room type
   roomImages = {
-  'Classic': [
-    'assets/images/BEACH.jpg',
-    'assets/images/bombo.jpg',
-    'assets/images/CR.jpg',
-    'assets/images/bomboa.png'
-  ],
-  'Deluxe': [
-    'assets/images/deluxe.jpg',
-    'assets/images/deluxe1.jpg',
-    'assets/images/prev.jpg',
-    'assets/images/MainPICTURE.jpg'
-  ],
-  'Prestige': [
-    'assets/images/woww.png',
-    'assets/images/STANDARD ROOM.jpg',
-    'assets/images/HALLWAY.jpg',
-    'assets/images/CHIC ROOM.jpg'
-  ],
-  'Luxury': [
-    'assets/images/hahahaha.png',
-    'assets/images/BEACHVIEW.jpg',
-    'assets/images/hahha.png',
-    'assets/images/DELUXE VIEW.jpg'
-  ]
-};
-
+    'Classic': [
+      'assets/images/BEACH.jpg',
+      'assets/images/bombo.jpg',
+      'assets/images/CR.jpg',
+      'assets/images/bomboa.png'
+    ],
+    'Deluxe': [
+      'assets/images/deluxe.jpg',
+      'assets/images/deluxe1.jpg',
+      'assets/images/prev.jpg',
+      'assets/images/MainPICTURE.jpg'
+    ],
+    'Prestige': [
+      'assets/images/woww.png',
+      'assets/images/STANDARD ROOM.jpg',
+      'assets/images/HALLWAY.jpg',
+      'assets/images/CHIC ROOM.jpg'
+    ],
+    'Luxury': [
+      'assets/images/hahahaha.png',
+      'assets/images/BEACHVIEW.jpg',
+      'assets/images/hahha.png',
+      'assets/images/DELUXE VIEW.jpg'
+    ]
+  };
 
   constructor(
     private reservationDataService: ReservationDataService,
@@ -54,7 +56,18 @@ export class AvailabilityComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loadSelectedDates();
     this.loadAvailableRoomTypes();
+  }
+
+  loadSelectedDates() {
+    const reservation = this.reservationDataService.getReservation();
+    if (reservation) {
+      this.selectedDates = {
+        checkIn: reservation.checkIn,
+        checkOut: reservation.checkOut
+      };
+    }
   }
 
   async loadAvailableRoomTypes() {
@@ -64,41 +77,118 @@ export class AvailabilityComponent implements OnInit {
     try {
       // Get room types from backend
       const roomTypes = await this.roomService.getRoomTypes().toPromise();
-      
-      if (roomTypes) {
-        // Filter room types that have available rooms
+      // Get all rooms from backend
+      const allRooms = await this.roomService.getAllRooms().toPromise();
+
+      if (roomTypes && roomTypes.length > 0) {
         this.availableRoomTypes = [];
-        
         for (const roomType of roomTypes) {
-          const availableRooms = await this.roomService.getAvailableRoomsByType(roomType.type).toPromise();
-          if (availableRooms && availableRooms.length > 0) {
-            // Add the room type with the first available room's price
-            this.availableRoomTypes.push({
-              ...roomType,
-              rate: availableRooms[0].price
-            });
+          // Get rooms for this type
+          const roomsOfType = Array.isArray(allRooms) ? allRooms.filter(room => room.roomTypeId === roomType.id) : [];
+
+          // Count available rooms by status
+          const availableCount = roomsOfType.filter(
+            room => room.roomStatus === 'Vacant and Ready' || room.roomStatus === 'Vacant and Clean'
+          ).length;
+
+          // Add the room type with pricing
+          let enhancedRoomType = roomType;
+          try {
+            const detailedRoomType = await this.roomService.getRoomTypeDetails(roomType.id).toPromise();
+            if (detailedRoomType) {
+              enhancedRoomType = detailedRoomType;
+            }
+          } catch (error) {
+            console.log('Using basic room type data for room type', roomType.id);
           }
+
+          this.availableRoomTypes.push({
+            ...enhancedRoomType,
+            rate: roomsOfType.length > 0 ? roomsOfType[0].price : enhancedRoomType.basePrice
+          });
+
+          // Set counts for UI
+          this.roomAvailabilityCounts[enhancedRoomType.type] = {
+            available: availableCount,
+            total: roomsOfType.length
+          };
+
+          // Load amenities for this room type (don't await to avoid blocking)
+          this.loadRoomAmenities(roomType.id).catch(error => {
+            console.error('Error loading amenities for room type', roomType.id, error);
+          });
         }
+      } else {
+        this.error = 'No room types found.';
       }
     } catch (error) {
-      console.error('Error loading room types:', error);
+      console.error('Error loading room types or rooms:', error);
       this.error = 'Failed to load room types. Please try again.';
-      
-      // Fallback to static data if backend is not available
-      this.loadStaticRoomTypes();
     } finally {
       this.loading = false;
     }
   }
 
-  // Fallback to static data
-  loadStaticRoomTypes() {
-    this.availableRoomTypes = [
-      { id: 1, type: 'Classic', description: 'Comfortable and affordable accommodation', basePrice: 120, rate: 120, reservationFeePercentage: 10.00 },
-      { id: 2, type: 'Deluxe', description: 'Enhanced amenities and spacious rooms', basePrice: 200, rate: 200, reservationFeePercentage: 15.00 },
-      { id: 3, type: 'Prestige', description: 'Luxury accommodations with premium services', basePrice: 150, rate: 150, reservationFeePercentage: 12.50 },
-      { id: 4, type: 'Luxury', description: 'Ultimate luxury experience with top-tier amenities', basePrice: 80, rate: 80, reservationFeePercentage: 8.00 }
-    ];
+  async loadRoomAmenities(roomTypeId: number) {
+    try {
+      const amenities = await this.roomService.getRoomAmenities(roomTypeId).toPromise();
+      if (amenities && amenities.length > 0) {
+        const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+        if (roomType) {
+          this.roomAmenities[roomType.type] = amenities;
+        }
+      } else {
+        const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+        if (roomType) {
+          this.roomAmenities[roomType.type] = this.getAmenitiesByRoomType(roomType.type);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading room amenities from backend:', error);
+      const roomType = this.availableRoomTypes.find(rt => rt.id === roomTypeId);
+      if (roomType) {
+        this.roomAmenities[roomType.type] = this.getAmenitiesByRoomType(roomType.type);
+      }
+    }
+  }
+
+  getAmenitiesByRoomType(roomType: string): string[] {
+    const amenitiesMap: { [key: string]: string[] } = {
+      'Classic': [
+        'Air conditioning',
+        'Private bathroom',
+        'Free WiFi',
+        'TV',
+        'Daily housekeeping',
+        'Towels and linens'
+      ],
+      'Deluxe': [
+        'All Classic amenities',
+        'Premium bedding',
+        'Mini refrigerator',
+        'Coffee maker',
+        'Work desk',
+        'Enhanced toiletries'
+      ],
+      'Prestige': [
+        'All Deluxe amenities',
+        'Balcony/terrace',
+        'Premium toiletries',
+        'Room service',
+        'King-size bed',
+        'Ocean view option'
+      ],
+      'Luxury': [
+        'All Prestige amenities',
+        'Ocean view',
+        'Butler service',
+        'Premium dining access',
+        'Spa access',
+        'Concierge service'
+      ]
+    };
+
+    return amenitiesMap[roomType] || [];
   }
 
   getRoomImage(roomType: string, viewNumber: number): string {
@@ -106,8 +196,46 @@ export class AvailabilityComponent implements OnInit {
     if (roomImages && roomImages[viewNumber - 1]) {
       return roomImages[viewNumber - 1];
     }
-    // Fallback to first image of Classic room type
     return this.roomImages['Classic'][0];
+  }
+
+  toggleRoomDetails(roomType: string) {
+    if (this.expandedRoomType === roomType) {
+      this.expandedRoomType = null;
+    } else {
+      this.expandedRoomType = roomType;
+    }
+  }
+
+  getRoomDescription(roomType: string): string {
+    const roomTypeData = this.availableRoomTypes.find(rt => rt.type === roomType);
+    return roomTypeData?.description || 'No description available.';
+  }
+
+  getAvailabilityCount(roomType: string): { available: number; total: number } {
+    return this.roomAvailabilityCounts[roomType] || { available: 0, total: 0 };
+  }
+
+  getRoomAmenities(roomType: string): string[] {
+    return this.roomAmenities[roomType] || [];
+  }
+
+  isLowAvailability(roomType: string): boolean {
+    const { available, total } = this.getAvailabilityCount(roomType);
+    if (total === 0 || available === 0) return false;
+    return available / total <= 0.2;
+  }
+
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
   selectRoomType(roomType: RoomType) {
