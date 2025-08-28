@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../_services/account.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,11 @@ export class LoginComponent {
 
   activeTab: 'signin' | 'signup' = 'signin';
 
-  constructor(private router: Router, private accountService: AccountService) {}
+  constructor(private router: Router, private accountService: AccountService, private titleService: Title) {}
+
+  ngOnInit(): void {
+    this.titleService.setTitle('BC Flats - Login');
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -62,5 +67,6 @@ export class LoginComponent {
   }
   goToHome() {
     this.router.navigate(['/']);
+    this.titleService.setTitle('BC Flats');
   }
 }

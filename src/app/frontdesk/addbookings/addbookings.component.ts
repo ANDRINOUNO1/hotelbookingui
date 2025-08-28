@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { startWith, Subject, takeUntil } from 'rxjs';
 import { Booking, Guest, Availability, PaymentDetails, RoomType } from '../../_models/booking.model';
 import { RESERVATION_FEES } from '../../_models/entities';
 import { environment } from '../../../environments/environment';
@@ -23,6 +23,9 @@ export class AddbookingsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   reservationFee = RESERVATION_FEES[0]?.fee;
+  estimatedTotal: number = 0;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +36,26 @@ export class AddbookingsComponent implements OnInit {
   ngOnInit() {
     this.loadRoomTypes();
     this.initForm();
+
+    this.bookingForm.valueChanges.subscribe(() => this.updateEstimatedTotal());
+  }
+
+  get numberOfNights(): number {
+    const checkInStr = this.bookingForm.get('availability.checkIn')?.value;
+    const checkOutStr = this.bookingForm.get('availability.checkOut')?.value;
+
+    if (!checkInStr || !checkOutStr) {
+      return 0;
+    }
+
+    const checkInDate = new Date(checkInStr);
+    const checkOutDate = new Date(checkOutStr);
+    
+    // Calculate the difference in time (milliseconds) and convert to days
+    const diffTime = checkOutDate.getTime() - checkInDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays > 0 ? diffDays : 0;
   }
 
   initForm() {
@@ -45,7 +68,6 @@ export class AddbookingsComponent implements OnInit {
         address: ['', [Validators.required, Validators.minLength(5)]],
         city: ['', [Validators.required, Validators.minLength(2)]]
       }),
-
       availability: this.fb.group({
         checkIn: ['', Validators.required],
         checkOut: ['', Validators.required],
@@ -53,65 +75,77 @@ export class AddbookingsComponent implements OnInit {
         children: [0, [Validators.min(0), Validators.max(10)]],
         rooms: [1, [Validators.required, Validators.min(1), Validators.max(5)]]
       }),
-
       payment: this.fb.group({
         paymentMode: ['', Validators.required],
         paymentMethod: [''],
-        amount: [this.reservationFee, [Validators.required, Validators.min(this.reservationFee)]], // Set initial value
+        amount: [this.reservationFee, [Validators.required, Validators.min(this.reservationFee)]],
         mobileNumber: [''],
         cardNumber: [''],
         expiry: [''],
         cvv: ['']
       }),
-
       requests: ['']
     });
-
-    // Amount is already set in the form initialization
-
+    
     const today = new Date().toISOString().split('T')[0];
     this.bookingForm.get('availability.checkIn')?.setValue(today);
 
-    this.bookingForm.get('availability.checkIn')?.valueChanges.subscribe(checkIn => {
-      if (checkIn) {
-        const checkInDate = new Date(checkIn);
-        const nextDay = new Date(checkInDate);
-        nextDay.setDate(nextDay.getDate() + 1);
-        const nextDayStr = nextDay.toISOString().split('T')[0];
-        this.bookingForm.get('availability.checkOut')?.setValue(nextDayStr);
-      }
-    });
+    // Auto-update checkout when check-in changes
+    this.bookingForm.get('availability.checkIn')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(checkIn => {
+        if (checkIn) {
+          const checkInDate = new Date(checkIn);
+          const nextDay = new Date(checkInDate);
+          nextDay.setDate(nextDay.getDate() + 1);
+          const nextDayStr = nextDay.toISOString().split('T')[0];
+          this.bookingForm.get('availability.checkOut')?.setValue(nextDayStr);
+        }
+      });
+    
+    // NEW: Listen to changes in dates to recalculate the total amount
+    const checkInControl = this.bookingForm.get('availability.checkIn');
+    const checkOutControl = this.bookingForm.get('availability.checkOut');
 
-    this.bookingForm.get('payment.paymentMode')?.valueChanges.subscribe(mode => {
-      const mobileNumberControl = this.bookingForm.get('payment.mobileNumber');
-      const cardNumberControl = this.bookingForm.get('payment.cardNumber');
-      const expiryControl = this.bookingForm.get('payment.expiry');
-      const cvvControl = this.bookingForm.get('payment.cvv');
-      const paymentMethodControl = this.bookingForm.get('payment.paymentMethod');
+    if (checkInControl && checkOutControl) {
+        checkInControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => this.updateTotalAmount());
+        checkOutControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => this.updateTotalAmount());
+    }
 
-      // Clear all validators first
-      mobileNumberControl?.clearValidators();
-      cardNumberControl?.clearValidators();
-      expiryControl?.clearValidators();
-      cvvControl?.clearValidators();
-      paymentMethodControl?.clearValidators();
+    // Dynamic validators for payment mode
+    this.bookingForm.get('payment.paymentMode')?.valueChanges
+      .pipe(startWith(this.bookingForm.get('payment.paymentMode')?.value), takeUntil(this.destroy$))
+      .subscribe(mode => {
+        this.updatePaymentValidators(mode);
+      });
+  }
+  
+  // NEW: Centralized logic for updating payment validators
+  updatePaymentValidators(mode: string) {
+    const mobileNumberControl = this.bookingForm.get('payment.mobileNumber');
+    const cardNumberControl = this.bookingForm.get('payment.cardNumber');
+    const expiryControl = this.bookingForm.get('payment.expiry');
+    const cvvControl = this.bookingForm.get('payment.cvv');
+    const paymentMethodControl = this.bookingForm.get('payment.paymentMethod');
 
-      if (mode === 'GCash' || mode === 'Maya') {
+    // Clear all validators first
+    mobileNumberControl?.clearValidators();
+    cardNumberControl?.clearValidators();
+    expiryControl?.clearValidators();
+    cvvControl?.clearValidators();
+    paymentMethodControl?.clearValidators();
+
+    if (mode === 'GCash' || mode === 'Maya') {
         mobileNumberControl?.setValidators([Validators.required, Validators.pattern(/^\+?[\d\s\-\(\)]+$/)]);
-      } else if (mode === 'Card') {
+    } else if (mode === 'Card') {
         cardNumberControl?.setValidators([Validators.required, Validators.pattern(/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/)]);
         expiryControl?.setValidators([Validators.required]);
         cvvControl?.setValidators([Validators.required, Validators.pattern(/^\d{3,4}$/)]);
         paymentMethodControl?.setValidators([Validators.required]);
-      }
-      // For Cash mode, no additional validators needed
+    }
 
-      mobileNumberControl?.updateValueAndValidity();
-      cardNumberControl?.updateValueAndValidity();
-      expiryControl?.updateValueAndValidity();
-      cvvControl?.updateValueAndValidity();
-      paymentMethodControl?.updateValueAndValidity();
-    });
+    // Update validity for all controls
+    [mobileNumberControl, cardNumberControl, expiryControl, cvvControl, paymentMethodControl].forEach(control => control?.updateValueAndValidity());
   }
 
   // Format phone number input with auto "09" prefix
@@ -158,6 +192,23 @@ export class AddbookingsComponent implements OnInit {
     });
   }
 
+  updateTotalAmount() {
+    const selectedTypes = this.roomTypes.filter(rt => this.selectedRoomTypes[rt.id]);
+    const dailyRate = selectedTypes.reduce((sum, rt) => sum + (rt.rate || 0), 0);
+    const nights = this.numberOfNights;
+
+    // Ensure we charge for at least one night if dates are valid
+    const effectiveNights = nights > 0 ? nights : 1;
+    const totalAmount = dailyRate * effectiveNights;
+
+    const amountControl = this.bookingForm.get('payment.amount');
+    if (totalAmount > 0) {
+      amountControl?.setValue(totalAmount);
+    } else {
+      amountControl?.setValue(this.reservationFee);
+    }
+  }
+
   onRoomTypeChange(roomTypeId: number, checked: boolean) {
     this.selectedRoomTypes[roomTypeId] = checked;
     
@@ -190,7 +241,7 @@ export class AddbookingsComponent implements OnInit {
     return Object.values(this.selectedRoomTypes).some(selected => selected);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.bookingForm.invalid || !this.hasSelectedRoomTypes()) {
       this.markFormGroupTouched();
       this.errorMessage = 'Please fill all required fields correctly and select at least one room type.';
@@ -201,66 +252,127 @@ export class AddbookingsComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const formValue = this.bookingForm.value;
-    const selectedRoomTypes = this.getSelectedRoomTypes();
-    const payment = formValue.payment;
+    try {
+      const formValue = this.bookingForm.getRawValue();
+      const payment = formValue.payment;
+      const selectedRoomTypes = this.getSelectedRoomTypes();
 
-    // Create booking payloads
-    const bookingPayloads = selectedRoomTypes.map(roomType => ({
-      roomTypeId: roomType.id,
-      guest: formValue.guest,
-      roomsCount: formValue.availability.rooms,
-      availability: formValue.availability,
-      requests: formValue.requests || '',
-      payment: {
-        ...payment,
-        amount: Number(payment.amount)
-      },
-      pay_status: true,
-      paidamount: payment.amount,
-      createdBy: 'Frontdesk'
-    }));
+      // ✅ Payment minimum check
+      if (payment.amount < this.reservationFee) {
+        alert(`Reservation fee must be at least ₱${this.reservationFee}.`);
+        this.loading = false;
+        return;
+      }
 
-    // Send booking creation requests
-    const postRequests = bookingPayloads.map(payload =>
-      this.http.post(`${environment.apiUrl}/bookings/frontdesk`, payload).toPromise()
-    );
+      // ✅ Payment mode validation
+      const mode = payment.paymentMode;
+      if (!mode) {
+        alert('Please select a payment mode.');
+        this.loading = false;
+        return;
+      }
 
-    Promise.all(postRequests)
-      .then(async results => {
-        // ✅ Update room and booking status after successful creation
-        for (const res of results) {
-          const booking: any = Array.isArray(res) ? res[0] : res; // backend may return array or single
-          if (booking && booking.room_id) {
-            await this.updateRoomAndBookingStatus(booking.room_id, booking.id);
-          }
+      if ((mode === 'GCash' || mode === 'Maya')) {
+        if (!payment.mobileNumber) {
+          alert('Mobile number is required for GCash/Maya payments.');
+          this.loading = false;
+          return;
+        }
+      }
+
+      if (mode === 'Card') {
+        const { paymentMethod, cardNumber, expiry, cvv } = payment;
+        if (!paymentMethod || !cardNumber || !expiry || !cvv) {
+          alert('Please fill in all required card payment fields.');
+          this.loading = false;
+          return;
+        }
+      }
+
+      // ✅ Normalize check-in / check-out
+      const checkIn = new Date(formValue.availability.checkIn).toISOString();
+      const checkOut = new Date(formValue.availability.checkOut).toISOString();
+
+      // ✅ Fetch all rooms
+      const allRooms: any[] = (await this.http.get<any[]>(`${environment.apiUrl}/rooms`).toPromise()) ?? [];
+
+      const bookingPayloads: any[] = [];
+
+      for (const roomType of selectedRoomTypes) {
+        // Filter rooms by type + vacant status
+        const availableRooms = allRooms.filter(room =>
+          room.roomTypeId === roomType.id &&
+          (room.roomStatus === 'Vacant and Ready' || room.roomStatus === 'Vacant and Clean')
+        );
+
+        if (!availableRooms.length) {
+          throw new Error(`Not enough available rooms for ${roomType.type}.`);
         }
 
-        this.successMessage = `Successfully created ${results.length} booking(s) and checked-in!`;
-        this.bookingForm.reset();
-        this.selectedRoomTypes = {};
-        this.roomTypes.forEach(rt => this.selectedRoomTypes[rt.id] = false);
-        this.initForm();
+        // Select the first available room
+        const selectedRoom = availableRooms[0];
 
-        setTimeout(() => this.router.navigate(['/frontdesk/frontdeskdashboard']), 2000);
-      })
-      .catch(err => {
-        this.errorMessage = err.error?.message || 'Failed to create booking.';
-      })
-      .finally(() => this.loading = false);
+        const bookingPayload = {
+          roomId: selectedRoom.id,
+          roomTypeId: roomType.id,
+          guest: { ...formValue.guest },
+          availability: {
+            checkIn,
+            checkOut,
+            adults: formValue.availability.adults,
+            children: formValue.availability.children,
+            rooms: formValue.availability.rooms
+          },
+          roomsCount: formValue.availability.rooms,
+          requests: formValue.requests || '',
+          payment: {
+            ...payment,
+            amount: payment.amount
+          },
+          paidamount: payment.amount,
+          pay_status: true,
+          createdBy: 'Frontdesk'
+        };
+
+        bookingPayloads.push({ bookingPayload, selectedRoomId: selectedRoom.id });
+      }
+
+      // ✅ Update room status + submit bookings
+      const results = [];
+      for (const { bookingPayload, selectedRoomId } of bookingPayloads) {
+
+        const newBooking: any = await this.http.post(`${environment.apiUrl}/bookings/frontdesk`, bookingPayload).toPromise();
+        results.push(newBooking);
+
+        this.updateRoomAndBookingStatus(selectedRoomId, newBooking.id);
+      }
+
+      this.successMessage = `Successfully created ${results.length} booking(s)!`;
+      this.bookingForm.reset();
+      this.selectedRoomTypes = {};
+      this.roomTypes.forEach(rt => this.selectedRoomTypes[rt.id] = false);
+      this.initForm();
+
+      setTimeout(() => this.router.navigate(['/frontdesk/frontdeskdashboard']), 2000);
+
+    } catch (err: any) {
+      this.errorMessage = err.error?.message || err.message || 'Failed to create booking.';
+    } finally {
+      this.loading = false;
+    }
   }
 
-  private async updateRoomAndBookingStatus(roomId: number, bookingId: number) {
+
+  private async updateRoomAndBookingStatus(roomId: number, bookingId: number) { // <--- This function is now correct
     try {
-      // Update room status to "Occupied"
       await this.http.patch(`${environment.apiUrl}/rooms/${roomId}/status`, { roomStatus: 'Occupied' }).toPromise();
 
-      // Update booking status to "checked_in"
       await this.http.patch(`${environment.apiUrl}/bookings/${bookingId}/check-in`, {}).toPromise();
     } catch (err) {
       console.error('Error updating room or booking status:', err);
     }
   }
+
   
   markFormGroupTouched() {
     Object.keys(this.bookingForm.controls).forEach(key => {
@@ -300,7 +412,6 @@ export class AddbookingsComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    // Check if basic form is valid
     if (this.bookingForm.invalid) {
       console.log('Form is invalid:', this.bookingForm.errors);
       this.logFormValidationErrors();
@@ -353,5 +464,21 @@ export class AddbookingsComponent implements OnInit {
         console.log(`${key}:`, control.errors);
       }
     });
+  }
+
+  updateEstimatedTotal() {
+    const formValue = this.bookingForm.getRawValue();
+    const availability = formValue.availability;
+    const nights = this.numberOfNights || 1;
+
+    const dailyRate = this.getSelectedRoomTypes()
+      .reduce((sum, rt) => sum + (rt.rate || 0), 0);
+
+    this.estimatedTotal = dailyRate * nights * (availability.rooms || 1);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

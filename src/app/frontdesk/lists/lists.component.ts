@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { RoomAvailabilityService } from '../../_services/room-availability.service';
+import { ReceiptComponent } from './pointofsale.modal';
+import { Router } from '@angular/router';
 
 interface Reservation {
   id: number;
@@ -19,6 +21,7 @@ interface Reservation {
   status: string;
   room_id?: number;
   bookingStatus?: string;
+  paymentMode?: string;
 }
 
 interface RoomType {
@@ -31,13 +34,14 @@ interface RoomType {
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReceiptComponent],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.scss'
 })
 export class ListsComponent implements OnInit {
   reservations: Reservation[] = [];
   filteredReservations: Reservation[] = [];
+  roomRates: Record<string, number> = {};
   searchTerm: string = '';
   loading = false;
   error = '';
@@ -47,15 +51,39 @@ export class ListsComponent implements OnInit {
   extendDays = 1;
   newCheckoutDate = '';
   manualCheckoutDate = '';
+  paymentMode: string = 'Cash';
+  paymentAmount: number = 0;
+  showPOS = false;
+  receiptData: any = null;
+  change: number = 0;
+
+  billbutton = false;   
 
   constructor(
     private http: HttpClient,
-    private roomAvailabilityService: RoomAvailabilityService
+    private roomAvailabilityService: RoomAvailabilityService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadReservations();
+    this.loadRoomRates
   }
+
+  private loadRoomRates() {
+  this.http.get<RoomType[]>(`${environment.apiUrl}/roomtypes`).subscribe({
+    next: (types) => {
+      this.roomRates = types.reduce<Record<string, number>>((acc, t) => {
+        acc[t.type.toLowerCase()] = 
+          typeof t.basePrice === 'string' ? parseFloat(t.basePrice) : t.basePrice;
+        return acc;
+      }, {});
+    },
+    error: (err) => {
+      console.error('Failed to load room rates:', err);
+    }
+  });
+}
 
   loadReservations() {
     this.loading = true;
@@ -77,6 +105,7 @@ export class ListsComponent implements OnInit {
               roomTypeId: booking.roomTypeId,
               checkIn: checkIn,
               checkOut: checkOut,
+              roomRate: booking.roomRate || this.getRateForRoomType(booking.roomType),
               totalAmount: booking.paidamount || booking.payment?.amount || 0,
               status: booking.pay_status ? 'active' : 'pending',
               room_id: booking.room_id,
@@ -97,6 +126,11 @@ export class ListsComponent implements OnInit {
       }
     });
   }
+
+  getRateForRoomType(roomType: string): number {
+    return this.roomRates[roomType?.toLowerCase()] || 1500;
+  }
+
 
   applySearch() {
     const term = this.searchTerm.trim().toLowerCase();
@@ -130,30 +164,44 @@ export class ListsComponent implements OnInit {
   }
 
   openExtendModal(reservation: Reservation) {
-    this.selectedReservation = reservation;
-    this.extendDays = 1; // Default to 1 day
-    this.manualCheckoutDate = '';
-    
-    // Set default new checkout date (current checkout + 1 day)
-    if (reservation.checkOut && reservation.checkOut !== 'Invalid Date' && reservation.checkOut !== '') {
-      try {
-        const currentCheckout = new Date(reservation.checkOut);
-        if (!isNaN(currentCheckout.getTime())) {
-          const newCheckout = new Date(currentCheckout);
-          newCheckout.setDate(currentCheckout.getDate() + 1);
-          this.newCheckoutDate = newCheckout.toISOString().split('T')[0];
+    this.http.get<any>(`${environment.apiUrl}/bookings/${reservation.id}`).subscribe({
+      next: (latestBooking) => {
+        if (latestBooking.status === 'checked_in') {
+          
+          this.selectedReservation = reservation;
+          this.extendDays = 1; 
+          this.manualCheckoutDate = '';
+
+          if (reservation.checkOut && reservation.checkOut !== 'Invalid Date' && reservation.checkOut !== '') {
+            try {
+              const currentCheckout = new Date(reservation.checkOut);
+              if (!isNaN(currentCheckout.getTime())) {
+                const newCheckout = new Date(currentCheckout);
+                newCheckout.setDate(currentCheckout.getDate() + 1);
+                this.newCheckoutDate = newCheckout.toISOString().split('T')[0];
+              } else {
+                this.newCheckoutDate = '';
+              }
+            } catch (error) {
+              console.error('Error setting default checkout date:', error);
+              this.newCheckoutDate = '';
+            }
+          } else {
+            this.newCheckoutDate = '';
+          }
+          
+          this.showExtendModal = true;
+
         } else {
-          this.newCheckoutDate = '';
+          alert('This booking is no longer active and cannot be extended.');
+          this.loadReservations();
         }
-      } catch (error) {
-        console.error('Error setting default checkout date:', error);
-        this.newCheckoutDate = '';
+      },
+      error: (err) => {
+        console.error('Could not verify booking status:', err);
+        alert('Could not verify the booking status. Please refresh the page and try again.');
       }
-    } else {
-      this.newCheckoutDate = '';
-    }
-    
-    this.showExtendModal = true;
+    });
   }
 
   extendStay() {
@@ -222,21 +270,13 @@ export class ListsComponent implements OnInit {
     const additionalDays = Math.ceil((newCheckout.getTime() - currentCheckout.getTime()) / (1000 * 60 * 60 * 24));
     
     // Calculate new total amount
-    const currentDays = this.getDaysBetween(this.selectedReservation!.checkIn, this.selectedReservation!.checkOut);
-    const ratePerNight = 1500;
+    const ratePerNight = this.getRateForRoomType(this.selectedReservation!.roomType);
     const additionalAmount = additionalDays * ratePerNight;
     const newTotalAmount = this.selectedReservation!.totalAmount + additionalAmount;
 
     const updatedReservation = {
       checkOut: checkoutDate,
-      totalAmount: newTotalAmount,
-      guest_firstName: this.selectedReservation!.guest_firstName,
-      guest_lastName: this.selectedReservation!.guest_lastName,
-      guest_email: this.selectedReservation!.guest_email,
-      guest_phone: this.selectedReservation!.guest_phone,
-      checkIn: this.selectedReservation!.checkIn,
-      roomType: this.selectedReservation!.roomType,
-      status: this.selectedReservation!.bookingStatus || 'checked_in'
+      totalAmount: newTotalAmount
     };
 
     this.http.patch(`${environment.apiUrl}/bookings/${this.selectedReservation!.id}/extend`, updatedReservation)
@@ -258,49 +298,101 @@ export class ListsComponent implements OnInit {
 
   openCheckoutModal(reservation: Reservation) {
     this.selectedReservation = reservation;
+    this.paymentAmount = reservation.totalAmount;
     this.showCheckoutModal = true;
   }
 
   confirmCheckout() {
     if (!this.selectedReservation) return;
 
-    const roomId = this.selectedReservation.room_id; // get the room id from the booking
+    // Capture reservation and room details before making requests
+    const reservationToCheckOut = this.selectedReservation;
+    const roomId = reservationToCheckOut.room_id;
 
-    // Step 1: delete the booking (checkout)
-    this.http.delete(`${environment.apiUrl}/bookings/${this.selectedReservation.id}`)
+    // Define the payload to update the booking's status
+    const updateBookingPayload = { status: 'checked_out' };
+
+    // Step 1: Update the booking status to 'checked_out'
+    this.http.patch(`${environment.apiUrl}/bookings/${reservationToCheckOut.id}/checkout`, {})
       .subscribe({
         next: () => {
-          console.log('✅ Booking checked out successfully');
+          console.log('✅ Booking status updated to checked_out successfully');
 
-          // Step 2: update the room status back to Vacant and Ready
+          const revenuePayload = {
+            source: 'Booking',
+            amount: reservationToCheckOut.totalAmount || 0, // assuming booking has a total_amount field
+            paymentType: reservationToCheckOut.paymentMode || 'Unknown'
+          };
+
+          this.http.post(`${environment.apiUrl}/revenues`, revenuePayload)
+            .subscribe({
+              next: () => {
+                console.log('✅ Revenue recorded successfully');
+              },
+              error: (err) => {
+                console.error('❌ Failed to record revenue:', err);
+                this.error = 'Booking checked out, but revenue was not recorded.';
+              }
+            });
+
+          // Step 2: If a room is associated, update its status to 'Vacant and Ready'
           if (roomId) {
             this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Vacant and Ready' })
               .subscribe({
                 next: () => {
                   console.log('✅ Room status updated to Vacant and Ready');
                   this.loadReservations();
+                  setTimeout(() => this.printReceipt(), 300);
                   this.showCheckoutModal = false;
                   this.selectedReservation = null;
                 },
                 error: (err) => {
                   console.error('❌ Failed to update room status:', err);
-                  this.error = 'Booking was checked out but failed to update room status.';
+                  this.error = 'Booking was checked out, but failed to update the room status.';
                 }
               });
           } else {
-            // fallback if no room_id found
+            // If no room was linked, just reload and close
             this.loadReservations();
             this.showCheckoutModal = false;
             this.selectedReservation = null;
           }
         },
         error: (err) => {
-          console.error('❌ Error completing checkout:', err);
-          this.error = 'Failed to complete checkout';
+          console.error('❌ Error updating booking status:', err);
+          this.error = 'Failed to check out the booking.';
         }
       });
   }
-
+  printReceipt() {
+    if (!this.receiptData) return;
+    
+    const receiptWindow = window.open('', '_blank', 'width=400,height=600');
+    receiptWindow!.document.write(`
+      <html>
+        <head><title>Receipt</title></head>
+        <body style="font-family: Arial; padding: 10px;">
+          <h2 style="text-align:center;">Hotel Receipt</h2>
+          <p><strong>Date:</strong> ${this.receiptData.date}</p>
+          <p><strong>Guest:</strong> ${this.receiptData.guest}</p>
+          <p><strong>Email:</strong> ${this.receiptData.email}</p>
+          <p><strong>Phone:</strong> ${this.receiptData.phone}</p>
+          <p><strong>Room:</strong> ${this.receiptData.room}</p>
+          <p><strong>Check-in:</strong> ${this.receiptData.checkIn}</p>
+          <p><strong>Check-out:</strong> ${this.receiptData.checkOut}</p>
+          <hr>
+          <p><strong>Total:</strong> ₱${this.receiptData.total}</p>
+          <p><strong>Payment:</strong> ₱${this.receiptData.payment}</p>
+          <p><strong>Change:</strong> ₱${this.receiptData.change}</p>
+          <p><strong>Mode:</strong> ${this.receiptData.mode}</p>
+          <hr>
+          <p style="text-align:center;">Thank you for staying with us!</p>
+          <button onclick="window.print()">Print</button>
+        </body>
+      </html>
+    `);
+    receiptWindow!.document.close();
+  }
 
   cancelCheckout() {
     this.showCheckoutModal = false;
@@ -381,9 +473,9 @@ export class ListsComponent implements OnInit {
       }
       
       // For now, use a default rate of 1500 per night if room type info is not available
-      const ratePerNight = 1500;
-      
+      const ratePerNight = this.getRateForRoomType(reservation.roomType);
       return days * ratePerNight;
+
     } catch (error) {
       return 0;
     }
@@ -512,5 +604,20 @@ export class ListsComponent implements OnInit {
     } catch (error) {
       return 0;
     }
+  }
+
+  showBilling(reservation: Reservation) {
+    if (!reservation) return;
+
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/billing/${reservation.id}`])
+    );
+    window.open(url, '_blank');
+  }
+
+
+
+  closeBilling() {
+    this.billbutton = false;
   }
 }
