@@ -16,21 +16,67 @@
   </div>
     <div class="dashboard-headertwo">
       <h2>Booking Status</h2>
-      <div class="calendar-legend">
-        <div class="legend-item">
-          <span class="legend-color legend-occupied"></span>
-          <span class="legend-text">Available</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color legend-reserved"></span>
-          <span class="legend-text">Reserved</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color legend-paid"></span>
-          <span class="legend-text">Occupied</span>
+
+      <!-- Dropdown container -->
+      <div class="status-dropdown" [class.open]="isDropdownOpen">
+        <button class="dropdown-toggle" (click)="toggleDropdown()">
+          {{ isDropdownOpen ? 'Hide Legends ▲' : 'Show Legends ▼' }}
+        </button>
+        <div class="dropdown-menu">
+          
+          <!-- Available -->
+          <h3 class="legend-category">Available</h3>
+          <div class="legend-item">
+            <span class="legend-color vacant-ready"></span>
+            <span class="legend-text">Vacant & Ready</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color vacant-clean"></span>
+            <span class="legend-text">Vacant & Clean</span>
+          </div>
+
+          <!-- Reserved -->
+          <h3 class="legend-category">Reserved</h3>
+          <div class="legend-item">
+            <span class="legend-color reserved-guaranteed"></span>
+            <span class="legend-text">Reserved - Guaranteed</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color reserved-not-guaranteed"></span>
+            <span class="legend-text">Reserved - Not Guaranteed</span>
+          </div>
+
+          <!-- Occupied -->
+          <h3 class="legend-category">Occupied</h3>
+          <div class="legend-item"><span class="legend-color occupied"></span> <span class="legend-text">Occupied</span></div>
+          <div class="legend-item"><span class="legend-color stay-over"></span> <span class="legend-text">Stay Over</span></div>
+          <div class="legend-item"><span class="legend-color on-change"></span> <span class="legend-text">On Change</span></div>
+          <div class="legend-item"><span class="legend-color do-not-disturb"></span> <span class="legend-text">Do Not Disturb</span></div>
+          <div class="legend-item"><span class="legend-color cleaning-in-progress"></span> <span class="legend-text">Cleaning in Progress</span></div>
+          <div class="legend-item"><span class="legend-color sleep-out"></span> <span class="legend-text">Sleep Out</span></div>
+          <div class="legend-item"><span class="legend-color on-queue"></span> <span class="legend-text">On Queue</span></div>
+          <div class="legend-item"><span class="legend-color skipper"></span> <span class="legend-text">Skipper</span></div>
+          <div class="legend-item"><span class="legend-color lockout"></span> <span class="legend-text">Lockout</span></div>
+          <div class="legend-item"><span class="legend-color did-not-checkout"></span> <span class="legend-text">Did Not Check Out</span></div>
+          <div class="legend-item"><span class="legend-color due-out"></span> <span class="legend-text">Due Out</span></div>
+          <div class="legend-item"><span class="legend-color check-out"></span> <span class="legend-text">Check Out</span></div>
+          <div class="legend-item"><span class="legend-color early-checkin"></span> <span class="legend-text">Early Check In</span></div>
+
+          <!-- Out of Order / Service -->
+          <h3 class="legend-category">Out of Order / Service</h3>
+          <div class="legend-item">
+            <span class="legend-color out-of-order"></span>
+            <span class="legend-text">Out of Order</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color out-of-service"></span>
+            <span class="legend-text">Out of Service</span>
+          </div>
+
         </div>
       </div>
     </div>
+
   <div class="type-tabs">
     <button *ngFor="let type of roomTypes"
             [class.active]="type.type === selectedType"
@@ -41,7 +87,7 @@
   <div class="roomview-grid">
     <div *ngFor="let room of roomsByType[selectedType]"
         class="room-card"
-        [ngClass]="getRoomStatusClass(room.id)">
+        [ngClass]="getRoomStatusClass(room.roomStatus)">
       <div class="booking-guest">{{ getGuestName(room.id) }}</div>
       <div class="room-number">{{ room.roomNumber }}</div>
              <div class="room-type">{{ getRoomType(room) }}</div>

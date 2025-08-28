@@ -388,5 +388,9 @@ export class CalendarComponent implements OnInit {
   }
 }
 
+isRoomOutOfService(room: Room): boolean {
+  return room.roomStatus === 'Out of Order' || room.roomStatus === 'Out of Service';
+}
+
 }
 

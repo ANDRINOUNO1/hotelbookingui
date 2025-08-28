@@ -18,6 +18,7 @@ export class BookingComponent implements OnInit {
   occupiedRooms: any[] = [];
   selectedBooking: any = null;
   isLoading = true;
+  showSuccessMessage = false;
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +33,7 @@ export class BookingComponent implements OnInit {
         this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
           next: (bookingsData) => {
             this.occupiedRooms = bookingsData
+              .filter(booking => booking.status === 'reserved')
               .map(booking => {
                 const room = roomsData.find(r => r.id === booking.room_id);
                 if (room) {
@@ -40,7 +42,7 @@ export class BookingComponent implements OnInit {
                     number: room.roomNumber,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     type: room.roomType?.type || room.RoomType?.type || 'Classic',
-                    status: booking.pay_status ? 'paid' : 'occupied',
+                    status: booking.pay_status ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed',
                     paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                     booking 
                   };
@@ -64,6 +66,21 @@ export class BookingComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Reserved - Guaranteed':
+        return 'reserved-guaranteed';
+      case 'Reserved - Not Guaranteed':
+        return 'reserved-not-guaranteed';
+      case 'Occupied':
+        return 'occupied';
+      case 'Vacant':
+        return 'vacant';
+      default:
+        return 'default';
+    }
   }
 
   addBooking(newBooking: Booking) {
@@ -111,20 +128,40 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  confirmPayment(room: any) {
-    const updatedBooking = {
-      ...room.booking,
-      pay_status: true
-    };
+  updateRoomStatus(roomId: number, guaranteed: boolean) {
+  const newStatus = guaranteed ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed';
 
-    this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
-      next: (updatedBooking) => {
-        this.sendPaymentConfirmationEmail(updatedBooking);
+    this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: newStatus }).subscribe({
+      next: () => {
+        console.log(`✅ Room status updated to ${newStatus}`);
         this.loadOccupiedRooms();
       },
       error: (err) => {
+        console.error('❌ Failed to update room status:', err);
       }
     });
+  }
+
+  confirmPayment(room: any) {
+    if (confirm(`Are you sure you want to confirm payment for ${room.guest}? This will send a payment confirmation email.`)) {
+      const updatedBooking = {
+        ...room.booking,
+        pay_status: true
+      };
+
+      this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
+        next: (updatedBooking) => {
+          console.log('✅ Payment confirmed successfully');
+          this.sendPaymentConfirmationEmail(updatedBooking);
+          this.updateRoomStatus(room.booking.room_id, true);
+          this.loadOccupiedRooms();
+          this.displaySuccessMessage();
+        },
+        error: (err) => {
+          console.error('❌ Failed to confirm payment:', err);
+        }
+      });
+    }
   }
 
   deleteBooking(id: number) {
@@ -181,5 +218,16 @@ openViewPopup(room: any) {
   closePopup() {
     this.selectedBooking = null;
     this.editMode = false;
+  }
+
+  displaySuccessMessage() {
+    this.showSuccessMessage = true;
+    setTimeout(() => {
+      this.hideSuccessMessage();
+    }, 5000); // Auto hide after 5 seconds
+  }
+
+  hideSuccessMessage() {
+    this.showSuccessMessage = false;
   }
 }

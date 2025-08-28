@@ -1,4 +1,65 @@
-<section class="progress">
+<!-- Top Bar with Back Button -->
+<div class="top-bar">
+  <button class="back-button" (click)="goToHome()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <h1 class="page-title">BC Flats</h1>
+</div>
+
+<!-- Terms and Conditions Disclaimer -->
+<div class="terms-disclaimer" *ngIf="!termsAccepted">
+  <div class="terms-content">
+    <h2>Terms and Conditions</h2>
+    <p>Before proceeding with your reservation, please read and accept our terms and conditions:</p>
+    
+    <div class="terms-text">
+      <h3>Reservation & Stay Terms:</h3>
+      <ul>
+        <li>All bookings are subject to room availability.</li>
+        <li>Check-in time: 3:00 PM, Check-out time: 11:00 AM.</li>
+        <li>Early check-in or late check-out may incur additional charges and is subject to availability.</li>
+        <li>A valid government-issued ID is required at check-in.</li>
+      </ul>
+
+      <h3>Payment & Cancellation:</h3>
+      <ul>
+        <li>All payments are <strong>non-refundable</strong> once confirmed.</li>
+        <li>Free cancellation up to 24 hours before check-in, unless otherwise stated.</li>
+        <li>No-shows will be charged the full booking amount.</li>
+      </ul>
+
+      <h3>Guest Responsibilities:</h3>
+      <ul>
+        <li>Guests are responsible for any damage to hotel property.</li>
+        <li>Smoking is strictly prohibited inside the rooms.</li>
+        <li>Pets are not allowed unless specifically permitted.</li>
+      </ul>
+
+      <h3>Privacy Policy:</h3>
+      <p>Your personal information will be used solely for reservation purposes and may be shared with third-party partners for booking or payment processing.</p>
+
+      <h3>Liability:</h3>
+      <p>The hotel is not responsible for loss or damage to personal belongings. Guests are advised to secure valuables in provided safes.</p>
+    </div>
+
+    <div class="terms-checkbox">
+      <input type="checkbox" [(ngModel)]="termsChecked" />
+      <span>I have read and agree to the <strong>Terms and Conditions</strong>.</span>
+    </div>
+
+    <div class="terms-actions">
+      <button class="btn btn-primary" (click)="acceptTerms()" [disabled]="!termsChecked">
+        Proceed
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Main Reservation Content (only show if terms accepted) -->
+<section class="progress" *ngIf="termsAccepted">
   <div class="progress_inner">
 
     <!-- Steps -->

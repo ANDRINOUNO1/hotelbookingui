@@ -4,7 +4,7 @@
 <section class="header">
   <div class="header-bar">
     <a href="#home" class="logo">
-      <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
+      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
     </a>
     <nav>
       <a href="#home">Home</a>
@@ -34,27 +34,10 @@
 
       <div class="swiper-wrapper">
 
-         <div class="box swiper-slide">
-            <img src="assets/images/Pool_home.jpg" alt="">
+         <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
+            <img [src]="image" [alt]="'Hero image ' + (i + 1)">
             <div class="flex">
-               <h3>luxurious rooms</h3>
-               
-            </div>
-         </div>
-
-         <div class="box swiper-slide">
-            <img src="assets/images/Beach_view.jpg" alt="">
-            <div class="flex">
-               <h3>foods and drinks</h3>
-               
-            </div>
-         </div>
-
-         <div class="box swiper-slide">
-            <img src="assets/images/Front_desk.jpg" alt="">
-            <div class="flex">
-               <h3>luxurious halls</h3>
-               
+               <h3>{{ getHeroTitle(i) }}</h3>
             </div>
          </div>
 
@@ -75,33 +58,33 @@
 
    <div class="row">
       <div class="image">
-         <img src="assets/images/Staff.jpg" alt="">
+         <img [src]="aboutImages['staff']" alt="Best Staff">
       </div>
       <div class="content">
-         <h3>best staff</h3>
-         <p>Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.</p>
+         <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
+         <p>{{ getContentText('about', 'staff-description') || 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.' }}</p>
          <a routerLink="/reserve" class="btn">make a reservation</a>
       </div>
    </div>
 
    <div class="row revers">
       <div class="image">
-         <img src="assets/images/Foods.jpg" alt="">
+         <img [src]="aboutImages['foods']" alt="Best Foods">
       </div>
       <div class="content">
-         <h3>best foods</h3>
-         <p>Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.</p>
+         <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
+         <p>{{ getContentText('about', 'foods-description') || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.' }}</p>
          <a href="#footer" class="btn">contact us</a>
       </div>
    </div>
 
    <div class="row">
       <div class="image">
-         <img src="assets/images/Pool.jpg" alt="">
+         <img [src]="aboutImages['pool']" alt="Swimming Pool">
       </div>
       <div class="content">
-         <h3>swimming pool</h3>
-         <p>Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.</p>
+         <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
+         <p>{{ getContentText('about', 'pool-description') || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.' }}</p>
          <a href="#availability" class="btn">check availability</a>
       </div>
    </div>
@@ -118,38 +101,38 @@
 
       <div class="box">
          <img src="assets/images/icon-1.png" alt="">
-         <h3>food & drinks</h3>
-         <p>Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.</p>
+         <h3>{{ getServiceContent('food-drinks-title') }}</h3>
+         <p>{{ getServiceContent('food-drinks-description') }}</p>
       </div>
 
       <div class="box">
          <img src="assets/images/icon-2.png" alt="">
-         <h3>outdoor dining</h3>
-         <p>Dine under the stars with a gentle breeze and the soothing ambiance of nature.</p>
+         <h3>{{ getServiceContent('outdoor-dining-title') }}</h3>
+         <p>{{ getServiceContent('outdoor-dining-description') }}</p>
       </div>
 
       <div class="box">
          <img src="assets/images/icon-3.png" alt="">
-         <h3>beach view</h3>
-         <p>Wake up to breathtaking views of the ocean right from your room or private balcony.</p>
+         <h3>{{ getServiceContent('beach-view-title') }}</h3>
+         <p>{{ getServiceContent('beach-view-description') }}</p>
       </div>
 
       <div class="box">
          <img src="assets/images/icon-4.png" alt="">
-         <h3>decorations</h3>
-         <p>Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.</p>
+         <h3>{{ getServiceContent('decorations-title') }}</h3>
+         <p>{{ getServiceContent('decorations-description') }}</p>
       </div>
 
       <div class="box">
          <img src="assets/images/icon-5.png" alt="">
-         <h3>swimming pool</h3>
-         <p>Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.</p>
+         <h3>{{ getServiceContent('swimming-pool-title') }}</h3>
+         <p>{{ getServiceContent('swimming-pool-description') }}</p>
       </div>
 
       <div class="box">
          <img src="assets/images/icon-6.png" alt="">
-         <h3>resort beach</h3>
-         <p>Step into paradise on our private beach, where golden sands meet turquoise waters.</p>
+         <h3>{{ getServiceContent('resort-beach-title') }}</h3>
+         <p>{{ getServiceContent('resort-beach-description') }}</p>
       </div>
 
 
@@ -315,11 +298,11 @@
     <div class="location-info">
       <div class="info-header">
         <i class="fas fa-map-marker-alt"></i>
-        <h3>Our Location</h3>
+        <h3>{{ getContactContent('contact-title') }}</h3>
       </div>
       
       <div class="address-details">
-        <p class="street">6014 Sacris Rd</p>
+        <p class="street">{{ getContactContent('contact-address') }}</p>
         <p class="city">Mandaue, Central Visayas</p>
         <p class="country">Philippines</p>
       </div>
@@ -327,11 +310,11 @@
       <div class="contact-details">
         <div class="contact-item">
           <i class="fas fa-phone"></i>
-          <span>+123-456-7890</span>
+          <span>{{ getContactContent('contact-phone') }}</span>
         </div>
         <div class="contact-item">
           <i class="fas fa-envelope"></i>
-          <span>BCflats.edu.ph</span>
+          <span>{{ getContactContent('contact-email') }}</span>
         </div>
       </div>
       
@@ -355,10 +338,10 @@
    <div class="box-container">
 
       <div class="box">
-         <a href="tel:1234567890"><i class="fas fa-phone"></i> +123-456-7890</a>
+         <a href="tel:1234567890"><i class="fas fa-phone"></i> {{ getContactContent('contact-phone') }}</a>
          <a href="tel:1112223333"><i class="fas fa-phone"></i> +696-969-69696</a>
-         <a href="mailto:BenedictoCollege"><i class="fas fa-envelope"></i>BCflats.edu.ph</a>
-         <a href="#"><i class="fas fa-map-marker-alt"></i> A.S Fortuna - 400104</a>
+         <a href="mailto:BenedictoCollege"><i class="fas fa-envelope"></i>{{ getContactContent('contact-email') }}</a>
+         <a href="#"><i class="fas fa-map-marker-alt"></i> {{ getContactContent('contact-address') }}</a>
       </div>
 
 

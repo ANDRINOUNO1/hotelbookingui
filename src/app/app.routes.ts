@@ -17,6 +17,8 @@ import { AddAccountComponent } from './admin-section/addaccount/add-account.comp
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 import { ArchiveComponent } from './admin-section/archive/archive.component';
 import { ContactMessagesComponent } from './admin-section/contact-messages/contact-messages.component';
+import { ContentManagementComponent } from './admin-section/content-management/content-management.component';
+import { RoomstatusComponent } from './admin-section/roomstatus/roomstatus.component';
 
 //Frontdesk
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
@@ -38,7 +40,6 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'reserve', component: ReservationComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminSectionComponent },
   {
     path: 'admin',
     component: AdminSectionComponent,
@@ -52,7 +53,9 @@ export const routes: Routes = [
       { path: 'addaccount', component: AddAccountComponent },
       { path: 'allbooking', component: AllbookingsComponent },
       { path: 'archive', component: ArchiveComponent },
-      { path: 'contact-messages', component: ContactMessagesComponent }
+      { path: 'contact-messages', component: ContactMessagesComponent },
+      { path: 'content-management', component: ContentManagementComponent },
+      { path: 'roomstatus', component: RoomstatusComponent }
     ]
   },
   {

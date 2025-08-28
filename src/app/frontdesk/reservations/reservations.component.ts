@@ -52,7 +52,7 @@ export class ReservationsComponent {
               grouped[guestEmail].rooms.push({
                 number: room?.roomNumber,
                 type: room?.roomType?.type || room?.RoomType?.type || '',
-                status: room?.isAvailable ? 'Available' : 'Occupied',
+                status: room?.roomStatus ? 'Vacant and Ready' : 'Occupied',
                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                 booking
               });
@@ -101,19 +101,32 @@ export class ReservationsComponent {
     this.applySearch();
   }
 
-  checkIn(bookingId: number) {
+  checkIn(bookingId: number, roomId: number) {
+    // Step 1: update booking
     this.http.patch<Booking>(`${environment.apiUrl}/bookings/${bookingId}/check-in`, {}).subscribe({
       next: (response) => {
-        console.log('Booking checked in successfully:', response);
-        this.loadReservedBookings(); // Refresh the list
-        this.closePopup();
+        console.log('✅ Booking checked in successfully:', response);
+
+        // Step 2: update room status to Occupied
+        this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Occupied' }).subscribe({
+          next: () => {
+            console.log('✅ Room status updated to Occupied');
+            this.loadReservedBookings(); // refresh UI
+            this.closePopup();
+          },
+          error: (err) => {
+            console.error('❌ Failed to update room status:', err);
+            alert('Booking checked in but room status update failed.');
+          }
+        });
       },
       error: (err) => {
-        console.error('Failed to check in booking:', err);
+        console.error('❌ Failed to check in booking:', err);
         alert('Failed to check in booking. Please try again.');
       }
     });
   }
+
 
   updateBooking(id: number, changes: Partial<Booking>) {
     this.http.put<Booking>(`${environment.apiUrl}/bookings/${id}`, changes).subscribe(() => {

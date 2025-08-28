@@ -46,7 +46,7 @@ export class LoginComponent {
         localStorage.setItem('user', JSON.stringify(account));
         
         if (account.role === 'Admin') {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin/dashboard']);
         } else if (account.role === 'SuperAdmin') {
           this.router.navigate(['/superadmin']);
         } else {
@@ -59,5 +59,8 @@ export class LoginComponent {
         console.log('Login failed, account state:', this.accountService.accountValue);
       }
     });
+  }
+  goToHome() {
+    this.router.navigate(['/']);
   }
 }

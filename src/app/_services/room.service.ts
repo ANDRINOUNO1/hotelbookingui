@@ -17,7 +17,7 @@ export interface Room {
   roomNumber: string;
   roomTypeId: number;
   price: number;
-  isAvailable: boolean;
+  roomStatus: string;
   RoomType?: RoomType;
 }
 
@@ -80,13 +80,13 @@ export class RoomService {
   }
 
   // Update room availability
-  updateRoomAvailability(id: number, isAvailable: boolean): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/availability`, { isAvailable });
+  updateRoomAvailability(id: number, roomStatus: boolean): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/availability`, { roomStatus });
   }
 
   // Bulk update room availability
-  bulkUpdateAvailability(roomIds: number[], isAvailable: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/bulk-availability`, { roomIds, isAvailable });
+  bulkUpdateAvailability(roomIds: number[], roomStatus: boolean): Observable<any> {
+    return this.http.post(`${this.apiUrl}/bulk-availability`, { roomIds, roomStatus });
   }
 
   // Delete room
@@ -112,5 +112,33 @@ export class RoomService {
   // Release a room (update availability to true)
   releaseRoom(roomId: number): Observable<any> {
     return this.updateRoomAvailability(roomId, true);
+  }
+
+  // Get room amenities by room type
+  getRoomAmenities(roomTypeId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/types/${roomTypeId}/amenities`);
+  }
+
+  // Get enhanced room availability with pricing for specific dates
+  getRoomAvailabilityWithPricing(checkIn: string, checkOut: string, roomTypeId?: number): Observable<any[]> {
+    let url = `${this.apiUrl}/availability-pricing?checkIn=${checkIn}&checkOut=${checkOut}`;
+    if (roomTypeId) {
+      url += `&roomTypeId=${roomTypeId}`;
+    }
+    return this.http.get<any[]>(url);
+  }
+
+  // Get room type details with full information
+  getRoomTypeDetails(roomTypeId: number): Observable<RoomType> {
+    return this.http.get<RoomType>(`${this.apiUrl}/types/${roomTypeId}/details`);
+  }
+
+  // Get room statistics for specific dates
+  getRoomStatsForDates(checkIn: string, checkOut: string): Observable<RoomStats> {
+    return this.http.get<RoomStats>(`${this.apiUrl}/stats/dates?checkIn=${checkIn}&checkOut=${checkOut}`);
+  }
+
+  bulkUpdateRoomStatus(status: string): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/rooms/reset-status`, { roomStatus: status });
   }
 } 

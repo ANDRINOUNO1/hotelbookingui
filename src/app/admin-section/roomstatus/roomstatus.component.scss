@@ -1,0 +1,106 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  thead {
+    background: #f4f6f8;
+
+    th {
+      padding: 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #eee;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #fafafa;
+      }
+
+      td {
+        padding: 12px;
+        font-size: 14px;
+        color: #555;
+
+        select {
+          padding: 6px 8px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 14px;
+          outline: none;
+
+          &:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &.edit-btn {
+    background: #007bff;
+    color: #fff;
+
+    &:hover {
+      background: #0056b3;
+    }
+  }
+
+  &.save-btn {
+    background: #28a745;
+    color: #fff;
+
+    &:hover {
+      background: #218838;
+    }
+  }
+
+  &.cancel-btn {
+    background: #dc3545;
+    color: #fff;
+    margin-left: 6px;
+
+    &:hover {
+      background: #c82333;
+    }
+  }
+}
+
+/* Loading + Error styles */
+.error {
+  color: #dc3545;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+[ng-reflect-ng-if="true"] {
+  margin: 15px 0;
+  font-size: 14px;
+  color: #555;
+}
