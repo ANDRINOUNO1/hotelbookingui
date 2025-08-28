@@ -62,6 +62,7 @@ export class FrontdeskdashboardComponent implements OnInit {
       next: (data) => {
         console.log('Frontdesk - Bookings data received:', data);
         this.bookings = data;
+        this.bookings = data.filter(booking => booking.status !== 'checked_out');
         this.updateStatusSummary(); // Refresh after bookings load
       },
       error: (err) => {

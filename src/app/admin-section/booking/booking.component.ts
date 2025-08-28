@@ -26,7 +26,7 @@ export class BookingComponent implements OnInit {
     this.loadOccupiedRooms();
   }
 
-  loadOccupiedRooms() {
+  loadOccupiedRooms() { 
     this.isLoading = true;
     this.http.get<Room[]>(`${environment.apiUrl}/rooms`).subscribe({
       next: (roomsData) => {
@@ -40,6 +40,7 @@ export class BookingComponent implements OnInit {
                   return {
                     id: booking.id,
                     number: room.roomNumber,
+                    roomId: booking.room_id,
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     type: room.roomType?.type || room.RoomType?.type || 'Classic',
                     status: booking.pay_status ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed',
@@ -152,8 +153,32 @@ export class BookingComponent implements OnInit {
       this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
         next: (updatedBooking) => {
           console.log('✅ Payment confirmed successfully');
+          
+          // 1. Send confirmation email
           this.sendPaymentConfirmationEmail(updatedBooking);
+
+          // 2. Update room status
           this.updateRoomStatus(room.booking.room_id, true);
+
+          // 3. Record revenue
+          const revenueRecord = {
+            bookingId: updatedBooking.id,
+            amount: updatedBooking.paidamount || updatedBooking.payment?.amount,
+            source: 'Reservation',
+            description: `Reservation payment for booking #${updatedBooking.id}`,
+            date: new Date()
+          };
+
+          this.http.post(`${environment.apiUrl}/revenues`, revenueRecord).subscribe({
+            next: () => {
+              console.log('💰 Revenue recorded successfully');
+            },
+            error: (err) => {
+              console.error('❌ Failed to record revenue:', err);
+            }
+          });
+
+          // 4. Reload & show success
           this.loadOccupiedRooms();
           this.displaySuccessMessage();
         },
@@ -164,12 +189,20 @@ export class BookingComponent implements OnInit {
     }
   }
 
-  deleteBooking(id: number) {
+  deleteBooking(id: number, roomId: number) {
+    if (!id) {
+      console.error('❌ Cannot delete booking: Invalid or missing booking ID.');
+      return;
+    }
+
     if (confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
       this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe({
         next: () => {
-          this.loadOccupiedRooms();
           console.log('✅ Booking deleted successfully');
+          if (roomId) {
+            this.setRoomVacant(roomId); // 👈 now always has a valid id
+          }
+          this.loadOccupiedRooms();
         },
         error: (err) => {
           console.error('❌ Failed to delete booking:', err);
@@ -177,6 +210,16 @@ export class BookingComponent implements OnInit {
       });
     }
   }
+
+
+  setRoomVacant(roomId: number) {
+    this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Vacant and Ready' })
+      .subscribe({
+        next: () => console.log(`Room ${roomId} set to Vacant and Ready`),
+        error: err => console.error('❌ Failed to update room status:', err)
+      });
+  }
+
   editMode = false;
   openEditPopup(room: any) {
   this.selectedBooking = { 

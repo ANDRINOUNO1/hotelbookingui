@@ -52,7 +52,7 @@ export class ReservationsComponent {
               grouped[guestEmail].rooms.push({
                 number: room?.roomNumber,
                 type: room?.roomType?.type || room?.RoomType?.type || '',
-                status: room?.roomStatus ? 'Vacant and Ready' : 'Occupied',
+                status: room?.roomStatus,
                 paymentStatus: booking.pay_status ? 'Paid' : 'Unpaid',
                 booking
               });
@@ -101,7 +101,12 @@ export class ReservationsComponent {
     this.applySearch();
   }
 
-  checkIn(bookingId: number, roomId: number) {
+  checkIn(bookingId: number, roomId: number, payStatus?: boolean) {
+    if (payStatus) {
+      alert("❌ Cannot check in: Payment not completed (Reserved - Not Guaranteed).");
+      return;
+    }
+
     // Step 1: update booking
     this.http.patch<Booking>(`${environment.apiUrl}/bookings/${bookingId}/check-in`, {}).subscribe({
       next: (response) => {
@@ -126,7 +131,6 @@ export class ReservationsComponent {
       }
     });
   }
-
 
   updateBooking(id: number, changes: Partial<Booking>) {
     this.http.put<Booking>(`${environment.apiUrl}/bookings/${id}`, changes).subscribe(() => {

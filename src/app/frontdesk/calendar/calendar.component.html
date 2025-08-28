@@ -102,8 +102,8 @@
                     (mousedown)="dragStart = true"
                     (mouseup)="onClickBooking(cell.booking, room)"
                     [ngClass]="{
-                      'booking-reserved': cell.booking && !cell.booking.pay_status,
-                      'booking-occupied': cell.booking && cell.booking.pay_status,
+                      'booking-reserved': cell.booking?.status === 'reserved',
+                      'booking-occupied': cell.booking?.status === 'checked_in',
                       'booking-maintenance': isMaintenance(cell)
                     }"
                     style="cursor: pointer;">
