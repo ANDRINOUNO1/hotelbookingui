@@ -23,32 +23,33 @@ export class AvailabilityComponent implements OnInit {
   roomAvailabilityCounts: { [key: string]: { available: number; total: number } } = {};
   roomAmenities: { [key: string]: string[] } = {};
 
-  roomImages = {
-    'Classic': [
-      'assets/images/BEACH.jpg',
-      'assets/images/bombo.jpg',
-      'assets/images/CR.jpg',
-      'assets/images/bomboa.png'
-    ],
-    'Deluxe': [
-      'assets/images/deluxe.jpg',
-      'assets/images/deluxe1.jpg',
-      'assets/images/prev.jpg',
-      'assets/images/MainPICTURE.jpg'
-    ],
-    'Prestige': [
-      'assets/images/woww.png',
-      'assets/images/STANDARD ROOM.jpg',
-      'assets/images/HALLWAY.jpg',
-      'assets/images/CHIC ROOM.jpg'
-    ],
-    'Luxury': [
-      'assets/images/hahahaha.png',
-      'assets/images/BEACHVIEW.jpg',
-      'assets/images/hahha.png',
-      'assets/images/DELUXE VIEW.jpg'
-    ]
-  };
+      // Multiple room images for each room type
+      roomImages = {
+      'Classic': [
+        'assets/images/BEACH.jpg',
+        'assets/images/bombo.jpg',
+        'assets/images/CR.jpg',
+        'assets/images/bomboa.png'
+      ],
+      'Deluxe': [
+        'assets/images/deluxe.jpg',
+        'assets/images/deluxe1.jpg',
+        'assets/images/prev.jpg',
+        'assets/images/MainPICTURE.jpg'
+      ],
+      'Prestige': [
+        'assets/images/woww.png',
+        'assets/images/STANDARD ROOM.jpg',
+        'assets/images/HALLWAY.jpg',
+        'assets/images/CHIC ROOM.jpg'
+      ],
+      'Luxury': [
+        'assets/images/hahahaha.png',
+        'assets/images/BEACHVIEW.jpg',
+        'assets/images/hahha.png',
+        'assets/images/DELUXE VIEW.jpg'
+      ]
+    };
 
   constructor(
     private reservationDataService: ReservationDataService,

@@ -55,7 +55,7 @@
               (click)="confirmPayment(room)">
               Confirm Payment
             </button>
-            <button class="btn-delete" (click)="deleteBooking(room.id)">
+            <button class="btn-delete" (click)="deleteBooking(room.id, room.roomId)">
               Delete
             </button>
           </div>
@@ -73,7 +73,7 @@
         {{ editMode ? 'Cancel' : 'Edit' }}
       </button>
       <button *ngIf="editMode" class="btn-save" (click)="updateBooking(selectedBooking.id, selectedBooking)">Save</button>
-      <button *ngIf="editMode" class="btn-delete" (click)="deleteBooking(selectedBooking.id)">Delete Booking</button>
+      <button *ngIf="editMode" class="btn-delete" (click)="deleteBooking(selectedBooking.id, selectedBooking.roomId);">Delete Booking</button>
     </div>
 
     <!-- Guest Details -->
