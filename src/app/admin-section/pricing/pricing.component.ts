@@ -63,7 +63,7 @@ export class PricingComponent implements OnInit {
           { id: 1, type: 'Classic', rate: 120, basePrice: 120, description: 'Comfortable and affordable accommodation', reservationFeePercentage: 10.00 },
           { id: 2, type: 'Deluxe', rate: 200, basePrice: 200, description: 'Enhanced amenities and spacious rooms', reservationFeePercentage: 15.00 },
           { id: 3, type: 'Prestige', rate: 150, basePrice: 150, description: 'Luxury accommodations with premium services', reservationFeePercentage: 12.50 },
-          { id: 4, type: 'Luxury', rate: 80, basePrice: 80, description: 'Ultimate luxury experience', reservationFeePercentage: 8.00 }
+          { id: 4, type: 'Luxury', rate: 800, basePrice: 800, description: 'Ultimate luxury experience', reservationFeePercentage: 80.00 }
         ];
         // Hide loading after fallback data is loaded
         setTimeout(() => {

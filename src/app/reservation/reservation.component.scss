@@ -17,8 +17,8 @@ $glass-border: rgba(255, 255, 255, 0.2);
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
-  border-bottom: 2px solid $primary-gold;
+  background: rgba(43, 101, 236, 1);
+  border-bottom: 2px solid black;
   padding: 15px 30px;
   display: flex;
   align-items: center;
@@ -31,8 +31,8 @@ $glass-border: rgba(255, 255, 255, 0.2);
     align-items: center;
     gap: 8px;
     background: transparent;
-    border: 2px solid $primary-gold;
-    color: $primary-gold;
+    border: 2px solid white;
+    color: rgb(159, 182, 235);
     padding: 10px 16px;
     border-radius: 8px;
     cursor: pointer;
@@ -70,7 +70,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,7 +87,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
     max-height: 80vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    border: 2px solid $primary-gold;
+    border: 2px solid rgba(43, 101, 236, 1);
 
     h2 {
       color: $dark-blue;
@@ -95,7 +95,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
       font-weight: 700;
       margin-bottom: 20px;
       text-align: center;
-      border-bottom: 3px solid $primary-gold;
+      border-bottom: 3px solid rgba(43, 101, 236, 1);
       padding-bottom: 15px;
     }
 
@@ -115,7 +115,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
         font-size: 20px;
         font-weight: 600;
         margin: 25px 0 15px 0;
-        border-left: 4px solid $primary-gold;
+        border-left: 4px solid rgba(43, 101, 236, 1);
         padding-left: 15px;
       }
 
@@ -133,7 +133,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
           &:before {
             content: '•';
-            color: $primary-gold;
+            color: rgba(43, 101, 236, 1);
             font-weight: bold;
             position: absolute;
             left: 0;
@@ -155,8 +155,8 @@ $glass-border: rgba(255, 255, 255, 0.2);
       border-top: 2px solid #eee;
 
       .btn {
-        background: $gold-gradient;
-        color: $dark-blue;
+        background: rgba(43, 101, 236, 1);
+        color: white;
         border: none;
         padding: 15px 30px;
         border-radius: 8px;
@@ -172,7 +172,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
         }
 
         &.btn-primary {
-          background: $gold-gradient;
+          background: rgba(43, 101, 236, 1);
         }
 
         &:disabled {
@@ -202,7 +202,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
 // Adjust main progress section to account for top bar
 .progress {
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
+  background: rgb(244, 244, 244);
   min-height: 100vh;
   padding: 100px 0 0; // remove side padding to use full width
   position: relative;
@@ -259,7 +259,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
         width: $step-point-width;
         height: $step-point-width;
         background: rgba(255, 255, 255, 0.9);
-        border: 3px solid $primary-gold;
+        border: 3px solid rgba(43, 101, 236, 1);
         border-radius: 50%;
         top: 0;
         left: 50%;
@@ -276,12 +276,12 @@ $glass-border: rgba(255, 255, 255, 0.2);
         
         label {
           opacity: 1;
-          color: $light-gold;
+          color: rgba(43, 101, 236, 1) ;
         }
         
         &:before {
           box-shadow: 
-            0 8px 24px rgba(180, 136, 77, 0.5),
+            0 8px 24px rgba(43, 101, 236, 1),
             inset 0 2px 4px rgba(255, 255, 255, 0.3);
           transform: translateX(-50%) scale(1.1);
         }
@@ -291,15 +291,15 @@ $glass-border: rgba(255, 255, 255, 0.2);
       &.active {
         label {
           opacity: 1;
-          color: $light-gold;
-          text-shadow: 0 0 20px rgba(212, 165, 116, 0.8);
+          color: rgba(43, 101, 236, 1);
+          text-shadow:  rgba(43, 101, 236, 1);
         }
         
         &:before {
-          background: $gold-gradient;
-          border-color: $light-gold;
+          background: rgba(43, 101, 236, 1);
+          border-color: white;
           box-shadow: 
-            0 0 30px rgba(180, 136, 77, 0.8),
+            0 0 30px  rgba(43, 101, 236, 1) ,
             inset 0 2px 8px rgba(255, 255, 255, 0.4);
           animation: pulse 2s ease-in-out infinite;
         }
@@ -309,12 +309,12 @@ $glass-border: rgba(255, 255, 255, 0.2);
       &.completed {
         label {
           opacity: 0.9;
-          color: $light-gold;
+          color: rgba(43, 101, 236, 1);
         }
         
         &:before {
-          background: $gold-gradient;
-          border-color: $light-gold;
+          background:  rgba(43, 101, 236, 1);;
+          border-color: white;
           box-shadow: 
             0 4px 16px rgba(180, 136, 77, 0.4),
             inset 0 2px 4px rgba(255, 255, 255, 0.3);
@@ -360,7 +360,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
     &__bar {
       position: absolute;
       height: $bar-height;
-      background: $gold-gradient;
+      background: white;
       left: 0;
       border-radius: $bar-height;
       transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -466,7 +466,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 }
 
 body {
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%) !important;
+  background: white!important;
   font-family: 'Nunito', sans-serif;
   color: white;
 }

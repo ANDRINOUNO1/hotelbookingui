@@ -113,12 +113,22 @@ export class AllbookingsComponent implements OnInit {
     });
   }
 
-  deleteBooking(id: number) {
+  deleteBooking(id: number, roomId: number) {
     this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe(() => {
+      this.setRoomVacant(roomId);
       this.loadOccupiedRooms();
       this.closePopup();
     });
   }
+
+  setRoomVacant(roomId: number) {
+    this.http.patch(`${environment.apiUrl}/rooms/${roomId}`, { status: 'Vacant and Ready' })
+      .subscribe({
+        next: () => console.log(`Room ${roomId} set to Vacant and Ready`),
+        error: err => console.error('Error updating room status:', err)
+      });
+  }
+
   editMode = false;
   openEditPopup(room: any) {
     this.selectedBooking = { 

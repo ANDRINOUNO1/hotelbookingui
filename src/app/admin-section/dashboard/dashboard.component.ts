@@ -7,11 +7,12 @@ import { DashboardchartviewComponent } from './dashboardchartview/dashboardchart
 import { SharedService, DashboardAnalytics } from '../../_services/shared.service';
 import { catchError, of } from 'rxjs';
 import { DashboardService } from '../../_services/dashboard.service';
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, DashboardchartviewComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DashboardchartviewComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -27,6 +28,10 @@ export class DashboardComponent implements OnInit {
   reservedRooms = 0;
   occupiedRooms = 0;
   otherRooms = 0;
+
+  revenues: any[] = [];        // all revenue records
+  filteredRevenue = 0;         // displayed sum after filtering
+  selectedSource: string = 'All'; // dropdown selected value
 
   dropdownOpen = {
     available: false,
@@ -51,6 +56,9 @@ export class DashboardComponent implements OnInit {
     if (isPlatformBrowser(this.platformId) && !this.dataLoaded) {
       this.fetchData();
     }
+
+    this.loadRevenue();
+
     this.dashboardService.getRoomStatusDistribution().subscribe(data => {
       // Room status categories
       const availableStatuses = ['Vacant and Ready', 'Vacant and Clean'];
@@ -219,4 +227,32 @@ export class DashboardComponent implements OnInit {
     const frequencyBonus = Math.min(paidBookings.length / 10, 0.3);
     return Math.round((baseRating + amountBonus + frequencyBonus) * 10) / 10;
   }
+
+  loadRevenue() {
+    this.http.get<any[]>(`${environment.apiUrl}/revenues`).subscribe({
+      next: (data) => {
+        this.revenues = data;
+        this.filterRevenue(); // initialize with All
+      },
+      error: (err) => {
+        console.error('❌ Failed to load revenue:', err);
+      }
+    });
+  }
+
+  filterRevenue() {
+    if (this.selectedSource === 'All') {
+      this.filteredRevenue = this.revenues.reduce(
+        (sum, r) => sum + Number(r.amount) || 0,
+        0
+      );
+    } else {
+      this.filteredRevenue = this.revenues
+        .filter(r => r.source === this.selectedSource)
+        .reduce((sum, r) => sum + Number(r.amount) || 0, 0);
+    }
+
+    console.log("Filtered Revenue:", this.filteredRevenue, typeof this.filteredRevenue);
+  }
+
 }

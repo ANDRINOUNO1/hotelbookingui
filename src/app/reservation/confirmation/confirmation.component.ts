@@ -176,6 +176,7 @@ export class ConfirmationComponent implements OnInit {
 
   // 3. Select the first available room (or more if needed)
   const selectedRoom = availableRooms[0];
+  const selectedRooms = availableRooms.slice(0, this.reservationData?.rooms || 1);
 
     // Payload
     const bookingPayload = {
@@ -189,6 +190,7 @@ export class ConfirmationComponent implements OnInit {
         city: this.customerDetails?.city
       },
       roomsCount: this.reservationData?.rooms,
+      rooms: selectedRooms.map(r => ({ id: r.id, number: r.number })),
       availability: {
         checkIn: this.reservationData?.checkIn,
         checkOut: this.reservationData?.checkOut,
@@ -210,11 +212,6 @@ export class ConfirmationComponent implements OnInit {
       paidamount: this.paymentDetails.amount
     };
 
-    await this.http.put(
-      `${environment.apiUrl}/rooms/${selectedRoom.id}`,
-      { roomStatus: 'Reserved - Not Guaranteed' }
-    ).toPromise();
-
     // Submit booking
     this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({
       next: booking => {
@@ -228,6 +225,7 @@ export class ConfirmationComponent implements OnInit {
       }
     });
   }
+
   clearPaymentForm() {
     this.paymentDetails = {
       paymentMode: '',

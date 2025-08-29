@@ -12,31 +12,16 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
 
-  // Get monthly bookings data for area chart
   getMonthlyBookings(): Observable<ChartDataItem[]> {
-    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/dashboard/monthly-bookings`)
-      .pipe(
-        catchError(() => {
-          console.log('Monthly bookings API not available, calculating from bookings data');
-          return this.calculateMonthlyBookingsFromData();
-        })
-      );
+    return this.calculateMonthlyBookingsFromData();
   }
 
-  // Get room status distribution for pie chart
   getRoomStatusDistribution(): Observable<ChartDataItem[]> {
-    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/dashboard/room-status`)
-      .pipe(
-        catchError(() => {
-          console.log('Room status API not available, calculating from rooms and bookings data');
-          return this.calculateRoomStatusFromData();
-        })
-      );
+    return this.calculateRoomStatusFromData();
   }
 
-  // Get revenue data
   getRevenueData(): Observable<ChartDataItem[]> {
-    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/dashboard/revenue`)
+    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/revenues`)
       .pipe(
         catchError(() => {
           console.log('Revenue API not available, calculating from bookings data');
@@ -45,25 +30,12 @@ export class DashboardService {
       );
   }
 
-  // Get comprehensive dashboard analytics
   getDashboardAnalytics(): Observable<DashboardAnalytics> {
-    return this.http.get<DashboardAnalytics>(`${environment.apiUrl}/dashboard/analytics`)
-      .pipe(
-        catchError(() => {
-          console.log('Dashboard analytics API not available, calculating from database data');
-          return this.calculateAnalyticsFromData();
-        })
-      );
+   return this.calculateAnalyticsFromData();
   }
 
   getPaymentMethodDistribution(): Observable<ChartDataItem[]> {
-    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/dashboard/payment-methods`)
-      .pipe(
-        catchError(() => {
-          console.log('Payment method API not available, calculating from bookings data');
-          return this.calculatePaymentMethodsFromData();
-        })
-      );
+    return this.calculatePaymentMethodsFromData();
   }
 
   // Calculate monthly bookings from actual booking data
