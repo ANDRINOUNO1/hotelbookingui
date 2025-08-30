@@ -2,6 +2,7 @@ import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef, HostList
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-section',
@@ -24,7 +25,8 @@ export class AdminSectionComponent implements OnInit {
     private renderer: Renderer2,
     private el: ElementRef,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private titleservice: Title
   ) {
     // Listen to route changes
     this.router.events.pipe(
@@ -36,13 +38,15 @@ export class AdminSectionComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const savedTheme = localStorage.getItem('admin-theme');
       this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
       this.applyTheme();
     }
+    this.titleservice.setTitle('BC Flats - Admin');
   }
+  
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
@@ -158,6 +162,7 @@ export class AdminSectionComponent implements OnInit {
     }
     
     // Navigate to login page
+    this.titleservice.setTitle('BC Flats');
     this.router.navigate(['/login']);
   }
 }

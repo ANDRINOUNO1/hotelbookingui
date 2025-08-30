@@ -115,8 +115,20 @@
     <div class="metrics-card">
       <div class="metrics-content">
         <p class="label">Total Revenue</p>
-        <p class="value">₱{{ totalRevenue | number:'1.0-0' }}</p>
+        <p class="value">₱{{ filteredRevenue | number:'1.0-0' }}</p>
+
+        <!-- Dropdown filter -->
+        <div class="revenue-filter">
+          <label for="revenueFilter">Source:</label>
+          <select id="revenueFilter" [(ngModel)]="selectedSource" (change)="filterRevenue()">
+            <option value="All">All</option>
+            <option value="Booking">Booking</option>
+            <option value="Reservation">Reservation</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
       </div>
+
       <div class="icon-wrapper green">
         <i class="fa fa-dollar-sign"></i>
       </div>

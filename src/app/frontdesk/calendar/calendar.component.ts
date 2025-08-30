@@ -69,8 +69,10 @@ export class CalendarComponent implements OnInit {
       this.allRooms = rooms;
       this.roomTypes = this.getUniqueRoomTypes(rooms);
       this.selectedType = this.roomTypes.length ? this.roomTypes[0].type : '';
+
       this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe(bookings => {
-        this.bookings = bookings;
+        // ✅ Filter out checked_out bookings
+        this.bookings = bookings.filter(b => b.status !== 'checked_out');
       });
     });
   }
@@ -95,6 +97,7 @@ export class CalendarComponent implements OnInit {
 
   getBookingsForRoomAndDate(roomId: number, date: Date) {
     return this.bookings.filter(b => {
+      if (b.status === 'checked_out') return false;
       if (b.room_id !== roomId) return false;
 
       const checkIn = new Date(b.availability.checkIn);

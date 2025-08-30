@@ -179,11 +179,52 @@
           <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(calculateTotalAmount(selectedReservation)) : '' }}</p>
         </div>
 
+        <div class="modal-body">
+          <button (click)="closeBilling()">❌ Close</button>
+
+            <app-receipt
+              [selectedReservation]="selectedReservation"
+              [paymentAmount]="paymentAmount"
+              [billNo]="'BILL-' + selectedReservation?.id">
+            </app-receipt>
+        </div>
+
+        <button 
+          class="billbutton" 
+          *ngIf="selectedReservation" 
+          (click)="showBilling(selectedReservation)">
+          Show Billing
+        </button>
+                
+        <div class="pos-section">
+          <h3>Payment Details</h3>
+
+          <label>Payment Mode:</label>
+          <select [(ngModel)]="paymentMode">
+            <option value="Cash">Cash</option>
+            <option value="GCash">GCash</option>
+            <option value="Card">Card</option>
+          </select>
+
+          <label>Amount Received:</label>
+          <input type="number" [(ngModel)]="paymentAmount" placeholder="Enter amount">
+
+          <p *ngIf="selectedReservation && paymentAmount >= calculateTotalAmount(selectedReservation)">
+            <strong>Change:</strong> 
+            {{ formatCurrency(paymentAmount - calculateTotalAmount(selectedReservation)) }}
+          </p>
+
+          <p *ngIf="selectedReservation && paymentAmount && paymentAmount < calculateTotalAmount(selectedReservation)" style="color: red;">
+            Payment is less than total amount.
+          </p>
+        </div>
+
+
         <div class="checkout-note">
           <p><i class="fa fa-info-circle"></i> This action will:</p>
           <ul>
-            <li>Move the booking to the archive section</li>
-            <li>Remove it from the active reservations list</li>
+            <li>Check out the selected booking.</li>
+            <li><strong>Please confirm the payments to avoid conclusions</strong></li>
             <li>Mark the room as available</li>
           </ul>
         </div>

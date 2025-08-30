@@ -13,17 +13,6 @@
     <strong>Success:</strong> {{ successMessage }}
   </div>
 
-  <!-- Debug Information (remove in production) -->
-  <div class="debug-info mb-4" style="background: #f0f0f0; padding: 10px; border-radius: 5px; font-size: 12px;">
-    <strong>Debug Info:</strong><br>
-    Form Valid: {{ bookingForm.valid }}<br>
-    Form Invalid: {{ bookingForm.invalid }}<br>
-    Room Types Selected: {{ hasSelectedRoomTypes() }}<br>
-    Is Form Valid (Custom): {{ isFormValid() }}<br>
-    Payment Mode: {{ bookingForm.get('payment.paymentMode')?.value }}<br>
-    Amount: {{ bookingForm.get('payment.amount')?.value }}
-  </div>
-
   <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
     
     <!-- Guest Information Section -->
@@ -195,12 +184,12 @@
             <label [for]="'roomType' + roomType.id" class="room-type-label">
               <div class="room-type-info">
                 <h3 class="room-type-name">{{ roomType.type }}</h3>
-                <p class="room-type-rate">${{ roomType.rate }}/night</p>
+                <p class="room-type-rate">${{ roomType.basePrice }}/night</p>
               </div>
             </label>
           </div>
         </div>
-      </div>
+    </div>
       <div *ngIf="!hasSelectedRoomTypes() && errorMessage.includes('room type')" class="error-message">
         Please select at least one room type
       </div>
@@ -239,7 +228,10 @@
           <div *ngIf="getErrorMessage('payment', 'amount')" class="error-message">
             {{ getErrorMessage('payment', 'amount') }}
           </div>
-          <small class="help-text">Minimum amount: ${{ reservationFee }}</small>
+          <small class="help-text">
+            Minimum: ${{ reservationFee }} <br>
+            Estimated Total: ${{ estimatedTotal }}
+          </small>
         </div>
       </div>
 
@@ -338,20 +330,13 @@
 
     <!-- Submit Button -->
     <div class="form-actions">
-      <button 
-        type="submit" 
-        class="btn btn-primary"
-        [disabled]="loading || !isFormValid()">
+      <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading || bookingForm.invalid || !hasSelectedRoomTypes()">
         <span *ngIf="loading" class="spinner"></span>
         {{ loading ? 'Creating Booking...' : 'Create Booking' }}
       </button>
-      
-      <button 
-        type="button" 
-        class="btn btn-secondary"
-        (click)="bookingForm.reset(); initForm()">
-        Reset Form
-      </button>
+      <button type="button" class="btn btn-secondary" (click)="bookingForm.reset(); initForm()">Reset Form</button>
+    </div>
     </div>
   </form>
 </div>

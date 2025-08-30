@@ -36,6 +36,9 @@ import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pendi
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
 import path from 'path';
 
+//extras
+import { BillingComponent } from './frontdesk/lists/billing.component';
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'reserve', component: ReservationComponent },
@@ -82,7 +85,9 @@ export const routes: Routes = [
       { path: 'archives', component: ArchivesComponent},
       { path: 'pricing', component: PricingComponent }
     ]
-  }
+  },
+  { path: 'billing/:id', component: BillingComponent }
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
