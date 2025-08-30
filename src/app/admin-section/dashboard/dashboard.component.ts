@@ -143,7 +143,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get occupiedCount() {
-    // Occupied: rooms with isAvailable false or with a checked-in booking
+ 
     const count = this.rooms.filter(room =>
       room.isAvailable === false ||
       this.bookings.some(b => b.room_id === room.id && b.status === 'checked_in')
