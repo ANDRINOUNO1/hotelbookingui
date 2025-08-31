@@ -68,7 +68,7 @@
 
 .booking-form {
   .form-section {
-    background: var(--card-bg);
+    background: #00BFFF;
     border: var(--border);
     border-radius: 12px;
     padding: 1.5rem;
@@ -103,8 +103,8 @@
     textarea {
       padding: 0.75rem 1rem;
       border-radius: 8px;
-      border: 2px solid var(--card-border);
-      background: var(--main-bg);
+      border: 2px solid rgba(45, 45, 250, 0.683);
+      background: #f0f2f5;
       color: var(--white);
       font-size: 1rem;
       transition: all 0.2s ease;
@@ -153,7 +153,7 @@
       transition: all 0.3s ease;
 
       &.btn-primary {
-        background: var(--gradient-touch);
+        background: #00BFFF;
         color: var(--white);
         border: none;
 
@@ -244,7 +244,7 @@
   p.room-type-rate {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #3b82f6;
+    color: #f9f9f9;
     margin: 0;
   }
 }
