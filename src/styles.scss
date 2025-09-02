@@ -22,7 +22,7 @@
   --card-bg: #0b0b31;
   --card-border: #ffffff;
   --room-vacant: rgba(43, 101, 236, 1)
-  --room-occupied: rgba(43, 101, 236, 1)
+  --room-occupied: rgba(43, 101, 236, 1)x
   --room-reserved: #4caf50;
   --room-dueout: #9c27b0;
   --room-dirty: #e53935;
@@ -33,6 +33,7 @@
 
 * {
   font-family: var(--font-main);
+  color:#ffffff;
   margin: 0; padding: 0;
   box-sizing: border-box;
   outline: none; border: none;

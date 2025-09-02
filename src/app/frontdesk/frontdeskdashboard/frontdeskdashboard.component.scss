@@ -5,7 +5,7 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #23233a, #4b3912);
+  background: var(--ait-primary-content-text-color);
 }
 .roomview-header {
   display: flex;
@@ -398,7 +398,7 @@
   min-width: 250px;
   max-height: 400px;
   overflow-y: auto;
-  background: #fff;
+  background: #252a2d9a;
   color: #000;
   border: 1px solid #ddd;
   border-radius: 8px;
