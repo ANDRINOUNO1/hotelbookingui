@@ -57,6 +57,7 @@ export class AllbookingsComponent implements OnInit {
                 if (room) {
                   return {
                     id: booking.id,
+                    roomId: room.id,
                     number: room.roomNumber || 'N/A',
                     guest: `${booking.guest.first_name} ${booking.guest.last_name}`,
                     address: `${booking.guest.address}, ${booking.guest.city}`,

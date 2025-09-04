@@ -34,6 +34,9 @@ import { SuperhomeComponent } from './superadmin-sect/superhome.component';
 import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
+import { AddAccountComponentt } from './superadmin-sect/addaccount/add-account.component';
+import { PricingComponents } from './superadmin-sect/pricing/pricing.component';
+
 import path from 'path';
 
 //extras
@@ -81,9 +84,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
       { path: 'account-list', component: AccountListComponent },
       { path: 'pending-accounts', component: PendingAccountsComponent },
-      { path: 'add-account', component: AddAccountComponent },
+      { path: 'add-accounts', component: AddAccountComponentt },
       { path: 'archives', component: ArchivesComponent},
-      { path: 'pricing', component: PricingComponent }
+      { path: 'pricing', component: PricingComponents }
     ]
   },
   { path: 'billing/:id', component: BillingComponent }

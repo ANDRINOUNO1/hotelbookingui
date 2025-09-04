@@ -1,5 +1,4 @@
 .account-list-container {
-  background: var(--card-bg);
   color: var(--text-color);
   padding: 2rem;
   border-radius: 10px;
@@ -12,25 +11,19 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
-  background: var(--table-bg);
-  border: 1px solid var(--table-border);
 }
 
 .account-table th, .account-table td {
-  border: 1px solid var(--table-border);
   padding: 0.7rem 0.5rem;
   text-align: left;
-  background: var(--table-bg);
   color: var(--text-color);
 }
 
 .account-table th {
   font-weight: 600;
-  background: var(--card-bg);
 }
 
 .table-header {
-  background: var(--card-bg);
   font-weight: 600;
   color: var(--text-color);
 }
