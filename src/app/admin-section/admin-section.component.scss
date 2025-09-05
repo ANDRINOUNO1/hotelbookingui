@@ -28,51 +28,23 @@
   --button-bg: #f3f4f6;
   --button-text: #374151;
   --button-hover: #e5e7eb;
+
 }
 
-:host(.dark-mode) {
-  --sidebar-bg: #181824;
-  --sidebar-active: #23233a;
-  --sidebar-text: #e5c07b;
-  --main-bg: #10101a;
-  --header-bg: #23233a;
-  --header-text: #fff;
-  --card-bg: #181824;
-  --card-border: #23233a;
-  --room-vacant: #e5c07b;
-  --room-occupied: #ffe29a;
-  --room-reserved: #4caf50;
-  --room-dueout: #9c27b0;
-  --room-dirty: #e53935;
-  --room-outoforder: #f44336;
-  --room-default: #b4884d;
-  --text-color: #ffffff;
-  --input-bg: #0b0b31;
-  --input-text: #ffffff;
-  --input-border: #23233a;
-  --table-bg: #181824;
-  --table-border: #23233a;
-  --popup-bg: #181824;
-  --popup-border: #23233a;
-  --button-bg: #23233a;
-  --button-text: #ffffff;
-  --button-hover: #2d2d4a;
-  color: #fff;
-  background: var(--main-bg);
-}
+
 
 .dashboard-container {
   display: flex;
   min-height: 100vh;
-  background: var(--main-bg);
+  background: white;
   position: relative;
 }
 
 /* Sidebar */
 .sidebar {
   width: 220px;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
+  background: #0b0b31;
+  color: #fff;
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
@@ -1007,7 +979,7 @@ body.dark-mode {
   left: 0;
   right: 0;
   z-index: 1001;
-  background: linear-gradient(135deg, #0b0b31 0%, #171725 100%);
+  background: { background: #4da3ff; color: #fff; };
   border-bottom: 1px solid rgba(229, 192, 123, 0.2);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
