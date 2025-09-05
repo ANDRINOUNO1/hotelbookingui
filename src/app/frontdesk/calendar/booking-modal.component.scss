@@ -19,7 +19,6 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  border: var(--border);
   color: var(--white);
   font-family: var(--font-main);
 }
@@ -30,7 +29,7 @@
   align-items: center;
   padding: 20px;
   border-bottom: 1px solid var(--card-border);
-  background-color: var(--sidebar-active);
+  background-color: #212183;
 }
 
 .modal-header h2 {
@@ -102,7 +101,7 @@
 }
 
 .info-item span {
-  color: var(--white);
+  color: black;
   font-size: 1rem;
 }
 

@@ -2,22 +2,23 @@
   --main-background: #0b0b31;
   --text-color: #222;
   --header-text-color: #fff;
-  --color-primary:  linear-gradient(90deg, #171725 0%, #b4884d 100%);
+  --color-primary:  linear-gradient(90deg, #007affa1 70%, #549eff 100%);
   --color-secondary: #2196f3;
-  --sidebar-color: #222d35;
+  --sidebar-color: linear-gradient(90deg, #007affa1 0%, #0f83a0 100%);
 }
 
 .frontdesk-container {
   min-height: 100vh;
   display: flex;
   background-color: var(--main-background);
+  color: var(--text-color);
 }
 
 .frontdesk-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-primary);
+  background: #0a47b885;
   color: #fff;
   padding: 0.5rem 1rem;
   width: 100%;
@@ -68,7 +69,7 @@
   justify-content: space-between;
   z-index: 1;
   width: 220px;
-  background: var(--sidebar-color);
+  background: #1e1eca77;
   color: #fff;
   ul { list-style: none; padding: 10px; }
   li {
@@ -87,6 +88,6 @@
 
 .frontdesk-content {
   flex: 1;
-  background: var(--main-background);
+  background:  linear-gradient(90deg, #007affa1 0%, #77c2ff 100%);
   padding: 1rem;
 }

@@ -1,0 +1,581 @@
+.pricing-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+h2 {
+  color: #ffffff;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.loading, .no-data {
+  text-align: center;
+  padding: 40px;
+  color: #ffffff;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+}
+
+.pricing-table th {
+  color: white;
+  padding: 18px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--card-border);
+}
+
+.pricing-table td {
+  padding: 18px 15px;
+  border-bottom: 1px solid var(--table-border);
+  color: var(--text-color);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.pricing-table tr:hover {
+  background: rgba(180, 136, 77, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.pricing-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rate-input {
+  width: 120px;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--input-text);
+  transition: border-color 0.3s ease;
+}
+
+.rate-input:focus {
+  outline: none;
+  border-color: #b4884d;
+  box-shadow: 0 0 0 2px rgba(180, 136, 77, 0.2);
+}
+
+.rate-input::placeholder {
+  color: rgba(245, 245, 247, 0.5);
+}
+
+.btn-edit, .btn-save, .btn-cancel {
+  padding: 10px 18px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.btn-edit:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+  border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.btn-save:hover {
+  background: linear-gradient(135deg, #229954, #1e8449);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.btn-cancel:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.reservation-fee-row {
+  background: rgba(180, 136, 77, 0.05);
+  font-weight: bold;
+}
+
+.reservation-fee-row td {
+  border-top: 2px solid rgba(180, 136, 77, 0.3);
+  color: #b4884d;
+}
+
+// Enhanced Responsive Design for Pricing Component
+
+// Large Desktop (1920px and up)
+@media (min-width: 1920px) {
+  .pricing-container {
+    max-width: 1400px;
+    padding: 30px;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 22px 20px;
+    font-size: 16px;
+  }
+  
+  .rate-input {
+    width: 140px;
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 12px 22px;
+    font-size: 16px;
+    min-width: 90px;
+  }
+}
+
+// Desktop (1600px - 1919px)
+@media (max-width: 1919px) and (min-width: 1600px) {
+  .pricing-container {
+    max-width: 1300px;
+    padding: 25px;
+  }
+  
+  h2 {
+    font-size: 2.2rem;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 20px 18px;
+    font-size: 15px;
+  }
+}
+
+// Large Tablet/Small Desktop (1400px - 1599px)
+@media (max-width: 1599px) and (min-width: 1400px) {
+  .pricing-container {
+    max-width: 1200px;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+// Tablet Landscape (1200px - 1399px)
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .pricing-container {
+    max-width: 1100px;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+
+// Tablet Portrait (768px - 1199px)
+@media (max-width: 1199px) and (min-width: 768px) {
+  .pricing-container {
+    max-width: 95%;
+    padding: 20px;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+  }
+  
+  .pricing-table {
+    font-size: 13px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 15px 12px;
+    font-size: 13px;
+  }
+  
+  .rate-input {
+    width: 100px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-width: 70px;
+  }
+}
+
+// Mobile Large (576px - 767px)
+@media (max-width: 767px) and (min-width: 576px) {
+  .pricing-container {
+    max-width: 98%;
+    padding: 15px;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+  
+  .pricing-table {
+    font-size: 12px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .rate-input {
+    width: 80px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: 60px;
+  }
+}
+
+// Mobile Small (up to 575px)
+@media (max-width: 575px) {
+  .pricing-container {
+    max-width: 100%;
+    padding: 10px;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .pricing-table {
+    font-size: 11px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 10px 6px;
+    font-size: 11px;
+  }
+  
+  .rate-input {
+    width: 70px;
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 5px 10px;
+    font-size: 11px;
+    min-width: 50px;
+  }
+}
+
+// Extra Small Mobile (up to 375px)
+@media (max-width: 375px) {
+  .pricing-container {
+    padding: 8px;
+  }
+  
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  
+  .pricing-table th,
+  .pricing-table td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+  
+  .rate-input {
+    width: 60px;
+    padding: 4px 5px;
+    font-size: 10px;
+  }
+  
+  .btn-edit, .btn-save, .btn-cancel {
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: 45px;
+  }
+}
+
+// Additional Styles for Enhanced Template
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pricing-table tr.highlighted {
+  background: rgba(180, 136, 77, 0.15) !important;
+  border-left: 4px solid #b4884d;
+}
+
+.room-type-cell {
+  font-weight: 600;
+  color: #b4884d;
+}
+
+.room-type-name {
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.description-cell {
+  max-width: 300px;
+}
+
+.description-text {
+  color: #f5f5f7;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.no-description {
+  color: rgba(245, 245, 247, 0.5);
+  font-style: italic;
+}
+
+.price-cell {
+  font-weight: 600;
+}
+
+.price-value {
+  color: #94ffc1;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.fee-cell {
+  font-weight: 600;
+}
+
+.fee-value {
+  color: #ffd99d;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.rate-input.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-edit i,
+.btn-save i,
+.btn-cancel i {
+  margin-right: 4px;
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+// Summary Section Styles
+.summary-section {
+  margin-top: 30px;
+}
+
+.summary-card {
+  border: 1px solid rgba(180, 136, 77, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.summary-card h3 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(52, 126, 155, 0.541);
+  border-radius: 8px;
+}
+
+.stat-label {
+  color: #f5f5f7;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  color: #b4884d;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+// Room selector styles
+.room-selector {
+  background: rgba(52, 126, 155, 0.541);
+}
+
+.room-type-select {
+  color: #000000;
+  border: 1px solid rgba(180, 136, 77, 0.3);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  max-width: 200px;
+}
+
+.room-type-select:focus {
+  outline: none;
+  border-color: #b4884d;
+  box-shadow: 0 0 0 2px rgba(180, 136, 77, 0.2);
+}
+
+.room-type-select option {
+  background: rgba(11, 11, 49, 0.95);
+  color: #f5f5f7;
+  padding: 8px;
+}
+
+// Special styling for price and fee values
+.stat-value.price {
+  color: #beffd9;
+  font-weight: 700;
+}
+
+.stat-value.fee {
+  color: #ffbdb6;
+  font-weight: 700;
+}
+
+// Responsive Summary Section
+@media (max-width: 768px) {
+  .summary-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .stat-item {
+    padding: 12px;
+  }
+  
+  .summary-card {
+    padding: 20px;
+  }
+  
+  .summary-card h3 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-card {
+    padding: 15px;
+  }
+  
+  .summary-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .stat-item {
+    padding: 10px;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+}

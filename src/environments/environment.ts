@@ -7,7 +7,7 @@ export const environment = {
   apiUrl: 'https://deploymentbackend-production-1612.up.railway.app',
   cloudinary:{
     cloudName: 'dsheuvqdc'
-  }
+  } 
 };
 
 /*

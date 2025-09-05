@@ -143,7 +143,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get occupiedCount() {
-    // Occupied: rooms with isAvailable false or with a checked-in booking
+ 
     const count = this.rooms.filter(room =>
       room.isAvailable === false ||
       this.bookings.some(b => b.room_id === room.id && b.status === 'checked_in')
@@ -241,18 +241,25 @@ export class DashboardComponent implements OnInit {
   }
 
   filterRevenue() {
-    if (this.selectedSource === 'All') {
-      this.filteredRevenue = this.revenues.reduce(
-        (sum, r) => sum + Number(r.amount) || 0,
-        0
-      );
-    } else {
-      this.filteredRevenue = this.revenues
-        .filter(r => r.source === this.selectedSource)
-        .reduce((sum, r) => sum + Number(r.amount) || 0, 0);
+    if (!this.revenues || this.revenues.length === 0) {
+      this.filteredRevenue = 0;
+      return;
     }
 
-    console.log("Filtered Revenue:", this.filteredRevenue, typeof this.filteredRevenue);
+    let revenuesToSum = this.revenues;
+
+    if (this.selectedSource && this.selectedSource !== 'All') {
+      revenuesToSum = revenuesToSum.filter(
+        r => r.source?.toLowerCase() === this.selectedSource.toLowerCase()
+      );
+    }
+
+    this.filteredRevenue = revenuesToSum.reduce((sum, r) => {
+      const amount = parseFloat(r.amount); // ensure it's a number
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    console.log("✅ Filtered Revenue:", this.filteredRevenue);
   }
 
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { RoomService } from '../../_services/room.service';
 
 @Component({
@@ -103,6 +103,8 @@ export class ReceiptComponent implements OnInit {
   @Input() selectedReservation: any;
   @Input() paymentAmount: number = 0;
   @Input() billNo: string = '001';
+  @Output() totalCalculated = new EventEmitter<number>();
+
   today: Date = new Date();
 
   hotelName = 'BC Flats';
@@ -156,6 +158,9 @@ export class ReceiptComponent implements OnInit {
       this.totalAmount = this.breakdown.reduce((sum, d) => sum + d.charge, 0);
       this.grandTotal = this.totalAmount - this.discount;
       this.change = this.paymentAmount - this.grandTotal;
+
+      this.totalCalculated.emit(this.grandTotal);
+
     }
   }
 

@@ -32,7 +32,7 @@ Hotel Online Booking Main Document
 | ⛔ State Chart Diagram                | Not started yet (waiting for system completion)                              |
 | ⚠️ Design                             | Inputted (will be updated as features are completed)                         |
 | ⏳ Entity Relationship Diagram (ERD)  | Waiting for database to be completed                                         |
-| ⛔ System Architecture                | Not yet started                                                              |
+| ⛔ System Architecture                | Done                                                                         |
 | ⛔ Security                           | Done                                                                         |
 | ✔︎ Development                         | Done                                                                         |
 | ✔︎ Hardware Specification              | Done                                                                         |

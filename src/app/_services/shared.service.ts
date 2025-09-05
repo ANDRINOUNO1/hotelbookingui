@@ -48,6 +48,11 @@ export class SharedService {
     return this.dashboardService.getPaymentMethodDistribution();
   }
 
+  getBookingStatusDistribution(): Observable<ChartDataItem[]> {
+    return this.dashboardService.getBookingStatusDistribution();
+  }
+
+
   // Fallback method with mock data if API is not available
   getMockChartsData(): Observable<ChartDataItem[]> {
     const mockData: ChartDataItem[] = [

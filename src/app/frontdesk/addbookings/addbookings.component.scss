@@ -19,7 +19,6 @@
   margin: 2rem auto;
   padding: 2rem;
   border-radius: 12px;
-  background: white;
   color: black;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-family: var(--font-main);
@@ -34,12 +33,12 @@
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--sub-color);
+    color: white;
   }
 
   p {
     font-size: 1.125rem;
-    color: var(--white);
+    color: rgb(237, 255, 254);
   }
 }
 
@@ -68,7 +67,7 @@
 
 .booking-form {
   .form-section {
-    background: var(--card-bg);
+    background: #cbf2ff5b;
     border: var(--border);
     border-radius: 12px;
     padding: 1.5rem;
@@ -77,8 +76,8 @@
     .section-title {
       font-size: 1.5rem;
       font-weight: 600;
-      color: var(--sub-color);
-      border-bottom: var(--border);
+      color: white;
+      border-bottom: 0.2rem solid white;
       padding-bottom: 0.5rem;
       margin-bottom: 1.5rem;
     }
@@ -103,9 +102,9 @@
     textarea {
       padding: 0.75rem 1rem;
       border-radius: 8px;
-      border: 2px solid var(--card-border);
-      background: var(--main-bg);
-      color: var(--white);
+      border: 2px solid rgba(45, 127, 250, 0.683);
+      background: #f0f2f5;
+      color: black;
       font-size: 1rem;
       transition: all 0.2s ease;
 
@@ -153,7 +152,7 @@
       transition: all 0.3s ease;
 
       &.btn-primary {
-        background: var(--gradient-touch);
+        background: #00BFFF;
         color: var(--white);
         border: none;
 
@@ -165,8 +164,8 @@
 
       &.btn-secondary {
         background: transparent;
-        color: var(--sub-color);
-        border: 2px solid var(--sub-color);
+        color: var(--white);
+        border: 2px solid var(--white);
 
         &:hover {
           background: var(--sub-color);
@@ -189,7 +188,7 @@
 }
 
 .room-type-card {
-  border: 2px solid #1b1e38;
+  border: 2px solid #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
@@ -203,7 +202,7 @@
 
   &.selected {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    background: linear-gradient(135deg, #eff6ff, #9bc3f8);
     box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
   }
 }
@@ -244,13 +243,13 @@
   p.room-type-rate {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #3b82f6;
+    color: #f9f9f9;
     margin: 0;
   }
 }
 
 // Selected state styling
 .room-type-card:has(.room-checkbox:checked) {
-  background: linear-gradient(135deg, #324052, #664c1b);
+  background: linear-gradient(135deg, #398fff, #3da2bb);
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }

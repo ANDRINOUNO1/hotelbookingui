@@ -56,6 +56,7 @@ export class ListsComponent implements OnInit {
   showPOS = false;
   receiptData: any = null;
   change: number = 0;
+  grandTotalFromReceipt: number = 0;
 
   billbutton = false;   
 
@@ -298,8 +299,13 @@ export class ListsComponent implements OnInit {
 
   openCheckoutModal(reservation: Reservation) {
     this.selectedReservation = reservation;
+    const totalBill = this.calculateTotalAmount(reservation);
     this.paymentAmount = reservation.totalAmount;
     this.showCheckoutModal = true;
+  }
+
+  onTotalCalculated(total: number) {
+    this.grandTotalFromReceipt = total;
   }
 
   confirmCheckout() {
@@ -308,9 +314,7 @@ export class ListsComponent implements OnInit {
     // Capture reservation and room details before making requests
     const reservationToCheckOut = this.selectedReservation;
     const roomId = reservationToCheckOut.room_id;
-
-    // Define the payload to update the booking's status
-    const updateBookingPayload = { status: 'checked_out' };
+    
 
     // Step 1: Update the booking status to 'checked_out'
     this.http.patch(`${environment.apiUrl}/bookings/${reservationToCheckOut.id}/checkout`, {})
@@ -320,22 +324,25 @@ export class ListsComponent implements OnInit {
 
           const revenuePayload = {
             source: 'Booking',
-            amount: reservationToCheckOut.totalAmount || 0, // assuming booking has a total_amount field
-            paymentType: reservationToCheckOut.paymentMode || 'Unknown'
+            amount: this.grandTotalFromReceipt || 0, 
+            paymentType: this.paymentMode || 'Unknown',
+            // ✅ Add the current timestamp for the transaction date.
+            transactionDate: new Date().toISOString() 
           };
 
+          // Step 2: POST the new revenue record to the server.
           this.http.post(`${environment.apiUrl}/revenues`, revenuePayload)
             .subscribe({
-              next: () => {
-                console.log('✅ Revenue recorded successfully');
+              next: (newRevenue) => {
+                console.log('✅ New revenue record added successfully:', newRevenue);
               },
               error: (err) => {
-                console.error('❌ Failed to record revenue:', err);
+                console.error('❌ Failed to add new revenue record:', err);
                 this.error = 'Booking checked out, but revenue was not recorded.';
               }
             });
 
-          // Step 2: If a room is associated, update its status to 'Vacant and Ready'
+          // Step 3: If a room is associated, update its status
           if (roomId) {
             this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Vacant and Ready' })
               .subscribe({
@@ -364,6 +371,7 @@ export class ListsComponent implements OnInit {
         }
       });
   }
+
   printReceipt() {
     if (!this.receiptData) return;
     
