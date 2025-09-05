@@ -1,0 +1,267 @@
+<!-- Dynamic Header Component -->
+<section class="dynamic-header" [style]="getCurrentConfig().styles | json">
+  <div class="header-bar">
+    <!-- Logo -->
+    <a [href]="getCurrentConfig().logo.url ? '#' : '/'" class="logo">
+      <img 
+        [src]="getCurrentConfig().logo.url" 
+        [alt]="getCurrentConfig().logo.altText" 
+        class="w-16 h-16"
+        *ngIf="getCurrentConfig().logo.url">
+      <span *ngIf="!getCurrentConfig().logo.url" class="logo-text">BC Flats</span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <a 
+        *ngFor="let item of getCurrentConfig().navigation; trackBy: trackByIndex"
+        [href]="item.href"
+        [routerLink]="!item.isExternal ? item.href : null"
+        [target]="item.isExternal ? '_blank' : null"
+        class="nav-link">
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <!-- Action Buttons -->
+    <div class="header-actions">
+      <a 
+        [href]="getCurrentConfig().ctaButton.href"
+        [routerLink]="!getCurrentConfig().ctaButton.isExternal ? getCurrentConfig().ctaButton.href : null"
+        [target]="getCurrentConfig().ctaButton.isExternal ? '_blank' : null"
+        class="btn book-now-btn">
+        {{ getCurrentConfig().ctaButton.text }}
+      </a>
+      
+      <a 
+        [href]="getCurrentConfig().loginButton.href"
+        [routerLink]="!getCurrentConfig().loginButton.isExternal ? getCurrentConfig().loginButton.href : null"
+        [target]="getCurrentConfig().loginButton.isExternal ? '_blank' : null"
+        class="btn login-btn">
+        {{ getCurrentConfig().loginButton.text }}
+      </a>
+
+      <!-- Edit Button (only show if editable) -->
+      <button 
+        *ngIf="isEditable && showEditButton && !isEditing"
+        (click)="startEditing()"
+        class="btn edit-btn">
+        <i class="fa fa-edit"></i> Edit Header
+      </button>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <nav class="mobile-nav">
+      <a 
+        *ngFor="let item of getCurrentConfig().navigation; trackBy: trackByIndex"
+        [href]="item.href"
+        [routerLink]="!item.isExternal ? item.href : null"
+        [target]="item.isExternal ? '_blank' : null"
+        class="mobile-nav-link">
+        {{ item.label }}
+      </a>
+      <a 
+        [href]="getCurrentConfig().ctaButton.href"
+        [routerLink]="!getCurrentConfig().ctaButton.isExternal ? getCurrentConfig().ctaButton.href : null"
+        class="btn mobile-cta-btn">
+        {{ getCurrentConfig().ctaButton.text }}
+      </a>
+      <a 
+        [href]="getCurrentConfig().loginButton.href"
+        [routerLink]="!getCurrentConfig().loginButton.isExternal ? getCurrentConfig().loginButton.href : null"
+        class="btn mobile-login-btn">
+        {{ getCurrentConfig().loginButton.text }}
+      </a>
+    </nav>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+</section>
+
+<!-- Edit Modal -->
+<div *ngIf="isEditing && editingConfig" class="edit-modal-overlay" (click)="cancelEditing()">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
+    <div class="edit-modal-header">
+      <h3>Edit Header</h3>
+      <button class="close-btn" (click)="cancelEditing()">&times;</button>
+    </div>
+    
+    <div class="edit-modal-content">
+      <!-- Logo Section -->
+      <div class="edit-section">
+        <h4>Logo</h4>
+        <div class="form-group">
+          <label>Logo URL:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.logo.url" 
+            placeholder="Enter logo URL">
+        </div>
+        <div class="form-group">
+          <label>Alt Text:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.logo.altText" 
+            placeholder="Enter alt text">
+        </div>
+      </div>
+
+      <!-- Navigation Section -->
+      <div class="edit-section">
+        <h4>Navigation</h4>
+        <div class="navigation-items">
+          <div 
+            *ngFor="let item of editingConfig.navigation; let i = index" 
+            class="navigation-item">
+            <div class="form-group">
+              <label>Label:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="item.label" 
+                placeholder="Menu label">
+            </div>
+            <div class="form-group">
+              <label>Link:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="item.href" 
+                placeholder="Link URL">
+            </div>
+            <div class="form-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="item.isExternal">
+                External Link
+              </label>
+            </div>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm" 
+              (click)="removeNavigationItem(i)">
+              Remove
+            </button>
+          </div>
+        </div>
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="addNavigationItem()">
+          Add Navigation Item
+        </button>
+      </div>
+
+      <!-- CTA Button Section -->
+      <div class="edit-section">
+        <h4>Call-to-Action Button</h4>
+        <div class="form-group">
+          <label>Button Text:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.ctaButton.text" 
+            placeholder="Button text">
+        </div>
+        <div class="form-group">
+          <label>Button Link:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.ctaButton.href" 
+            placeholder="Button link">
+        </div>
+        <div class="form-group">
+          <label>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="editingConfig.ctaButton.isExternal">
+            External Link
+          </label>
+        </div>
+      </div>
+
+      <!-- Login Button Section -->
+      <div class="edit-section">
+        <h4>Login Button</h4>
+        <div class="form-group">
+          <label>Button Text:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.loginButton.text" 
+            placeholder="Button text">
+        </div>
+        <div class="form-group">
+          <label>Button Link:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.loginButton.href" 
+            placeholder="Button link">
+        </div>
+        <div class="form-group">
+          <label>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="editingConfig.loginButton.isExternal">
+            External Link
+          </label>
+        </div>
+      </div>
+
+      <!-- Styles Section -->
+      <div class="edit-section">
+        <h4>Styles</h4>
+        <div class="form-group">
+          <label>Background Color:</label>
+          <input 
+            type="color" 
+            [(ngModel)]="editingConfig.styles.backgroundColor">
+        </div>
+        <div class="form-group">
+          <label>Text Color:</label>
+          <input 
+            type="color" 
+            [(ngModel)]="editingConfig.styles.textColor">
+        </div>
+        <div class="form-group">
+          <label>Accent Color:</label>
+          <input 
+            type="color" 
+            [(ngModel)]="editingConfig.styles.accentColor">
+        </div>
+        <div class="form-group">
+          <label>Font Family:</label>
+          <input 
+            type="text" 
+            [(ngModel)]="editingConfig.styles.fontFamily" 
+            placeholder="Font family">
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-modal-footer">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="cancelEditing()">
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="saveChanges()"
+        [disabled]="loading">
+        {{ loading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>

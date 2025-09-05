@@ -1,60 +1,86 @@
 <router-outlet></router-outlet>
-<!-- header section starts  -->
 
-<section class="header">
-  <div class="header-bar">
-    <a href="#home" class="logo">
-      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
-    </a>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#rooms">Rooms</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
-      <a routerLink="/reserve" class="btn book-now-btn">Book Now</a>
-    </nav>
-    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <a routerLink="/login" class="btn login-btn">Login</a>
-  </div>
-</section>
+<!-- Home Component Table Structure -->
+<table class="home-component-table">
+  <tbody>
+    <!-- Header Section Row -->
+    <tr id="header-section">
+      <td colspan="2">
+        <section class="header" [style]="getHeaderStyles()">
+          <div class="header-bar">
+            <a href="#home" class="logo">
+              <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
+              <span class="logo-text" *ngIf="headerContent.companyName">{{ headerContent.companyName }}</span>
+            </a>
+            <nav>
+              <a 
+                *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
+                [href]="item.href"
+                [routerLink]="!item.isExternal ? item.href : null"
+                [target]="item.isExternal ? '_blank' : undefined"
+                class="nav-link">
+                {{ item.label }}
+              </a>
+              <a 
+                [href]="headerContent.ctaButton.href"
+                [routerLink]="!headerContent.ctaButton.isExternal ? headerContent.ctaButton.href : null"
+                [target]="headerContent.ctaButton.isExternal ? '_blank' : undefined"
+                class="btn book-now-btn">
+                {{ headerContent.ctaButton.text }}
+              </a>
+            </nav>
+            <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <a 
+              [href]="headerContent.loginButton.href"
+              [routerLink]="!headerContent.loginButton.isExternal ? headerContent.loginButton.href : null"
+              [target]="headerContent.loginButton.isExternal ? '_blank' : undefined"
+              class="btn login-btn">
+              {{ headerContent.loginButton.text }}
+            </a>
+          </div>
+        </section>
+      </td>
+    </tr>
 
-
-<!-- header section ends -->
-
-<!-- home section starts  -->
-<section class="back">
-<section class="home" id="home">
-
-   <div class="swiper home-slider">
-
-      <div class="swiper-wrapper">
-
-         <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
-            <img [src]="image" [alt]="'Hero image ' + (i + 1)">
-            <div class="flex">
-               <h3>{{ getHeroTitle(i) }}</h3>
+    <!-- Hero Section Row -->
+    <tr id="hero-section">
+      <td colspan="2">
+        <section class="back">
+          <section class="home" id="home">
+            <div class="swiper home-slider">
+              <div class="swiper-wrapper">
+                <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
+                  <img [src]="image" [alt]="'Hero image ' + (i + 1)">
+                  <div class="flex">
+                    <h3>{{ getHeroTitle(i) }}</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
             </div>
-         </div>
+          </section>
+        </section>
+      </td>
+    </tr>
 
-      </div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-   </div>
+    <!-- Availability Section Row -->
+    <tr id="availability-section">
+      <td colspan="2">
+        <section class="availability" id="availability">
+          <!-- Availability content will be added here -->
+        </section>
+      </td>
+    </tr>
 
-</section>
-
-<!-- home section ends -->
-
-<!-- availability section starts  -->
-
-<section class="availability" id="availability">
-
-<section class="about" id="about">
+    <!-- About Section Row -->
+    <tr id="about-section">
+      <td colspan="2">
+        <section class="about" id="about">
 
    <div class="row">
       <div class="image">
@@ -88,14 +114,15 @@
          <a href="#availability" class="btn">check availability</a>
       </div>
    </div>
+        </section>
+      </td>
+    </tr>
 
-</section>
-
-<!-- about section ends -->   
-<div style="height: 50px;"></div>
-<!-- services section starts  -->
-
-<section class="services">
+    <!-- Services Section Row -->
+    <tr id="services-section">
+      <td colspan="2">
+        <div style="height: 50px;"></div>
+        <section class="services">
 
    <div class="box-container">
 
@@ -136,12 +163,16 @@
       </div>
 
    </div>
+        </section>
+        <div style="height: 50px;"></div>
+      </td>
+    </tr>
 
-</section>
-<div style="height: 50px;"></div>
-<!-- services section ends -->
-<!-- Background gradient -->
-<section class="rooms">
+    <!-- Rooms Section Row -->
+    <tr id="rooms-section">
+      <td colspan="2">
+        <!-- Background gradient -->
+        <section class="rooms">
 <section id="rooms" class="py-12 bg-gradient-to-r from-[#2b65ec] to-white min-h-[600px] min-w-full">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold text-center mb-8 text-black drop-shadow-md">Our Rooms</h2>
@@ -216,12 +247,15 @@
     </div>
   </div>
 </section>
-</section>
-<div style="height: 100px;"></div>
+        </section>
+        <div style="height: 100px;"></div>
+      </td>
+    </tr>
 
-<!-- contact section starts  -->
-
-<section class="contact" id="contact">
+    <!-- Contact Section Row -->
+    <tr id="contact-section">
+      <td colspan="2">
+        <section class="contact" id="contact">
 
    <div class="row">
 
@@ -235,14 +269,14 @@
       </form>
 
    </div>
+        </section>
+      </td>
+    </tr>
 
-</section>
-
-<!-- contact section ends -->
-
-<!-- reviews section starts  -->
-
-<section class="reviews" id="reviews">
+    <!-- Reviews Section Row -->
+    <tr id="reviews-section">
+      <td colspan="2">
+        <section class="reviews" id="reviews">
 
   <div class="map-section">
     <div class="map-container">
@@ -290,30 +324,35 @@
       </div>
     </div>
   </div>
-</section>
-<!-- reviews section ends  -->
+        </section>
+      </td>
+    </tr>
 
-<!-- footer section starts  -->
+    <!-- Footer Section Row -->
+    <tr id="footer-section">
+      <td colspan="2">
+        <footer class="footer">
 
-<section class="footer">
+          <div class="footer-contacts">
+            <a [href]="'tel:' + footerContent.phone1"><i class="fas fa-phone"></i> {{ footerContent.phone1 }}</a>
+            <a [href]="'tel:' + footerContent.phone2"><i class="fas fa-phone"></i> {{ footerContent.phone2 }}</a>
+            <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
+          </div>
 
-   <div class="box-container">
+          <div class="footer-socials">
+            <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+            <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+            <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+          </div>
 
-      <div class="box">
-         <a href="tel:1234567890"><i class="fas fa-phone"></i> +123-456-7890</a>
-         <a href="tel:1112223333"><i class="fas fa-phone"></i> +696-969-69696</a>
-         <a href="mailto:BenedictoCollege"><i class="fas fa-envelope"></i>BCflats.edu.ph</a>
-         <a href="#"><i class="fas fa-map-marker-alt"></i> A.S Fortuna - 400104</a>
-      </div>
+          <div class="footer-bottom">
+            <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
+          </div>
 
-
-      <div class="box">
-         <a href="#">facebook <i class="fab fa-facebook-f"></i></a>
-         <a href="#">twitter <i class="fab fa-twitter"></i></a>
-         <a href="#">instagram <i class="fab fa-instagram"></i></a>
-         <a href="#">linkedin <i class="fab fa-linkedin"></i></a>
-      </div>
-
-   </div>
-
-</section>
+        </footer>
+      </td>
+    </tr>
+  </tbody>
+</table>
