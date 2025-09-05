@@ -19,6 +19,7 @@ import { ArchiveComponent } from './admin-section/archive/archive.component';
 import { ContactMessagesComponent } from './admin-section/contact-messages/contact-messages.component';
 import { ContentManagementComponent } from './admin-section/content-management/content-management.component';
 import { RoomstatusComponent } from './admin-section/roomstatus/roomstatus.component';
+import { LoginHistoryComponent } from './admin-section/history/history.component';
 
 //Frontdesk
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
@@ -34,6 +35,9 @@ import { SuperhomeComponent } from './superadmin-sect/superhome.component';
 import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
+import { AddAccountComponentt } from './superadmin-sect/addaccount/add-account.component';
+import { PricingComponents } from './superadmin-sect/pricing/pricing.component';
+
 import path from 'path';
 
 //extras
@@ -58,7 +62,8 @@ export const routes: Routes = [
       { path: 'archive', component: ArchiveComponent },
       { path: 'contact-messages', component: ContactMessagesComponent },
       { path: 'content-management', component: ContentManagementComponent },
-      { path: 'roomstatus', component: RoomstatusComponent }
+      { path: 'roomstatus', component: RoomstatusComponent },
+      { path: 'history', component: LoginHistoryComponent }
     ]
   },
   {
@@ -81,9 +86,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
       { path: 'account-list', component: AccountListComponent },
       { path: 'pending-accounts', component: PendingAccountsComponent },
-      { path: 'add-account', component: AddAccountComponent },
+      { path: 'add-accounts', component: AddAccountComponentt },
       { path: 'archives', component: ArchivesComponent},
-      { path: 'pricing', component: PricingComponent }
+      { path: 'pricing', component: PricingComponents }
     ]
   },
   { path: 'billing/:id', component: BillingComponent }

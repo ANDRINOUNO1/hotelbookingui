@@ -1575,13 +1575,89 @@ body, html {
 }
 
 .footer {
-   background: linear-gradient(90deg, rgba(43, 101, 236, 1) 0%,  rgb(184, 204, 252) 100%);
-   padding-top: 3rem;
-   padding-bottom: 0;
-   margin-top: 4.5rem;
-   border-radius: 1rem 2rem 0 0;
-   text-align: center;
+    background: linear-gradient(to right, rgb(43, 101, 236), rgb(87, 138, 255));
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #fff;
+    width: 100%; /* Ensure full width */
+    margin: 0 auto; /* Remove any unwanted margins */
+    box-sizing: border-box; /* Include padding in width calculation */
+    position: relative;
+    left: 0;
+    right: 0;
+    max-width: none; /* Remove any max-width limit */
+}
+/* Contact & Social links */
+.footer-contacts,
+.footer-socials {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 
+.footer-contacts a,
+.footer-socials a {
+  color: #fff;
+  font-size: 1.4rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-contacts a i,
+.footer-socials a i {
+  margin-right: 0.6rem;
+  color: #ffd700; /* gold accent for icons */
+}
+
+.footer-contacts a:hover,
+.footer-socials a:hover {
+  text-decoration: underline;
+  color: #dbeafe;
+}
+
+/* Bottom Bar */
+.footer .footer-bottom {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding-top: 1.5rem;
+}
+
+.footer .footer-bottom p {
+  margin: 0.3rem 0;
+  font-size: 1.3rem;
+  color: #e5e7eb;
+}
+
+/* =========================
+   Responsive Footer
+   ========================= */
+@media (min-width: 768px) {
+  .footer {
+    text-align: left;
+  }
+
+  .footer-contacts,
+  .footer-socials {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .footer-contacts a,
+  .footer-socials a {
+    margin: 0 1.2rem;
+  }
+
+  .footer .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer .footer-bottom p {
+    margin: 0;
+  }
 }
 
 .footer .box-container{
@@ -1638,4 +1714,43 @@ body, html {
    background-color: var(--sub-color);
    font-size: 2rem;
    margin-top: 2rem;
+}
+
+.footer .footer-credit{
+   border-radius: .5rem;
+   padding: 1.5rem;
+   text-align: center;
+   color: #666;
+   background-color: #f8f9fa;
+   font-size: 1.4rem;
+   margin-top: 2rem;
+   border-top: 1px solid #e9ecef;
+}
+
+.footer .footer-credit p{
+   margin: 0;
+   font-weight: 500;
+}
+
+// Home Component Table Structure
+.home-component-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: none;
+  
+  tbody {
+    display: block;
+  }
+  
+  tr {
+    display: block;
+    width: 100%;
+  }
+  
+  td {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+  }
 }

@@ -1,0 +1,136 @@
+<!-- Loading Spinner Overlay -->
+<app-loading-spinner 
+  *ngIf="isLoading" 
+  [overlay]="true" 
+  message="Loading Pricing..." 
+  [size]="'large'">
+</app-loading-spinner>
+
+<!-- Content will show after loading -->
+<div *ngIf="!isLoading" class="pricing-container">
+  <h2>Room Pricing Management</h2>
+  
+  <div *ngIf="loading" class="loading">
+    Loading room types...
+  </div>
+  
+  <div *ngIf="!loading && roomTypes.length === 0" class="no-data">
+    No room types found.
+  </div>
+  
+  <div *ngIf="!loading && roomTypes.length > 0" class="table-wrapper">
+    <table class="pricing-table">
+      <thead>
+        <tr>
+          <th>Room Type</th>
+          <th>Description</th>
+          <th>Base Price</th>
+          <th>Reservation Fee %</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let roomType of roomTypes; let i = index" [class.highlighted]="editingId === roomType.id">
+          <td class="room-type-cell">
+            <span *ngIf="roomType.type" class="room-type-name">{{ roomType.type }}</span>
+            <span *ngIf="!roomType.type" class="error-text">[NO TYPE]</span>
+          </td>
+          <td class="description-cell">
+            <span *ngIf="roomType.description" class="description-text">{{ roomType.description }}</span>
+            <span *ngIf="!roomType.description" class="no-description">No description available</span>
+          </td>
+          <td class="price-cell" *ngIf="editingId !== roomType.id">
+            <span *ngIf="roomType.rate || roomType.basePrice" class="price-value">
+              ₱{{ roomType.rate || roomType.basePrice || 0 }}
+            </span>
+            <span *ngIf="!roomType.rate && !roomType.basePrice" class="error-text">[NO RATE]</span>
+          </td>
+          <td class="edit-price-cell" *ngIf="editingId === roomType.id">
+            <input 
+              type="number" 
+              [(ngModel)]="editRate" 
+              min="0" 
+              step="0.01" 
+              class="rate-input" 
+              placeholder="Enter price"
+              [class.error]="!editRate || editRate <= 0"
+            />
+          </td>
+          <td class="fee-cell" *ngIf="editingId !== roomType.id">
+            <span *ngIf="roomType.reservationFeePercentage !== undefined" class="fee-value">
+              {{ roomType.reservationFeePercentage }}%
+            </span>
+            <span *ngIf="roomType.reservationFeePercentage === undefined" class="error-text">[NO FEE]</span>
+          </td>
+          <td class="edit-fee-cell" *ngIf="editingId === roomType.id">
+            <input 
+              type="number" 
+              [(ngModel)]="editReservationFee" 
+              min="0" 
+              max="100" 
+              step="0.01" 
+              class="rate-input" 
+              placeholder="Enter fee %"
+              [class.error]="!editReservationFee || editReservationFee < 0 || editReservationFee > 100"
+            />
+          </td>
+          <td class="actions-cell">
+            <div class="action-buttons">
+              <button 
+                *ngIf="editingId !== roomType.id" 
+                (click)="startEdit(roomType)" 
+                class="btn-edit"
+                title="Edit this room type">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button 
+                *ngIf="editingId === roomType.id" 
+                (click)="saveEdit(roomType)" 
+                class="btn-save"
+                [disabled]="!editRate || !editReservationFee || editRate <= 0 || editReservationFee < 0 || editReservationFee > 100"
+                title="Save changes">
+                <i class="fas fa-save"></i> Save
+              </button>
+              <button 
+                *ngIf="editingId === roomType.id" 
+                (click)="cancelEdit()" 
+                class="btn-cancel"
+                title="Cancel editing">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Summary Section -->
+  <div *ngIf="!loading && roomTypes.length > 0" class="summary-section">
+    <div class="summary-card">
+      <h3>Pricing Summary</h3>
+      <div class="summary-stats">
+        <div class="stat-item room-selector">
+          <span class="stat-label">Room Type:</span>
+          <select 
+            [(ngModel)]="selectedRoomTypeId" 
+            (change)="onRoomTypeChange()"
+            class="room-type-select">
+            <option value="">Choose a room type...</option>
+            <option *ngFor="let roomType of roomTypes" [value]="roomType.id">
+              {{ roomType.type }}
+            </option>
+          </select>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Base Price:</span>
+          <span class="stat-value price">₱{{ selectedRoomType ? (selectedRoomType.rate || selectedRoomType.basePrice || 0) : '0.00' }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Reservation Fee:</span>
+          <span class="stat-value fee">₱{{ getCalculatedReservationFee() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

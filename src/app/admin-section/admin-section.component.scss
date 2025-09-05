@@ -1,7 +1,7 @@
 :host {
   --sidebar-bg: var(--main-color, #dfdffa);
   --sidebar-active: var(--dark-base, #181824);
-  --sidebar-text: #fff;
+  --sidebar-text: var(--sub-color, #e5c07b);
   --main-bg: var(--white, #f5f5f7);
   --header-bg: var(--accent-color, #b4884d);
   --header-text: #fff;
@@ -147,7 +147,7 @@
   flex: 1;
   padding: 2rem;
   background: #fff;
-  color: var(--header-text, #fff);
+  color: black;
   z-index: 0;
   position: relative;
   min-width: 0;

@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ContentService, ContentItem, GalleryImage } from '../../_services/content.service';
 import { AlertService } from '../../_services/alert.service';
 
+interface AboutImages {
+  [key: string]: string;
+}
+
 @Component({
   selector: 'app-content-management',
   templateUrl: './content-management.component.html',
@@ -47,6 +51,93 @@ export class ContentManagementComponent implements OnInit {
 
   // Store original content values
   private originalContent: { [key: string]: string } = {};
+
+  // Header content management
+  headerContent = {
+    companyName: 'BC Flats',
+    logoText: 'BC Flats',
+    title: 'BC Flats',
+    navigation: [
+      { label: 'Home', href: '#home', isExternal: false },
+      { label: 'Rooms', href: '#rooms', isExternal: false },
+      { label: 'About', href: '#about', isExternal: false },
+      { label: 'Services', href: '#services', isExternal: false },
+      { label: 'Contact', href: '#contact', isExternal: false }
+    ],
+    ctaButton: {
+      text: 'Book Now',
+      href: '/reserve',
+      isExternal: false
+    },
+    loginButton: {
+      text: 'Login',
+      href: '/login',
+      isExternal: false
+    },
+    styles: {
+      backgroundColor: '#0b0b31',
+      textColor: '#e5c07b',
+      accentColor: '#b4884d',
+      fontFamily: 'Montserrat, sans-serif'
+    }
+  };
+
+  // Footer content management
+  footerContent = {
+    companyName: 'BC Flats',
+    phone1: '+123-456-7890',
+    phone2: '+696-969-69696',
+    email: 'BCflats.edu.ph',
+    address: 'A.S Fortuna - 400104',
+    social: {
+      facebook: '#',
+      twitter: '#',
+      instagram: '#',
+      linkedin: '#'
+    },
+    copyrightText: '',
+    showDynamicYear: true,
+    styles: {
+      backgroundColor: '#0b0b31',
+      textColor: '#e5c07b',
+      linkColor: '#b4884d',
+      copyrightBackgroundColor: '#f8f9fa'
+    }
+  };
+
+  savingHeader = false;
+  savingFooter = false;
+  savingHome = false;
+
+  // Footer year editor fields
+  footerStartYear: number = new Date().getFullYear();
+  footerEndYear?: number;
+
+  // Home content management
+  homeContent = {
+    heroImages: [
+      'assets/images/Pool_home.jpg',
+      'assets/images/Beach_view.jpg',
+      'assets/images/Front_desk.jpg'
+    ],
+    aboutContent: {
+      staffTitle: 'best staff',
+      staffDescription: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+      foodsTitle: 'best foods',
+      foodsDescription: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+      poolTitle: 'swimming pool',
+      poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
+    },
+    aboutImages: {
+      staff: 'assets/images/about-img-1.jpg',
+      foods: 'assets/images/about-img-2.jpg',
+      pool: 'assets/images/about-img-3.jpg'
+    }
+  };
+
+  selectedHeroImages: File[] = [];
+  selectedAboutImage: File | null = null;
+  selectedAboutImageType: string = '';
 
   // Text field definitions for each section
   private textFields = {
@@ -937,11 +1028,14 @@ export class ContentManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContent();
+    this.loadHeaderContent();
+    this.loadFooterContent();
+    this.loadHomeContent();
     this.initializeTabs();
 
     
     this.content = this.content || {};
-    ['hero','about','services','rooms','contact','header'].forEach(key => {
+    ['hero','about','services','rooms','contact','header','footer','home'].forEach(key => {
       if (!Array.isArray((this.content as any)[key])) {
         (this.content as any)[key] = [];
       }
@@ -3106,5 +3200,429 @@ export class ContentManagementComponent implements OnInit {
   getGalleryContent(sectionId: string): any[] {
     const sectionContent = this.getSectionItemsSafe(sectionId);
     return sectionContent.filter((item: any) => item.type === 'gallery');
+  }
+
+  // Header Management Methods
+  async loadHeaderContent(): Promise<void> {
+    try {
+      const headerItems = await this.contentService.getSectionContent('header').toPromise();
+      
+      if (headerItems && Array.isArray(headerItems)) {
+        headerItems.forEach((item: ContentItem) => {
+          switch (item.key) {
+            case 'company_name':
+              this.headerContent.companyName = item.value || 'BC Flats';
+              break;
+            case 'logo_text':
+              (this.headerContent as any).logoText = item.value || this.headerContent.companyName || 'BC Flats';
+              break;
+            case 'title':
+              this.headerContent.title = item.value || 'BC Flats';
+              break;
+            case 'navigation':
+              try {
+                this.headerContent.navigation = JSON.parse(item.value || '[]');
+              } catch (e) {
+                console.warn('Invalid navigation JSON:', item.value);
+              }
+              break;
+            case 'cta_button':
+              try {
+                this.headerContent.ctaButton = JSON.parse(item.value || '{}');
+              } catch (e) {
+                console.warn('Invalid CTA button JSON:', item.value);
+              }
+              break;
+            case 'login_button':
+              try {
+                this.headerContent.loginButton = JSON.parse(item.value || '{}');
+              } catch (e) {
+                console.warn('Invalid login button JSON:', item.value);
+              }
+              break;
+            case 'styles':
+              try {
+                this.headerContent.styles = { ...this.headerContent.styles, ...JSON.parse(item.value || '{}') };
+              } catch (e) {
+                console.warn('Invalid styles JSON:', item.value);
+              }
+              break;
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading header content:', error);
+    }
+  }
+
+  async saveHeaderContent(): Promise<void> {
+    this.savingHeader = true;
+    try {
+      const headerItems = [
+        { section: 'header', type: 'text', key: 'company_name', value: this.headerContent.companyName },
+        { section: 'header', type: 'text', key: 'logo_text', value: (this.headerContent as any).logoText || this.headerContent.companyName },
+        { section: 'header', type: 'text', key: 'title', value: this.headerContent.title },
+        { section: 'header', type: 'text', key: 'navigation', value: JSON.stringify(this.headerContent.navigation) },
+        { section: 'header', type: 'text', key: 'cta_button', value: JSON.stringify(this.headerContent.ctaButton) },
+        { section: 'header', type: 'text', key: 'login_button', value: JSON.stringify(this.headerContent.loginButton) },
+        { section: 'header', type: 'text', key: 'styles', value: JSON.stringify(this.headerContent.styles) }
+      ];
+
+      // Save each header item
+      for (const item of headerItems) {
+        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
+      }
+
+      this.alertService.success('Header content saved successfully!');
+      await this.loadContent();
+      await this.loadHeaderContent();
+    } catch (error) {
+      this.alertService.error('Failed to save header content');
+      console.error('Error saving header content:', error);
+    } finally {
+      this.savingHeader = false;
+    }
+  }
+
+  addNavigationItem(): void {
+    this.headerContent.navigation.push({
+      label: 'New Item',
+      href: '#',
+      isExternal: false
+    });
+  }
+
+  removeNavigationItem(index: number): void {
+    if (this.headerContent.navigation.length > 1) {
+      this.headerContent.navigation.splice(index, 1);
+    } else {
+      this.alertService.error('At least one navigation item is required');
+    }
+  }
+
+  resetHeaderContent(): void {
+    this.headerContent = {
+      companyName: 'BC Flats',
+      logoText: 'BC Flats',
+      title: 'BC Flats',
+      navigation: [
+        { label: 'Home', href: '#home', isExternal: false },
+        { label: 'Rooms', href: '#rooms', isExternal: false },
+        { label: 'About', href: '#about', isExternal: false },
+        { label: 'Services', href: '#services', isExternal: false },
+        { label: 'Contact', href: '#contact', isExternal: false }
+      ],
+      ctaButton: {
+        text: 'Book Now',
+        href: '/reserve',
+        isExternal: false
+      },
+      loginButton: {
+        text: 'Login',
+        href: '/login',
+        isExternal: false
+      },
+      styles: {
+        backgroundColor: '#0b0b31',
+        textColor: '#e5c07b',
+        accentColor: '#b4884d',
+        fontFamily: 'Montserrat, sans-serif'
+      }
+    };
+    this.alertService.info('Header content reset to default values');
+  }
+
+  // Footer Management Methods
+  async loadFooterContent(): Promise<void> {
+    try {
+      const footerItems = await this.contentService.getSectionContent('footer').toPromise();
+      
+      if (footerItems && Array.isArray(footerItems)) {
+        footerItems.forEach((item: ContentItem) => {
+          switch (item.key) {
+            case 'company_name':
+              this.footerContent.companyName = item.value || 'BC Flats';
+              break;
+            case 'phone1':
+              this.footerContent.phone1 = item.value || '+123-456-7890';
+              break;
+            case 'phone2':
+              this.footerContent.phone2 = item.value || '+696-969-69696';
+              break;
+            case 'email':
+              this.footerContent.email = item.value || 'BCflats.edu.ph';
+              break;
+            case 'address':
+              this.footerContent.address = item.value || 'A.S Fortuna - 400104';
+              break;
+            case 'social_links':
+              try {
+                this.footerContent.social = JSON.parse(item.value || '{}');
+              } catch (e) {
+                console.warn('Invalid social links JSON:', item.value);
+              }
+              break;
+            case 'copyright_text':
+              this.footerContent.copyrightText = item.value || '';
+              break;
+            case 'show_dynamic_year':
+              this.footerContent.showDynamicYear = item.value === 'true';
+              break;
+            case 'styles':
+              try {
+                this.footerContent.styles = { ...this.footerContent.styles, ...JSON.parse(item.value || '{}') };
+              } catch (e) {
+                console.warn('Invalid footer styles JSON:', item.value);
+              }
+              break;
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading footer content:', error);
+    }
+  }
+
+  async saveFooterContent(): Promise<void> {
+    this.savingFooter = true;
+    try {
+      const footerItems = [
+        { section: 'footer', type: 'text', key: 'company_name', value: this.footerContent.companyName },
+        { section: 'footer', type: 'text', key: 'phone1', value: this.footerContent.phone1 },
+        { section: 'footer', type: 'text', key: 'phone2', value: this.footerContent.phone2 },
+        { section: 'footer', type: 'text', key: 'email', value: this.footerContent.email },
+        { section: 'footer', type: 'text', key: 'address', value: this.footerContent.address },
+        { section: 'footer', type: 'text', key: 'social_links', value: JSON.stringify(this.footerContent.social) },
+        { section: 'footer', type: 'text', key: 'copyright_text', value: this.footerContent.copyrightText },
+        { section: 'footer', type: 'text', key: 'show_dynamic_year', value: this.footerContent.showDynamicYear.toString() },
+        { section: 'footer', type: 'text', key: 'styles', value: JSON.stringify(this.footerContent.styles) }
+      ];
+
+      // Save each footer item
+      for (const item of footerItems) {
+        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
+      }
+
+      this.alertService.success('Footer content saved successfully!');
+      await this.loadContent(); // Refresh the main content
+    } catch (error) {
+      this.alertService.error('Failed to save footer content');
+      console.error('Error saving footer content:', error);
+    } finally {
+      this.savingFooter = false;
+    }
+  }
+
+  resetFooterContent(): void {
+    this.footerContent = {
+      companyName: 'BC Flats',
+      phone1: '+123-456-7890',
+      phone2: '+696-969-69696',
+      email: 'BCflats.edu.ph',
+      address: 'A.S Fortuna - 400104',
+      social: {
+        facebook: '#',
+        twitter: '#',
+        instagram: '#',
+        linkedin: '#'
+      },
+      copyrightText: '',
+      showDynamicYear: true,
+      styles: {
+        backgroundColor: '#0b0b31',
+        textColor: '#e5c07b',
+        linkColor: '#b4884d',
+        copyrightBackgroundColor: '#f8f9fa'
+      }
+    };
+    this.alertService.info('Footer content reset to default values');
+  }
+
+  // Footer year helpers
+  setDynamicYear(enabled: boolean): void {
+    this.footerContent.showDynamicYear = enabled;
+  }
+
+  updateFooterYearRange(startYear: number, endYear?: number): void {
+    const normalizedStart = Math.max(1900, Math.floor(startYear));
+    const normalizedEnd = endYear !== undefined ? Math.max(normalizedStart, Math.floor(endYear)) : normalizedStart;
+    this.footerContent.showDynamicYear = false;
+    this.footerContent.copyrightText = normalizedStart === normalizedEnd
+      ? `${normalizedStart}`
+      : `${normalizedStart}-${normalizedEnd}`;
+  }
+
+  async saveFooterYearRange(startYear: number, endYear?: number): Promise<void> {
+    this.updateFooterYearRange(startYear, endYear);
+    await this.saveFooterContent();
+  }
+
+  // Home Management Methods
+  async loadHomeContent(): Promise<void> {
+    try {
+      // Load hero images
+      const heroItems = await this.contentService.getSectionContent('hero').toPromise();
+      if (heroItems && Array.isArray(heroItems)) {
+        this.homeContent.heroImages = heroItems
+          .filter((item: ContentItem) => item.type === 'image' || item.type === 'gallery')
+          .map((item: ContentItem) => item.optimizedUrl || item.value)
+          .filter((url): url is string => Boolean(url));
+      }
+
+      // Load about content
+      const aboutItems = await this.contentService.getSectionContent('about').toPromise();
+      if (aboutItems && Array.isArray(aboutItems)) {
+        aboutItems.forEach((item: ContentItem) => {
+          switch (item.key) {
+            case 'staff-title':
+              this.homeContent.aboutContent.staffTitle = item.value || 'best staff';
+              break;
+            case 'staff-description':
+              this.homeContent.aboutContent.staffDescription = item.value || 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.';
+              break;
+            case 'foods-title':
+              this.homeContent.aboutContent.foodsTitle = item.value || 'best foods';
+              break;
+            case 'foods-description':
+              this.homeContent.aboutContent.foodsDescription = item.value || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.';
+              break;
+            case 'pool-title':
+              this.homeContent.aboutContent.poolTitle = item.value || 'swimming pool';
+              break;
+            case 'pool-description':
+              this.homeContent.aboutContent.poolDescription = item.value || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.';
+              break;
+            case 'staff-image':
+              this.homeContent.aboutImages.staff = item.optimizedUrl || item.value || 'assets/images/about-img-1.jpg';
+              break;
+            case 'foods-image':
+              this.homeContent.aboutImages.foods = item.optimizedUrl || item.value || 'assets/images/about-img-2.jpg';
+              break;
+            case 'pool-image':
+              this.homeContent.aboutImages.pool = item.optimizedUrl || item.value || 'assets/images/about-img-3.jpg';
+              break;
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading home content:', error);
+    }
+  }
+
+  async saveHomeContent(): Promise<void> {
+    this.savingHome = true;
+    try {
+      // Save about content
+      const aboutItems = [
+        { section: 'about', type: 'text', key: 'staff-title', value: this.homeContent.aboutContent.staffTitle },
+        { section: 'about', type: 'text', key: 'staff-description', value: this.homeContent.aboutContent.staffDescription },
+        { section: 'about', type: 'text', key: 'foods-title', value: this.homeContent.aboutContent.foodsTitle },
+        { section: 'about', type: 'text', key: 'foods-description', value: this.homeContent.aboutContent.foodsDescription },
+        { section: 'about', type: 'text', key: 'pool-title', value: this.homeContent.aboutContent.poolTitle },
+        { section: 'about', type: 'text', key: 'pool-description', value: this.homeContent.aboutContent.poolDescription },
+        { section: 'about', type: 'text', key: 'staff-image', value: this.homeContent.aboutImages.staff },
+        { section: 'about', type: 'text', key: 'foods-image', value: this.homeContent.aboutImages.foods },
+        { section: 'about', type: 'text', key: 'pool-image', value: this.homeContent.aboutImages.pool }
+      ];
+
+      // Save each about item
+      for (const item of aboutItems) {
+        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
+      }
+
+      this.alertService.success('Home content saved successfully!');
+      await this.loadContent(); // Refresh the main content
+    } catch (error) {
+      this.alertService.error('Failed to save home content');
+      console.error('Error saving home content:', error);
+    } finally {
+      this.savingHome = false;
+    }
+  }
+
+  onHeroImagesSelected(event: any): void {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      this.selectedHeroImages = Array.from(files);
+      this.uploadHeroImages();
+    }
+  }
+
+  async uploadHeroImages(): Promise<void> {
+    if (this.selectedHeroImages.length === 0) return;
+
+    this.uploading = true;
+    try {
+      for (const file of this.selectedHeroImages) {
+        await this.contentService.uploadImage('hero', 'hero-image', file).toPromise();
+      }
+      this.alertService.success('Hero images uploaded successfully!');
+      await this.loadHomeContent();
+      this.selectedHeroImages = [];
+    } catch (error) {
+      this.alertService.error('Failed to upload hero images');
+      console.error('Error uploading hero images:', error);
+    } finally {
+      this.uploading = false;
+    }
+  }
+
+  removeHeroImage(index: number): void {
+    this.homeContent.heroImages.splice(index, 1);
+  }
+
+  onAboutImageSelected(event: any, type: string): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedAboutImage = file;
+      this.selectedAboutImageType = type;
+      this.uploadAboutImage();
+    }
+  }
+
+  async uploadAboutImage(): Promise<void> {
+    if (!this.selectedAboutImage || !this.selectedAboutImageType) return;
+
+    this.uploading = true;
+    try {
+      const result = await this.contentService.uploadImage('about', `${this.selectedAboutImageType}-image`, this.selectedAboutImage).toPromise();
+      if (result) {
+        (this.homeContent.aboutImages as any)[this.selectedAboutImageType] = result.optimizedUrl || result.value || '';
+        this.alertService.success('About image uploaded successfully!');
+      } else {
+        this.alertService.error('Failed to upload about image - no result returned');
+      }
+      this.selectedAboutImage = null;
+      this.selectedAboutImageType = '';
+    } catch (error) {
+      this.alertService.error('Failed to upload about image');
+      console.error('Error uploading about image:', error);
+    } finally {
+      this.uploading = false;
+    }
+  }
+
+  resetHomeContent(): void {
+    this.homeContent = {
+      heroImages: [
+        'assets/images/Pool_home.jpg',
+        'assets/images/Beach_view.jpg',
+        'assets/images/Front_desk.jpg'
+      ],
+      aboutContent: {
+        staffTitle: 'best staff',
+        staffDescription: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+        foodsTitle: 'best foods',
+        foodsDescription: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+        poolTitle: 'swimming pool',
+        poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
+      },
+      aboutImages: {
+        staff: 'assets/images/about-img-1.jpg',
+        foods: 'assets/images/about-img-2.jpg',
+        pool: 'assets/images/about-img-3.jpg'
+      }
+    };
+    this.alertService.info('Home content reset to default values');
   }
 }

@@ -16,10 +16,10 @@
   --sidebar-bg: #020202;
   --sidebar-active: #23233a;
   --sidebar-text: #fafafa;
-  --main-bg: #000000;
+  --main-bg: #55adff;
   --header-bg: #23233a;
-  --header-text: #fff;
-  --card-bg: #0b0b31;
+  --header-text: #313131;
+  --card-bg: #000000;
   --card-border: #ffffff;
   --room-vacant: rgba(43, 101, 236, 1)
   --room-occupied: rgba(43, 101, 236, 1)x
@@ -68,7 +68,7 @@ html {
 body {
   margin: 0;
   font-family: var(--font-main);
-  background: whitesmoke;
+  background: ffffff;
   color: var(--white);
 }
 
@@ -89,7 +89,6 @@ section {
   text-transform: capitalize;
   transition: .2s linear;
   margin-top: 1rem;
-  background-color: var(--main-bg);
 }
 
 .btn:hover {
