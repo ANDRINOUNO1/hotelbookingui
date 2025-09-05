@@ -61,7 +61,6 @@
           <th>Room Type</th>
           <th>Check In</th>
           <th>Check Out</th>
-          <th>Total Amount</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -73,7 +72,6 @@
           <td>{{ reservation.roomType }}</td>
           <td>{{ formatDate(reservation.checkIn) }}</td>
           <td>{{ formatDate(reservation.checkOut) }}</td>
-          <td>{{ formatCurrency(calculateTotalAmount(reservation)) }}</td>
           <td class="actions">
             <button class="btn-extend" (click)="openExtendModal(reservation)">
               <i class="fa fa-calendar-plus"></i>
@@ -185,7 +183,8 @@
             <app-receipt
               [selectedReservation]="selectedReservation"
               [paymentAmount]="paymentAmount"
-              [billNo]="'BILL-' + selectedReservation?.id">
+              [billNo]="'BILL-' + selectedReservation?.id"
+              (totalCalculated)="onTotalCalculated($event)">
             </app-receipt>
         </div>
 

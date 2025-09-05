@@ -1,1 +1,31 @@
-<p>requests works!</p>
+<div class="requests-container">
+  <h3>Guest Requests (In Development)</h3>
+
+  <!-- New Request Form -->
+  <form (ngSubmit)="addRequest()" class="request-form">
+    <label for="type">Type:</label>
+    <select [(ngModel)]="newRequest.type" name="type" required>
+      <option value="meal">Meal</option>
+      <option value="extra_bed">Extra Bed</option>
+      <option value="cleaning">Cleaning</option>
+      <option value="other">Other</option>
+    </select>
+
+    <input [(ngModel)]="newRequest.description" 
+           name="description" 
+           placeholder="Details (optional)" />
+
+    <button type="submit">Add Request</button>
+  </form>
+
+  <!-- Requests List -->
+  <ul class="requests-list">
+    <li *ngFor="let req of requests">
+      <b>{{ req.type | titlecase }}</b> - {{ req.description || 'No details' }}
+      <span class="status">[{{ req.status }}]</span>
+      <button *ngIf="req.status !== 'completed'" (click)="markCompleted(req.id!)">
+        Mark Completed
+      </button>
+    </li>
+  </ul>
+</div>

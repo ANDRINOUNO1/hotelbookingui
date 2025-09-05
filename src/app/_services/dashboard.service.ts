@@ -21,13 +21,7 @@ export class DashboardService {
   }
 
   getRevenueData(): Observable<ChartDataItem[]> {
-    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/revenues`)
-      .pipe(
-        catchError(() => {
-          console.log('Revenue API not available, calculating from bookings data');
-          return this.calculateRevenueFromData();
-        })
-      );
+    return this.calculateRevenueFromData();
   }
 
   getDashboardAnalytics(): Observable<DashboardAnalytics> {
@@ -36,6 +30,10 @@ export class DashboardService {
 
   getPaymentMethodDistribution(): Observable<ChartDataItem[]> {
     return this.calculatePaymentMethodsFromData();
+  }
+
+  getBookingStatusDistribution(): Observable<ChartDataItem[]> {
+    return this.BookingStatusDistribution();
   }
 
   // Calculate monthly bookings from actual booking data
@@ -285,6 +283,12 @@ export class DashboardService {
     );
   }
 
+  BookingStatusDistribution(): Observable<ChartDataItem[]> {
+    return this.http.get<ChartDataItem[]>(`${environment.apiUrl}/bookings/status-distribution`).pipe(
+      catchError(() => of(this.getMockBookingStatus()))
+    );
+  }
+
   // Mock data methods for fallback
   private getMockMonthlyBookings(): ChartDataItem[] {
     return [
@@ -345,6 +349,15 @@ export class DashboardService {
       { name: 'Maya', count: 25 },
       { name: 'Card', count: 20 },
       { name: 'Cash', count: 10 }
+    ];
+  }
+
+  private getMockBookingStatus(): ChartDataItem[] {
+    return [
+      { name: 'Reserved - Guaranteed', count: 25 },
+      { name: 'Reserved - Not Guaranteed', count: 10 },
+      { name: 'Checked In', count: 40 },
+      { name: 'Checked Out', count: 25 }
     ];
   }
 } 

@@ -33,11 +33,13 @@
 .calendar-header {
   padding: 0.5rem;
   border: 1px solid #e5e7eb; /* Tailwind's default border */
+  color: #ffffff; 
 }
 
 .calendar-cell {
   padding: 0.5rem;
   border: 1px solid #e5e7eb;
+  color: #ffffff; 
 }
 
 .room-info {
@@ -303,7 +305,7 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #23233a, #4b3912);
+  background: var(--ait-primary-content-text-color);
 }
 
 .out-of-service-row {
