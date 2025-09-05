@@ -91,13 +91,6 @@ section {
   margin-top: 1rem;
 }
 
-.btn:hover {
-  border-radius: 5rem;
-  background-color: var(--sub-color);
-  color: var(--main-bg);
-  box-shadow: 0 0 10px var(--accent-color);
-}
-
 /* Responsive */
 @media (max-width: 1024px) {
   .dashboard-container { 
