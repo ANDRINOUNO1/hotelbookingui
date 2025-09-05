@@ -93,6 +93,22 @@ export class ChartsComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.cdr.detectChanges();
       });
+      this.sharedService.getBookingStatusDistribution()
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => of([
+          { name: 'Reserved - ', count: 45 },
+          { name: 'Maya', count: 25 },
+          { name: 'Card', count: 20 },
+          { name: 'Cash', count: 10 }
+        ]))
+      )
+      .subscribe(data => {
+        this.createBookingStatusPieChart(data);
+        this.isLoading = false;
+
+        this.cdr.detectChanges();
+      });
   }
 
   createAreaChart(data: ChartDataItem[]): void {
@@ -206,7 +222,7 @@ export class ChartsComponent implements OnInit, OnDestroy {
         labels: { style: { color: '#6B7280' } }
       },
       yAxis: {
-        title: { text: 'Revenue ($)', style: { color: '#6B7280' } },
+        title: { text: 'Revenue (₱)', style: { color: '#6B7280' } },
         labels: { style: { color: '#6B7280' } }
       },
       series: [{
@@ -265,6 +281,55 @@ export class ChartsComponent implements OnInit, OnDestroy {
       case 'card': return '#FFB800';  // Gold for cards
       case 'cash': return '#4CAF50';  // Green for cash
       default: return '#6B7280';      // Default gray
+    }
+  }
+
+  createBookingStatusPieChart(data: ChartDataItem[]): void {
+    const pieData = data.map(item => ({
+      name: item.name,
+      y: item.count,
+      color: this.getColorForBookingStatus(item.name)
+    }));
+    Highcharts.chart('bookingStatusPieChart', {
+      chart: {
+        type: 'pie',
+        backgroundColor: 'transparent'
+      },
+      title: {
+        text: 'Booking Status Distribution'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+        point: { valueSuffix: '%' }
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.y}'
+          }
+        }
+      },
+      series: [{
+        data: pieData,
+        type: 'pie'
+      }],
+    });
+  }
+
+  // **NEW METHOD**: Color helper for the new chart
+  private getColorForBookingStatus(status: string): string {
+    switch (status) {
+      case 'Reserved - Guaranteed': return '#d9ff00ff'; // Light Red
+      case 'Reserved - Not Guaranteed': return '#ff7300ff'; // Light Yellow
+      case 'Checked In': return '#15ff00ff'; // Light Green
+      case 'Checked Out': return '#0077ffff'; // Light Blue
+      case 'Cancelled': return '#ff0000ff'; // Gray
+      default: return '#E5E7EB'; // Default gray
     }
   }
 }

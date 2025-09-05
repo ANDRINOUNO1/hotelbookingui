@@ -1,5 +1,7 @@
 .dashboard-container {
-  padding: 0.5rem;
+  padding: 1.5rem;
+  background-color: var(--main-bg);
+  border-radius: 10px;
   .dashboard-title {
     h1 {
       display: flex;
@@ -9,12 +11,12 @@
       color: #ffffff;
 
       i {
-        color: #3b82f6; // blue-500
+        color: #ffffff; // blue-500
         margin-right: 1rem;
       }
     }
     p {
-      color: #d1d5db; // light gray
+      color: #ffffff; // light gray
       margin-top: 0.25rem;
       font-size: 1.5rem;
     }
