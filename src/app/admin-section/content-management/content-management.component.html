@@ -140,6 +140,601 @@
       </div>
     </div>
 
+    <!-- Header Management Section -->
+    <div class="section-card header-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-header"></i>
+        </div>
+        <div class="section-title">
+          <h2>Header Management</h2>
+          <p>Edit the website header title, navigation, and styling</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Website header (top of every page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="header-content">
+        <!-- Company Name -->
+        <div class="header-field-group">
+          <h3>Company Information</h3>
+          <div class="form-group">
+            <label for="company-name">Company Name:</label>
+            <input 
+              type="text" 
+              id="company-name"
+              [(ngModel)]="headerContent.companyName" 
+              placeholder="Enter company name"
+              class="form-control">
+            <small class="form-help">This will appear in the header and footer throughout the website</small>
+          </div>
+          <div class="form-group">
+            <label for="logo-text">Logo Text (shown beside logo):</label>
+            <input 
+              type="text" 
+              id="logo-text"
+              [(ngModel)]="headerContent.logoText" 
+              placeholder="Enter text to display beside logo"
+              class="form-control">
+            <small class="form-help">Shown next to the logo in the header. Leave blank to use Company Name.</small>
+          </div>
+        </div>
+
+        <!-- Header Title -->
+        <div class="header-field-group">
+          <h3>Header Title</h3>
+          <div class="form-group">
+            <label for="header-title">Main Header Title:</label>
+            <input 
+              type="text" 
+              id="header-title"
+              [(ngModel)]="headerContent.title" 
+              placeholder="Enter header title"
+              class="form-control">
+            <small class="form-help">This is the main title that appears in the header</small>
+          </div>
+        </div>
+
+        <!-- Navigation Items -->
+        <div class="header-field-group">
+          <h3>Navigation Menu</h3>
+          <div class="navigation-items">
+            <div *ngFor="let navItem of headerContent.navigation; let i = index" class="navigation-item">
+              <div class="nav-item-content">
+                <div class="form-group">
+                  <label>Menu Label:</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="navItem.label" 
+                    placeholder="Menu item label"
+                    class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Link URL:</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="navItem.href" 
+                    placeholder="Link URL (e.g., #home, /about)"
+                    class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [(ngModel)]="navItem.isExternal">
+                    External Link
+                  </label>
+                </div>
+                <button 
+                  type="button" 
+                  class="btn btn-danger btn-sm" 
+                  (click)="removeNavigationItem(i)"
+                  title="Remove this navigation item">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="addNavigationItem()">
+            <i class="fa fa-plus"></i> Add Navigation Item
+          </button>
+        </div>
+
+        <!-- Call-to-Action Button -->
+        <div class="header-field-group">
+          <h3>Call-to-Action Button</h3>
+          <div class="cta-settings">
+            <div class="form-group">
+              <label>Button Text:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="headerContent.ctaButton.text" 
+                placeholder="Button text (e.g., Book Now)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Button Link:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="headerContent.ctaButton.href" 
+                placeholder="Button link (e.g., /reserve)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="headerContent.ctaButton.isExternal">
+                External Link
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Button -->
+        <div class="header-field-group">
+          <h3>Login Button</h3>
+          <div class="login-settings">
+            <div class="form-group">
+              <label>Button Text:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="headerContent.loginButton.text" 
+                placeholder="Button text (e.g., Login)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Button Link:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="headerContent.loginButton.href" 
+                placeholder="Button link (e.g., /login)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="headerContent.loginButton.isExternal">
+                External Link
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header Styling -->
+        <div class="header-field-group">
+          <h3>Header Styling</h3>
+          <div class="styling-settings">
+            <div class="form-group">
+              <label>Background Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="headerContent.styles.backgroundColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Text Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="headerContent.styles.textColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Accent Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="headerContent.styles.accentColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Font Family:</label>
+              <select [(ngModel)]="headerContent.styles.fontFamily" class="form-control">
+                <option value="Montserrat, sans-serif">Montserrat</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="header-actions">
+          <button 
+            type="button" 
+            (click)="saveHeaderContent()" 
+            [disabled]="savingHeader" 
+            class="primary-btn save-header-btn">
+            <i class="fa fa-save"></i>
+            <span *ngIf="!savingHeader">Save Header Changes</span>
+            <span *ngIf="savingHeader">Saving...</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="resetHeaderContent()" 
+            class="btn btn-secondary">
+            <i class="fa fa-undo"></i> Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Management Section -->
+    <div class="section-card footer-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-copyright"></i>
+        </div>
+        <div class="section-title">
+          <h2>Footer Management</h2>
+          <p>Edit the website footer content, company information, and copyright</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Website footer (bottom of every page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-content">
+        <!-- Company Information -->
+        <div class="footer-field-group">
+          <h3>Company Information</h3>
+          <div class="form-group">
+            <label for="company-name">Company Name:</label>
+            <input 
+              type="text" 
+              id="company-name"
+              [(ngModel)]="footerContent.companyName" 
+              placeholder="Enter company name"
+              class="form-control">
+            <small class="form-help">This will appear in the header and footer</small>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="footer-field-group">
+          <h3>Contact Information</h3>
+          <div class="contact-settings">
+            <div class="form-group">
+              <label>Phone Number 1:</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="footerContent.phone1" 
+                placeholder="Enter primary phone number"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Phone Number 2:</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="footerContent.phone2" 
+                placeholder="Enter secondary phone number"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Email Address:</label>
+              <input 
+                type="email" 
+                [(ngModel)]="footerContent.email" 
+                placeholder="Enter email address"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Address:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="footerContent.address" 
+                placeholder="Enter company address"
+                class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Links -->
+        <div class="footer-field-group">
+          <h3>Social Media Links</h3>
+          <div class="social-settings">
+            <div class="form-group">
+              <label>Facebook URL:</label>
+              <input 
+                type="url" 
+                [(ngModel)]="footerContent.social.facebook" 
+                placeholder="https://facebook.com/yourpage"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Twitter URL:</label>
+              <input 
+                type="url" 
+                [(ngModel)]="footerContent.social.twitter" 
+                placeholder="https://twitter.com/yourpage"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Instagram URL:</label>
+              <input 
+                type="url" 
+                [(ngModel)]="footerContent.social.instagram" 
+                placeholder="https://instagram.com/yourpage"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label>LinkedIn URL:</label>
+              <input 
+                type="url" 
+                [(ngModel)]="footerContent.social.linkedin" 
+                placeholder="https://linkedin.com/company/yourpage"
+                class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright Settings -->
+        <div class="footer-field-group">
+          <h3>Copyright Settings</h3>
+          <div class="copyright-settings">
+            <div class="form-group">
+              <label>Copyright Text:</label>
+              <input 
+                type="text" 
+                [(ngModel)]="footerContent.copyrightText" 
+                placeholder="Enter copyright text"
+                class="form-control">
+              <small class="form-help">Leave empty to use default format: "© [Year]-[Next Year] [Company Name]. All rights reserved."</small>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="footerContent.showDynamicYear">
+                Use dynamic year (automatically updates)
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Set Year / Range (disables dynamic year)</label>
+              <div class="inline-inputs">
+                <input type="number" class="form-control" [(ngModel)]="footerStartYear" min="1900" placeholder="Start year">
+                <span>—</span>
+                <input type="number" class="form-control" [(ngModel)]="footerEndYear" min="1900" placeholder="End year (optional)">
+                <button type="button" class="btn btn-secondary" (click)="updateFooterYearRange(footerStartYear, footerEndYear)">Apply</button>
+                <button type="button" class="btn btn-primary" (click)="saveFooterYearRange(footerStartYear, footerEndYear)" [disabled]="savingFooter">Save Year</button>
+              </div>
+              <small class="form-help">Leave End year empty to set a single year.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Styling -->
+        <div class="footer-field-group">
+          <h3>Footer Styling</h3>
+          <div class="styling-settings">
+            <div class="form-group">
+              <label>Background Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="footerContent.styles.backgroundColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Text Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="footerContent.styles.textColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Link Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="footerContent.styles.linkColor" 
+                class="color-input">
+            </div>
+            <div class="form-group">
+              <label>Copyright Background Color:</label>
+              <input 
+                type="color" 
+                [(ngModel)]="footerContent.styles.copyrightBackgroundColor" 
+                class="color-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="footer-actions">
+          <button 
+            type="button" 
+            (click)="saveFooterContent()" 
+            [disabled]="savingFooter" 
+            class="primary-btn save-footer-btn">
+            <i class="fa fa-save"></i>
+            <span *ngIf="!savingFooter">Save Footer Changes</span>
+            <span *ngIf="savingFooter">Saving...</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="resetFooterContent()" 
+            class="btn btn-secondary">
+            <i class="fa fa-undo"></i> Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home Management Section -->
+    <div class="section-card home-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-home"></i>
+        </div>
+        <div class="section-title">
+          <h2>Home Page Management</h2>
+          <p>Edit the home page content, images, and sections directly</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Home page (main landing page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="home-content">
+        <!-- Hero Section Management -->
+        <div class="home-field-group">
+          <h3>Hero Section</h3>
+          <div class="hero-settings">
+            <div class="form-group">
+              <label>Hero Images (Gallery):</label>
+              <div class="image-gallery-upload">
+                <input 
+                  type="file" 
+                  id="hero-images" 
+                  (change)="onHeroImagesSelected($event)" 
+                  accept="image/*" 
+                  multiple
+                  class="file-input">
+                <label for="hero-images" class="file-input-label">
+                  <i class="fa fa-cloud-upload"></i>
+                  <span>Upload Hero Images</span>
+                </label>
+              </div>
+              <div class="current-hero-images" *ngIf="homeContent.heroImages.length > 0">
+                <div *ngFor="let image of homeContent.heroImages; let i = index" class="hero-image-item">
+                  <img [src]="image" alt="Hero image" class="hero-preview">
+                  <button type="button" class="btn btn-danger btn-sm" (click)="removeHeroImage(i)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section Management -->
+        <div class="home-field-group">
+          <h3>About Section</h3>
+          <div class="about-settings">
+            <div class="about-item">
+              <h4>Staff Section</h4>
+              <div class="form-group">
+                <label>Title:</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="homeContent.aboutContent.staffTitle" 
+                  placeholder="Enter staff title"
+                  class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <textarea 
+                  [(ngModel)]="homeContent.aboutContent.staffDescription" 
+                  placeholder="Enter staff description"
+                  class="form-control"
+                  rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Image:</label>
+                <input 
+                  type="file" 
+                  (change)="onAboutImageSelected($event, 'staff')" 
+                  accept="image/*" 
+                  class="file-input">
+                <div class="current-image" *ngIf="homeContent.aboutImages['staff']">
+                  <img [src]="homeContent.aboutImages['staff']" alt="Staff image" class="image-preview">
+                </div>
+              </div>
+            </div>
+
+            <div class="about-item">
+              <h4>Foods Section</h4>
+              <div class="form-group">
+                <label>Title:</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="homeContent.aboutContent.foodsTitle" 
+                  placeholder="Enter foods title"
+                  class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <textarea 
+                  [(ngModel)]="homeContent.aboutContent.foodsDescription" 
+                  placeholder="Enter foods description"
+                  class="form-control"
+                  rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Image:</label>
+                <input 
+                  type="file" 
+                  (change)="onAboutImageSelected($event, 'foods')" 
+                  accept="image/*" 
+                  class="file-input">
+                <div class="current-image" *ngIf="homeContent.aboutImages['foods']">
+                  <img [src]="homeContent.aboutImages['foods']" alt="Foods image" class="image-preview">
+                </div>
+              </div>
+            </div>
+
+            <div class="about-item">
+              <h4>Pool Section</h4>
+              <div class="form-group">
+                <label>Title:</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="homeContent.aboutContent.poolTitle" 
+                  placeholder="Enter pool title"
+                  class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <textarea 
+                  [(ngModel)]="homeContent.aboutContent.poolDescription" 
+                  placeholder="Enter pool description"
+                  class="form-control"
+                  rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Image:</label>
+                <input 
+                  type="file" 
+                  (change)="onAboutImageSelected($event, 'pool')" 
+                  accept="image/*" 
+                  class="file-input">
+                <div class="current-image" *ngIf="homeContent.aboutImages['pool']">
+                  <img [src]="homeContent.aboutImages['pool']" alt="Pool image" class="image-preview">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="home-actions">
+          <button 
+            type="button" 
+            (click)="saveHomeContent()" 
+            [disabled]="savingHome" 
+            class="primary-btn save-home-btn">
+            <i class="fa fa-save"></i>
+            <span *ngIf="!savingHome">Save Home Changes</span>
+            <span *ngIf="savingHome">Saving...</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="resetHomeContent()" 
+            class="btn btn-secondary">
+            <i class="fa fa-undo"></i> Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Content Sections -->
     <div class="section-card" *ngFor="let section of sections; trackBy: trackBySection">
       <div class="section-header">

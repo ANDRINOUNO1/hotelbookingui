@@ -1,0 +1,33 @@
+<div class="history-container">
+  <h2>All Login & Logout History</h2>
+
+  <div *ngIf="isLoading">Loading logs...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!isLoading && logs.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of logs">
+        <td>{{ log.id }}</td>
+        <td>{{ log.account?.firstName }} {{ log.account?.lastName }}</td>
+        <td>{{ log.account?.email }}</td>
+        <td>{{ log.account?.role }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.timestamp | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading && logs.length === 0">
+    No login/logout records found.
+  </div>
+</div>

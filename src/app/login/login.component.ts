@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../_services/account.service';
 import { Title } from '@angular/platform-browser';
+import { LoginHistoryService } from '../_services/login-history.service'; 
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent {
 
   activeTab: 'signin' | 'signup' = 'signin';
 
-  constructor(private router: Router, private accountService: AccountService, private titleService: Title) {}
+  constructor(private router: Router, private accountService: AccountService, private titleService: Title, private loginHistoryService: LoginHistoryService, // ✅ inject
+) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('BC Flats - Login');
@@ -42,19 +44,27 @@ export class LoginComponent {
   login() {
     this.isLoading = true;
     this.error = '';
-    
-    // FIX: Pass 'this.email' to the login service
+
     this.accountService.login(this.email, this.password).subscribe({
       next: (account) => {
         this.isLoading = false;
-
         localStorage.setItem('user', JSON.stringify(account));
-        
+        sessionStorage.setItem('accountId', account.id.toString());
+
+        this.loginHistoryService.createLog({
+          accountId: account.id,
+          action: 'login'
+        }).subscribe({
+          next: () => console.log('Login log created'),
+          error: (err) => console.error('Failed to create login log:', err)
+        });
+
+
         if (account.role === 'Admin') {
           this.router.navigate(['/admin/dashboard']);
         } else if (account.role === 'SuperAdmin') {
           this.router.navigate(['/superadmin']);
-        } else {
+        } else if (account.role === 'frontdeskUser') {
           this.router.navigate(['/frontdesk']);
         }
       },

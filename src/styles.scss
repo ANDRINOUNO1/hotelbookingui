@@ -68,7 +68,7 @@ html {
 body {
   margin: 0;
   font-family: var(--font-main);
-  background: whitesmoke;
+  background: ffffff;
   color: var(--white);
 }
 
@@ -89,14 +89,6 @@ section {
   text-transform: capitalize;
   transition: .2s linear;
   margin-top: 1rem;
-  background-color: var(--main-bg);
-}
-
-.btn:hover {
-  border-radius: 5rem;
-  background-color: var(--sub-color);
-  color: var(--main-bg);
-  box-shadow: 0 0 10px var(--accent-color);
 }
 
 /* Responsive */

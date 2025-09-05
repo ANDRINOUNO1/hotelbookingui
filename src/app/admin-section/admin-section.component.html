@@ -96,6 +96,9 @@
         <div class="submenu" *ngIf="openMenu === 'staff'">
           <a routerLink="addaccount" routerLinkActive="active" (click)="closeMobileMenu()">Add Account</a>
         </div>
+        <div class="submenu" *ngIf="openMenu === 'staff'">
+          <a routerLink="history" routerLinkActive="active" (click)="closeMobileMenu()">Login History</a>
+        </div>
       </div>
 
       <a routerLink="contact-messages" routerLinkActive="active" (click)="closeMobileMenu()">

@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { LoginHistoryService } from '../_services/login-history.service';
 
 @Component({
   selector: 'app-admin-section',
@@ -26,7 +27,8 @@ export class AdminSectionComponent implements OnInit {
     private el: ElementRef,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private titleservice: Title
+    private titleservice: Title,
+    private loginHistoryService: LoginHistoryService
   ) {
     // Listen to route changes
     this.router.events.pipe(
@@ -155,13 +157,21 @@ export class AdminSectionComponent implements OnInit {
   }
 
   logout() {
-    // Clear any stored data
+    const accountId = sessionStorage.getItem('accountId'); 
+
+    if (accountId) {
+      this.loginHistoryService.createLog({ accountId: +accountId, action: 'logout' })
+        .subscribe({
+          next: () => console.log('Logout recorded in history'),
+          error: (err) => console.error('Failed to record logout history', err)
+        });
+    }
+
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('admin-theme');
-      sessionStorage.clear();
+      localStorage.removeItem('user');        // 👈 clear user too
     }
-    
-    // Navigate to login page
+
     this.titleservice.setTitle('BC Flats');
     this.router.navigate(['/login']);
   }
