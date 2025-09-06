@@ -3847,6 +3847,306 @@ export class ContentManagementComponent implements OnInit {
     this.alertService.info('Backup cleared');
   }
 
+  // Reset to Original Homepage Content
+  async resetToOriginalHomepage(): Promise<void> {
+    if (confirm('Are you sure you want to reset to original homepage content? This will overwrite ALL current content and cannot be undone.')) {
+      try {
+        this.uploading = true;
+        this.alertService.info('Resetting to original homepage content...');
+
+        // Reset header content
+        this.headerContent = {
+          companyName: 'BC Flats',
+          logoText: 'BC Flats',
+          title: 'BC Flats',
+          navigation: [
+            { label: 'Home', href: '#home', isExternal: false },
+            { label: 'Rooms', href: '#rooms', isExternal: false },
+            { label: 'About', href: '#about', isExternal: false },
+            { label: 'Services', href: '#services', isExternal: false },
+            { label: 'Contact', href: '#contact', isExternal: false }
+          ],
+          ctaButton: {
+            text: 'Book Now',
+            href: '/reserve',
+            isExternal: false
+          },
+          loginButton: {
+            text: 'Login',
+            href: '/login',
+            isExternal: false
+          },
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            accentColor: '#b4884d',
+            fontFamily: 'Montserrat, sans-serif'
+          }
+        };
+
+        // Reset footer content
+        this.footerContent = {
+          companyName: 'BC Flats',
+          phone1: '+123-456-7890',
+          phone2: '+696-969-69696',
+          email: 'BCflats.edu.ph',
+          address: 'A.S Fortuna - 400104',
+          social: {
+            facebook: '#',
+            twitter: '#',
+            instagram: '#',
+            linkedin: '#'
+          },
+          copyrightText: '',
+          showDynamicYear: true,
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            linkColor: '#b4884d',
+            copyrightBackgroundColor: '#f8f9fa'
+          }
+        };
+
+        // Reset service icons to original
+        this.serviceIcons = [
+          {
+            name: 'Food & Drinks',
+            description: 'Icon for food and drinks service',
+            currentUrl: 'assets/images/icon-1.png',
+            key: 'icon-1'
+          },
+          {
+            name: 'Outdoor Dining',
+            description: 'Icon for outdoor dining service',
+            currentUrl: 'assets/images/icon-2.png',
+            key: 'icon-2'
+          },
+          {
+            name: 'Beach View',
+            description: 'Icon for beach view service',
+            currentUrl: 'assets/images/icon-3.png',
+            key: 'icon-3'
+          },
+          {
+            name: 'Decorations',
+            description: 'Icon for decorations service',
+            currentUrl: 'assets/images/icon-4.png',
+            key: 'icon-4'
+          },
+          {
+            name: 'Swimming Pool',
+            description: 'Icon for swimming pool service',
+            currentUrl: 'assets/images/icon-5.png',
+            key: 'icon-5'
+          },
+          {
+            name: 'Resort Beach',
+            description: 'Icon for resort beach service',
+            currentUrl: 'assets/images/icon-6.png',
+            key: 'icon-6'
+          }
+        ];
+
+        // Reset room images to original
+        this.roomImages = [
+          {
+            name: 'Classic Room',
+            mainImage: 'assets/images/Standard_Room1.jpg',
+            seasonalImages: [
+              'assets/images/Pic_1.jpg',
+              'assets/images/Pic_2.jpg',
+              'assets/images/Pic_3.jpg',
+              'assets/images/Pic_4.jpg'
+            ]
+          },
+          {
+            name: 'Deluxe Room',
+            mainImage: 'assets/images/Deluxe_rooms1.jpg',
+            seasonalImages: [
+              'assets/images/Deluxe_tv.jpg',
+              'assets/images/Deluxe_view.jpg',
+              'assets/images/Deluxe_dressing.jpg',
+              'assets/images/Deluxe_Comfort.jpg'
+            ]
+          },
+          {
+            name: 'Prestige Room',
+            mainImage: 'assets/images/prestige_rooms.jpg',
+            seasonalImages: [
+              'assets/images/view_room.jpg',
+              'assets/images/Prestige_Room.png',
+              'assets/images/Prestige_tv.png',
+              'assets/images/Prestige_Comfort.jpg'
+            ]
+          },
+          {
+            name: 'Luxury Suite',
+            mainImage: 'assets/images/Luxury_Rooms1.jpg',
+            seasonalImages: [
+              'assets/images/tv_luxury.jpg',
+              'assets/images/bath_luxury.png',
+              'assets/images/balcony_luxury.png',
+              'assets/images/pool_luxury.png'
+            ]
+          }
+        ];
+
+        // Reset home content
+        this.homeContent = {
+          heroImages: [
+            'assets/images/Pool_home.jpg',
+            'assets/images/Beach_view.jpg',
+            'assets/images/Front_desk.jpg'
+          ],
+          aboutContent: {
+            staffTitle: 'best staff',
+            staffDescription: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+            foodsTitle: 'best foods',
+            foodsDescription: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+            poolTitle: 'swimming pool',
+            poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
+          },
+          aboutImages: {
+            staff: 'assets/images/Staff.jpg',
+            foods: 'assets/images/Foods.jpg',
+            pool: 'assets/images/Pool.jpg'
+          }
+        };
+
+        // Save all content to backend
+        await this.saveHeaderContent();
+        await this.saveFooterContent();
+        await this.saveHomeContent();
+
+        // Reset text content to original values
+        const originalTextContent = {
+          'about_staff-title': 'best staff',
+          'about_staff-description': 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+          'about_foods-title': 'best foods',
+          'about_foods-description': 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+          'about_pool-title': 'swimming pool',
+          'about_pool-description': 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
+          'services_food-drinks-title': 'food & drinks',
+          'services_food-drinks-description': 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+          'services_outdoor-dining-title': 'outdoor dining',
+          'services_outdoor-dining-description': 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+          'services_beach-view-title': 'beach view',
+          'services_beach-view-description': 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+          'services_decorations-title': 'decorations',
+          'services_decorations-description': 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+          'services_swimming-pool-title': 'swimming pool',
+          'services_swimming-pool-description': 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+          'services_resort-beach-title': 'resort beach',
+          'services_resort-beach-description': 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
+          'contact_contact-title': 'Contact Us',
+          'contact_contact-subtitle': 'Get in touch with us',
+          'contact_contact-address': '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
+          'contact_contact-phone': '+123-456-7890',
+          'contact_contact-email': 'BCflats.edu.ph'
+        };
+
+        // Update text content
+        for (const [key, value] of Object.entries(originalTextContent)) {
+          const [section, fieldKey] = key.split('_');
+          try {
+            await this.contentService.updateText(section, fieldKey, value).toPromise();
+          } catch (error) {
+            console.warn(`Failed to update ${section}.${fieldKey}:`, error);
+          }
+        }
+
+        // Clear any selected files
+        this.clearFileSelection();
+        this.clearLogoSelection();
+
+        this.alertService.success('Homepage content reset to original values successfully!');
+        await this.loadContent(); // Refresh the display
+        this.uploading = false;
+      } catch (error) {
+        this.alertService.error('Failed to reset to original content');
+        console.error('Error resetting to original:', error);
+        this.uploading = false;
+      }
+    }
+  }
+
+  // Homepage Preview Helper Methods
+  getCurrentLogo(): string {
+    return this.logoUrl || 'assets/images/bcflats.png';
+  }
+
+  getHeaderStyles(): string {
+    const styles = this.headerContent.styles;
+    return `
+      background-color: ${styles.backgroundColor};
+      color: ${styles.textColor};
+      font-family: ${styles.fontFamily};
+    `;
+  }
+
+  getFooterStyles(): string {
+    const styles = this.footerContent.styles;
+    return `
+      background-color: ${styles.backgroundColor};
+      color: ${styles.textColor};
+    `;
+  }
+
+  getHeroTitle(index: number): string {
+    const titles = ['Pool View', 'Beach View', 'Front Desk'];
+    return titles[index] || 'Hero Image';
+  }
+
+  getAboutItems(): any[] {
+    return [
+      {
+        title: this.homeContent.aboutContent.staffTitle,
+        description: this.homeContent.aboutContent.staffDescription,
+        image: this.homeContent.aboutImages.staff
+      },
+      {
+        title: this.homeContent.aboutContent.foodsTitle,
+        description: this.homeContent.aboutContent.foodsDescription,
+        image: this.homeContent.aboutImages.foods
+      },
+      {
+        title: this.homeContent.aboutContent.poolTitle,
+        description: this.homeContent.aboutContent.poolDescription,
+        image: this.homeContent.aboutImages.pool
+      }
+    ];
+  }
+
+  getServiceTitle(index: number): string {
+    const titles = [
+      'food & drinks',
+      'outdoor dining',
+      'beach view',
+      'decorations',
+      'swimming pool',
+      'resort beach'
+    ];
+    return titles[index] || 'Service';
+  }
+
+  getServiceDescription(index: number): string {
+    const descriptions = [
+      'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+      'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+      'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+      'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+      'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+      'Step into paradise on our private beach, where golden sands meet turquoise waters.'
+    ];
+    return descriptions[index] || 'Service description';
+  }
+
+  getCopyrightText(): string {
+    const currentYear = new Date().getFullYear();
+    return this.footerContent.copyrightText || 
+           `${this.footerContent.companyName} ${this.footerContent.showDynamicYear ? currentYear : ''}`;
+  }
+
   // Service Icon Management
   replaceServiceIcon(iconIndex: number): void {
     if (!this.selectedFile) {
@@ -3865,8 +4165,8 @@ export class ContentManagementComponent implements OnInit {
 
     this.contentService.uploadImage('services', icon.key, this.selectedFile, icon.name).subscribe({
       next: (response) => {
-        // Update the icon URL
-        icon.currentUrl = response.optimizedUrl || response.value;
+        // Update the icon URL with proper fallback
+        icon.currentUrl = response.optimizedUrl || response.value || icon.currentUrl;
         this.alertService.success(`Service icon "${icon.name}" updated successfully!`);
         this.clearFileSelection();
         this.uploading = false;
@@ -3908,12 +4208,12 @@ export class ContentManagementComponent implements OnInit {
 
     this.contentService.uploadImage('rooms', key, this.selectedFile, altText).subscribe({
       next: (response) => {
-        const newUrl = response.optimizedUrl || response.value;
+        const newUrl = response.optimizedUrl || response.value || '';
         
         if (imageType === 'main') {
-          room.mainImage = newUrl;
+          room.mainImage = newUrl || room.mainImage;
         } else {
-          room.seasonalImages[seasonalIndex!] = newUrl;
+          room.seasonalImages[seasonalIndex!] = newUrl || room.seasonalImages[seasonalIndex!];
         }
         
         this.alertService.success(`Room image updated successfully!`);

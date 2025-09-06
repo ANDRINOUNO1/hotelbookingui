@@ -29,6 +29,13 @@
                 title="Restore to original content">
           <i class="fa fa-refresh"></i> Reset to Original
         </button>
+        <button type="button" 
+                (click)="resetToOriginalHomepage()" 
+                class="reset-homepage-btn"
+                [disabled]="uploading"
+                title="Reset to original homepage content">
+          <i class="fa fa-home"></i> Reset Homepage
+        </button>
       </div>
     </div>
   </div>
@@ -1197,6 +1204,133 @@
       </div>
     </div>
 
+    <!-- Homepage Preview Section -->
+    <div class="section-card homepage-preview-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-eye"></i>
+        </div>
+        <div class="section-title">
+          <h2>Homepage Preview</h2>
+          <p>Preview how your homepage will look with current content</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Live preview of homepage content</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="homepage-preview-content">
+        <!-- Header Preview -->
+        <div class="preview-section">
+          <h3>Header Preview</h3>
+          <div class="header-preview" [style]="getHeaderStyles()">
+            <div class="header-bar">
+              <a href="#home" class="logo">
+                <img [src]="getCurrentLogo()" alt="BC Flats Logo" class="w-16 h-16">
+                <span class="logo-text">{{ headerContent.companyName }}</span>
+              </a>
+              <nav>
+                <a *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
+                   [href]="item.href" class="nav-link">
+                  {{ item.label }}
+                </a>
+                <a [href]="headerContent.ctaButton.href" class="btn book-now-btn">
+                  {{ headerContent.ctaButton.text }}
+                </a>
+              </nav>
+              <a [href]="headerContent.loginButton.href" class="btn login-btn">
+                {{ headerContent.loginButton.text }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Images Preview -->
+        <div class="preview-section">
+          <h3>Hero Images Preview</h3>
+          <div class="hero-preview">
+            <div class="hero-slider">
+              <div class="hero-slide" *ngFor="let image of homeContent.heroImages; let i = index">
+                <img [src]="image" [alt]="'Hero image ' + (i + 1)" class="hero-image">
+                <div class="hero-content">
+                  <h3>{{ getHeroTitle(i) }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section Preview -->
+        <div class="preview-section">
+          <h3>About Section Preview</h3>
+          <div class="about-preview">
+            <div class="about-item" *ngFor="let item of getAboutItems()">
+              <div class="about-image">
+                <img [src]="item.image" [alt]="item.title">
+              </div>
+              <div class="about-content">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Preview -->
+        <div class="preview-section">
+          <h3>Services Preview</h3>
+          <div class="services-preview">
+            <div class="service-item" *ngFor="let icon of serviceIcons; let i = index">
+              <img [src]="icon.currentUrl" [alt]="icon.name" class="service-icon">
+              <h3>{{ getServiceTitle(i) }}</h3>
+              <p>{{ getServiceDescription(i) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Images Preview -->
+        <div class="preview-section">
+          <h3>Room Images Preview</h3>
+          <div class="rooms-preview">
+            <div class="room-preview" *ngFor="let room of roomImages">
+              <h4>{{ room.name }}</h4>
+              <div class="room-images">
+                <img [src]="room.mainImage" [alt]="room.name + ' main'" class="main-room-image">
+                <div class="seasonal-images">
+                  <img *ngFor="let img of room.seasonalImages; let j = index" 
+                       [src]="img" [alt]="room.name + ' seasonal ' + (j + 1)" 
+                       class="seasonal-image">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Preview -->
+        <div class="preview-section">
+          <h3>Footer Preview</h3>
+          <div class="footer-preview" [style]="getFooterStyles()">
+            <div class="footer-contacts">
+              <a [href]="'tel:' + footerContent.phone1"><i class="fas fa-phone"></i> {{ footerContent.phone1 }}</a>
+              <a [href]="'tel:' + footerContent.phone2"><i class="fas fa-phone"></i> {{ footerContent.phone2 }}</a>
+              <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
+              <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
+            </div>
+            <div class="footer-socials">
+              <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+              <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+              <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+              <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            </div>
+            <div class="footer-bottom">
+              <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Help Section -->
     <div class="help-section">
       <div class="help-content">
@@ -1214,6 +1348,7 @@
             <li><strong>Room Images:</strong> Manage main and seasonal images for each room type</li>
             <li><strong>Logo:</strong> Update your website logo from the top section</li>
             <li><strong>Reset:</strong> Use the reset button to restore original content</li>
+            <li><strong>Preview:</strong> Check the homepage preview to see how changes will look</li>
           </ul>
         </div>
       </div>
