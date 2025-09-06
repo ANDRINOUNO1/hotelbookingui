@@ -24,15 +24,8 @@
           <i class="fa fa-undo"></i> Restore Backup
         </button>
         <button type="button" 
-                (click)="createOriginalBackup()" 
-                class="original-backup-btn"
-                title="Create original content backup">
-          <i class="fa fa-archive"></i> Save Original
-        </button>
-        <button type="button" 
                 (click)="restoreToOriginal()" 
                 class="restore-original-btn"
-                [disabled]="!hasOriginalBackup"
                 title="Restore to original content">
           <i class="fa fa-refresh"></i> Reset to Original
         </button>
@@ -1073,6 +1066,137 @@
       </div>
     </div>
 
+    <!-- Service Icons Section -->
+    <div class="section-card service-icons-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-icons"></i>
+        </div>
+        <div class="section-title">
+          <h2>Service Icons</h2>
+          <p>Manage the service icons displayed in the services section</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Services section (home page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="service-icons-content">
+        <div class="icons-grid">
+          <div class="icon-item" *ngFor="let icon of serviceIcons; let i = index">
+            <div class="icon-preview">
+              <img [src]="icon.currentUrl" [alt]="icon.name" class="icon-image">
+              <div class="icon-overlay">
+                <button type="button" 
+                        (click)="replaceServiceIcon(i)" 
+                        class="btn btn-primary btn-sm"
+                        [disabled]="!selectedFile || uploading">
+                  <i class="fa fa-upload"></i> Replace
+                </button>
+              </div>
+            </div>
+            <div class="icon-details">
+              <h4>{{ icon.name }}</h4>
+              <p>{{ icon.description }}</p>
+              <div class="file-upload-controls">
+                <input type="file" 
+                       (change)="onFileSelected($event, 'service-icon')" 
+                       accept="image/*" 
+                       class="file-input">
+                <label class="file-input-label">
+                  <i class="fa fa-cloud-upload"></i>
+                  <span>Choose Icon</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Images Section -->
+    <div class="section-card room-images-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-bed"></i>
+        </div>
+        <div class="section-title">
+          <h2>Room Images</h2>
+          <p>Manage the room images and seasonal images displayed in the rooms section</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Rooms section (home page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="room-images-content">
+        <div class="rooms-grid">
+          <div class="room-category" *ngFor="let room of roomImages; let i = index">
+            <h3>{{ room.name }}</h3>
+            <div class="room-images-grid">
+              <!-- Main Room Image -->
+              <div class="room-image-item main-image">
+                <div class="image-preview">
+                  <img [src]="room.mainImage" [alt]="room.name + ' main image'" class="room-image">
+                  <div class="image-overlay">
+                    <button type="button" 
+                            (click)="replaceRoomImage(i, 'main')" 
+                            class="btn btn-primary btn-sm"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-upload"></i> Replace
+                    </button>
+                  </div>
+                </div>
+                <div class="image-details">
+                  <h4>Main Image</h4>
+                  <div class="file-upload-controls">
+                    <input type="file" 
+                           (change)="onFileSelected($event, 'room-main')" 
+                           accept="image/*" 
+                           class="file-input">
+                    <label class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Main Image</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Seasonal Images -->
+              <div class="room-image-item seasonal-image" *ngFor="let seasonalImg of room.seasonalImages; let j = index">
+                <div class="image-preview">
+                  <img [src]="seasonalImg" [alt]="room.name + ' seasonal image ' + (j + 1)" class="room-image">
+                  <div class="image-overlay">
+                    <button type="button" 
+                            (click)="replaceRoomImage(i, 'seasonal', j)" 
+                            class="btn btn-primary btn-sm"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-upload"></i> Replace
+                    </button>
+                  </div>
+                </div>
+                <div class="image-details">
+                  <h4>Seasonal Image {{ j + 1 }}</h4>
+                  <div class="file-upload-controls">
+                    <input type="file" 
+                           (change)="onFileSelected($event, 'room-seasonal')" 
+                           accept="image/*" 
+                           class="file-input">
+                    <label class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Image</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Help Section -->
     <div class="help-section">
       <div class="help-content">
@@ -1086,6 +1210,8 @@
             <li><strong>Text Content:</strong> Update titles, descriptions, and other text elements</li>
             <li><strong>Images:</strong> Upload new images to replace existing ones</li>
             <li><strong>Gallery:</strong> Manage multiple images for hero and rooms sections</li>
+            <li><strong>Service Icons:</strong> Update the icons used in the services section</li>
+            <li><strong>Room Images:</strong> Manage main and seasonal images for each room type</li>
             <li><strong>Logo:</strong> Update your website logo from the top section</li>
             <li><strong>Reset:</strong> Use the reset button to restore original content</li>
           </ul>

@@ -32,11 +32,93 @@ export class ContentManagementComponent implements OnInit {
   // Backup system
   private contentBackup: any = null;
   public hasBackup: boolean = false;
-  private originalContentBackup: any = null;
-  public hasOriginalBackup: boolean = false;
   
   // Text content
   textContent: { [key: string]: string } = {};
+  
+  // Service Icons
+  serviceIcons = [
+    {
+      name: 'Food & Drinks',
+      description: 'Icon for food and drinks service',
+      currentUrl: 'assets/images/icon-1.png',
+      key: 'icon-1'
+    },
+    {
+      name: 'Outdoor Dining',
+      description: 'Icon for outdoor dining service',
+      currentUrl: 'assets/images/icon-2.png',
+      key: 'icon-2'
+    },
+    {
+      name: 'Beach View',
+      description: 'Icon for beach view service',
+      currentUrl: 'assets/images/icon-3.png',
+      key: 'icon-3'
+    },
+    {
+      name: 'Decorations',
+      description: 'Icon for decorations service',
+      currentUrl: 'assets/images/icon-4.png',
+      key: 'icon-4'
+    },
+    {
+      name: 'Swimming Pool',
+      description: 'Icon for swimming pool service',
+      currentUrl: 'assets/images/icon-5.png',
+      key: 'icon-5'
+    },
+    {
+      name: 'Resort Beach',
+      description: 'Icon for resort beach service',
+      currentUrl: 'assets/images/icon-6.png',
+      key: 'icon-6'
+    }
+  ];
+
+  // Room Images
+  roomImages = [
+    {
+      name: 'Classic Room',
+      mainImage: 'assets/images/Standard_Room1.jpg',
+      seasonalImages: [
+        'assets/images/Pic_1.jpg',
+        'assets/images/Pic_2.jpg',
+        'assets/images/Pic_3.jpg',
+        'assets/images/Pic_4.jpg'
+      ]
+    },
+    {
+      name: 'Deluxe Room',
+      mainImage: 'assets/images/Deluxe_rooms1.jpg',
+      seasonalImages: [
+        'assets/images/Deluxe_tv.jpg',
+        'assets/images/Deluxe_view.jpg',
+        'assets/images/Deluxe_dressing.jpg',
+        'assets/images/Deluxe_Comfort.jpg'
+      ]
+    },
+    {
+      name: 'Prestige Room',
+      mainImage: 'assets/images/prestige_rooms.jpg',
+      seasonalImages: [
+        'assets/images/view_room.jpg',
+        'assets/images/Prestige_Room.png',
+        'assets/images/Prestige_tv.png',
+        'assets/images/Prestige_Comfort.jpg'
+      ]
+    },
+    {
+      name: 'Luxury Suite',
+      mainImage: 'assets/images/Luxury_Rooms1.jpg',
+      seasonalImages: [
+        'assets/images/tv_luxury.jpg',
+        'assets/images/bath_luxury.png',
+        'assets/images/balcony_luxury.png',
+        'assets/images/pool_luxury.png'
+      ]
+    }
+  ];
   
   // Tab management
   private activeTabs: { [key: string]: string } = {};
@@ -3652,11 +3734,12 @@ export class ContentManagementComponent implements OnInit {
     }
   }
 
-  createOriginalBackup(): void {
-    try {
-      // Create a backup of the original/default content
-      this.originalContentBackup = {
-        header: {
+
+  async restoreToOriginal(): Promise<void> {
+    if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
+      try {
+        // Reset header content to original values
+        this.headerContent = {
           companyName: 'BC Flats',
           logoText: 'BC Flats',
           title: 'BC Flats',
@@ -3683,8 +3766,10 @@ export class ContentManagementComponent implements OnInit {
             accentColor: '#b4884d',
             fontFamily: 'Montserrat, sans-serif'
           }
-        },
-        footer: {
+        };
+
+        // Reset footer content to original values
+        this.footerContent = {
           companyName: 'BC Flats',
           phone1: '+123-456-7890',
           phone2: '+696-969-69696',
@@ -3704,461 +3789,46 @@ export class ContentManagementComponent implements OnInit {
             linkColor: '#b4884d',
             copyrightBackgroundColor: '#f8f9fa'
           }
-        },
-        about: [
-          {
-            id: 1,
-            section: 'about',
-            type: 'text',
-            key: 'staff-title',
-            value: 'best staff',
-            publicId: null,
-            altText: null,
-            order: 1,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 2,
-            section: 'about',
-            type: 'text',
-            key: 'staff-description',
-            value: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
-            publicId: null,
-            altText: null,
-            order: 2,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 3,
-            section: 'about',
-            type: 'text',
-            key: 'foods-title',
-            value: 'best foods',
-            publicId: null,
-            altText: null,
-            order: 3,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 4,
-            section: 'about',
-            type: 'text',
-            key: 'foods-description',
-            value: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
-            publicId: null,
-            altText: null,
-            order: 4,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 5,
-            section: 'about',
-            type: 'text',
-            key: 'pool-title',
-            value: 'swimming pool',
-            publicId: null,
-            altText: null,
-            order: 5,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 6,
-            section: 'about',
-            type: 'text',
-            key: 'pool-description',
-            value: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
-            publicId: null,
-            altText: null,
-            order: 6,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 7,
-            section: 'about',
-            type: 'image',
-            key: 'staff-image',
-            value: 'assets/images/Staff.jpg',
-            publicId: null,
-            altText: 'Best Staff',
-            order: 7,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 8,
-            section: 'about',
-            type: 'image',
-            key: 'foods-image',
-            value: 'assets/images/Foods.jpg',
-            publicId: null,
-            altText: 'Best Foods',
-            order: 8,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 9,
-            section: 'about',
-            type: 'image',
-            key: 'pool-image',
-            value: 'assets/images/Pool.jpg',
-            publicId: null,
-            altText: 'Swimming Pool',
-            order: 9,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        ],
-        services: [
-          {
-            id: 10,
-            section: 'services',
-            type: 'text',
-            key: 'food-drinks-title',
-            value: 'food & drinks',
-            publicId: null,
-            altText: null,
-            order: 1,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 11,
-            section: 'services',
-            type: 'text',
-            key: 'food-drinks-description',
-            value: 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
-            publicId: null,
-            altText: null,
-            order: 2,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 12,
-            section: 'services',
-            type: 'text',
-            key: 'outdoor-dining-title',
-            value: 'outdoor dining',
-            publicId: null,
-            altText: null,
-            order: 3,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 13,
-            section: 'services',
-            type: 'text',
-            key: 'outdoor-dining-description',
-            value: 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
-            publicId: null,
-            altText: null,
-            order: 4,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 14,
-            section: 'services',
-            type: 'text',
-            key: 'beach-view-title',
-            value: 'beach view',
-            publicId: null,
-            altText: null,
-            order: 5,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 15,
-            section: 'services',
-            type: 'text',
-            key: 'beach-view-description',
-            value: 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
-            publicId: null,
-            altText: null,
-            order: 6,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 16,
-            section: 'services',
-            type: 'text',
-            key: 'decorations-title',
-            value: 'decorations',
-            publicId: null,
-            altText: null,
-            order: 7,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 17,
-            section: 'services',
-            type: 'text',
-            key: 'decorations-description',
-            value: 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
-            publicId: null,
-            altText: null,
-            order: 8,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 18,
-            section: 'services',
-            type: 'text',
-            key: 'swimming-pool-title',
-            value: 'swimming pool',
-            publicId: null,
-            altText: null,
-            order: 9,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 19,
-            section: 'services',
-            type: 'text',
-            key: 'swimming-pool-description',
-            value: 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
-            publicId: null,
-            altText: null,
-            order: 10,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 20,
-            section: 'services',
-            type: 'text',
-            key: 'resort-beach-title',
-            value: 'resort beach',
-            publicId: null,
-            altText: null,
-            order: 11,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 21,
-            section: 'services',
-            type: 'text',
-            key: 'resort-beach-description',
-            value: 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
-            publicId: null,
-            altText: null,
-            order: 12,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        ],
-        hero: [
-          {
-            id: 22,
-            section: 'hero',
-            type: 'image',
-            key: 'hero-image-1',
-            value: 'assets/images/Pool_home.jpg',
-            publicId: null,
-            altText: 'Pool Home Image',
-            order: 1,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 23,
-            section: 'hero',
-            type: 'image',
-            key: 'hero-image-2',
-            value: 'assets/images/Beach_view.jpg',
-            publicId: null,
-            altText: 'Beach View Image',
-            order: 2,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 24,
-            section: 'hero',
-            type: 'image',
-            key: 'hero-image-3',
-            value: 'assets/images/Front_desk.jpg',
-            publicId: null,
-            altText: 'Front Desk Image',
-            order: 3,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        ],
-        contact: [
-          {
-            id: 25,
-            section: 'contact',
-            type: 'text',
-            key: 'contact-title',
-            value: 'Contact Us',
-            publicId: null,
-            altText: null,
-            order: 1,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 26,
-            section: 'contact',
-            type: 'text',
-            key: 'contact-subtitle',
-            value: 'Get in touch with us',
-            publicId: null,
-            altText: null,
-            order: 2,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 27,
-            section: 'contact',
-            type: 'text',
-            key: 'contact-address',
-            value: '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
-            publicId: null,
-            altText: null,
-            order: 3,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 28,
-            section: 'contact',
-            type: 'text',
-            key: 'contact-phone',
-            value: '+123-456-7890',
-            publicId: null,
-            altText: null,
-            order: 4,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          },
-          {
-            id: 29,
-            section: 'contact',
-            type: 'text',
-            key: 'contact-email',
-            value: 'BCflats.edu.ph',
-            publicId: null,
-            altText: null,
-            order: 5,
-            isActive: true,
-            metadata: null,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        ]
-      };
-      
-      this.hasOriginalBackup = true;
-      this.alertService.success('Original content backup created successfully!');
-    } catch (error) {
-      this.alertService.error('Failed to create original backup');
-      console.error('Error creating original backup:', error);
-    }
-  }
+        };
 
-  async restoreToOriginal(): Promise<void> {
-    if (!this.hasOriginalBackup || !this.originalContentBackup) {
-      this.alertService.error('No original backup available to restore');
-      return;
-    }
+        // Save header and footer content
+        await this.saveHeaderContent();
+        await this.saveFooterContent();
 
-    if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
-      try {
-        // Restore each section to original values
-        for (const [sectionName, sectionContent] of Object.entries(this.originalContentBackup)) {
-          if (Array.isArray(sectionContent)) {
-            // For array-based sections (about, services, hero, contact)
-            for (const item of sectionContent) {
-              if (item.type === 'text') {
-                await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-              } else if (item.type === 'image') {
-                // For images, we would need to handle file uploads
-                // For now, just update the value
-                await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-              }
-            }
-          } else if (typeof sectionContent === 'object' && sectionContent !== null) {
-            // For object-based sections (header, footer)
-            for (const [key, value] of Object.entries(sectionContent as Record<string, any>)) {
-              if (typeof value === 'string') {
-                await this.contentService.updateText(sectionName, key, value).toPromise();
-              } else {
-                await this.contentService.updateText(sectionName, key, JSON.stringify(value)).toPromise();
-              }
-            }
+        // Reset text content to original values
+        const originalTextContent = {
+          'about_staff-title': 'best staff',
+          'about_staff-description': 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+          'about_foods-title': 'best foods',
+          'about_foods-description': 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+          'about_pool-title': 'swimming pool',
+          'about_pool-description': 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
+          'services_food-drinks-title': 'food & drinks',
+          'services_food-drinks-description': 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+          'services_outdoor-dining-title': 'outdoor dining',
+          'services_outdoor-dining-description': 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+          'services_beach-view-title': 'beach view',
+          'services_beach-view-description': 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+          'services_decorations-title': 'decorations',
+          'services_decorations-description': 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+          'services_swimming-pool-title': 'swimming pool',
+          'services_swimming-pool-description': 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+          'services_resort-beach-title': 'resort beach',
+          'services_resort-beach-description': 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
+          'contact_contact-title': 'Contact Us',
+          'contact_contact-subtitle': 'Get in touch with us',
+          'contact_contact-address': '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
+          'contact_contact-phone': '+123-456-7890',
+          'contact_contact-email': 'BCflats.edu.ph'
+        };
+
+        // Update text content
+        for (const [key, value] of Object.entries(originalTextContent)) {
+          const [section, fieldKey] = key.split('_');
+          try {
+            await this.contentService.updateText(section, fieldKey, value).toPromise();
+          } catch (error) {
+            console.warn(`Failed to update ${section}.${fieldKey}:`, error);
           }
         }
 
@@ -4177,9 +3847,165 @@ export class ContentManagementComponent implements OnInit {
     this.alertService.info('Backup cleared');
   }
 
-  clearOriginalBackup(): void {
-    this.originalContentBackup = null;
-    this.hasOriginalBackup = false;
-    this.alertService.info('Original backup cleared');
+  // Service Icon Management
+  replaceServiceIcon(iconIndex: number): void {
+    if (!this.selectedFile) {
+      this.alertService.error('Please select a file first');
+      return;
+    }
+
+    const icon = this.serviceIcons[iconIndex];
+    if (!icon) {
+      this.alertService.error('Invalid icon selection');
+      return;
+    }
+
+    this.uploading = true;
+    this.alertService.info('Uploading service icon...');
+
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+    formData.append('section', 'services');
+    formData.append('key', icon.key);
+    formData.append('altText', icon.name);
+
+    this.contentService.uploadImage(formData).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Update the icon URL
+          icon.currentUrl = response.data.optimizedUrl || response.data.value;
+          this.alertService.success(`Service icon "${icon.name}" updated successfully!`);
+          this.clearFileSelection();
+        } else {
+          this.alertService.error('Failed to update service icon');
+        }
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Error uploading service icon:', error);
+        this.alertService.error('Failed to upload service icon');
+        this.uploading = false;
+      }
+    });
   }
+
+  // Room Image Management
+  replaceRoomImage(roomIndex: number, imageType: 'main' | 'seasonal', seasonalIndex?: number): void {
+    if (!this.selectedFile) {
+      this.alertService.error('Please select a file first');
+      return;
+    }
+
+    const room = this.roomImages[roomIndex];
+    if (!room) {
+      this.alertService.error('Invalid room selection');
+      return;
+    }
+
+    this.uploading = true;
+    this.alertService.info('Uploading room image...');
+
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+    formData.append('section', 'rooms');
+    
+    let key: string;
+    let altText: string;
+    
+    if (imageType === 'main') {
+      key = `${room.name.toLowerCase().replace(' ', '-')}-main-image`;
+      altText = `${room.name} main image`;
+    } else {
+      key = `${room.name.toLowerCase().replace(' ', '-')}-seasonal-image-${seasonalIndex! + 1}`;
+      altText = `${room.name} seasonal image ${seasonalIndex! + 1}`;
+    }
+    
+    formData.append('key', key);
+    formData.append('altText', altText);
+
+    this.contentService.uploadImage(formData).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const newUrl = response.data.optimizedUrl || response.data.value;
+          
+          if (imageType === 'main') {
+            room.mainImage = newUrl;
+          } else {
+            room.seasonalImages[seasonalIndex!] = newUrl;
+          }
+          
+          this.alertService.success(`Room image updated successfully!`);
+          this.clearFileSelection();
+        } else {
+          this.alertService.error('Failed to update room image');
+        }
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Error uploading room image:', error);
+        this.alertService.error('Failed to upload room image');
+        this.uploading = false;
+      }
+    });
+  }
+
+  // Load service icons from content service
+  async loadServiceIcons(): Promise<void> {
+    try {
+      const iconsContent = await this.contentService.getSectionContent('services').toPromise();
+      
+      if (iconsContent && Array.isArray(iconsContent)) {
+        iconsContent.forEach((item: any) => {
+          if (item.type === 'image' && item.key.startsWith('icon-')) {
+            const iconIndex = this.serviceIcons.findIndex(icon => icon.key === item.key);
+            if (iconIndex !== -1) {
+              this.serviceIcons[iconIndex].currentUrl = item.optimizedUrl || item.value;
+            }
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading service icons:', error);
+    }
+  }
+
+  // Load room images from content service
+  async loadRoomImages(): Promise<void> {
+    try {
+      const roomsContent = await this.contentService.getSectionContent('rooms').toPromise();
+      
+      if (roomsContent && Array.isArray(roomsContent)) {
+        roomsContent.forEach((item: any) => {
+          if (item.type === 'image') {
+            const key = item.key;
+            
+            // Match main images
+            this.roomImages.forEach(room => {
+              const roomKey = room.name.toLowerCase().replace(' ', '-');
+              if (key.includes(roomKey) && key.includes('main')) {
+                room.mainImage = item.optimizedUrl || item.value;
+              }
+            });
+            
+            // Match seasonal images
+            this.roomImages.forEach(room => {
+              const roomKey = room.name.toLowerCase().replace(' ', '-');
+              if (key.includes(roomKey) && key.includes('seasonal')) {
+                const match = key.match(/seasonal-image-(\d+)/);
+                if (match) {
+                  const index = parseInt(match[1]) - 1;
+                  if (index >= 0 && index < room.seasonalImages.length) {
+                    room.seasonalImages[index] = item.optimizedUrl || item.value;
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading room images:', error);
+    }
+  }
+
 }
