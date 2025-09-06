@@ -32,6 +32,8 @@ export class ContentManagementComponent implements OnInit {
   // Backup system
   private contentBackup: any = null;
   public hasBackup: boolean = false;
+  private originalContentBackup: any = null;
+  public hasOriginalBackup: boolean = false;
   
   // Text content
   textContent: { [key: string]: string } = {};
@@ -3624,5 +3626,566 @@ export class ContentManagementComponent implements OnInit {
       }
     };
     this.alertService.info('Home content reset to default values');
+  }
+
+  // Enhanced Backup and Restore Methods
+  createBackup(): void {
+    try {
+      this.contentBackup = JSON.parse(JSON.stringify(this.content));
+      this.hasBackup = true;
+      this.alertService.success('Backup created successfully!');
+    } catch (error) {
+      this.alertService.error('Failed to create backup');
+      console.error('Error creating backup:', error);
+    }
+  }
+
+  restoreFromBackup(): void {
+    if (!this.hasBackup || !this.contentBackup) {
+      this.alertService.error('No backup available to restore');
+      return;
+    }
+
+    if (confirm('Are you sure you want to restore from backup? This will overwrite all current content.')) {
+      try {
+        this.content = JSON.parse(JSON.stringify(this.contentBackup));
+        this.alertService.success('Content restored from backup successfully!');
+        this.loadContent(); // Refresh the display
+      } catch (error) {
+        this.alertService.error('Failed to restore from backup');
+        console.error('Error restoring from backup:', error);
+      }
+    }
+  }
+
+  createOriginalBackup(): void {
+    try {
+      // Create a backup of the original/default content
+      this.originalContentBackup = {
+        header: {
+          companyName: 'BC Flats',
+          logoText: 'BC Flats',
+          title: 'BC Flats',
+          navigation: [
+            { label: 'Home', href: '#home', isExternal: false },
+            { label: 'Rooms', href: '#rooms', isExternal: false },
+            { label: 'About', href: '#about', isExternal: false },
+            { label: 'Services', href: '#services', isExternal: false },
+            { label: 'Contact', href: '#contact', isExternal: false }
+          ],
+          ctaButton: {
+            text: 'Book Now',
+            href: '/reserve',
+            isExternal: false
+          },
+          loginButton: {
+            text: 'Login',
+            href: '/login',
+            isExternal: false
+          },
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            accentColor: '#b4884d',
+            fontFamily: 'Montserrat, sans-serif'
+          }
+        },
+        footer: {
+          companyName: 'BC Flats',
+          phone1: '+123-456-7890',
+          phone2: '+696-969-69696',
+          email: 'BCflats.edu.ph',
+          address: 'A.S Fortuna - 400104',
+          social: {
+            facebook: '#',
+            twitter: '#',
+            instagram: '#',
+            linkedin: '#'
+          },
+          copyrightText: '',
+          showDynamicYear: true,
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            linkColor: '#b4884d',
+            copyrightBackgroundColor: '#f8f9fa'
+          }
+        },
+        about: [
+          {
+            id: 1,
+            section: 'about',
+            type: 'text',
+            key: 'staff-title',
+            value: 'best staff',
+            publicId: null,
+            altText: null,
+            order: 1,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 2,
+            section: 'about',
+            type: 'text',
+            key: 'staff-description',
+            value: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+            publicId: null,
+            altText: null,
+            order: 2,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 3,
+            section: 'about',
+            type: 'text',
+            key: 'foods-title',
+            value: 'best foods',
+            publicId: null,
+            altText: null,
+            order: 3,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 4,
+            section: 'about',
+            type: 'text',
+            key: 'foods-description',
+            value: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+            publicId: null,
+            altText: null,
+            order: 4,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 5,
+            section: 'about',
+            type: 'text',
+            key: 'pool-title',
+            value: 'swimming pool',
+            publicId: null,
+            altText: null,
+            order: 5,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 6,
+            section: 'about',
+            type: 'text',
+            key: 'pool-description',
+            value: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
+            publicId: null,
+            altText: null,
+            order: 6,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 7,
+            section: 'about',
+            type: 'image',
+            key: 'staff-image',
+            value: 'assets/images/Staff.jpg',
+            publicId: null,
+            altText: 'Best Staff',
+            order: 7,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 8,
+            section: 'about',
+            type: 'image',
+            key: 'foods-image',
+            value: 'assets/images/Foods.jpg',
+            publicId: null,
+            altText: 'Best Foods',
+            order: 8,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 9,
+            section: 'about',
+            type: 'image',
+            key: 'pool-image',
+            value: 'assets/images/Pool.jpg',
+            publicId: null,
+            altText: 'Swimming Pool',
+            order: 9,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        ],
+        services: [
+          {
+            id: 10,
+            section: 'services',
+            type: 'text',
+            key: 'food-drinks-title',
+            value: 'food & drinks',
+            publicId: null,
+            altText: null,
+            order: 1,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 11,
+            section: 'services',
+            type: 'text',
+            key: 'food-drinks-description',
+            value: 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+            publicId: null,
+            altText: null,
+            order: 2,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 12,
+            section: 'services',
+            type: 'text',
+            key: 'outdoor-dining-title',
+            value: 'outdoor dining',
+            publicId: null,
+            altText: null,
+            order: 3,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 13,
+            section: 'services',
+            type: 'text',
+            key: 'outdoor-dining-description',
+            value: 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+            publicId: null,
+            altText: null,
+            order: 4,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 14,
+            section: 'services',
+            type: 'text',
+            key: 'beach-view-title',
+            value: 'beach view',
+            publicId: null,
+            altText: null,
+            order: 5,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 15,
+            section: 'services',
+            type: 'text',
+            key: 'beach-view-description',
+            value: 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+            publicId: null,
+            altText: null,
+            order: 6,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 16,
+            section: 'services',
+            type: 'text',
+            key: 'decorations-title',
+            value: 'decorations',
+            publicId: null,
+            altText: null,
+            order: 7,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 17,
+            section: 'services',
+            type: 'text',
+            key: 'decorations-description',
+            value: 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+            publicId: null,
+            altText: null,
+            order: 8,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 18,
+            section: 'services',
+            type: 'text',
+            key: 'swimming-pool-title',
+            value: 'swimming pool',
+            publicId: null,
+            altText: null,
+            order: 9,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 19,
+            section: 'services',
+            type: 'text',
+            key: 'swimming-pool-description',
+            value: 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+            publicId: null,
+            altText: null,
+            order: 10,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 20,
+            section: 'services',
+            type: 'text',
+            key: 'resort-beach-title',
+            value: 'resort beach',
+            publicId: null,
+            altText: null,
+            order: 11,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 21,
+            section: 'services',
+            type: 'text',
+            key: 'resort-beach-description',
+            value: 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
+            publicId: null,
+            altText: null,
+            order: 12,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        ],
+        hero: [
+          {
+            id: 22,
+            section: 'hero',
+            type: 'image',
+            key: 'hero-image-1',
+            value: 'assets/images/Pool_home.jpg',
+            publicId: null,
+            altText: 'Pool Home Image',
+            order: 1,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 23,
+            section: 'hero',
+            type: 'image',
+            key: 'hero-image-2',
+            value: 'assets/images/Beach_view.jpg',
+            publicId: null,
+            altText: 'Beach View Image',
+            order: 2,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 24,
+            section: 'hero',
+            type: 'image',
+            key: 'hero-image-3',
+            value: 'assets/images/Front_desk.jpg',
+            publicId: null,
+            altText: 'Front Desk Image',
+            order: 3,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        ],
+        contact: [
+          {
+            id: 25,
+            section: 'contact',
+            type: 'text',
+            key: 'contact-title',
+            value: 'Contact Us',
+            publicId: null,
+            altText: null,
+            order: 1,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 26,
+            section: 'contact',
+            type: 'text',
+            key: 'contact-subtitle',
+            value: 'Get in touch with us',
+            publicId: null,
+            altText: null,
+            order: 2,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 27,
+            section: 'contact',
+            type: 'text',
+            key: 'contact-address',
+            value: '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
+            publicId: null,
+            altText: null,
+            order: 3,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 28,
+            section: 'contact',
+            type: 'text',
+            key: 'contact-phone',
+            value: '+123-456-7890',
+            publicId: null,
+            altText: null,
+            order: 4,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: 29,
+            section: 'contact',
+            type: 'text',
+            key: 'contact-email',
+            value: 'BCflats.edu.ph',
+            publicId: null,
+            altText: null,
+            order: 5,
+            isActive: true,
+            metadata: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        ]
+      };
+      
+      this.hasOriginalBackup = true;
+      this.alertService.success('Original content backup created successfully!');
+    } catch (error) {
+      this.alertService.error('Failed to create original backup');
+      console.error('Error creating original backup:', error);
+    }
+  }
+
+  async restoreToOriginal(): Promise<void> {
+    if (!this.hasOriginalBackup || !this.originalContentBackup) {
+      this.alertService.error('No original backup available to restore');
+      return;
+    }
+
+    if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
+      try {
+        // Restore each section to original values
+        for (const [sectionName, sectionContent] of Object.entries(this.originalContentBackup)) {
+          if (Array.isArray(sectionContent)) {
+            // For array-based sections (about, services, hero, contact)
+            for (const item of sectionContent) {
+              if (item.type === 'text') {
+                await this.contentService.updateText(item.section, item.key, item.value).toPromise();
+              } else if (item.type === 'image') {
+                // For images, we would need to handle file uploads
+                // For now, just update the value
+                await this.contentService.updateText(item.section, item.key, item.value).toPromise();
+              }
+            }
+          } else {
+            // For object-based sections (header, footer)
+            for (const [key, value] of Object.entries(sectionContent)) {
+              if (typeof value === 'string') {
+                await this.contentService.updateText(sectionName, key, value).toPromise();
+              } else {
+                await this.contentService.updateText(sectionName, key, JSON.stringify(value)).toPromise();
+              }
+            }
+          }
+        }
+
+        this.alertService.success('Content restored to original values successfully!');
+        await this.loadContent(); // Refresh the display
+      } catch (error) {
+        this.alertService.error('Failed to restore to original content');
+        console.error('Error restoring to original:', error);
+      }
+    }
+  }
+
+  clearBackup(): void {
+    this.contentBackup = null;
+    this.hasBackup = false;
+    this.alertService.info('Backup cleared');
+  }
+
+  clearOriginalBackup(): void {
+    this.originalContentBackup = null;
+    this.hasOriginalBackup = false;
+    this.alertService.info('Original backup cleared');
   }
 }

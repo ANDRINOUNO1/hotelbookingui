@@ -750,4 +750,5 @@ export class HomeComponent implements AfterViewInit, OnInit {
       console.error('Error loading about content:', error);
     }
   }
+
 }

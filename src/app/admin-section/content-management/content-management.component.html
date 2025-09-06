@@ -13,15 +13,28 @@
         <button type="button" 
                 (click)="createBackup()" 
                 class="backup-btn"
-                [disabled]="!hasBackup"
-                title="Create backup of current content">
+                title="Backup current content">
           <i class="fa fa-save"></i> Backup Content
         </button>
         <button type="button" 
-                (click)="globalReset()" 
-                class="global-reset-btn"
-                title="Reset all content to original state">
-          <i class="fa fa-undo"></i> Reset All
+                (click)="restoreFromBackup()" 
+                class="restore-btn"
+                [disabled]="!hasBackup"
+                title="Restore from backup">
+          <i class="fa fa-undo"></i> Restore Backup
+        </button>
+        <button type="button" 
+                (click)="createOriginalBackup()" 
+                class="original-backup-btn"
+                title="Create original content backup">
+          <i class="fa fa-archive"></i> Save Original
+        </button>
+        <button type="button" 
+                (click)="restoreToOriginal()" 
+                class="restore-original-btn"
+                [disabled]="!hasOriginalBackup"
+                title="Restore to original content">
+          <i class="fa fa-refresh"></i> Reset to Original
         </button>
       </div>
     </div>
