@@ -178,12 +178,6 @@ export class ContentManagementComponent implements OnInit {
     ]
   };
 
-  // Create backup of current content
-  createBackup(): void {
-    this.contentBackup = JSON.parse(JSON.stringify(this.content));
-    this.hasBackup = true;
-    console.log('Content backup created');
-  }
 
   // Global reset to original content - this will reset the home page to show original content
   async globalReset(): Promise<void> {
@@ -4156,9 +4150,9 @@ export class ContentManagementComponent implements OnInit {
                 await this.contentService.updateText(item.section, item.key, item.value).toPromise();
               }
             }
-          } else {
+          } else if (typeof sectionContent === 'object' && sectionContent !== null) {
             // For object-based sections (header, footer)
-            for (const [key, value] of Object.entries(sectionContent)) {
+            for (const [key, value] of Object.entries(sectionContent as Record<string, any>)) {
               if (typeof value === 'string') {
                 await this.contentService.updateText(sectionName, key, value).toPromise();
               } else {
