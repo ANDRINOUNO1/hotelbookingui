@@ -213,9 +213,9 @@ export class ContentManagementComponent implements OnInit {
       poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
     },
     aboutImages: {
-      staff: 'assets/images/about-img-1.jpg',
-      foods: 'assets/images/about-img-2.jpg',
-      pool: 'assets/images/about-img-3.jpg'
+      staff: 'assets/images/Staff.jpg',
+      foods: 'assets/images/Foods.jpg',
+      pool: 'assets/images/Pool.jpg'
     }
   };
 
@@ -3333,20 +3333,8 @@ export class ContentManagementComponent implements OnInit {
   async saveHeaderContent(): Promise<void> {
     this.savingHeader = true;
     try {
-      const headerItems = [
-        { section: 'header', type: 'text', key: 'company_name', value: this.headerContent.companyName },
-        { section: 'header', type: 'text', key: 'logo_text', value: (this.headerContent as any).logoText || this.headerContent.companyName },
-        { section: 'header', type: 'text', key: 'title', value: this.headerContent.title },
-        { section: 'header', type: 'text', key: 'navigation', value: JSON.stringify(this.headerContent.navigation) },
-        { section: 'header', type: 'text', key: 'cta_button', value: JSON.stringify(this.headerContent.ctaButton) },
-        { section: 'header', type: 'text', key: 'login_button', value: JSON.stringify(this.headerContent.loginButton) },
-        { section: 'header', type: 'text', key: 'styles', value: JSON.stringify(this.headerContent.styles) }
-      ];
-
-      // Save each header item
-      for (const item of headerItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveHeaderContent(this.headerContent).toPromise();
 
       this.alertService.success('Header content saved successfully!');
       await this.loadContent();
@@ -3461,22 +3449,8 @@ export class ContentManagementComponent implements OnInit {
   async saveFooterContent(): Promise<void> {
     this.savingFooter = true;
     try {
-      const footerItems = [
-        { section: 'footer', type: 'text', key: 'company_name', value: this.footerContent.companyName },
-        { section: 'footer', type: 'text', key: 'phone1', value: this.footerContent.phone1 },
-        { section: 'footer', type: 'text', key: 'phone2', value: this.footerContent.phone2 },
-        { section: 'footer', type: 'text', key: 'email', value: this.footerContent.email },
-        { section: 'footer', type: 'text', key: 'address', value: this.footerContent.address },
-        { section: 'footer', type: 'text', key: 'social_links', value: JSON.stringify(this.footerContent.social) },
-        { section: 'footer', type: 'text', key: 'copyright_text', value: this.footerContent.copyrightText },
-        { section: 'footer', type: 'text', key: 'show_dynamic_year', value: this.footerContent.showDynamicYear.toString() },
-        { section: 'footer', type: 'text', key: 'styles', value: JSON.stringify(this.footerContent.styles) }
-      ];
-
-      // Save each footer item
-      for (const item of footerItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveFooterContent(this.footerContent).toPromise();
 
       this.alertService.success('Footer content saved successfully!');
       await this.loadContent(); // Refresh the main content
@@ -3568,13 +3542,13 @@ export class ContentManagementComponent implements OnInit {
               this.homeContent.aboutContent.poolDescription = item.value || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.';
               break;
             case 'staff-image':
-              this.homeContent.aboutImages.staff = item.optimizedUrl || item.value || 'assets/images/about-img-1.jpg';
+              this.homeContent.aboutImages.staff = item.optimizedUrl || item.value || 'assets/images/Staff.jpg';
               break;
             case 'foods-image':
-              this.homeContent.aboutImages.foods = item.optimizedUrl || item.value || 'assets/images/about-img-2.jpg';
+              this.homeContent.aboutImages.foods = item.optimizedUrl || item.value || 'assets/images/Foods.jpg';
               break;
             case 'pool-image':
-              this.homeContent.aboutImages.pool = item.optimizedUrl || item.value || 'assets/images/about-img-3.jpg';
+              this.homeContent.aboutImages.pool = item.optimizedUrl || item.value || 'assets/images/Pool.jpg';
               break;
           }
         });
@@ -3587,23 +3561,8 @@ export class ContentManagementComponent implements OnInit {
   async saveHomeContent(): Promise<void> {
     this.savingHome = true;
     try {
-      // Save about content
-      const aboutItems = [
-        { section: 'about', type: 'text', key: 'staff-title', value: this.homeContent.aboutContent.staffTitle },
-        { section: 'about', type: 'text', key: 'staff-description', value: this.homeContent.aboutContent.staffDescription },
-        { section: 'about', type: 'text', key: 'foods-title', value: this.homeContent.aboutContent.foodsTitle },
-        { section: 'about', type: 'text', key: 'foods-description', value: this.homeContent.aboutContent.foodsDescription },
-        { section: 'about', type: 'text', key: 'pool-title', value: this.homeContent.aboutContent.poolTitle },
-        { section: 'about', type: 'text', key: 'pool-description', value: this.homeContent.aboutContent.poolDescription },
-        { section: 'about', type: 'text', key: 'staff-image', value: this.homeContent.aboutImages.staff },
-        { section: 'about', type: 'text', key: 'foods-image', value: this.homeContent.aboutImages.foods },
-        { section: 'about', type: 'text', key: 'pool-image', value: this.homeContent.aboutImages.pool }
-      ];
-
-      // Save each about item
-      for (const item of aboutItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveHomeContent(this.homeContent).toPromise();
 
       this.alertService.success('Home content saved successfully!');
       await this.loadContent(); // Refresh the main content
@@ -4010,10 +3969,8 @@ export class ContentManagementComponent implements OnInit {
           }
         };
 
-        // Save all content to backend
-        await this.saveHeaderContent();
-        await this.saveFooterContent();
-        await this.saveHomeContent();
+        // Use the backend reset API to restore all content
+        await this.contentService.resetAll().toPromise();
 
         // Reset text content to original values
         const originalTextContent = {

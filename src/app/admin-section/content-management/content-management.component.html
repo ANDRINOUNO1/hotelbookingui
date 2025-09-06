@@ -93,7 +93,7 @@
         <div class="current-logo-display" *ngIf="getCurrentLogo()">
           <h3>Current Logo</h3>
           <div class="logo-preview-container">
-        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
+        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview" width="200" height="100" loading="lazy">
             <div class="logo-info">
               <span class="logo-status active">Active</span>
               <span class="logo-size">Displayed on all pages</span>
@@ -1227,7 +1227,7 @@
           <div class="header-preview" [style]="getHeaderStyles()">
             <div class="header-bar">
               <a href="#home" class="logo">
-                <img [src]="getCurrentLogo()" alt="BC Flats Logo" class="w-16 h-16">
+                <img [src]="getCurrentLogo()" alt="BC Flats Logo" class="w-16 h-16" width="48" height="48" loading="lazy">
                 <span class="logo-text">{{ headerContent.companyName }}</span>
               </a>
               <nav>
