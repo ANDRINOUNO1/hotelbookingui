@@ -2012,9 +2012,6 @@ export class ContentManagementComponent implements OnInit {
   }
 
   // Get current content for specific sections
-  getCurrentLogo(): string {
-    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
-  }
 
   getCurrentHeroImages(): string[] {
     const hero = this.getSectionItemsSafe('hero');
@@ -4071,8 +4068,12 @@ export class ContentManagementComponent implements OnInit {
   }
 
   // Homepage Preview Helper Methods
+  trackByIndex(index: number, item: any): number {
+    return index;
+  }
+
   getCurrentLogo(): string {
-    return this.logoUrl || 'assets/images/bcflats.png';
+    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
   }
 
   getHeaderStyles(): string {
