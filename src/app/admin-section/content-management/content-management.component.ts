@@ -3863,22 +3863,12 @@ export class ContentManagementComponent implements OnInit {
     this.uploading = true;
     this.alertService.info('Uploading service icon...');
 
-    const formData = new FormData();
-    formData.append('image', this.selectedFile);
-    formData.append('section', 'services');
-    formData.append('key', icon.key);
-    formData.append('altText', icon.name);
-
-    this.contentService.uploadImage(formData).subscribe({
+    this.contentService.uploadImage('services', icon.key, this.selectedFile, icon.name).subscribe({
       next: (response) => {
-        if (response.success && response.data) {
-          // Update the icon URL
-          icon.currentUrl = response.data.optimizedUrl || response.data.value;
-          this.alertService.success(`Service icon "${icon.name}" updated successfully!`);
-          this.clearFileSelection();
-        } else {
-          this.alertService.error('Failed to update service icon');
-        }
+        // Update the icon URL
+        icon.currentUrl = response.optimizedUrl || response.value;
+        this.alertService.success(`Service icon "${icon.name}" updated successfully!`);
+        this.clearFileSelection();
         this.uploading = false;
       },
       error: (error) => {
@@ -3905,10 +3895,6 @@ export class ContentManagementComponent implements OnInit {
     this.uploading = true;
     this.alertService.info('Uploading room image...');
 
-    const formData = new FormData();
-    formData.append('image', this.selectedFile);
-    formData.append('section', 'rooms');
-    
     let key: string;
     let altText: string;
     
@@ -3919,26 +3905,19 @@ export class ContentManagementComponent implements OnInit {
       key = `${room.name.toLowerCase().replace(' ', '-')}-seasonal-image-${seasonalIndex! + 1}`;
       altText = `${room.name} seasonal image ${seasonalIndex! + 1}`;
     }
-    
-    formData.append('key', key);
-    formData.append('altText', altText);
 
-    this.contentService.uploadImage(formData).subscribe({
+    this.contentService.uploadImage('rooms', key, this.selectedFile, altText).subscribe({
       next: (response) => {
-        if (response.success && response.data) {
-          const newUrl = response.data.optimizedUrl || response.data.value;
-          
-          if (imageType === 'main') {
-            room.mainImage = newUrl;
-          } else {
-            room.seasonalImages[seasonalIndex!] = newUrl;
-          }
-          
-          this.alertService.success(`Room image updated successfully!`);
-          this.clearFileSelection();
+        const newUrl = response.optimizedUrl || response.value;
+        
+        if (imageType === 'main') {
+          room.mainImage = newUrl;
         } else {
-          this.alertService.error('Failed to update room image');
+          room.seasonalImages[seasonalIndex!] = newUrl;
         }
+        
+        this.alertService.success(`Room image updated successfully!`);
+        this.clearFileSelection();
         this.uploading = false;
       },
       error: (error) => {
@@ -3947,6 +3926,28 @@ export class ContentManagementComponent implements OnInit {
         this.uploading = false;
       }
     });
+  }
+
+  // Handle file selection for service icons
+  onServiceIconFileSelected(event: any, iconIndex: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedPreviewUrl = URL.createObjectURL(file);
+      // Store the icon index for later use
+      (this as any).selectedIconIndex = iconIndex;
+    }
+  }
+
+  // Handle file selection for room images
+  onRoomImageFileSelected(event: any, roomIndex: number, imageType: 'main' | 'seasonal', seasonalIndex?: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedPreviewUrl = URL.createObjectURL(file);
+      // Store the room details for later use
+      (this as any).selectedRoomDetails = { roomIndex, imageType, seasonalIndex };
+    }
   }
 
   // Load service icons from content service

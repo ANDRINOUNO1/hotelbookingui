@@ -1101,7 +1101,7 @@
               <p>{{ icon.description }}</p>
               <div class="file-upload-controls">
                 <input type="file" 
-                       (change)="onFileSelected($event, 'service-icon')" 
+                       (change)="onServiceIconFileSelected($event, i)" 
                        accept="image/*" 
                        class="file-input">
                 <label class="file-input-label">
@@ -1153,7 +1153,7 @@
                   <h4>Main Image</h4>
                   <div class="file-upload-controls">
                     <input type="file" 
-                           (change)="onFileSelected($event, 'room-main')" 
+                           (change)="onRoomImageFileSelected($event, i, 'main')" 
                            accept="image/*" 
                            class="file-input">
                     <label class="file-input-label">
@@ -1181,7 +1181,7 @@
                   <h4>Seasonal Image {{ j + 1 }}</h4>
                   <div class="file-upload-controls">
                     <input type="file" 
-                           (change)="onFileSelected($event, 'room-seasonal')" 
+                           (change)="onRoomImageFileSelected($event, i, 'seasonal', j)" 
                            accept="image/*" 
                            class="file-input">
                     <label class="file-input-label">
