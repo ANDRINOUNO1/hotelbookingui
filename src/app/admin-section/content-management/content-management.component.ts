@@ -3683,7 +3683,7 @@ export class ContentManagementComponent implements OnInit {
     }
   }
 
-  restoreFromBackup(): void {
+  async restoreFromBackup(): Promise<void> {
     if (!this.hasBackup || !this.contentBackup) {
       this.alertService.error('No backup available to restore');
       return;
