@@ -3201,8 +3201,19 @@ export class ContentManagementComponent implements OnInit {
       (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
     }
   }
-  refreshContent(): void {
-    this.loadContent();
+  async refreshContent(): Promise<void> {
+    try {
+      await this.loadContent();
+      await this.loadHeaderContent();
+      await this.loadFooterContent();
+      await this.loadHomeContent();
+      await this.loadServiceIcons();
+      await this.loadRoomImages();
+      this.alertService.success('Content refreshed successfully!');
+    } catch (error) {
+      this.alertService.error('Failed to refresh content');
+      console.error('Error refreshing content:', error);
+    }
   }
 
   exportContent(): void {
@@ -3682,7 +3693,14 @@ export class ContentManagementComponent implements OnInit {
       try {
         this.content = JSON.parse(JSON.stringify(this.contentBackup));
         this.alertService.success('Content restored from backup successfully!');
-        this.loadContent(); // Refresh the display
+        
+        // Refresh all content to show the updated data in the content management page
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
       } catch (error) {
         this.alertService.error('Failed to restore from backup');
         console.error('Error restoring from backup:', error);
@@ -3789,7 +3807,14 @@ export class ContentManagementComponent implements OnInit {
         }
 
         this.alertService.success('Content restored to original values successfully!');
-        await this.loadContent(); // Refresh the display
+        
+        // Refresh all content to show the updated data in the content management page
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
       } catch (error) {
         this.alertService.error('Failed to restore to original content');
         console.error('Error restoring to original:', error);
@@ -3972,49 +3997,20 @@ export class ContentManagementComponent implements OnInit {
         // Use the backend reset API to restore all content
         await this.contentService.resetAll().toPromise();
 
-        // Reset text content to original values
-        const originalTextContent = {
-          'about_staff-title': 'best staff',
-          'about_staff-description': 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
-          'about_foods-title': 'best foods',
-          'about_foods-description': 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
-          'about_pool-title': 'swimming pool',
-          'about_pool-description': 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
-          'services_food-drinks-title': 'food & drinks',
-          'services_food-drinks-description': 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
-          'services_outdoor-dining-title': 'outdoor dining',
-          'services_outdoor-dining-description': 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
-          'services_beach-view-title': 'beach view',
-          'services_beach-view-description': 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
-          'services_decorations-title': 'decorations',
-          'services_decorations-description': 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
-          'services_swimming-pool-title': 'swimming pool',
-          'services_swimming-pool-description': 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
-          'services_resort-beach-title': 'resort beach',
-          'services_resort-beach-description': 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
-          'contact_contact-title': 'Contact Us',
-          'contact_contact-subtitle': 'Get in touch with us',
-          'contact_contact-address': '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
-          'contact_contact-phone': '+123-456-7890',
-          'contact_contact-email': 'BCflats.edu.ph'
-        };
-
-        // Update text content
-        for (const [key, value] of Object.entries(originalTextContent)) {
-          const [section, fieldKey] = key.split('_');
-          try {
-            await this.contentService.updateText(section, fieldKey, value).toPromise();
-          } catch (error) {
-            console.warn(`Failed to update ${section}.${fieldKey}:`, error);
-          }
-        }
-
         // Clear any selected files
         this.clearFileSelection();
         this.clearLogoSelection();
 
         this.alertService.success('Homepage content reset to original values successfully!');
-        await this.loadContent(); // Refresh the display
+        
+        // Refresh all content to show the updated data in the content management page
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
+        
         this.uploading = false;
       } catch (error) {
         this.alertService.error('Failed to reset to original content');
