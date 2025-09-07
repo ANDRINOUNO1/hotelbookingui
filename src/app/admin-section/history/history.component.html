@@ -18,9 +18,9 @@
     <tbody>
       <tr *ngFor="let log of logs">
         <td>{{ log.id }}</td>
-        <td>{{ log.account?.firstName }} {{ log.account?.lastName }}</td>
-        <td>{{ log.account?.email }}</td>
-        <td>{{ log.account?.role }}</td>
+        <td>{{ log.account.firstName }} {{ log.account.lastName }}</td>
+        <td>{{ log.account.email }}</td>
+        <td>{{ log.account.role }}</td>
         <td>{{ log.action }}</td>
         <td>{{ log.timestamp | date:'short' }}</td>
       </tr>

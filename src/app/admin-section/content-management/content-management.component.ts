@@ -28,6 +28,8 @@ export class ContentManagementComponent implements OnInit {
   // Preview URLs for selected files (used in template)
   selectedPreviewUrl: string | null = null;
   selectedLogoPreviewUrl: string | null = null;
+  // Track which service icon index has a pending file selection
+  selectedIconIndex: number | null = null;
   
   // Backup system
   private contentBackup: any = null;
@@ -2066,9 +2068,13 @@ export class ContentManagementComponent implements OnInit {
     this.uploading = true;
     try {
       await this.contentService.uploadImage(section, key, this.selectedFile, altText).toPromise();
-      this.alertService.success('Image uploaded successfully');
-      this.selectedFile = null;
+      // Refresh admin and homepage content so UI reflects change
       await this.loadContent();
+      if (section === 'rooms') {
+        await this.loadRoomImages();
+      }
+      await this.loadHomeContent();
+      this.selectedFile = null;
     } catch (error) {
       this.alertService.error('Failed to upload image');
       console.error('Error uploading image:', error);
@@ -3168,6 +3174,7 @@ export class ContentManagementComponent implements OnInit {
     this.altText = '';
     // Cleanup preview URL if any (future-proof)
     try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+    this.selectedIconIndex = null;
   }
 
   clearGallerySelection(): void {
@@ -3616,6 +3623,23 @@ export class ContentManagementComponent implements OnInit {
     this.homeContent.heroImages.splice(index, 1);
   }
 
+  // Reset only the homepage to original content and persist via backend
+  async resetToOriginalHomepage(): Promise<void> {
+    if (!confirm('Reset homepage content to original defaults? This will overwrite current homepage content.')) return;
+    try {
+      this.loading = true;
+      await this.contentService.resetAll().toPromise();
+      await this.loadHomeContent();
+      await this.loadContent();
+      
+    } catch (error) {
+      this.alertService.error('Failed to reset homepage content');
+      console.error('Reset homepage error:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   onAboutImageSelected(event: any, type: string): void {
     const file = event.target.files[0];
     if (file) {
@@ -3633,7 +3657,9 @@ export class ContentManagementComponent implements OnInit {
       const result = await this.contentService.uploadImage('about', `${this.selectedAboutImageType}-image`, this.selectedAboutImage).toPromise();
       if (result) {
         (this.homeContent.aboutImages as any)[this.selectedAboutImageType] = result.optimizedUrl || result.value || '';
-        this.alertService.success('About image uploaded successfully!');
+        // Refresh admin content and previews
+        await this.loadContent();
+        await this.loadHomeContent();
       } else {
         this.alertService.error('Failed to upload about image - no result returned');
       }
@@ -3712,6 +3738,19 @@ export class ContentManagementComponent implements OnInit {
   async restoreToOriginal(): Promise<void> {
     if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
       try {
+        // Persist reset to backend so originals are saved in DB
+        this.loading = true;
+        await this.contentService.resetAll().toPromise();
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
+        
+        this.loading = false;
+        return;
+
         // Reset header content to original values
         this.headerContent = {
           companyName: 'BC Flats',
@@ -3828,197 +3867,7 @@ export class ContentManagementComponent implements OnInit {
     this.alertService.info('Backup cleared');
   }
 
-  // Reset to Original Homepage Content
-  async resetToOriginalHomepage(): Promise<void> {
-    if (confirm('Are you sure you want to reset to original homepage content? This will overwrite ALL current content and cannot be undone.')) {
-      try {
-        this.uploading = true;
-        this.alertService.info('Resetting to original homepage content...');
-
-        // Reset header content
-        this.headerContent = {
-          companyName: 'BC Flats',
-          logoText: 'BC Flats',
-          title: 'BC Flats',
-          navigation: [
-            { label: 'Home', href: '#home', isExternal: false },
-            { label: 'Rooms', href: '#rooms', isExternal: false },
-            { label: 'About', href: '#about', isExternal: false },
-            { label: 'Services', href: '#services', isExternal: false },
-            { label: 'Contact', href: '#contact', isExternal: false }
-          ],
-          ctaButton: {
-            text: 'Book Now',
-            href: '/reserve',
-            isExternal: false
-          },
-          loginButton: {
-            text: 'Login',
-            href: '/login',
-            isExternal: false
-          },
-          styles: {
-            backgroundColor: '#0b0b31',
-            textColor: '#e5c07b',
-            accentColor: '#b4884d',
-            fontFamily: 'Montserrat, sans-serif'
-          }
-        };
-
-        // Reset footer content
-        this.footerContent = {
-          companyName: 'BC Flats',
-          phone1: '+123-456-7890',
-          phone2: '+696-969-69696',
-          email: 'BCflats.edu.ph',
-          address: 'A.S Fortuna - 400104',
-          social: {
-            facebook: '#',
-            twitter: '#',
-            instagram: '#',
-            linkedin: '#'
-          },
-          copyrightText: '',
-          showDynamicYear: true,
-          styles: {
-            backgroundColor: '#0b0b31',
-            textColor: '#e5c07b',
-            linkColor: '#b4884d',
-            copyrightBackgroundColor: '#f8f9fa'
-          }
-        };
-
-        // Reset service icons to original
-        this.serviceIcons = [
-          {
-            name: 'Food & Drinks',
-            description: 'Icon for food and drinks service',
-            currentUrl: 'assets/images/icon-1.png',
-            key: 'icon-1'
-          },
-          {
-            name: 'Outdoor Dining',
-            description: 'Icon for outdoor dining service',
-            currentUrl: 'assets/images/icon-2.png',
-            key: 'icon-2'
-          },
-          {
-            name: 'Beach View',
-            description: 'Icon for beach view service',
-            currentUrl: 'assets/images/icon-3.png',
-            key: 'icon-3'
-          },
-          {
-            name: 'Decorations',
-            description: 'Icon for decorations service',
-            currentUrl: 'assets/images/icon-4.png',
-            key: 'icon-4'
-          },
-          {
-            name: 'Swimming Pool',
-            description: 'Icon for swimming pool service',
-            currentUrl: 'assets/images/icon-5.png',
-            key: 'icon-5'
-          },
-          {
-            name: 'Resort Beach',
-            description: 'Icon for resort beach service',
-            currentUrl: 'assets/images/icon-6.png',
-            key: 'icon-6'
-          }
-        ];
-
-        // Reset room images to original
-        this.roomImages = [
-          {
-            name: 'Classic Room',
-            mainImage: 'assets/images/Standard_Room1.jpg',
-            seasonalImages: [
-              'assets/images/Pic_1.jpg',
-              'assets/images/Pic_2.jpg',
-              'assets/images/Pic_3.jpg',
-              'assets/images/Pic_4.jpg'
-            ]
-          },
-          {
-            name: 'Deluxe Room',
-            mainImage: 'assets/images/Deluxe_rooms1.jpg',
-            seasonalImages: [
-              'assets/images/Deluxe_tv.jpg',
-              'assets/images/Deluxe_view.jpg',
-              'assets/images/Deluxe_dressing.jpg',
-              'assets/images/Deluxe_Comfort.jpg'
-            ]
-          },
-          {
-            name: 'Prestige Room',
-            mainImage: 'assets/images/prestige_rooms.jpg',
-            seasonalImages: [
-              'assets/images/view_room.jpg',
-              'assets/images/Prestige_Room.png',
-              'assets/images/Prestige_tv.png',
-              'assets/images/Prestige_Comfort.jpg'
-            ]
-          },
-          {
-            name: 'Luxury Suite',
-            mainImage: 'assets/images/Luxury_Rooms1.jpg',
-            seasonalImages: [
-              'assets/images/tv_luxury.jpg',
-              'assets/images/bath_luxury.png',
-              'assets/images/balcony_luxury.png',
-              'assets/images/pool_luxury.png'
-            ]
-          }
-        ];
-
-        // Reset home content
-        this.homeContent = {
-          heroImages: [
-            'assets/images/Pool_home.jpg',
-            'assets/images/Beach_view.jpg',
-            'assets/images/Front_desk.jpg'
-          ],
-          aboutContent: {
-            staffTitle: 'best staff',
-            staffDescription: 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
-            foodsTitle: 'best foods',
-            foodsDescription: 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
-            poolTitle: 'swimming pool',
-            poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
-          },
-          aboutImages: {
-            staff: 'assets/images/Staff.jpg',
-            foods: 'assets/images/Foods.jpg',
-            pool: 'assets/images/Pool.jpg'
-          }
-        };
-
-        // Use the backend reset API to restore all content
-        await this.contentService.resetAll().toPromise();
-
-        // Clear any selected files
-        this.clearFileSelection();
-        this.clearLogoSelection();
-
-        this.alertService.success('Homepage content reset to original values successfully!');
-        
-        // Refresh all content to show the updated data in the content management page
-        await this.loadContent();
-        await this.loadHeaderContent();
-        await this.loadFooterContent();
-        await this.loadHomeContent();
-        await this.loadServiceIcons();
-        await this.loadRoomImages();
-        
-        this.uploading = false;
-      } catch (error) {
-        this.alertService.error('Failed to reset to original content');
-        console.error('Error resetting to original:', error);
-        this.uploading = false;
-      }
-    }
-  }
+  
 
   // Homepage Preview Helper Methods
   trackByIndex(index: number, item: any): number {
@@ -4170,7 +4019,11 @@ export class ContentManagementComponent implements OnInit {
           room.seasonalImages[seasonalIndex!] = newUrl || room.seasonalImages[seasonalIndex!];
         }
         
-        this.alertService.success(`Room image updated successfully!`);
+        // Refresh admin content and previews
+        this.loadContent();
+        this.loadHomeContent();
+        // Reload room images so the admin tiles reflect the change
+        this.loadRoomImages();
         this.clearFileSelection();
         this.uploading = false;
       },
@@ -4189,7 +4042,7 @@ export class ContentManagementComponent implements OnInit {
       this.selectedFile = file;
       this.selectedPreviewUrl = URL.createObjectURL(file);
       // Store the icon index for later use
-      (this as any).selectedIconIndex = iconIndex;
+      this.selectedIconIndex = iconIndex;
     }
   }
 
