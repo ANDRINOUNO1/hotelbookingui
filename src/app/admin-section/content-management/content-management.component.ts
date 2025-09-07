@@ -28,6 +28,8 @@ export class ContentManagementComponent implements OnInit {
   // Preview URLs for selected files (used in template)
   selectedPreviewUrl: string | null = null;
   selectedLogoPreviewUrl: string | null = null;
+  // Track which service icon index has a pending file selection
+  selectedIconIndex: number | null = null;
   
   // Backup system
   private contentBackup: any = null;
@@ -35,6 +37,90 @@ export class ContentManagementComponent implements OnInit {
   
   // Text content
   textContent: { [key: string]: string } = {};
+  
+  // Service Icons
+  serviceIcons = [
+    {
+      name: 'Food & Drinks',
+      description: 'Icon for food and drinks service',
+      currentUrl: 'assets/images/icon-1.png',
+      key: 'icon-1'
+    },
+    {
+      name: 'Outdoor Dining',
+      description: 'Icon for outdoor dining service',
+      currentUrl: 'assets/images/icon-2.png',
+      key: 'icon-2'
+    },
+    {
+      name: 'Beach View',
+      description: 'Icon for beach view service',
+      currentUrl: 'assets/images/icon-3.png',
+      key: 'icon-3'
+    },
+    {
+      name: 'Decorations',
+      description: 'Icon for decorations service',
+      currentUrl: 'assets/images/icon-4.png',
+      key: 'icon-4'
+    },
+    {
+      name: 'Swimming Pool',
+      description: 'Icon for swimming pool service',
+      currentUrl: 'assets/images/icon-5.png',
+      key: 'icon-5'
+    },
+    {
+      name: 'Resort Beach',
+      description: 'Icon for resort beach service',
+      currentUrl: 'assets/images/icon-6.png',
+      key: 'icon-6'
+    }
+  ];
+
+  // Room Images
+  roomImages = [
+    {
+      name: 'Classic Room',
+      mainImage: 'assets/images/Standard_Room1.jpg',
+      seasonalImages: [
+        'assets/images/Pic_1.jpg',
+        'assets/images/Pic_2.jpg',
+        'assets/images/Pic_3.jpg',
+        'assets/images/Pic_4.jpg'
+      ]
+    },
+    {
+      name: 'Deluxe Room',
+      mainImage: 'assets/images/Deluxe_rooms1.jpg',
+      seasonalImages: [
+        'assets/images/Deluxe_tv.jpg',
+        'assets/images/Deluxe_view.jpg',
+        'assets/images/Deluxe_dressing.jpg',
+        'assets/images/Deluxe_Comfort.jpg'
+      ]
+    },
+    {
+      name: 'Prestige Room',
+      mainImage: 'assets/images/prestige_rooms.jpg',
+      seasonalImages: [
+        'assets/images/view_room.jpg',
+        'assets/images/Prestige_Room.png',
+        'assets/images/Prestige_tv.png',
+        'assets/images/Prestige_Comfort.jpg'
+      ]
+    },
+    {
+      name: 'Luxury Suite',
+      mainImage: 'assets/images/Luxury_Rooms1.jpg',
+      seasonalImages: [
+        'assets/images/tv_luxury.jpg',
+        'assets/images/bath_luxury.png',
+        'assets/images/balcony_luxury.png',
+        'assets/images/pool_luxury.png'
+      ]
+    }
+  ];
   
   // Tab management
   private activeTabs: { [key: string]: string } = {};
@@ -129,9 +215,9 @@ export class ContentManagementComponent implements OnInit {
       poolDescription: 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.'
     },
     aboutImages: {
-      staff: 'assets/images/about-img-1.jpg',
-      foods: 'assets/images/about-img-2.jpg',
-      pool: 'assets/images/about-img-3.jpg'
+      staff: 'assets/images/Staff.jpg',
+      foods: 'assets/images/Foods.jpg',
+      pool: 'assets/images/Pool.jpg'
     }
   };
 
@@ -176,12 +262,6 @@ export class ContentManagementComponent implements OnInit {
     ]
   };
 
-  // Create backup of current content
-  createBackup(): void {
-    this.contentBackup = JSON.parse(JSON.stringify(this.content));
-    this.hasBackup = true;
-    console.log('Content backup created');
-  }
 
   // Global reset to original content - this will reset the home page to show original content
   async globalReset(): Promise<void> {
@@ -1934,9 +2014,6 @@ export class ContentManagementComponent implements OnInit {
   }
 
   // Get current content for specific sections
-  getCurrentLogo(): string {
-    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
-  }
 
   getCurrentHeroImages(): string[] {
     const hero = this.getSectionItemsSafe('hero');
@@ -1991,9 +2068,13 @@ export class ContentManagementComponent implements OnInit {
     this.uploading = true;
     try {
       await this.contentService.uploadImage(section, key, this.selectedFile, altText).toPromise();
-      this.alertService.success('Image uploaded successfully');
-      this.selectedFile = null;
+      // Refresh admin and homepage content so UI reflects change
       await this.loadContent();
+      if (section === 'rooms') {
+        await this.loadRoomImages();
+      }
+      await this.loadHomeContent();
+      this.selectedFile = null;
     } catch (error) {
       this.alertService.error('Failed to upload image');
       console.error('Error uploading image:', error);
@@ -3093,6 +3174,7 @@ export class ContentManagementComponent implements OnInit {
     this.altText = '';
     // Cleanup preview URL if any (future-proof)
     try { (window as any).URL?.revokeObjectURL?.((this as any).selectedPreviewUrl); } catch {}
+    this.selectedIconIndex = null;
   }
 
   clearGallerySelection(): void {
@@ -3126,8 +3208,19 @@ export class ContentManagementComponent implements OnInit {
       (this as any).selectedLogoPreviewUrl = URL.createObjectURL(file);
     }
   }
-  refreshContent(): void {
-    this.loadContent();
+  async refreshContent(): Promise<void> {
+    try {
+      await this.loadContent();
+      await this.loadHeaderContent();
+      await this.loadFooterContent();
+      await this.loadHomeContent();
+      await this.loadServiceIcons();
+      await this.loadRoomImages();
+      this.alertService.success('Content refreshed successfully!');
+    } catch (error) {
+      this.alertService.error('Failed to refresh content');
+      console.error('Error refreshing content:', error);
+    }
   }
 
   exportContent(): void {
@@ -3258,20 +3351,8 @@ export class ContentManagementComponent implements OnInit {
   async saveHeaderContent(): Promise<void> {
     this.savingHeader = true;
     try {
-      const headerItems = [
-        { section: 'header', type: 'text', key: 'company_name', value: this.headerContent.companyName },
-        { section: 'header', type: 'text', key: 'logo_text', value: (this.headerContent as any).logoText || this.headerContent.companyName },
-        { section: 'header', type: 'text', key: 'title', value: this.headerContent.title },
-        { section: 'header', type: 'text', key: 'navigation', value: JSON.stringify(this.headerContent.navigation) },
-        { section: 'header', type: 'text', key: 'cta_button', value: JSON.stringify(this.headerContent.ctaButton) },
-        { section: 'header', type: 'text', key: 'login_button', value: JSON.stringify(this.headerContent.loginButton) },
-        { section: 'header', type: 'text', key: 'styles', value: JSON.stringify(this.headerContent.styles) }
-      ];
-
-      // Save each header item
-      for (const item of headerItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveHeaderContent(this.headerContent).toPromise();
 
       this.alertService.success('Header content saved successfully!');
       await this.loadContent();
@@ -3386,22 +3467,8 @@ export class ContentManagementComponent implements OnInit {
   async saveFooterContent(): Promise<void> {
     this.savingFooter = true;
     try {
-      const footerItems = [
-        { section: 'footer', type: 'text', key: 'company_name', value: this.footerContent.companyName },
-        { section: 'footer', type: 'text', key: 'phone1', value: this.footerContent.phone1 },
-        { section: 'footer', type: 'text', key: 'phone2', value: this.footerContent.phone2 },
-        { section: 'footer', type: 'text', key: 'email', value: this.footerContent.email },
-        { section: 'footer', type: 'text', key: 'address', value: this.footerContent.address },
-        { section: 'footer', type: 'text', key: 'social_links', value: JSON.stringify(this.footerContent.social) },
-        { section: 'footer', type: 'text', key: 'copyright_text', value: this.footerContent.copyrightText },
-        { section: 'footer', type: 'text', key: 'show_dynamic_year', value: this.footerContent.showDynamicYear.toString() },
-        { section: 'footer', type: 'text', key: 'styles', value: JSON.stringify(this.footerContent.styles) }
-      ];
-
-      // Save each footer item
-      for (const item of footerItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveFooterContent(this.footerContent).toPromise();
 
       this.alertService.success('Footer content saved successfully!');
       await this.loadContent(); // Refresh the main content
@@ -3493,13 +3560,13 @@ export class ContentManagementComponent implements OnInit {
               this.homeContent.aboutContent.poolDescription = item.value || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.';
               break;
             case 'staff-image':
-              this.homeContent.aboutImages.staff = item.optimizedUrl || item.value || 'assets/images/about-img-1.jpg';
+              this.homeContent.aboutImages.staff = item.optimizedUrl || item.value || 'assets/images/Staff.jpg';
               break;
             case 'foods-image':
-              this.homeContent.aboutImages.foods = item.optimizedUrl || item.value || 'assets/images/about-img-2.jpg';
+              this.homeContent.aboutImages.foods = item.optimizedUrl || item.value || 'assets/images/Foods.jpg';
               break;
             case 'pool-image':
-              this.homeContent.aboutImages.pool = item.optimizedUrl || item.value || 'assets/images/about-img-3.jpg';
+              this.homeContent.aboutImages.pool = item.optimizedUrl || item.value || 'assets/images/Pool.jpg';
               break;
           }
         });
@@ -3512,23 +3579,8 @@ export class ContentManagementComponent implements OnInit {
   async saveHomeContent(): Promise<void> {
     this.savingHome = true;
     try {
-      // Save about content
-      const aboutItems = [
-        { section: 'about', type: 'text', key: 'staff-title', value: this.homeContent.aboutContent.staffTitle },
-        { section: 'about', type: 'text', key: 'staff-description', value: this.homeContent.aboutContent.staffDescription },
-        { section: 'about', type: 'text', key: 'foods-title', value: this.homeContent.aboutContent.foodsTitle },
-        { section: 'about', type: 'text', key: 'foods-description', value: this.homeContent.aboutContent.foodsDescription },
-        { section: 'about', type: 'text', key: 'pool-title', value: this.homeContent.aboutContent.poolTitle },
-        { section: 'about', type: 'text', key: 'pool-description', value: this.homeContent.aboutContent.poolDescription },
-        { section: 'about', type: 'text', key: 'staff-image', value: this.homeContent.aboutImages.staff },
-        { section: 'about', type: 'text', key: 'foods-image', value: this.homeContent.aboutImages.foods },
-        { section: 'about', type: 'text', key: 'pool-image', value: this.homeContent.aboutImages.pool }
-      ];
-
-      // Save each about item
-      for (const item of aboutItems) {
-        await this.contentService.updateText(item.section, item.key, item.value).toPromise();
-      }
+      // Use the new bulk save method
+      await this.contentService.saveHomeContent(this.homeContent).toPromise();
 
       this.alertService.success('Home content saved successfully!');
       await this.loadContent(); // Refresh the main content
@@ -3571,6 +3623,23 @@ export class ContentManagementComponent implements OnInit {
     this.homeContent.heroImages.splice(index, 1);
   }
 
+  // Reset only the homepage to original content and persist via backend
+  async resetToOriginalHomepage(): Promise<void> {
+    if (!confirm('Reset homepage content to original defaults? This will overwrite current homepage content.')) return;
+    try {
+      this.loading = true;
+      await this.contentService.resetAll().toPromise();
+      await this.loadHomeContent();
+      await this.loadContent();
+      
+    } catch (error) {
+      this.alertService.error('Failed to reset homepage content');
+      console.error('Reset homepage error:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   onAboutImageSelected(event: any, type: string): void {
     const file = event.target.files[0];
     if (file) {
@@ -3588,7 +3657,9 @@ export class ContentManagementComponent implements OnInit {
       const result = await this.contentService.uploadImage('about', `${this.selectedAboutImageType}-image`, this.selectedAboutImage).toPromise();
       if (result) {
         (this.homeContent.aboutImages as any)[this.selectedAboutImageType] = result.optimizedUrl || result.value || '';
-        this.alertService.success('About image uploaded successfully!');
+        // Refresh admin content and previews
+        await this.loadContent();
+        await this.loadHomeContent();
       } else {
         this.alertService.error('Failed to upload about image - no result returned');
       }
@@ -3625,4 +3696,424 @@ export class ContentManagementComponent implements OnInit {
     };
     this.alertService.info('Home content reset to default values');
   }
+
+  // Enhanced Backup and Restore Methods
+  createBackup(): void {
+    try {
+      this.contentBackup = JSON.parse(JSON.stringify(this.content));
+      this.hasBackup = true;
+      this.alertService.success('Backup created successfully!');
+    } catch (error) {
+      this.alertService.error('Failed to create backup');
+      console.error('Error creating backup:', error);
+    }
+  }
+
+  async restoreFromBackup(): Promise<void> {
+    if (!this.hasBackup || !this.contentBackup) {
+      this.alertService.error('No backup available to restore');
+      return;
+    }
+
+    if (confirm('Are you sure you want to restore from backup? This will overwrite all current content.')) {
+      try {
+        this.content = JSON.parse(JSON.stringify(this.contentBackup));
+        this.alertService.success('Content restored from backup successfully!');
+        
+        // Refresh all content to show the updated data in the content management page
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
+      } catch (error) {
+        this.alertService.error('Failed to restore from backup');
+        console.error('Error restoring from backup:', error);
+      }
+    }
+  }
+
+
+  async restoreToOriginal(): Promise<void> {
+    if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
+      try {
+        // Persist reset to backend so originals are saved in DB
+        this.loading = true;
+        await this.contentService.resetAll().toPromise();
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
+        
+        this.loading = false;
+        return;
+
+        // Reset header content to original values
+        this.headerContent = {
+          companyName: 'BC Flats',
+          logoText: 'BC Flats',
+          title: 'BC Flats',
+          navigation: [
+            { label: 'Home', href: '#home', isExternal: false },
+            { label: 'Rooms', href: '#rooms', isExternal: false },
+            { label: 'About', href: '#about', isExternal: false },
+            { label: 'Services', href: '#services', isExternal: false },
+            { label: 'Contact', href: '#contact', isExternal: false }
+          ],
+          ctaButton: {
+            text: 'Book Now',
+            href: '/reserve',
+            isExternal: false
+          },
+          loginButton: {
+            text: 'Login',
+            href: '/login',
+            isExternal: false
+          },
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            accentColor: '#b4884d',
+            fontFamily: 'Montserrat, sans-serif'
+          }
+        };
+
+        // Reset footer content to original values
+        this.footerContent = {
+          companyName: 'BC Flats',
+          phone1: '+123-456-7890',
+          phone2: '+696-969-69696',
+          email: 'BCflats.edu.ph',
+          address: 'A.S Fortuna - 400104',
+          social: {
+            facebook: '#',
+            twitter: '#',
+            instagram: '#',
+            linkedin: '#'
+          },
+          copyrightText: '',
+          showDynamicYear: true,
+          styles: {
+            backgroundColor: '#0b0b31',
+            textColor: '#e5c07b',
+            linkColor: '#b4884d',
+            copyrightBackgroundColor: '#f8f9fa'
+          }
+        };
+
+        // Save header and footer content
+        await this.saveHeaderContent();
+        await this.saveFooterContent();
+
+        // Reset text content to original values
+        const originalTextContent = {
+          'about_staff-title': 'best staff',
+          'about_staff-description': 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.',
+          'about_foods-title': 'best foods',
+          'about_foods-description': 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.',
+          'about_pool-title': 'swimming pool',
+          'about_pool-description': 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.',
+          'services_food-drinks-title': 'food & drinks',
+          'services_food-drinks-description': 'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+          'services_outdoor-dining-title': 'outdoor dining',
+          'services_outdoor-dining-description': 'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+          'services_beach-view-title': 'beach view',
+          'services_beach-view-description': 'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+          'services_decorations-title': 'decorations',
+          'services_decorations-description': 'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+          'services_swimming-pool-title': 'swimming pool',
+          'services_swimming-pool-description': 'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+          'services_resort-beach-title': 'resort beach',
+          'services_resort-beach-description': 'Step into paradise on our private beach, where golden sands meet turquoise waters.',
+          'contact_contact-title': 'Contact Us',
+          'contact_contact-subtitle': 'Get in touch with us',
+          'contact_contact-address': '6014 Sacris Rd, Mandaue, Central Visayas, Philippines',
+          'contact_contact-phone': '+123-456-7890',
+          'contact_contact-email': 'BCflats.edu.ph'
+        };
+
+        // Update text content
+        for (const [key, value] of Object.entries(originalTextContent)) {
+          const [section, fieldKey] = key.split('_');
+          try {
+            await this.contentService.updateText(section, fieldKey, value).toPromise();
+          } catch (error) {
+            console.warn(`Failed to update ${section}.${fieldKey}:`, error);
+          }
+        }
+
+        this.alertService.success('Content restored to original values successfully!');
+        
+        // Refresh all content to show the updated data in the content management page
+        await this.loadContent();
+        await this.loadHeaderContent();
+        await this.loadFooterContent();
+        await this.loadHomeContent();
+        await this.loadServiceIcons();
+        await this.loadRoomImages();
+      } catch (error) {
+        this.alertService.error('Failed to restore to original content');
+        console.error('Error restoring to original:', error);
+      }
+    }
+  }
+
+  clearBackup(): void {
+    this.contentBackup = null;
+    this.hasBackup = false;
+    this.alertService.info('Backup cleared');
+  }
+
+  
+
+  // Homepage Preview Helper Methods
+  trackByIndex(index: number, item: any): number {
+    return index;
+  }
+
+  getCurrentLogo(): string {
+    return this.getCurrentContent('header', 'main-logo', 'logo') || 'assets/images/bcflats.png';
+  }
+
+  getHeaderStyles(): string {
+    const styles = this.headerContent.styles;
+    return `
+      background-color: ${styles.backgroundColor};
+      color: ${styles.textColor};
+      font-family: ${styles.fontFamily};
+    `;
+  }
+
+  getFooterStyles(): string {
+    const styles = this.footerContent.styles;
+    return `
+      background-color: ${styles.backgroundColor};
+      color: ${styles.textColor};
+    `;
+  }
+
+  getHeroTitle(index: number): string {
+    const titles = ['Pool View', 'Beach View', 'Front Desk'];
+    return titles[index] || 'Hero Image';
+  }
+
+  getAboutItems(): any[] {
+    return [
+      {
+        title: this.homeContent.aboutContent.staffTitle,
+        description: this.homeContent.aboutContent.staffDescription,
+        image: this.homeContent.aboutImages.staff
+      },
+      {
+        title: this.homeContent.aboutContent.foodsTitle,
+        description: this.homeContent.aboutContent.foodsDescription,
+        image: this.homeContent.aboutImages.foods
+      },
+      {
+        title: this.homeContent.aboutContent.poolTitle,
+        description: this.homeContent.aboutContent.poolDescription,
+        image: this.homeContent.aboutImages.pool
+      }
+    ];
+  }
+
+  getServiceTitle(index: number): string {
+    const titles = [
+      'food & drinks',
+      'outdoor dining',
+      'beach view',
+      'decorations',
+      'swimming pool',
+      'resort beach'
+    ];
+    return titles[index] || 'Service';
+  }
+
+  getServiceDescription(index: number): string {
+    const descriptions = [
+      'Enjoy delicious meals and refreshing drinks crafted by our expert chefs and bartenders.',
+      'Dine under the stars with a gentle breeze and the soothing ambiance of nature.',
+      'Wake up to breathtaking views of the ocean right from your room or private balcony.',
+      'Experience a space thoughtfully decorated to provide elegance, warmth, and comfort.',
+      'Cool off in our luxurious pool, perfect for a relaxing dip or fun with family and friends.',
+      'Step into paradise on our private beach, where golden sands meet turquoise waters.'
+    ];
+    return descriptions[index] || 'Service description';
+  }
+
+  getCopyrightText(): string {
+    const currentYear = new Date().getFullYear();
+    return this.footerContent.copyrightText || 
+           `${this.footerContent.companyName} ${this.footerContent.showDynamicYear ? currentYear : ''}`;
+  }
+
+  // Service Icon Management
+  replaceServiceIcon(iconIndex: number): void {
+    if (!this.selectedFile) {
+      this.alertService.error('Please select a file first');
+      return;
+    }
+
+    const icon = this.serviceIcons[iconIndex];
+    if (!icon) {
+      this.alertService.error('Invalid icon selection');
+      return;
+    }
+
+    this.uploading = true;
+    this.alertService.info('Uploading service icon...');
+
+    this.contentService.uploadImage('services', icon.key, this.selectedFile, icon.name).subscribe({
+      next: (response) => {
+        // Update the icon URL with proper fallback
+        icon.currentUrl = response.optimizedUrl || response.value || icon.currentUrl;
+        this.alertService.success(`Service icon "${icon.name}" updated successfully!`);
+        this.clearFileSelection();
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Error uploading service icon:', error);
+        this.alertService.error('Failed to upload service icon');
+        this.uploading = false;
+      }
+    });
+  }
+
+  // Room Image Management
+  replaceRoomImage(roomIndex: number, imageType: 'main' | 'seasonal', seasonalIndex?: number): void {
+    if (!this.selectedFile) {
+      this.alertService.error('Please select a file first');
+      return;
+    }
+
+    const room = this.roomImages[roomIndex];
+    if (!room) {
+      this.alertService.error('Invalid room selection');
+      return;
+    }
+
+    this.uploading = true;
+    this.alertService.info('Uploading room image...');
+
+    let key: string;
+    let altText: string;
+    
+    if (imageType === 'main') {
+      key = `${room.name.toLowerCase().replace(' ', '-')}-main-image`;
+      altText = `${room.name} main image`;
+    } else {
+      key = `${room.name.toLowerCase().replace(' ', '-')}-seasonal-image-${seasonalIndex! + 1}`;
+      altText = `${room.name} seasonal image ${seasonalIndex! + 1}`;
+    }
+
+    this.contentService.uploadImage('rooms', key, this.selectedFile, altText).subscribe({
+      next: (response) => {
+        const newUrl = response.optimizedUrl || response.value || '';
+        
+        if (imageType === 'main') {
+          room.mainImage = newUrl || room.mainImage;
+        } else {
+          room.seasonalImages[seasonalIndex!] = newUrl || room.seasonalImages[seasonalIndex!];
+        }
+        
+        // Refresh admin content and previews
+        this.loadContent();
+        this.loadHomeContent();
+        // Reload room images so the admin tiles reflect the change
+        this.loadRoomImages();
+        this.clearFileSelection();
+        this.uploading = false;
+      },
+      error: (error) => {
+        console.error('Error uploading room image:', error);
+        this.alertService.error('Failed to upload room image');
+        this.uploading = false;
+      }
+    });
+  }
+
+  // Handle file selection for service icons
+  onServiceIconFileSelected(event: any, iconIndex: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedPreviewUrl = URL.createObjectURL(file);
+      // Store the icon index for later use
+      this.selectedIconIndex = iconIndex;
+    }
+  }
+
+  // Handle file selection for room images
+  onRoomImageFileSelected(event: any, roomIndex: number, imageType: 'main' | 'seasonal', seasonalIndex?: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedPreviewUrl = URL.createObjectURL(file);
+      // Store the room details for later use
+      (this as any).selectedRoomDetails = { roomIndex, imageType, seasonalIndex };
+    }
+  }
+
+  // Load service icons from content service
+  async loadServiceIcons(): Promise<void> {
+    try {
+      const iconsContent = await this.contentService.getSectionContent('services').toPromise();
+      
+      if (iconsContent && Array.isArray(iconsContent)) {
+        iconsContent.forEach((item: any) => {
+          if (item.type === 'image' && item.key.startsWith('icon-')) {
+            const iconIndex = this.serviceIcons.findIndex(icon => icon.key === item.key);
+            if (iconIndex !== -1) {
+              this.serviceIcons[iconIndex].currentUrl = item.optimizedUrl || item.value;
+            }
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading service icons:', error);
+    }
+  }
+
+  // Load room images from content service
+  async loadRoomImages(): Promise<void> {
+    try {
+      const roomsContent = await this.contentService.getSectionContent('rooms').toPromise();
+      
+      if (roomsContent && Array.isArray(roomsContent)) {
+        roomsContent.forEach((item: any) => {
+          if (item.type === 'image') {
+            const key = item.key;
+            
+            // Match main images
+            this.roomImages.forEach(room => {
+              const roomKey = room.name.toLowerCase().replace(' ', '-');
+              if (key.includes(roomKey) && key.includes('main')) {
+                room.mainImage = item.optimizedUrl || item.value;
+              }
+            });
+            
+            // Match seasonal images
+            this.roomImages.forEach(room => {
+              const roomKey = room.name.toLowerCase().replace(' ', '-');
+              if (key.includes(roomKey) && key.includes('seasonal')) {
+                const match = key.match(/seasonal-image-(\d+)/);
+                if (match) {
+                  const index = parseInt(match[1]) - 1;
+                  if (index >= 0 && index < room.seasonalImages.length) {
+                    room.seasonalImages[index] = item.optimizedUrl || item.value;
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading room images:', error);
+    }
+  }
+
 }
