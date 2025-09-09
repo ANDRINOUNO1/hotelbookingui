@@ -13,15 +13,28 @@
         <button type="button" 
                 (click)="createBackup()" 
                 class="backup-btn"
-                [disabled]="!hasBackup"
-                title="Create backup of current content">
+                title="Backup current content">
           <i class="fa fa-save"></i> Backup Content
         </button>
         <button type="button" 
-                (click)="globalReset()" 
-                class="global-reset-btn"
-                title="Reset all content to original state">
-          <i class="fa fa-undo"></i> Reset All
+                (click)="restoreFromBackup()" 
+                class="restore-btn"
+                [disabled]="!hasBackup"
+                title="Restore from backup">
+          <i class="fa fa-undo"></i> Restore Backup
+        </button>
+        <button type="button" 
+                (click)="restoreToOriginal()" 
+                class="restore-original-btn"
+                title="Restore to original content">
+          <i class="fa fa-refresh"></i> Reset to Original
+        </button>
+        <button type="button" 
+                (click)="resetToOriginalHomepage()" 
+                class="reset-homepage-btn"
+                [disabled]="uploading"
+                title="Reset to original homepage content">
+          <i class="fa fa-home"></i> Reset Homepage
         </button>
       </div>
     </div>
@@ -80,7 +93,7 @@
         <div class="current-logo-display" *ngIf="getCurrentLogo()">
           <h3>Current Logo</h3>
           <div class="logo-preview-container">
-        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview">
+        <img [src]="getCurrentLogo()" alt="Current Logo" class="logo-preview" width="200" height="100" loading="lazy">
             <div class="logo-info">
               <span class="logo-status active">Active</span>
               <span class="logo-size">Displayed on all pages</span>
@@ -639,13 +652,40 @@
               </div>
               <div class="form-group">
                 <label>Image:</label>
+                <div class="file-upload-controls">
+                  <div class="file-input-wrapper">
                 <input 
                   type="file" 
+                      id="about-staff-upload"
                   (change)="onAboutImageSelected($event, 'staff')" 
                   accept="image/*" 
                   class="file-input">
+                    <label for="about-staff-upload" class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Image</span>
+                    </label>
+                  </div>
+                  <div class="file-selected-info" *ngIf="selectedAboutImage && selectedAboutImageType === 'staff'">
+                    <div class="file-details">
+                      <i class="fa fa-file-image-o"></i>
+                      <div class="file-info-text">
+                        <span class="file-name">{{ selectedAboutImage.name }}</span>
+                        <span class="file-size">{{ getFileSize(selectedAboutImage) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="current-image" *ngIf="homeContent.aboutImages['staff']">
                   <img [src]="homeContent.aboutImages['staff']" alt="Staff image" class="image-preview">
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()" 
+                          [disabled]="!(selectedAboutImage && selectedAboutImageType === 'staff') || uploading">
+                    <i class="fa fa-save"></i> Save Changes
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                    <i class="fa fa-undo"></i> Reset to Original Homepage
+                  </button>
                 </div>
               </div>
             </div>
@@ -670,13 +710,40 @@
               </div>
               <div class="form-group">
                 <label>Image:</label>
+                <div class="file-upload-controls">
+                  <div class="file-input-wrapper">
                 <input 
                   type="file" 
+                      id="about-foods-upload"
                   (change)="onAboutImageSelected($event, 'foods')" 
                   accept="image/*" 
                   class="file-input">
+                    <label for="about-foods-upload" class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Image</span>
+                    </label>
+                  </div>
+                  <div class="file-selected-info" *ngIf="selectedAboutImage && selectedAboutImageType === 'foods'">
+                    <div class="file-details">
+                      <i class="fa fa-file-image-o"></i>
+                      <div class="file-info-text">
+                        <span class="file-name">{{ selectedAboutImage.name }}</span>
+                        <span class="file-size">{{ getFileSize(selectedAboutImage) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="current-image" *ngIf="homeContent.aboutImages['foods']">
                   <img [src]="homeContent.aboutImages['foods']" alt="Foods image" class="image-preview">
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()"
+                          [disabled]="!(selectedAboutImage && selectedAboutImageType === 'foods') || uploading">
+                    <i class="fa fa-save"></i> Save Changes
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                    <i class="fa fa-undo"></i> Reset to Original Homepage
+                  </button>
                 </div>
               </div>
             </div>
@@ -701,13 +768,40 @@
               </div>
               <div class="form-group">
                 <label>Image:</label>
+                <div class="file-upload-controls">
+                  <div class="file-input-wrapper">
                 <input 
                   type="file" 
+                      id="about-pool-upload"
                   (change)="onAboutImageSelected($event, 'pool')" 
                   accept="image/*" 
                   class="file-input">
+                    <label for="about-pool-upload" class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Image</span>
+                    </label>
+                  </div>
+                  <div class="file-selected-info" *ngIf="selectedAboutImage && selectedAboutImageType === 'pool'">
+                    <div class="file-details">
+                      <i class="fa fa-file-image-o"></i>
+                      <div class="file-info-text">
+                        <span class="file-name">{{ selectedAboutImage.name }}</span>
+                        <span class="file-size">{{ getFileSize(selectedAboutImage) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="current-image" *ngIf="homeContent.aboutImages['pool']">
                   <img [src]="homeContent.aboutImages['pool']" alt="Pool image" class="image-preview">
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()"
+                          [disabled]="!(selectedAboutImage && selectedAboutImageType === 'pool') || uploading">
+                    <i class="fa fa-save"></i> Save Changes
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                    <i class="fa fa-undo"></i> Reset to Original Homepage
+                  </button>
                 </div>
               </div>
             </div>
@@ -735,325 +829,290 @@
       </div>
     </div>
 
-    <!-- Content Sections -->
-    <div class="section-card" *ngFor="let section of sections; trackBy: trackBySection">
+    
+
+    <!-- Service Icons Section -->
+    <div class="section-card service-icons-section-card">
       <div class="section-header">
         <div class="section-icon">
-          <i [class]="getSectionIcon(section.id)"></i>
+          <i class="fa fa-icons"></i>
         </div>
         <div class="section-title">
-        <h2>{{ section.name }}</h2>
-        <p>{{ section.description }}</p>
-        <div class="section-location">
-          <i class="fa fa-map-marker-alt"></i>
-            <span>Appears in: {{ getSectionLocation(section.id) }}</span>
-          </div>
-        </div>
-        <div class="section-status">
-          <span class="status-badge" [class]="getSectionStatusClass(section.id)">
-            {{ getSectionStatus(section.id) }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Section Content Tabs -->
-      <div class="section-tabs">
-        <div class="tab-buttons">
-          <button type="button" 
-                  class="tab-btn active" 
-                  (click)="setActiveTab(section.id, 'text')"
-                  [class.active]="getActiveTab(section.id) === 'text'">
-            <i class="fa fa-font"></i> Text Content
-          </button>
-          <button type="button" 
-                  class="tab-btn" 
-                  (click)="setActiveTab(section.id, 'images')"
-                  [class.active]="getActiveTab(section.id) === 'images'">
-            <i class="fa fa-image"></i> Images
-          </button>
-          <button type="button" 
-                  class="tab-btn" 
-                  (click)="setActiveTab(section.id, 'gallery')"
-                  [class.active]="getActiveTab(section.id) === 'gallery'"
-                  *ngIf="section.id === 'hero' || section.id === 'rooms'">
-            <i class="fa fa-th"></i> Gallery
-          </button>
-        </div>
-
-        <!-- Text Content Tab -->
-        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'text'">
-          <div class="current-vs-edit">
-            <div class="current-block">
-              <h4>Current Content</h4>
-              <div class="content-grid">
-                <div class="content-item" *ngFor="let item of getSectionContentOrSample(section.id)">
-                  <img *ngIf="item.type === 'image' || item.type === 'logo'" [src]="item.optimizedUrl || item.value" class="content-image"/>
-                  <div *ngIf="item.type === 'text'" class="text-preview">
-                    <strong>{{ item.key }}</strong>
-                    <div>{{ item.value }}</div>
-                  </div>
-                  <div class="meta">Key: {{ item.key }} | Type: {{ item.type }}</div>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          <div class="text-content-editor">
-            <div class="editor-header">
-              <h3>Edit Text Content</h3>
-              <div class="editor-actions">
-                <button type="button" 
-                        (click)="resetSectionText(section.id)" 
-                        class="secondary-btn reset-btn"
-                        title="Reset to current values">
-                  <i class="fa fa-undo"></i> Reset
-                </button>
-            <button type="button"
-                        (click)="saveAllText(section.id)" 
-                        class="primary-btn save-btn"
-                    [disabled]="uploading"
-                        title="Save all changes">
-                  <i class="fa fa-save"></i> Save All
-                </button>
-              </div>
-            </div>
-
-            <div class="text-inputs-grid">
-              <div class="text-input-group" *ngFor="let field of getTextFields(section.id)">
-                <label [for]="'text-' + section.id + '-' + field.key">{{ field.label }}</label>
-                <div class="input-wrapper">
-                  <div class="current-value-pill" *ngIf="getCurrentContentWithFallback(section.id, field.key)">
-                    <i class="fa fa-eye"></i>
-                    <span><strong>Current:</strong> {{ getCurrentContentWithFallback(section.id, field.key) }}</span>
-                  </div>
-                  <input *ngIf="field.type === 'input'" 
-                         type="text"
-                         [id]="'text-' + section.id + '-' + field.key"
-                         [(ngModel)]="textContent[section.id + '_' + field.key]"
-                         [placeholder]="field.placeholder"
-                         class="text-input">
-                  <textarea *ngIf="field.type === 'textarea'" 
-                           [id]="'text-' + section.id + '-' + field.key"
-                           [(ngModel)]="textContent[section.id + '_' + field.key]"
-                           [placeholder]="field.placeholder"
-                           rows="3"
-                           class="text-textarea"></textarea>
-                  
-                  
-                </div>
-              </div>
-            </div>
+          <h2>Service Icons</h2>
+          <p>Manage the service icons displayed in the services section</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Services section (home page)</span>
           </div>
         </div>
       </div>
-
-        <!-- Images Tab -->
-        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'images'">
-          <div class="hint">Select a file to replace an existing image or click Upload Image to add one. Keys are shown on each tile.</div>
-          <div class="images-manager">
-            <div class="images-header" (dragover)="onDragOver($event)" (drop)="onDropFile($event, 'image')">
-              <h3>Manage Images</h3>
-              <div class="images-actions">
+      
+      <div class="service-icons-content">
+        <div class="icons-grid">
+          <div class="icon-item" *ngFor="let icon of serviceIcons; let i = index">
+            <div class="icon-preview">
+              <img [src]="icon.currentUrl" [alt]="icon.name" class="icon-image">
+              <div class="icon-overlay">
                 <button type="button" 
-                        (click)="uploadSectionImage(section.id)" 
-                        class="primary-btn upload-btn"
+                        (click)="replaceServiceIcon(i)" 
+                        class="btn btn-primary btn-sm"
                         [disabled]="!selectedFile || uploading">
-                  <i class="fa fa-upload"></i> Upload Image
+                  <i class="fa fa-upload"></i> Replace
                 </button>
               </div>
             </div>
-
-            <!-- Current Images -->
-            <div class="current-images" *ngIf="hasImageContent(section.id)">
-              <h4>Current Images</h4>
-              <div class="images-grid">
-                <div class="image-item" *ngFor="let item of getImageContent(section.id)">
-                  <div class="image-preview">
-            <img [src]="item.optimizedUrl || item.value" 
-                 [alt]="item.altText || item.key"
-                         class="content-image">
-                    <div class="image-overlay">
-                      <button type="button" 
-                              (click)="replaceImage(section.id, item.key)"
-                              class="delete-image-btn"
-                              title="Replace with selected file" [disabled]="!selectedFile || uploading">
-                        <i class="fa fa-refresh"></i>
-                      </button>
-                      <button type="button" 
-                              (click)="deleteContent(item.id!)" 
-                              class="delete-image-btn"
-                              title="Delete image">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="image-details">
-                    <span class="image-key">{{ formatImageKey(item.key) }}</span>
-              <span class="image-alt" *ngIf="item.altText">{{ item.altText }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Image Upload -->
-            <div class="image-upload-area" (dragover)="onDragOver($event)" (drop)="onDropFile($event, 'image')">
-              <h4>Upload New Image</h4>
-              <div class="upload-instructions">
-                <i class="fa fa-info-circle"></i>
-                <span>Select an image file to upload for this section</span>
-              </div>
-              
+            <div class="icon-details">
+              <h4>{{ icon.name }}</h4>
+              <p>{{ icon.description }}</p>
               <div class="file-upload-controls">
-                <div class="file-input-wrapper">
-            <input type="file" 
-                   [id]="'image-upload-' + section.id"
-                   (change)="onFileSelected($event, 'image')" 
-                   accept="image/*" 
-                   class="file-input">
-                  <label [for]="'image-upload-' + section.id" class="file-input-label">
-                    <i class="fa fa-cloud-upload"></i>
-                    <span>Choose Image</span>
-                  </label>
-                </div>
-                
-                <div class="file-selected-info" *ngIf="selectedFile">
-                  <div class="file-details">
-                    <i class="fa fa-file-image-o"></i>
-                    <div class="file-info-text">
-                      <span class="file-name">{{ selectedFile.name }}</span>
-                      <span class="file-size">{{ getFileSize(selectedFile) }}</span>
-            </div>
-          </div>
-                  <img *ngIf="selectedPreviewUrl" [src]="selectedPreviewUrl" class="preview-thumb" alt="Preview"/>
-            <button type="button" 
-                          (click)="clearFileSelection()" 
-                          class="clear-selection-btn"
-                          title="Clear selected file">
-                    <i class="fa fa-times"></i>
-            </button>
-        </div>
-      </div>
-
-              <div class="upload-form" *ngIf="selectedFile">
-                <div class="form-group">
-                  <label for="alt-text">Alt Text (Optional)</label>
-                  <input type="text" 
-                         id="alt-text"
-                         [(ngModel)]="altText" 
-                         placeholder="Describe the image for accessibility" 
-                         class="alt-text-input">
+                <input type="file" 
+                       (change)="onServiceIconFileSelected($event, i)" 
+                       accept="image/*" 
+                       class="file-input">
+                <label class="file-input-label">
+                  <i class="fa fa-cloud-upload"></i>
+                  <span>Choose Icon</span>
+                </label>
+              </div>
+              <div class="upload-actions">
+                <button type="button"
+                        class="primary-btn upload-btn"
+                        (click)="replaceServiceIcon(i)"
+                        [disabled]="!selectedFile || (selectedIconIndex !== i) || uploading">
+                  <i class="fa fa-save"></i> Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-          <!-- Hero specific trio editor with fixed keys -->
-          <div *ngIf="section.id === 'hero'" class="hero-trio-editor">
-            <h4>Hero Slides (Fixed Keys)</h4>
-            <div class="images-grid">
-              <div class="image-item" *ngFor="let idx of [1,2,3]">
+    <!-- Room Images Section -->
+    <div class="section-card room-images-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-bed"></i>
+        </div>
+        <div class="section-title">
+          <h2>Room Images</h2>
+          <p>Manage the room images and seasonal images displayed in the rooms section</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Appears in: Rooms section (home page)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="room-images-content">
+        <div class="rooms-grid">
+          <div class="room-category" *ngFor="let room of roomImages; let i = index">
+            <h3>{{ room.name }}</h3>
+            <div class="room-images-grid">
+              <!-- Main Room Image -->
+              <div class="room-image-item main-image">
                 <div class="image-preview">
-                  <img [src]="getCurrentContent('hero', 'hero-image-' + idx, 'image') || 'assets/images/placeholder.jpg'" class="content-image"/>
+                  <img [src]="room.mainImage" [alt]="room.name + ' main image'" class="room-image">
                   <div class="image-overlay">
                     <button type="button" 
-                            (click)="replaceImage('hero', 'hero-image-' + idx)"
-                            class="delete-image-btn"
-                            [disabled]="!selectedFile || uploading"
-                            title="Replace hero-image-{{idx}} with selected file">
-                      <i class="fa fa-refresh"></i>
+                            (click)="replaceRoomImage(i, 'main')" 
+                            class="btn btn-primary btn-sm"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-upload"></i> Replace
                     </button>
                   </div>
                 </div>
                 <div class="image-details">
-                  <span class="image-key">hero-image-{{idx}}</span>
-                  <div class="file-upload-controls small">
-                    <div class="file-input-wrapper">
-                      <input type="file" (change)="onFileSelected($event, 'image')" accept="image/*" class="file-input">
-                      <label class="file-input-label"><i class="fa fa-cloud-upload"></i><span>Choose Image</span></label>
-              </div>
-            </div>
+                  <h4>Main Image</h4>
+                  <div class="file-upload-controls">
+                    <input type="file" 
+                           (change)="onRoomImageFileSelected($event, i, 'main')" 
+                           accept="image/*" 
+                           class="file-input">
+                    <label class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Main Image</span>
+                    </label>
+                  </div>
+                  <div class="upload-actions">
+                    <button type="button" 
+                            class="primary-btn upload-btn"
+                            (click)="replaceRoomImage(i, 'main')"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                      <i class="fa fa-undo"></i> Reset to Original Homepage
+                    </button>
+                  </div>
                 </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-        <!-- Gallery Tab -->
-        <div class="tab-content" *ngIf="getActiveTab(section.id) === 'gallery' && (section.id === 'hero' || section.id === 'rooms')">
-          <div class="gallery-manager">
-            <div class="gallery-header">
-              <h3>Gallery Management</h3>
-              <div class="gallery-actions">
-                <button type="button" 
-                        (click)="uploadGalleryImages(section.id)" 
-                        class="primary-btn upload-btn"
-                        [disabled]="selectedGalleryFiles.length === 0 || uploading">
-                  <i class="fa fa-upload"></i> Upload Images
-                </button>
-        </div>
-      </div>
-
-            <!-- Gallery Upload -->
-            <div class="gallery-upload-area">
-              <h4>Upload Multiple Images</h4>
-              <div class="upload-instructions">
-                <i class="fa fa-info-circle"></i>
-                <span>Select multiple images to create a gallery for this section</span>
               </div>
               
-              <div class="file-upload-controls">
-                <div class="file-input-wrapper">
-            <input type="file" 
-                   [id]="'gallery-upload-' + section.id"
-                   (change)="onFileSelected($event, 'gallery')" 
-                   accept="image/*" 
-                   multiple 
-                   class="file-input">
-                  <label [for]="'gallery-upload-' + section.id" class="file-input-label">
-                    <i class="fa fa-cloud-upload"></i>
-                    <span>Choose Multiple Images</span>
-                  </label>
-          </div>
-          
-                <div class="files-selected-info" *ngIf="selectedGalleryFiles.length > 0">
-                  <div class="files-summary">
-                    <i class="fa fa-images"></i>
-                    <span>{{ selectedGalleryFiles.length }} image(s) selected</span>
+              <!-- Seasonal Images -->
+              <div class="room-image-item seasonal-image" *ngFor="let seasonalImg of room.seasonalImages; let j = index">
+                <div class="image-preview">
+                  <img [src]="seasonalImg" [alt]="room.name + ' seasonal image ' + (j + 1)" class="room-image">
+                  <div class="image-overlay">
+                    <button type="button" 
+                            (click)="replaceRoomImage(i, 'seasonal', j)" 
+                            class="btn btn-primary btn-sm"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-upload"></i> Replace
+                    </button>
                   </div>
-          <button type="button" 
-                          (click)="clearGallerySelection()" 
-                          class="clear-selection-btn"
-                          title="Clear selected files">
-                    <i class="fa fa-times"></i>
-          </button>
+                </div>
+                <div class="image-details">
+                  <h4>Seasonal Image {{ j + 1 }}</h4>
+                  <div class="file-upload-controls">
+                    <input type="file" 
+                           (change)="onRoomImageFileSelected($event, i, 'seasonal', j)" 
+                           accept="image/*" 
+                           class="file-input">
+                    <label class="file-input-label">
+                      <i class="fa fa-cloud-upload"></i>
+                      <span>Choose Image</span>
+                    </label>
+                  </div>
+                  <div class="upload-actions">
+                    <button type="button" 
+                            class="primary-btn upload-btn"
+                            (click)="replaceRoomImage(i, 'seasonal', j)"
+                            [disabled]="!selectedFile || uploading">
+                      <i class="fa fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                      <i class="fa fa-undo"></i> Reset to Original Homepage
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <!-- Current Gallery -->
-            <div class="current-gallery" *ngIf="hasGalleryContent(section.id)">
-              <h4>Current Gallery</h4>
-              <div class="gallery-grid">
-                <div class="gallery-item" *ngFor="let item of getGalleryContent(section.id)">
-                  <div class="gallery-preview">
-                    <img [src]="item.optimizedUrl || item.value" 
-                         [alt]="item.altText || item.key"
-                         class="gallery-image">
-                    <div class="gallery-overlay">
-                      <button type="button" 
-                              (click)="deleteContent(item.id!)" 
-                              class="delete-gallery-btn"
-                              title="Delete image">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="gallery-details">
-                    <span class="gallery-order">#{{ item.order || 1 }}</span>
-                    <span class="gallery-alt" *ngIf="item.altText">{{ item.altText }}</span>
-                  </div>
+    <!-- Homepage Preview Section -->
+    <div class="section-card homepage-preview-section-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fa fa-eye"></i>
+        </div>
+        <div class="section-title">
+          <h2>Homepage Preview</h2>
+          <p>Preview how your homepage will look with current content</p>
+          <div class="section-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Live preview of homepage content</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="homepage-preview-content">
+        <!-- Header Preview -->
+        <div class="preview-section">
+          <h3>Header Preview</h3>
+          <div class="header-preview" [style]="getHeaderStyles()">
+            <div class="header-bar">
+              <a href="#home" class="logo">
+                <img [src]="getCurrentLogo()" alt="BC Flats Logo" class="w-16 h-16" width="48" height="48" loading="lazy">
+                <span class="logo-text">{{ headerContent.companyName }}</span>
+              </a>
+              <nav>
+                <a *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
+                   [href]="item.href" class="nav-link">
+                  {{ item.label }}
+                </a>
+                <a [href]="headerContent.ctaButton.href" class="btn book-now-btn">
+                  {{ headerContent.ctaButton.text }}
+                </a>
+              </nav>
+              <a [href]="headerContent.loginButton.href" class="btn login-btn">
+                {{ headerContent.loginButton.text }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Images Preview -->
+        <div class="preview-section">
+          <h3>Hero Images Preview</h3>
+          <div class="hero-preview">
+            <div class="hero-slider">
+              <div class="hero-slide" *ngFor="let image of homeContent.heroImages; let i = index">
+                <img [src]="image" [alt]="'Hero image ' + (i + 1)" class="hero-image">
+                <div class="hero-content">
+                  <h3>{{ getHeroTitle(i) }}</h3>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section Preview -->
+        <div class="preview-section">
+          <h3>About Section Preview</h3>
+          <div class="about-preview">
+            <div class="about-item" *ngFor="let item of getAboutItems()">
+              <div class="about-image">
+                <img [src]="item.image" [alt]="item.title">
+              </div>
+              <div class="about-content">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Preview -->
+        <div class="preview-section">
+          <h3>Services Preview</h3>
+          <div class="services-preview">
+            <div class="service-item" *ngFor="let icon of serviceIcons; let i = index">
+              <img [src]="icon.currentUrl" [alt]="icon.name" class="service-icon">
+              <h3>{{ getServiceTitle(i) }}</h3>
+              <p>{{ getServiceDescription(i) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Images Preview -->
+        <div class="preview-section">
+          <h3>Room Images Preview</h3>
+          <div class="rooms-preview">
+            <div class="room-preview" *ngFor="let room of roomImages">
+              <h4>{{ room.name }}</h4>
+              <div class="room-images">
+                <img [src]="room.mainImage" [alt]="room.name + ' main'" class="main-room-image">
+                <div class="seasonal-images">
+                  <img *ngFor="let img of room.seasonalImages; let j = index" 
+                       [src]="img" [alt]="room.name + ' seasonal ' + (j + 1)" 
+                       class="seasonal-image">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Preview -->
+        <div class="preview-section">
+          <h3>Footer Preview</h3>
+          <div class="footer-preview" [style]="getFooterStyles()">
+            <div class="footer-contacts">
+              <a [href]="'tel:' + footerContent.phone1"><i class="fas fa-phone"></i> {{ footerContent.phone1 }}</a>
+              <a [href]="'tel:' + footerContent.phone2"><i class="fas fa-phone"></i> {{ footerContent.phone2 }}</a>
+              <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
+              <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
+            </div>
+            <div class="footer-socials">
+              <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+              <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+              <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+              <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            </div>
+            <div class="footer-bottom">
+              <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
             </div>
           </div>
         </div>
@@ -1073,8 +1132,11 @@
             <li><strong>Text Content:</strong> Update titles, descriptions, and other text elements</li>
             <li><strong>Images:</strong> Upload new images to replace existing ones</li>
             <li><strong>Gallery:</strong> Manage multiple images for hero and rooms sections</li>
+            <li><strong>Service Icons:</strong> Update the icons used in the services section</li>
+            <li><strong>Room Images:</strong> Manage main and seasonal images for each room type</li>
             <li><strong>Logo:</strong> Update your website logo from the top section</li>
             <li><strong>Reset:</strong> Use the reset button to restore original content</li>
+            <li><strong>Preview:</strong> Check the homepage preview to see how changes will look</li>
           </ul>
         </div>
       </div>

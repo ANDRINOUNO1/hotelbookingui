@@ -139,6 +139,27 @@ export class ContentService {
     );
   }
 
+  // Save header content in bulk
+  saveHeaderContent(headerData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/header`, headerData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Save footer content in bulk
+  saveFooterContent(footerData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/footer`, footerData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Save home content in bulk
+  saveHomeContent(homeData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/home`, homeData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Reset all content to defaults (admin only)
   resetAll(): Observable<any> {
     return this.http.post(`${this.apiUrl}/reset-all`, {}).pipe(

@@ -273,6 +273,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
       });
       console.log('About images loaded:', this.aboutImages);
 
+      // Load rooms from CMS
+      await this.loadRoomsFromContent();
+
       // Load services content
       const servicesContent = this.content['services'] || [];
       servicesContent.forEach((item: ContentItem) => {
@@ -294,6 +297,64 @@ export class HomeComponent implements AfterViewInit, OnInit {
     } catch (error) {
       console.error('Error loading content:', error);
       // Fallback to default images if content loading fails
+    }
+  }
+
+  private async loadRoomsFromContent(): Promise<void> {
+    try {
+      const roomItems = await this.contentService.getSectionContent('rooms').toPromise();
+      const map: { [key: string]: string } = {};
+      (roomItems || []).forEach((it: ContentItem) => {
+        map[it.key] = (it as any).optimizedUrl || it.value || '';
+      });
+
+      const get = (key: string, fallback: string) => map[key] || fallback;
+
+      // Classic
+      if (this.rooms[0]) {
+        this.rooms[0].image = get('classic-room-main-image', this.rooms[0].image);
+        this.rooms[0].seasonalImages = [
+          get('classic-room-seasonal-image-1', this.rooms[0].seasonalImages[0]),
+          get('classic-room-seasonal-image-2', this.rooms[0].seasonalImages[1]),
+          get('classic-room-seasonal-image-3', this.rooms[0].seasonalImages[2]),
+          get('classic-room-seasonal-image-4', this.rooms[0].seasonalImages[3])
+        ];
+      }
+
+      // Deluxe
+      if (this.rooms[1]) {
+        this.rooms[1].image = get('deluxe-room-main-image', this.rooms[1].image);
+        this.rooms[1].seasonalImages = [
+          get('deluxe-room-seasonal-image-1', this.rooms[1].seasonalImages[0]),
+          get('deluxe-room-seasonal-image-2', this.rooms[1].seasonalImages[1]),
+          get('deluxe-room-seasonal-image-3', this.rooms[1].seasonalImages[2]),
+          get('deluxe-room-seasonal-image-4', this.rooms[1].seasonalImages[3])
+        ];
+      }
+
+      // Prestige
+      if (this.rooms[2]) {
+        this.rooms[2].image = get('prestige-room-main-image', this.rooms[2].image);
+        this.rooms[2].seasonalImages = [
+          get('prestige-room-seasonal-image-1', this.rooms[2].seasonalImages[0]),
+          get('prestige-room-seasonal-image-2', this.rooms[2].seasonalImages[1]),
+          get('prestige-room-seasonal-image-3', this.rooms[2].seasonalImages[2]),
+          get('prestige-room-seasonal-image-4', this.rooms[2].seasonalImages[3])
+        ];
+      }
+
+      // Luxury Suite
+      if (this.rooms[3]) {
+        this.rooms[3].image = get('luxury-suite-main-image', this.rooms[3].image);
+        this.rooms[3].seasonalImages = [
+          get('luxury-suite-seasonal-image-1', this.rooms[3].seasonalImages[0]),
+          get('luxury-suite-seasonal-image-2', this.rooms[3].seasonalImages[1]),
+          get('luxury-suite-seasonal-image-3', this.rooms[3].seasonalImages[2]),
+          get('luxury-suite-seasonal-image-4', this.rooms[3].seasonalImages[3])
+        ];
+      }
+    } catch (e) {
+      console.error('Failed to load rooms from CMS:', e);
     }
   }
 
@@ -750,4 +811,5 @@ export class HomeComponent implements AfterViewInit, OnInit {
       console.error('Error loading about content:', error);
     }
   }
+
 }
