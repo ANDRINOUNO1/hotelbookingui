@@ -28,8 +28,8 @@
     color: #333;
     transition: background 0.2s;
     &.active {
-      background-color: #23233a;
-      border-bottom: 2px solid #b4884d;
+      background-color: #55adff;
+      border-bottom: 2px solid #ececec;
       color: #fff;
     }
     &:hover {
@@ -191,6 +191,9 @@
     font-size: 1.1rem;
     color: #ffffff;
   }
+}
+.dashboard-headertwo h2 {
+  color: #ffffff; /* pure white */
 }
 .dashboard-headertwo{
   margin-bottom: 2rem;
