@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /
+
+# Do not rewrite existing files, directories, or symlinks
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -l
+RewriteRule ^ - [L]
+
+# Send all other requests to index.html (Angular SPA fallback)
+RewriteRule ^ index.html [L]
+
+
