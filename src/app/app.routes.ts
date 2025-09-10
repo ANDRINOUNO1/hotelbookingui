@@ -38,7 +38,6 @@ import { ArchivesComponent } from './superadmin-sect/archives/archives.component
 import { AddAccountComponentt } from './superadmin-sect/addaccount/add-account.component';
 import { PricingComponents } from './superadmin-sect/pricing/pricing.component';
 
-import path from 'path';
 
 //extras
 import { BillingComponent } from './frontdesk/lists/billing.component';
