@@ -109,6 +109,10 @@
     </nav>
     
     <div class="sidebar-bottom">
+      <button class="toggle-mode-btn" (click)="toggleDarkMode()">
+        <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
+        {{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
+      </button>
       <button class="logout-btn" (click)="logout()">
         <i class="fa fa-sign-out-alt"></i> Logout
       </button>
