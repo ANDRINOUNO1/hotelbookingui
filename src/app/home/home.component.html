@@ -293,13 +293,25 @@
     <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
     <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
   </div>
+          <div class="footer-socials">
+            <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+            <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+            <a [href]="footerContent.social.instagram" target="_blank">
+                <i class="bi bi-instagram"></i> Instagram
+                </a>
 
-  <div class="footer-socials">
-    <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
-    <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-    <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-    <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-  </div>
+            <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+          </div>
+
+          <div class="footer-bottom">
+            <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
+          </div>
+
+        </footer>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
   <div class="footer-bottom">
     <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>

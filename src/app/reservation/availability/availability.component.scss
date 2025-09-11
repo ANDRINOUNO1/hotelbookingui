@@ -349,7 +349,7 @@
         &:hover {
           transform: scale(1.08);
           box-shadow: 0 8px 24px rgba(23, 23, 37, 0.3);
-          border-color: rgba(180, 136, 77, 0.5);
+          border-color: #007bff7a;
         }
       }
     }
@@ -523,7 +523,7 @@
     }
 
     .price-circle {
-      background:  rgba(43, 101, 236, 1);
+      background:  #55adff;
       color: #312216;
       border-radius: 30%;
       width: 5.5rem;
@@ -535,7 +535,7 @@
       margin: 0 0 0.5rem 0;
       font-size: 1.1rem;
       transition: all 0.3s ease;
-      box-shadow: 0 8px 24px rgba(180, 136, 77, 0.4);
+      box-shadow: 0 8px 24px #55adff90;
       position: relative;
       overflow: hidden;
 
@@ -568,13 +568,13 @@
       padding: 0.5rem 1rem;
       background: rgba(180, 136, 77, 0.1);
       border-radius: 12px;
-      border: 1px solid rgba(180, 136, 77, 0.3);
+      border: 1px solid #55adff;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
 
       &:hover {
         background: rgba(180, 136, 77, 0.15);
-        border-color: rgba(180, 136, 77, 0.5);
+        border-color: #55adff95;
         transform: translateY(-2px);
       }
 
@@ -628,7 +628,7 @@
         transition: left 0.5s ease;
       }
 
-      color: #e6f5f0; 
+      color: #007aff; 
       border: 2px solid rgba(60, 179, 113, 0.7); 
       background: rgba(60, 179, 113, 0.25); 
 

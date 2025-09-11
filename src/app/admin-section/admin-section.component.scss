@@ -128,8 +128,8 @@
 /* Sidebar */
 .sidebar {
   width: 220px;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
+  background: #0b0b31;
+  color: #fff !important;
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
@@ -148,15 +148,36 @@
 
 .toggle-mode-btn,
 .logout-btn {
-  background: none;
+  position: relative;
+  padding: 14px 28px;
   border: none;
-  color: var(--sidebar-text);
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  color: #fff;
+  background: #c1331e;
+  text-align: center;
+
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: color 0.2s;
+  box-shadow: 0 6px #c1331e;
+}
+
+.toggle-mode-btn:hover,
+.logout-btn:hover {
+  background: #c1331e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px #a52b1a;
+}
+
+.toggle-mode-btn:active,
+.logout-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px #a52b1a;
 }
 
 .toggle-mode-btn .fa,
@@ -179,7 +200,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--sidebar-text);
+  color: #ffff;
   padding: 1rem 2rem;
   border-radius: 5px;
   text-decoration: none;
