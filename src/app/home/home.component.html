@@ -1,294 +1,254 @@
 <router-outlet></router-outlet>
 
+<!-- Header Section -->
+<section class="header" [style]="getHeaderStyles()">
+  <div class="header-bar">
+    <a href="#home" class="logo">
+      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
+      <span class="logo-text" *ngIf="headerContent.companyName">{{ headerContent.companyName }}</span>
+    </a>
+    <nav>
+      <a 
+        *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
+        [href]="item.href"
+        [routerLink]="!item.isExternal ? item.href : null"
+        [target]="item.isExternal ? '_blank' : undefined"
+        class="nav-link">
+        {{ item.label }}
+      </a>
+      <a 
+        [href]="headerContent.ctaButton.href"
+        [routerLink]="!headerContent.ctaButton.isExternal ? headerContent.ctaButton.href : null"
+        [target]="headerContent.ctaButton.isExternal ? '_blank' : undefined"
+        class="btn book-now-btn">
+        {{ headerContent.ctaButton.text }}
+      </a>
+    </nav>
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <a 
+      [href]="headerContent.loginButton.href"
+      [routerLink]="!headerContent.loginButton.isExternal ? headerContent.loginButton.href : null"
+      [target]="headerContent.loginButton.isExternal ? '_blank' : undefined"
+      class="btn login-btn">
+      {{ headerContent.loginButton.text }}
+    </a>
+  </div>
+</section>
 
-<!-- Home Component Table Structure -->
-<table class="home-component-table">
-  <tbody>
-    <!-- Header Section Row -->
-    <tr id="header-section">
-      <td colspan="2">
-        <section class="header" [style]="getHeaderStyles()">
-          <div class="header-bar">
-            <a href="#home" class="logo">
-              <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
-              <span class="logo-text" *ngIf="headerContent.companyName">{{ headerContent.companyName }}</span>
-            </a>
-            <nav>
-              <a 
-                *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
-                [href]="item.href"
-                [routerLink]="!item.isExternal ? item.href : null"
-                [target]="item.isExternal ? '_blank' : undefined"
-                class="nav-link">
-                {{ item.label }}
-              </a>
-              <a 
-                [href]="headerContent.ctaButton.href"
-                [routerLink]="!headerContent.ctaButton.isExternal ? headerContent.ctaButton.href : null"
-                [target]="headerContent.ctaButton.isExternal ? '_blank' : undefined"
-                class="btn book-now-btn">
-                {{ headerContent.ctaButton.text }}
-              </a>
-            </nav>
-            <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-            <a 
-              [href]="headerContent.loginButton.href"
-              [routerLink]="!headerContent.loginButton.isExternal ? headerContent.loginButton.href : null"
-              [target]="headerContent.loginButton.isExternal ? '_blank' : undefined"
-              class="btn login-btn">
-              {{ headerContent.loginButton.text }}
-            </a>
-          </div>
-        </section>
-      </td>
-    </tr>
-
-    <!-- Hero Section Row -->
-    <tr id="hero-section">
-      <td colspan="2">
-        <section class="back">
-          <section class="home" id="home">
-            <div class="swiper home-slider">
-              <div class="swiper-wrapper">
-                <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
-                  <img [src]="image" [alt]="'Hero image ' + (i + 1)">
-                  <div class="flex">
-                    <h3>{{ getHeroTitle(i) }}</h3>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-            </div>
-          </section>
-        </section>
-      </td>
-    </tr>
-
-    <!-- Availability Section Row -->
-    <tr id="availability-section">
-      <td colspan="2">
-        <section class="availability" id="availability">
-          <!-- Availability content will be added here -->
-        </section>
-      </td>
-    </tr>
-
-    <!-- About Section Row -->
-    <tr id="about-section">
-      <td colspan="2">
-        <section class="about" id="about">
-
-   <div class="row">
-      <div class="image">
-         <img [src]="aboutImages['staff']" alt="Best Staff">
-      </div>
-      <div class="content">
-         <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
-         <p>{{ getContentText('about', 'staff-description') || 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.' }}</p>
-         <a routerLink="/reserve" class="btn">make a reservation</a>
-      </div>
-   </div>
-
-   <div class="row revers">
-      <div class="image">
-         <img [src]="aboutImages['foods']" alt="Best Foods">
-      </div>
-      <div class="content">
-         <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
-         <p>{{ getContentText('about', 'foods-description') || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.' }}</p>
-         <a href="#footer" class="btn">contact us</a>
-      </div>
-   </div>
-
-   <div class="row">
-      <div class="image">
-         <img [src]="aboutImages['pool']" alt="Swimming Pool">
-      </div>
-      <div class="content">
-         <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
-         <p>{{ getContentText('about', 'pool-description') || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.' }}</p>
-         <a href="#availability" class="btn">check availability</a>
-      </div>
-   </div>
-        </section>
-      </td>
-    </tr>
-
-    <!-- Services Section Row -->
-    <tr id="services-section">
-      <td colspan="2">
-        <div style="height: 50px;"></div>
-        <section class="services">
-
-   <div class="box-container">
-
-      <div class="box">
-         <img src="assets/images/icon-1.png" alt="">
-         <h3>{{ getServiceContent('food-drinks-title') }}</h3>
-         <p>{{ getServiceContent('food-drinks-description') }}</p>
-      </div>
-
-      <div class="box">
-         <img src="assets/images/icon-2.png" alt="">
-         <h3>{{ getServiceContent('outdoor-dining-title') }}</h3>
-         <p>{{ getServiceContent('outdoor-dining-description') }}</p>
-      </div>
-
-      <div class="box">
-         <img src="assets/images/icon-3.png" alt="">
-         <h3>{{ getServiceContent('beach-view-title') }}</h3>
-         <p>{{ getServiceContent('beach-view-description') }}</p>
-      </div>
-
-      <div class="box">
-         <img src="assets/images/icon-4.png" alt="">
-         <h3>{{ getServiceContent('decorations-title') }}</h3>
-         <p>{{ getServiceContent('decorations-description') }}</p>
-      </div>
-
-      <div class="box">
-         <img src="assets/images/icon-5.png" alt="">
-         <h3>{{ getServiceContent('swimming-pool-title') }}</h3>
-         <p>{{ getServiceContent('swimming-pool-description') }}</p>
-      </div>
-
-      <div class="box">
-         <img src="assets/images/icon-6.png" alt="">
-         <h3>{{ getServiceContent('resort-beach-title') }}</h3>
-         <p>{{ getServiceContent('resort-beach-description') }}</p>
-      </div>
-
-   </div>
-        </section>
-        <div style="height: 50px;"></div>
-      </td>
-    </tr>
-
-    <!-- Rooms Section Row -->
-    <tr id="rooms-section">
-      <td colspan="2">
-        <!-- Background gradient -->
-        <section class="rooms">
-<section id="rooms" class="py-12 bg-gradient-to-r from-[#2b65ec] to-white min-h-[600px] min-w-full">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-8 text-black drop-shadow-md">Our Rooms</h2>
-    <div class="relative h-[500px] flex items-center justify-center">
-      <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-        <div *ngFor="let room of rooms; let i = index"
-          class="absolute top-0 w-1/2 mx-auto transition-all duration-500"
-          [ngClass]="getCardClass(i)">
-          
-          <!-- Dirty white card with subtle shadow -->
-          <div class="bg-[#f5f5f5] border-2 border-[#ffa600] rounded-xl shadow-lg overflow-hidden flex flex-col h-[600px]">
-            
-            <!-- Main Image -->
-            <div class="relative w-full flex-shrink-0" style="height: 50%;">
-              <div
-                class="relative w-full h-full bg-cover bg-center rounded-t-xl"
-                [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
-                <div class="absolute inset-0 bg-black/30 rounded-t-xl"></div>
-              </div>
-            </div>
-
-            <!-- Seasonal Images -->
-            <div class="flex justify-center items-center gap-6 w-full flex-shrink-0" style="height: 20%;">
-              <div
-                *ngFor="let img of room.seasonalImages"
-                class="aspect-square h-full rounded-xl overflow-hidden border-2 border-white bg-cover bg-center cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:shadow-2xl"
-                [ngStyle]="{'background-image': 'url(' + img + ')'}"
-              ></div>
-            </div>
-
-            <!-- Card Info -->
-            <div class="flex flex-col flex-grow justify-center items-center text-center p-6" style="height: 30%;">
-              <h3 class="text-xl font-bold mb-1 text-gray-900">{{ room.name }}</h3>
-              <p class="text-gray-700 text-sm font-medium mb-2">{{ room.brand }}</p>
-              <p class="text-gray-800 text-sm">{{ room.description }}</p>
-            </div>
+<!-- Hero Section -->
+<section class="back">
+  <section class="home" id="home">
+    <div class="swiper home-slider">
+      <div class="swiper-wrapper">
+        <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
+          <img [src]="image" [alt]="'Hero image ' + (i + 1)">
+          <div class="flex">
+            <h3>{{ getHeroTitle(i) }}</h3>
           </div>
         </div>
       </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  </section>
+</section>
 
-      <!-- Navigation Buttons -->
-      <button
-        class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
-        (click)="prevRoom()"
-        aria-label="Previous"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </button>
+<!-- Availability Section -->
+<section class="availability" id="availability">
+  <!-- Availability content will be added here -->
+</section>
 
-      <button
-        class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
-        (click)="nextRoom()"
-        aria-label="Next"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </button>
-  
-      <!-- Dots -->
-      <div class="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-3 z-30">
-        <button
-          *ngFor="let room of rooms; let idx = index"
-          class="w-2 h-2 rounded-full transition-all duration-300"
-          [ngClass]="activeRoom === idx ? 'bg-orange-400 w-5' : 'bg-gray-400 hover:bg-gray-500'"
-          (click)="activeRoom = idx"
-          [attr.aria-label]="'Go to item ' + (idx + 1)"
-        ></button>
-      </div>
+<!-- About Section -->
+<section class="about" id="about">
+  <div class="row">
+    <div class="image">
+      <img [src]="aboutImages['staff']" alt="Best Staff">
+    </div>
+    <div class="content">
+      <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
+      <p>{{ getContentText('about', 'staff-description') || 'Our professional and friendly staff are always ready to serve you with a smile—making every moment feel like home.' }}</p>
+      <a routerLink="/reserve" class="btn">make a reservation</a>
+    </div>
+  </div>
+
+  <div class="row revers">
+    <div class="image">
+      <img [src]="aboutImages['foods']" alt="Best Foods">
+    </div>
+    <div class="content">
+      <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
+      <p>{{ getContentText('about', 'foods-description') || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.' }}</p>
+      <a href="#footer" class="btn">contact us</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="image">
+      <img [src]="aboutImages['pool']" alt="Swimming Pool">
+    </div>
+    <div class="content">
+      <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
+      <p>{{ getContentText('about', 'pool-description') || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.' }}</p>
+      <a href="#availability" class="btn">check availability</a>
     </div>
   </div>
 </section>
-        </section>
-        <div style="height: 100px;"></div>
-      </td>
-    </tr>
 
-    <!-- Contact Section Row -->
-    <tr id="contact-section">
-      <td colspan="2">
-        <section class="contact" id="contact">
+<!-- Services Section -->
+<div style="height: 50px;"></div>
+<section class="services">
+  <div class="box-container">
+    <div class="box">
+      <img src="assets/images/icon-1.png" alt="">
+      <h3>{{ getServiceContent('food-drinks-title') }}</h3>
+      <p>{{ getServiceContent('food-drinks-description') }}</p>
+    </div>
+
+    <div class="box">
+      <img src="assets/images/icon-2.png" alt="">
+      <h3>{{ getServiceContent('outdoor-dining-title') }}</h3>
+      <p>{{ getServiceContent('outdoor-dining-description') }}</p>
+    </div>
+
+    <div class="box">
+      <img src="assets/images/icon-3.png" alt="">
+      <h3>{{ getServiceContent('beach-view-title') }}</h3>
+      <p>{{ getServiceContent('beach-view-description') }}</p>
+    </div>
+
+    <div class="box">
+      <img src="assets/images/icon-4.png" alt="">
+      <h3>{{ getServiceContent('decorations-title') }}</h3>
+      <p>{{ getServiceContent('decorations-description') }}</p>
+    </div>
+
+    <div class="box">
+      <img src="assets/images/icon-5.png" alt="">
+      <h3>{{ getServiceContent('swimming-pool-title') }}</h3>
+      <p>{{ getServiceContent('swimming-pool-description') }}</p>
+    </div>
+
+    <div class="box">
+      <img src="assets/images/icon-6.png" alt="">
+      <h3>{{ getServiceContent('resort-beach-title') }}</h3>
+      <p>{{ getServiceContent('resort-beach-description') }}</p>
+    </div>
+  </div>
+</section>
+<div style="height: 50px;"></div>
+
+<!-- Rooms Section -->
+<section class="rooms">
+  <section id="rooms" class="py-12 bg-gradient-to-r from-[#2b65ec] to-white min-h-[600px] min-w-full">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-black drop-shadow-md">Our Rooms</h2>
+      <div class="relative h-[500px] flex items-center justify-center">
+        <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+          <div *ngFor="let room of rooms; let i = index"
+            class="absolute top-0 w-1/2 mx-auto transition-all duration-500"
+            [ngClass]="getCardClass(i)">
+            
+            <!-- Card -->
+            <div class="bg-[#f5f5f5] border-2 border-[#ffa600] rounded-xl shadow-lg overflow-hidden flex flex-col h-[600px]">
+              <div class="relative w-full flex-shrink-0" style="height: 50%;">
+                <div class="relative w-full h-full bg-cover bg-center rounded-t-xl"
+                  [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
+                  <div class="absolute inset-0 bg-black/30 rounded-t-xl"></div>
+                </div>
+              </div>
+
+              <div class="flex justify-center items-center gap-6 w-full flex-shrink-0" style="height: 20%;">
+                <div *ngFor="let img of room.seasonalImages"
+                  class="aspect-square h-full rounded-xl overflow-hidden border-2 border-white bg-cover bg-center cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:shadow-2xl"
+                  [ngStyle]="{'background-image': 'url(' + img + ')'}">
+                </div>
+              </div>
+
+              <div class="flex flex-col flex-grow justify-center items-center text-center p-6" style="height: 30%;">
+                <h3 class="text-xl font-bold mb-1 text-gray-900">{{ room.name }}</h3>
+                <p class="text-gray-700 text-sm font-medium mb-2">{{ room.brand }}</p>
+                <p class="text-gray-800 text-sm">{{ room.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nav Buttons -->
+        <button class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110" (click)="prevRoom()" aria-label="Previous">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+
+        <button class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110" (click)="nextRoom()" aria-label="Next">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <!-- Dots -->
+        <div class="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-3 z-30">
+          <button *ngFor="let room of rooms; let idx = index"
+            class="w-2 h-2 rounded-full transition-all duration-300"
+            [ngClass]="activeRoom === idx ? 'bg-orange-400 w-5' : 'bg-gray-400 hover:bg-gray-500'"
+            (click)="activeRoom = idx"
+            [attr.aria-label]="'Go to item ' + (idx + 1)">
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+<div style="height: 100px;"></div>
+
+<section class="contact" id="contact">
 
    <div class="row">
 
-      <form action="" method="post">
+      <form (ngSubmit)="submitContactForm()" #contactForm="ngForm">
          <h3>send us message</h3>
-         <input type="text" name="name" required maxlength="50" placeholder="enter your name" class="box">
-         <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
-         <input type="number" name="number" required maxlength="10" min="0" max="9999999999" placeholder="enter your number" class="box">
-         <textarea name="msg" class="box" required maxlength="1000" placeholder="enter your message" cols="30" rows="10"></textarea>
-         <input type="submit" value="send message" name="send" class="btn">
+         <input type="text" name="name" [(ngModel)]="contactFormData.name" required maxlength="50" placeholder="enter your name" class="box" [class.error]="contactFormData.nameError">
+         <div class="error-message" *ngIf="contactFormData.nameError">{{ contactFormData.nameError }}</div>
+         
+         <input type="email" name="email" [(ngModel)]="contactFormData.email" required maxlength="50" placeholder="enter your email" class="box" [class.error]="contactFormData.emailError">
+         <div class="error-message" *ngIf="contactFormData.emailError">{{ contactFormData.emailError }}</div>
+         
+         <input type="tel" name="phone" [(ngModel)]="contactFormData.phone" required maxlength="11" placeholder="enter your number (09XXXXXXXXX)" class="box" [class.error]="contactFormData.phoneError" (input)="validatePhone($event)">
+         <div class="error-message" *ngIf="contactFormData.phoneError">{{ contactFormData.phoneError }}</div>
+         
+         <select name="subject" [(ngModel)]="contactFormData.subject" required class="box">
+            <option value="">Select your inquiry type</option>
+            <option value="booking">Booking Inquiry</option>
+            <option value="cancellation">Cancellation Request</option>
+            <option value="feedback">Feedback & Suggestions</option>
+            <option value="complaint">Complaint</option>
+            <option value="partnership">Partnership</option>
+            <option value="other">Other</option>
+         </select>
+         
+         <textarea name="message" [(ngModel)]="contactFormData.message" required maxlength="1000" placeholder="enter your message" cols="30" rows="8" class="box" [class.error]="contactFormData.messageError"></textarea>
+         <div class="error-message" *ngIf="contactFormData.messageError">{{ contactFormData.messageError }}</div>
+         
+         <div class="form-footer">
+            <span class="char-count">{{ contactFormData.message.length || 0 }}/1000</span>
+            <button type="submit" [disabled]="isSubmitting" class="btn">
+               <span *ngIf="!isSubmitting">send message</span>
+               <span *ngIf="isSubmitting">sending...</span>
+            </button>
+         </div>
       </form>
-
    </div>
-        </section>
-      </td>
-    </tr>
-
-    <!-- Reviews Section Row -->
-    <tr id="reviews-section">
-      <td colspan="2">
-        <section class="reviews" id="reviews">
-
+</section>
+<!-- Reviews Section -->
+<section class="reviews" id="reviews">
   <div class="map-section">
     <div class="map-container">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!4v1750218388140!6m8!1m7!1sR676WU5vNdBtcGw68pb1tQ!2m2!1d10.33836319781541!2d123.9307615225092!3f333.56999909587535!4f15.699236120588282!5f0.4000000000000002"
-        width="100%"
-        height="100%"
-        style="border:0; border-radius: 10px;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1750218388140!6m8!1m7!1sR676WU5vNdBtcGw68pb1tQ!2m2!1d10.33836319781541!2d123.9307615225092!3f333.56999909587535!4f15.699236120588282!5f0.4000000000000002"
+        width="100%" height="100%" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
     
@@ -316,45 +276,32 @@
       </div>
       
       <div class="map-actions">
-        <a href="https://maps.google.com/?q=6014+Sacris+Rd,+Mandaue,+Central+Visayas" 
-           target="_blank" 
-           class="directions-btn">
+        <a href="https://maps.google.com/?q=6014+Sacris+Rd,+Mandaue,+Central+Visayas" target="_blank" class="directions-btn">
           <i class="fas fa-directions"></i>
           Get Directions
         </a>
       </div>
     </div>
   </div>
-        </section>
-      </td>
-    </tr>
+</section>
 
-    <!-- Footer Section Row -->
-    <tr id="footer-section">
-      <td colspan="2">
-        <footer class="footer">
+<!-- Footer Section -->
+<footer class="footer">
+  <div class="footer-contacts">
+    <a [href]="'tel:' + footerContent.phone1"><i class="fas fa-phone"></i> {{ footerContent.phone1 }}</a>
+    <a [href]="'tel:' + footerContent.phone2"><i class="fas fa-phone"></i> {{ footerContent.phone2 }}</a>
+    <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
+    <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
+  </div>
 
-          <div class="footer-contacts">
-            <a [href]="'tel:' + footerContent.phone1"><i class="fas fa-phone"></i> {{ footerContent.phone1 }}</a>
-            <a [href]="'tel:' + footerContent.phone2"><i class="fas fa-phone"></i> {{ footerContent.phone2 }}</a>
-            <a [href]="'mailto:' + footerContent.email"><i class="fas fa-envelope"></i> {{ footerContent.email }}</a>
-            <a href="#"><i class="fas fa-map-marker-alt"></i> {{ footerContent.address }}</a>
-          </div>
+  <div class="footer-socials">
+    <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+    <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+    <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+    <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+  </div>
 
-          <div class="footer-socials">
-            <a [href]="footerContent.social.facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
-            <a [href]="footerContent.social.twitter" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-            <a [href]="footerContent.social.instagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-            <a [href]="footerContent.social.linkedin" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-          </div>
-
-          <div class="footer-bottom">
-            <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
-          </div>
-
-        </footer>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
+  <div class="footer-bottom">
+    <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
+  </div>
+</footer>

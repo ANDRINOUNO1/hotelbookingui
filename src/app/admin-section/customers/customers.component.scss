@@ -2,9 +2,8 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: var(--card-bg);
+  background: var(--main-bg);
   border-radius: 12px;
-  border: 1px solid var(--card-border);
   color: var(--text-color);
 }
 
@@ -18,8 +17,11 @@
 
 .room-view-header {
   padding: 20px;
-  background: var(--gradient-touch);
+  background: var(--table-border);
   border-bottom: 1px solid var(--card-border);
+  h1{
+    font-size: 25px;
+  }
 }
 
 .room-view-header select {
@@ -47,7 +49,7 @@
 }
 
 .tables th {
-  background: var(--gradient-touch);
+  background: var(--table-header);
   color: white;
   padding: 18px 15px;
   text-align: left;
@@ -77,8 +79,8 @@
 }
 
 .tables button {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  color: white;
+  background: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 6px;
   padding: 8px 12px;
@@ -91,9 +93,8 @@
 }
 
 .tables button:hover {
-  background: linear-gradient(135deg, #2980b9, #1f5f8b);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 4px 12px var(--button-bg);
 }
 
 // Popup Styles
@@ -112,7 +113,7 @@
 }
 
 .popup {
-  background: rgba(11, 11, 49, 0.95);
+  background: var(--card-bg);
   border: 1px solid rgba(180, 136, 77, 0.3);
   border-radius: 12px;
   padding: 30px;
@@ -125,7 +126,7 @@
 }
 
 .popup h3 {
-  color: #b4884d;
+  color: var(--text-color);
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 15px;
@@ -136,14 +137,14 @@
 }
 
 .popup p {
-  color: #f5f5f7;
+  color: var(--text-color);
   font-size: 1rem;
   margin-bottom: 10px;
   line-height: 1.5;
 }
 
 .popup h4 {
-  color: #b4884d;
+  color: var(--text-color);
   font-size: 1.3rem;
   font-weight: 600;
   margin: 20px 0 15px 0;
@@ -152,32 +153,23 @@
 }
 
 .room-card {
-  background: rgba(180, 136, 77, 0.1);
-  border: 1px solid rgba(180, 136, 77, 0.2);
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
   transition: all 0.3s ease;
-}
-
-.room-card:hover {
-  background: rgba(180, 136, 77, 0.15);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(180, 136, 77, 0.2);
-}
-
-.room-card p {
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-}
-
-.room-card p:last-child {
-  margin-bottom: 0;
+  p{
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  p:last-child{
+    margin-bottom: 0;
+  }
 }
 
 .popup button {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-  color: white;
+  background: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 6px;
   padding: 12px 24px;
@@ -192,161 +184,127 @@
 }
 
 .popup button:hover {
-  background: linear-gradient(135deg, #c0392b, #a93226);
+  background: var(--button-bg);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-// Enhanced Responsive Design for Customers Component
+@media (max-width: 1199px) {
+  .room-view-header {
+    h1 {
+      font-size: 22px;
+    }
 
-// Large Desktop (1920px and up)
-@media (min-width: 1920px) {
-  .customers-container {
-    max-width: 1400px;
-    padding: 30px;
+    select {
+      width: 100%;
+      font-size: 13px;
+      padding: 8px 12px;
+    }
   }
-  
-  .tables th,
-  .tables td {
-    padding: 22px 20px;
-    font-size: 16px;
-  }
-  
-  .popup {
-    max-width: 600px;
-    padding: 40px;
-  }
-  
-  .popup h3 {
-    font-size: 2rem;
+
+  .tables button {
+    font-size: 14px;
+    padding: 6px 10px;
   }
 }
 
-// Desktop (1600px - 1919px)
-@media (max-width: 1919px) and (min-width: 1600px) {
-  .customers-container {
-    max-width: 1300px;
-    padding: 25px;
-  }
-  
-  .tables th,
-  .tables td {
-    padding: 20px 18px;
-    font-size: 15px;
-  }
-}
-
-// Large Tablet/Small Desktop (1400px - 1599px)
-@media (max-width: 1599px) and (min-width: 1400px) {
-  .customers-container {
-    max-width: 1200px;
-  }
-}
-
-// Tablet Landscape (1200px - 1399px)
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .customers-container {
-    max-width: 1100px;
-  }
-}
-
-// Tablet Portrait (768px - 1199px)
-@media (max-width: 1199px) and (min-width: 768px) {
-  .customers-container {
-    max-width: 95%;
-    padding: 20px;
-  }
-  
-  .tables th,
-  .tables td {
-    padding: 15px 12px;
-    font-size: 13px;
-  }
-  
-  .popup {
-    max-width: 90%;
-    padding: 25px;
-  }
-}
-
-// Mobile Large (576px - 767px)
-@media (max-width: 767px) and (min-width: 576px) {
-  .customers-container {
-    max-width: 98%;
+/* Mobile Large (576px - 767px) */
+@media (max-width: 767px) {
+  .room-view-header {
     padding: 15px;
+
+    h1 {
+      font-size: 20px;
+    }
   }
-  
+
   .tables th,
   .tables td {
     padding: 12px 8px;
     font-size: 12px;
   }
-  
-  .popup {
-    max-width: 95%;
-    padding: 20px;
-  }
-  
-  .popup h3 {
-    font-size: 1.5rem;
-  }
-}
 
-// Mobile Small (up to 575px)
-@media (max-width: 575px) {
-  .customers-container {
-    max-width: 100%;
-    padding: 10px;
+  .tables button {
+    width: 100%;
+    margin-top: 5px;
   }
-  
-  .tables th,
-  .tables td {
-    padding: 10px 6px;
-    font-size: 11px;
-  }
-  
+
   .popup {
-    max-width: 98%;
-    padding: 15px;
+    padding: 20px;
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    h4 {
+      font-size: 1.1rem;
+    }
   }
-  
-  .popup h3 {
-    font-size: 1.3rem;
-  }
-  
-  .popup h4 {
-    font-size: 1.1rem;
-  }
-  
+
   .room-card {
     padding: 12px;
   }
 }
 
-// Extra Small Mobile (up to 375px)
+/* Mobile Small (≤575px) */
+@media (max-width: 575px) {
+  .customers-container {
+    padding: 10px;
+  }
+
+  .room-view-header h1 {
+    font-size: 18px;
+  }
+
+  .tables th,
+  .tables td {
+    font-size: 11px;
+    padding: 10px 6px;
+  }
+
+  .tables button,
+  .room-view-header select {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .popup {
+    padding: 15px;
+
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+/* Extra Small Mobile (≤375px) */
 @media (max-width: 375px) {
   .customers-container {
     padding: 8px;
   }
-  
+
+  .room-view-header h1 {
+    font-size: 16px;
+  }
+
   .tables th,
   .tables td {
-    padding: 8px 4px;
     font-size: 10px;
+    padding: 8px 4px;
   }
-  
+
   .popup {
     padding: 12px;
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
   }
-  
-  .popup h3 {
-    font-size: 1.2rem;
-  }
-  
-  .popup h4 {
-    font-size: 1rem;
-  }
-  
+
   .room-card {
     padding: 10px;
   }

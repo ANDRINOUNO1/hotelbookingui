@@ -8,15 +8,15 @@
       align-items: center;
       font-size: 2.75rem;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--text-color);
 
       i {
-        color: #ffffff; // blue-500
+        color: var(--text-color);
         margin-right: 1rem;
       }
     }
     p {
-      color: #ffffff; // light gray
+      color: var(--text-color);
       margin-top: 0.25rem;
       font-size: 1.5rem;
     }
@@ -36,18 +36,19 @@
     }
 
     .analytics-card {
-      background-color: #ffffff;
+      background-color: var(--card-bg);
       border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
       padding: 1.5rem;
       border-left: 4px solid transparent;
       display: flex;
       align-items: center;
 
-      &.blue { border-left-color: #3b82f6; }
-      &.green { border-left-color: #22c55e; }
-      &.yellow { border-left-color: #eab308; }
-      &.red { border-left-color: #ef4444; }
+      &.blue { border-left-color: var(--room-all); }
+      &.green { border-left-color: var(--room-vacant); }
+      &.yellow { border-left-color: var(--room-reserved); }
+      &.red { border-left-color: var(--room-occupied); }
+      &.gray { border-left-color: var(--room-other); }
 
       .icon-wrapper {
         padding: 0.75rem;
@@ -57,10 +58,11 @@
         justify-content: center;
         font-size: 2.7rem;
 
-        &.blue { background-color: #dbeafe; color: #3b82f6; }
-        &.green { background-color: #dcfce7; color: #22c55e; }
-        &.yellow { background-color: #fef9c3; color: #eab308; }
-        &.red { background-color: #fee2e2; color: #ef4444; }
+        &.blue { background-color: var(--room-all-bg); color: var(--room-all); }
+        &.green { background-color: var(--room-vacant-bg); color: var(--room-vacant); }
+        &.yellow { background-color: var(--room-reserved-bg); color: var(--room-reserved); }
+        &.red { background-color: var(--room-occupied-bg); color: var(--room-occupied); }
+        &.gray { background-color: var(--room-other-bg); color: var(--room-other); }
       }
 
       .analytics-content {
@@ -69,20 +71,13 @@
         p.label {
           font-size: 1.275rem;
           font-weight: 500;
-          color: #4b5563;
+          color: var(--text-color);
         }
         p.value {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #111827;
+          color: var(--text-color);
         }
-      }
-    }
-    .analytics-card.gray {
-      border-left-color: #6b7280;
-      .icon-wrapper.gray {
-        background-color: #f3f4f6;
-        color: #6b7280;
       }
     }
 
@@ -148,9 +143,9 @@
     }
 
     .metrics-card {
-      background-color: #ffffff;
+      background-color: var(--card-bg);
       border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
       padding: 1.5rem;
       display: flex;
       align-items: center;
@@ -160,15 +155,21 @@
         p.label {
           font-size: 1.175rem;
           font-weight: 500;
-          color: #4b5563;
+          color: var(--text-color);
         }
         p.value {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #111827;
+          color: var(--text-color);
         }
         .revenue-filter{
-          color: black;
+          color: var(--text-color);
+        }
+        .dropdown-btn {
+          background: var(--card-bg);
+          color: var(--text-color);
+          font-size: 1rem;
+          cursor: pointer;
         }
       }
 
@@ -180,9 +181,9 @@
         justify-content: center;
         font-size: 1.5rem;
 
-        &.green { background-color: #dcfce7; color: #22c55e; }
-        &.blue { background-color: #dbeafe; color: #3b82f6; }
-        &.purple { background-color: #ede9fe; color: #8b5cf6; }
+        &.green { background-color: var(--room-revenue-bg); color: var(--room-revenue); }
+        &.blue { background-color: var(--room-occ-bg); color: var(--room-occ); }
+        &.purple { background-color: var(--room-stay-bg); color: var(--room-stay); }
       }
     }
   }

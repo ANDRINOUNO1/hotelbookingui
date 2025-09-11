@@ -1,5 +1,5 @@
 :host {
-  --main-background: #0b0b31;
+  --main-background: hsl(207, 100%, 77%);
   --text-color: #222;
   --header-text-color: #fff;
   --color-primary:  linear-gradient(90deg, #007affa1 70%, #549eff 100%);
@@ -78,16 +78,23 @@
     align-items: center;
     gap: 0.7rem;
     cursor: pointer;
-    &:hover { background: #1a222b; }
+    transition: background 0.2s, border-radius 0.2s;
+    transition: all 0.3s ease;
+    &:hover { 
+      background: #1a222b;
+      transform: translateX(5px);
+      color: white;
+      border-radius: 10px;  
+    }
     &.active {
       background: var(--color-primary);
       color: #fff;
+      border-radius: 5px;
     }
   }
 }
 
 .frontdesk-content {
   flex: 1;
-  background:  linear-gradient(90deg, #007affa1 0%, #77c2ff 100%);
   padding: 1rem;
 }
