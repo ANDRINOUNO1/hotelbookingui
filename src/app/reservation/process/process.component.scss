@@ -1,6 +1,6 @@
 .form-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   background: white;
   position: relative;
   overflow: hidden;
@@ -32,6 +32,7 @@
       object-fit: cover;
       filter: brightness(0.8) contrast(1.1);
       transition: all 0.3s ease;
+      max-height: 100vh;
     }
 
     .overlay {
@@ -86,9 +87,10 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     z-index: 2;
+    overflow-y: auto;
 
     .form-box {
       max-width: 450px;

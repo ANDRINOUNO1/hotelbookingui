@@ -1,33 +1,41 @@
 <div class="frontdesk-topbar">
   <div class="topbar-left">
-     <a href="#home" class="logo">
+    <button class="mobile-menu-toggle" (click)="toggleSidebar()" aria-label="Open menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <button class="desktop-menu-toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <i class="fa fa-bars"></i>
+    </button>
+    <a href="#home" class="logo">
       <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
     </a>
-    <h1>Bc Flats</h1>
   </div>
   <div class="user-section">
     <h1>Front Desk</h1>
   </div>
-
-  <div class="logout">
-    <button (click)="logout()">
-      <i class="fa fa-sign-out-alt"></i>Logout
-    </button>
-  </div>
-  
 </div>
-<div class="frontdesk-container">
+
+<div class="frontdesk-container" [class.sidebar-open]="isSidebarOpen">
   <div class="frontdesk-sidebar">
     <ul>
       <li routerLink="frontdeskdashboard" routerLinkActive="active" class="fa fa-dashboard"><span>Dashboard</span></li>
       <li routerLink="calendar" routerLinkActive="active" class="fa fa-calendar"><span>Calendar</span></li>
       <li routerLink="addbookings" routerLinkActive="active" class="fa fa-plus"><span>Add Bookings</span></li>
       <li routerLink="reservations" routerLinkActive="active" class="fa fa-bed"><span>Lists</span></li>
-      <li routerLink="room-status" routerLinkActive="active" class="fa fa-cogs"><span>Room Status</span></li>
       <li routerLink="requests" routerLinkActive="active" class="fa fa-dashboard"><span>Requests</span></li>
-      <li routerLink="lists" routerLinkActive="active" class="fa fa-list"><span>Reservations</span></li>    
+      <li routerLink="lists" routerLinkActive="active" class="fa fa-list"><span>Reservations</span></li>
     </ul>
+
+    <!-- logout button moved here -->
+    <div class="sidebar-logout">
+      <button (click)="logout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </div>
+
   <main class="frontdesk-content">
     <router-outlet></router-outlet>
   </main>

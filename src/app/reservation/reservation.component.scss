@@ -16,50 +16,33 @@ $glass-border: rgba(255, 255, 255, 0.2);
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  background: rgba(43, 101, 236, 1);
-  border-bottom: 2px solid black;
-  padding: 15px 30px;
+  width: 100%;
+  height: 60px; // consistent fixed height
+  background: #ffffff;
   display: flex;
   align-items: center;
-  gap: 20px;
+  padding: 0 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 
   .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: 2px solid white;
-    color: rgb(159, 182, 235);
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-
-    &:hover {
-      background: $primary-gold;
-      color: $dark-blue;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(180, 136, 77, 0.4);
-    }
+    margin-right: 1rem;
 
     svg {
-      width: 20px;
-      height: 20px;
+      stroke: #333;
     }
   }
 
   .page-title {
-    color: white;
-    font-size: 24px;
+    font-size: 1.2rem;
     font-weight: 700;
+    color: #333;
     margin: 0;
-    text-shadow: 0 2px 8px rgba(23, 23, 37, 0.8);
   }
 }
 
@@ -166,11 +149,6 @@ $glass-border: rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(180, 136, 77, 0.3);
 
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(180, 136, 77, 0.5);
-        }
-
         &.btn-primary {
           background: rgba(43, 101, 236, 1);
         }
@@ -207,6 +185,9 @@ $glass-border: rgba(255, 255, 255, 0.2);
   padding: 100px 0 0; // remove side padding to use full width
   position: relative;
   overflow: hidden;
+  margin-bottom: 30px;
+  margin-top: 70px; // space equal to .top-bar height + gap
+  padding: 0 1rem;
 
   // Animated background particles
   &::before {
@@ -228,7 +209,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
     max-width: none;
     margin: 50px 0 0; // remove auto margins that center with side gaps
     position: relative;
-    z-index: 2;
+    z-index: 1;
 
     &__step {
       float: left;
@@ -241,7 +222,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
       label {
         display: block;
-        margin-top: $step-gap;
+        margin-top: calc($step-gap - 10px);
         position: relative;
         font-weight: 700;
         color: white;
@@ -269,22 +250,6 @@ $glass-border: rgba(255, 255, 255, 0.2);
           0 4px 16px rgba(180, 136, 77, 0.3),
           inset 0 2px 4px rgba(255, 255, 255, 0.2);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      &:hover {
-        transform: translateY(-2px);
-        
-        label {
-          opacity: 1;
-          color: rgba(43, 101, 236, 1) ;
-        }
-        
-        &:before {
-          box-shadow: 
-            0 8px 24px rgba(43, 101, 236, 1),
-            inset 0 2px 4px rgba(255, 255, 255, 0.3);
-          transform: translateX(-50%) scale(1.1);
-        }
       }
 
       // Active step styling
@@ -337,10 +302,6 @@ $glass-border: rgba(255, 255, 255, 0.2);
       &.disabled {
         opacity: 0.4;
         cursor: not-allowed;
-        
-        &:hover {
-          transform: none;
-        }
       }
     }
 
@@ -364,7 +325,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
       left: 0;
       border-radius: $bar-height;
       transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      top: 15px;
+      top: $step-point-width / 2 - ($bar-height / 2);
       z-index: 1;
       box-shadow: 
         0 4px 16px rgba(180, 136, 77, 0.4),
@@ -404,13 +365,6 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
         &.active {
           display: block;
-        }
-        
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 
-            0 25px 50px rgba(23, 23, 37, 0.4),
-            inset 0 1px 2px rgba(255, 255, 255, 0.15);
         }
       }
     }

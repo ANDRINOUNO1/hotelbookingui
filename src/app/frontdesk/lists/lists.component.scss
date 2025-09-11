@@ -8,20 +8,20 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--header-bg);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
     h1 {
       margin: 0;
-      color: #171725;
+      color: var(--header-text);
       font-size: 2rem;
       font-weight: 700;
     }
 
     .refresh-btn {
-      background: #00BFFF;
+      background: #1f1f1f;
       color: white;
       border: none;
       padding: 12px 24px;
@@ -176,7 +176,7 @@
     }
 
     p {
-      color: #6b7280;
+      color: #000000;
       font-size: 1.1rem;
       margin: 0;
     }
@@ -185,8 +185,9 @@
   .table-container {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.603);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
     .reservations-table {
       width: 100%;
@@ -194,7 +195,7 @@
       font-size: 0.95rem;
 
       thead {
-        background: #1a90df;
+        background: var(--table-header);
         color: white;
 
         th {
@@ -204,6 +205,7 @@
           font-size: 0.9rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          white-space: nowrap; 
         }
       }
 
@@ -224,6 +226,7 @@
             padding: 16px 12px;
             color: #374151;
             vertical-align: middle;
+            white-space: nowrap; 
 
             &.actions {
               display: flex;
@@ -329,7 +332,7 @@
       overflow-y: auto;
 
       .modal-header {
-        background: linear-gradient(135deg, #0c30a5 0%, #70cbff 100%);
+        background: var(--header-bg);
         color: white;
         padding: 20px 24px;
         display: flex;
@@ -356,11 +359,6 @@
           justify-content: center;
           font-size: 18px;
           transition: all 0.3s ease;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-          }
         }
       }
 
@@ -516,7 +514,7 @@
           }
 
           &.btn-confirm {
-            background: linear-gradient(135deg, #1c1c69 0%, #4fb7fc 100%);
+            background: var(--button-bg);
             color: white;
             box-shadow: 0 4px 12px rgba(23, 23, 37, 0.3);
 
@@ -536,82 +534,154 @@
   100% { transform: rotate(360deg); }
 }
 
-// Responsive Design
-@media (max-width: 768px) {
+/* Existing SCSS remains the same */
+
+/* Large tablets / small desktops (≤ 1024px) */
+@media (max-width: 1024px) {
   .lists-container {
-    padding: 10px;
+    padding: 15px;
 
     .header {
-      flex-direction: column;
-      gap: 16px;
-      text-align: center;
-
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
+      }
+
+      .refresh-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
       }
     }
 
-    .table-container {
-      overflow-x: auto;
+    .search-container {
+      padding: 15px;
 
-      .reservations-table {
-        min-width: 800px;
-
-        thead th,
-        tbody td {
-          padding: 12px 8px;
-          font-size: 0.85rem;
-        }
-
-        tbody td.actions {
-          flex-direction: column;
-          gap: 4px;
-
-          button {
-            min-width: 80px;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-          }
-        }
+      .search-box input {
+        font-size: 0.95rem;
+        padding: 10px 14px;
       }
     }
 
-    .modal-overlay {
-      padding: 10px;
+    .reservations-table {
+      font-size: 0.9rem;
 
-      .modal {
-        max-width: none;
-        margin: 10px;
-
-        .modal-body {
-          padding: 16px;
-        }
-
-        .modal-footer {
-          padding: 16px;
-          flex-direction: column;
-
-          button {
-            width: 100%;
-          }
-        }
+      thead th {
+        padding: 12px 8px;
+      }
+      tbody td {
+        padding: 12px 8px;
       }
     }
   }
 }
 
+/* Medium tablets (≤ 768px) → already exists but extend a bit */
+@media (max-width: 768px) {
+  .lists-container {
+    .header {
+      h1 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .search-container {
+      padding: 12px;
+
+      .search-box input {
+        font-size: 0.9rem;
+      }
+    }
+
+    .reservations-table {
+      min-width: 700px;
+    }
+  }
+}
+
+/* Mobile landscape (≤ 600px) */
+@media (max-width: 600px) {
+  .lists-container {
+    .header {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .refresh-btn {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+      }
+    }
+
+    .search-container {
+      .search-box input {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+      }
+    }
+
+    .reservations-table {
+      min-width: 550px;
+    }
+  }
+}
 @media (max-width: 480px) {
   .lists-container {
-    .table-container {
-      .reservations-table {
-        min-width: 600px;
-        font-size: 0.8rem;
+    .reservations-table {
+      min-width: 650px;
+    }
 
-        thead th,
-        tbody td {
-          padding: 8px 4px;
-        }
+    .reservations-table td.actions {
+      flex-direction: column; // ✅ stack buttons vertically
+      gap: 6px;
+
+      button {
+        min-width: unset;
+        width: 100%; // make buttons full width for easy tap
       }
+    }
+  }
+}
+/* Small phones (≤ 400px) */
+@media (max-width: 400px) {
+  .lists-container {
+    .header {
+      h1 {
+        font-size: 1rem;
+      }
+
+      .refresh-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+    }
+
+    .search-container {
+      padding: 8px;
+
+      .search-box input {
+        font-size: 0.8rem;
+      }
+    }
+
+    .reservations-table {
+      min-width: 500px;
+      font-size: 0.75rem;
+
+      thead th,
+      tbody td {
+        padding: 6px 4px;
+      }
+    }
+  }
+}
+
+/* Ultra-wide screens (≥ 1440px) */
+@media (min-width: 1440px) {
+  .lists-container {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .reservations-table {
+      font-size: 1rem;
     }
   }
 }

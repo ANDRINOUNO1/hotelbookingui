@@ -1,5 +1,5 @@
 :host {
-  --sidebar-bg: #aad9ff;
+  --sidebar-bg: #5c9bcf;
   --sidebar-active: #181824;
   --sidebar-text: #000000;
   --main-bg: #ffffff;
@@ -55,6 +55,14 @@
   --status-default: #10B981;
   --text-red: #ff3c3c;
   --text-green: #4caf50;
+  --toggle-btn-bg: #374151;
+  --toggle-btn-shadow: #1f2937;
+  --toggle-btn-hover: #4b5563;
+  --toggle-btn-text: #ffffff;
+  --logout-btn-bg: #d94732;
+  --logout-btn-shadow: #a52b1a;
+  --logout-btn-hover: #e15f4e;
+  --logout-btn-text: #ffffff;
 }
 
 :host(.dark-mode) {
@@ -115,6 +123,14 @@
   --status-default: #10B981;
   --text-red: #5a1212;
   --text-green: #134715;
+  --toggle-btn-bg: #374151;
+  --toggle-btn-shadow: #1f2937;
+  --toggle-btn-hover: #4b5563;
+  --toggle-btn-text: #ffffff;
+  --logout-btn-bg: #46160f;
+  --logout-btn-shadow: #47120b;
+  --logout-btn-hover: #50221c;
+  --logout-btn-text: #ffffff;
   background: var(--main-bg);
 }
 
@@ -128,8 +144,8 @@
 /* Sidebar */
 .sidebar {
   width: 220px;
-  background: #0b0b31;
-  color: #fff !important;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
@@ -144,45 +160,79 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
 
-.toggle-mode-btn,
-.logout-btn {
-  position: relative;
-  padding: 14px 28px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  color: #fff;
-  background: #c1331e;
-  text-align: center;
+  /* 🔘 Dark/Light Mode Toggle Button */
+  .toggle-mode-btn {
+    position: relative;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--toggle-btn-text);
+    background: var(--toggle-btn-bg);
+    box-shadow: 0 4px var(--toggle-btn-shadow);
+    text-align: center;
 
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 6px #c1331e;
-}
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 4px #1f2937;
 
-.toggle-mode-btn:hover,
-.logout-btn:hover {
-  background: #c1331e;
-  transform: translateY(-2px);
-  box-shadow: 0 8px #a52b1a;
-}
+    &:hover {
+      background: var(--toggle-btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px var(--toggle-btn-shadow);
+    }
 
-.toggle-mode-btn:active,
-.logout-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 3px #a52b1a;
-}
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px var(--toggle-btn-shadow);
+    }
 
-.toggle-mode-btn .fa,
-.logout-btn .fa {
-  font-size: 1.2rem;
+    .fa {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* 🔴 Logout Button */
+  .logout-btn {
+    position: relative;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    color: var(--logout-btn-text);
+    background: var(--logout-btn-bg);
+    box-shadow: 0 6px var(--logout-btn-shadow);
+    text-align: center;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 6px #c1331e;
+
+    &:hover {
+      background: var(--logout-btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px var(--logout-btn-shadow);
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px var(--logout-btn-shadow);
+    }
+
+    .fa {
+      font-size: 1.2rem;
+    }
+  }
 }
 
 .sidebar .logo {
@@ -436,21 +486,6 @@
   .status-summary { padding: 1rem 1rem 0 1rem; gap: 0.7rem; }
   .room-view-header { flex-direction: column; gap: 0.7rem; }
   .room-tabs { gap: 0.5rem; }
-}
-.toggle-mode-btn {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 1rem;
-  margin-left: 1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: color 0.2s;
-}
-.toggle-mode-btn .fa {
-  font-size: 1.2rem;
 }
 .header-bar {
   display: flex;
@@ -885,8 +920,6 @@ body.dark-mode {
     display: block;
     
     .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
@@ -894,7 +927,6 @@ body.dark-mode {
       .card-header {
         font-weight: bold;
         margin-bottom: 0.5rem;
-        color: #b4884d;
       }
       
       .card-content {
@@ -905,12 +937,8 @@ body.dark-mode {
         
         .label {
           font-weight: 600;
-          color: #b4884d;
         }
         
-        .value {
-          color: #fff;
-        }
       }
       
       .card-actions {
@@ -936,17 +964,13 @@ body.dark-mode {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: #b4884d;
     }
     
     input, select, textarea {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 4px;
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-      font-size: 1rem;
+     font-size: 1rem;
       min-height: 44px;
       
       &::placeholder {
@@ -965,15 +989,11 @@ body.dark-mode {
     border-radius: 6px;
     
     &.btn-primary {
-      background: #b4884d;
-      color: #fff;
-      border: none;
+     border: none;
     }
     
     &.btn-secondary {
       background: transparent;
-      color: #b4884d;
-      border: 1px solid #b4884d;
     }
   }
 }
@@ -989,7 +1009,6 @@ body.dark-mode {
         flex-direction: column;
         background: none;
         border: none;
-        color: #fff;
         cursor: pointer;
         padding: 0.5rem;
         position: absolute;
@@ -1005,13 +1024,8 @@ body.dark-mode {
         span {
           width: 20px;
           height: 2px;
-          background-color: #fff;
           transition: all 0.3s ease;
           border-radius: 1px;
-        }
-        
-        &:hover span {
-          background-color: #b4884d;
         }
       }
     }
@@ -1117,7 +1131,7 @@ body.dark-mode {
 .mobile-logo-text {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #e5c07b;
+  color: var(--sidebar-text);
   letter-spacing: 0.5px;
 }
 
@@ -1131,7 +1145,7 @@ body.dark-mode {
   flex-direction: column;
   background: none;
   border: none;
-  color: #e5c07b;
+  color: var(--sidebar-text);
   cursor: pointer;
   padding: 0.5rem;
   gap: 4px;
@@ -1141,10 +1155,6 @@ body.dark-mode {
   align-items: center;
   border-radius: 6px;
   transition: all 0.3s ease;
-}
-
-.mobile-menu-toggle:hover {
-  background: rgba(229, 192, 123, 0.1);
 }
 
 .mobile-menu-toggle span {
@@ -1238,13 +1248,7 @@ body.dark-mode {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     border-radius: 6px;
-    background: rgba(255,255,255,0.1);
     transition: all 0.2s ease;
-  }
-  
-  .toggle-mode-btn:hover,
-  .logout-btn:hover {
-    background: var(--sidebar-active);
   }
   
   .main-content {
@@ -1351,17 +1355,8 @@ body.dark-mode {
     justify-content: center;
     padding: 0.75rem 1rem;
     font-size: 1rem;
-    color: var(--sidebar-text);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(229, 192, 123, 0.2);
     border-radius: 8px;
     transition: all 0.2s ease;
-  }
-  
-  .toggle-mode-btn:hover,
-  .logout-btn:hover {
-    background: var(--sidebar-active);
-    border-color: var(--accent-color);
   }
   
   .admin-logo-bar {
@@ -1387,7 +1382,6 @@ body.dark-mode {
     left: 0;
     width: 100%;
     height: calc(100vh - 70px);
-    background: rgba(0,0,0,0.5);
     z-index: 999;
     opacity: 0;
     visibility: hidden;

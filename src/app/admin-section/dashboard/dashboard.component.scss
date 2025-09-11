@@ -2,33 +2,39 @@
   padding: 1.5rem;
   background-color: var(--main-bg);
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
   .dashboard-title {
     h1 {
       display: flex;
       align-items: center;
-      font-size: 2.75rem;
+      font-size: 2rem; // smaller default for responsiveness
       font-weight: 700;
       color: var(--text-color);
+      flex-wrap: wrap; // prevents cut-off on small screens
 
       i {
         color: var(--text-color);
-        margin-right: 1rem;
+        margin-right: 0.75rem;
       }
     }
+
     p {
       color: var(--text-color);
       margin-top: 0.25rem;
-      font-size: 1.5rem;
+      font-size: 1rem;
     }
   }
 
+  /* Analytics cards */
   .analytics-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin: 2rem 0;
+    gap: 1rem;
 
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
       grid-template-columns: repeat(2, 1fr);
     }
     @media (min-width: 1024px) {
@@ -37,12 +43,14 @@
 
     .analytics-card {
       background-color: var(--card-bg);
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      padding: 1rem;
       border-left: 4px solid transparent;
       display: flex;
       align-items: center;
+      justify-content: flex-start;
+      gap: 1rem;
 
       &.blue { border-left-color: var(--room-all); }
       &.green { border-left-color: var(--room-vacant); }
@@ -52,11 +60,11 @@
 
       .icon-wrapper {
         padding: 0.75rem;
-        border-radius: 9999px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.7rem;
+        font-size: 2rem;
 
         &.blue { background-color: var(--room-all-bg); color: var(--room-all); }
         &.green { background-color: var(--room-vacant-bg); color: var(--room-vacant); }
@@ -66,39 +74,39 @@
       }
 
       .analytics-content {
-        margin-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
 
         p.label {
-          font-size: 1.275rem;
+          font-size: 1rem;
           font-weight: 500;
           color: var(--text-color);
         }
         p.value {
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           font-weight: 700;
           color: var(--text-color);
         }
       }
     }
 
-    // Dropdown styles for breakdowns
+    /* Dropdown */
     .analytics-content {
       position: relative;
 
       .dropdown {
         margin-top: 0.5rem;
-        display: inline-block;
 
         button {
           background: #f3f4f6;
           border: none;
           color: #374151;
-          font-size: 1rem;
+          font-size: 0.9rem;
           cursor: pointer;
-          padding: 0.2rem 0.7rem;
+          padding: 0.3rem 0.7rem;
           border-radius: 0.3rem;
           transition: background 0.2s;
-          margin-bottom: 0.2rem;
           &:hover {
             background: #e5e7eb;
           }
@@ -107,22 +115,22 @@
         ul {
           background: #fff;
           border-radius: 0.5rem;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-          padding: 0.5rem 1rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+          padding: 0.5rem;
           margin: 0.3rem 0 0 0;
           list-style: none;
           color: #374151;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           position: absolute;
           z-index: 10;
-          min-width: 160px;
+          min-width: 150px;
           left: 0;
-          top: 2.2rem;
+          top: 2.5rem;
           border: 1px solid #e5e7eb;
         }
 
         li {
-          padding: 0.2rem 0;
+          padding: 0.4rem 0;
           border-bottom: 1px solid #e5e7eb;
           &:last-child {
             border-bottom: none;
@@ -132,50 +140,59 @@
     }
   }
 
+  /* Metrics cards */
   .metrics-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
 
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1024px) {
       grid-template-columns: repeat(3, 1fr);
     }
 
     .metrics-card {
       background-color: var(--card-bg);
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      padding: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       .metrics-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
         p.label {
-          font-size: 1.175rem;
+          font-size: 1rem;
           font-weight: 500;
           color: var(--text-color);
         }
         p.value {
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           font-weight: 700;
           color: var(--text-color);
         }
-        .revenue-filter{
+
+        .revenue-filter {
           color: var(--text-color);
         }
+
         .dropdown-btn {
           background: var(--card-bg);
           color: var(--text-color);
-          font-size: 1rem;
+          font-size: 0.9rem;
           cursor: pointer;
         }
       }
 
       .icon-wrapper {
         padding: 0.75rem;
-        border-radius: 9999px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -189,6 +206,6 @@
   }
 
   .dashboard-basic-info {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 }
