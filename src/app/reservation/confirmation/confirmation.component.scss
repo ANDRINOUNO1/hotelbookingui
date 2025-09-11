@@ -1,6 +1,6 @@
 .reservation-confirmation {
   min-height: 100vh;
-  background:linear-gradient(135deg, #ffffff 0%, rgba(43, 107, 255, 0.486) 50%, rgb(68, 124, 255) 100%);
+  background: white;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -17,7 +17,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       
       h1 {
-        color: white;
+        color: #92ace8;
         font-size: 2.5rem;
         font-weight: 700;
         margin: 0 0 10px 0;
@@ -25,7 +25,7 @@
       }
       
       p {
-        color: rgba(255, 255, 255, 0.9);
+        color: #92ace8;
         font-size: 1.1rem;
         margin: 0;
       }
@@ -54,7 +54,7 @@
     margin-bottom: 25px;
     
     h2 {
-      color: white;
+      color: #000000;
       font-size: 1.8rem;
       font-weight: 600;
       margin: 0;
@@ -71,19 +71,19 @@
     
     .payment-icon {
       font-size: 2rem;
-      color: #b4884d;
+      color: #000000;
     }
   }
 
   // Containers
   .confirmation-container,
   .payment-container {
-    background: rgba(11, 11, 49, 0.8);
+    background: rgb(59 130 246 / 40%);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(180, 136, 77, 0.3);
+    border: 1px solid rgba(5, 40, 181, 0.594);
   }
 
   // Detail Cards
@@ -103,7 +103,7 @@
     }
 
     .card-header {
-      background: linear-gradient(135deg, #171725 0%, #b4884d 100%);
+      background: linear-gradient(135deg, var(--ait-sidebar-border-color) 0%, var(--main-bg) 100%);
       padding: 20px;
       display: flex;
       align-items: center;
@@ -117,7 +117,7 @@
 
       h3 {
         margin: 0;
-        color: white;
+        color: rgb(0, 0, 0);
         font-size: 1.2rem;
         font-weight: 600;
       }
@@ -165,10 +165,10 @@
 
       label {
         display: block;
-        color: #d4a574;
+        color:  black;
         font-weight: 600;
         margin-bottom: 8px;
-        font-size: 0.95rem;
+        font-size: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
