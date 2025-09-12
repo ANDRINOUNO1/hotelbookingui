@@ -69,7 +69,7 @@ section{
   align-items: center;
   justify-content: space-between;
   width: 100%;
- background: rgb(87, 138, 255);
+  background: rgb(87, 138, 255);
   padding: 1.2rem 3rem;
   box-sizing: border-box;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
@@ -1624,6 +1624,7 @@ body, html {
 }
 
 .footer .footer-bottom p {
+  text-align: center;
   margin: 0.3rem 0;
   font-size: 1.3rem;
   color: #e5e7eb;
@@ -1730,27 +1731,4 @@ body, html {
 .footer .footer-credit p{
    margin: 0;
    font-weight: 500;
-}
-
-// Home Component Table Structure
-.home-component-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: none;
-  
-  tbody {
-    display: block;
-  }
-  
-  tr {
-    display: block;
-    width: 100%;
-  }
-  
-  td {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: none;
-  }
 }

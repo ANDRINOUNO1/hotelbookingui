@@ -28,7 +28,7 @@ export class ConfirmationComponent implements OnInit {
   paymentDetails: any = {
     paymentMode: '',
     paymentMethod: '',
-    amount: 0,
+    amount: '₱0',
     mobileNumber: '',
     cardNumber: '',
     expiry: '',
@@ -100,11 +100,74 @@ export class ConfirmationComponent implements OnInit {
     return true;
   }
 
+  onAmountInput(event: any) {
+    let value = event.target.value;
+    
+    // If user is typing and there's no peso sign, add it
+    if (value && !value.startsWith('₱')) {
+      // Remove any non-numeric characters except decimal point
+      const numericValue = value.replace(/[^0-9.]/g, '');
+      
+      // Ensure only one decimal point
+      const parts = numericValue.split('.');
+      let cleanValue = numericValue;
+      if (parts.length > 2) {
+        cleanValue = parts[0] + '.' + parts.slice(1).join('');
+      }
+      
+      // Limit to 2 decimal places
+      if (parts.length === 2 && parts[1].length > 2) {
+        cleanValue = parts[0] + '.' + parts[1].substring(0, 2);
+      }
+      
+      // Add peso sign if there's a value
+      if (cleanValue) {
+        value = '₱' + cleanValue;
+      }
+    } else if (value.startsWith('₱')) {
+      // If peso sign is already there, clean and reformat
+      const numericValue = value.substring(1).replace(/[^0-9.]/g, '');
+      
+      // Ensure only one decimal point
+      const parts = numericValue.split('.');
+      let cleanValue = numericValue;
+      if (parts.length > 2) {
+        cleanValue = parts[0] + '.' + parts.slice(1).join('');
+      }
+      
+      // Limit to 2 decimal places
+      if (parts.length === 2 && parts[1].length > 2) {
+        cleanValue = parts[0] + '.' + parts[1].substring(0, 2);
+      }
+      
+      value = '₱' + cleanValue;
+    }
+    
+    this.paymentDetails.amount = value;
+    event.target.value = value;
+  }
+
+  onAmountFocus(event: any) {
+    // Clear the input when focused if it's empty or just the peso sign
+    if (!this.paymentDetails.amount || this.paymentDetails.amount === '₱0' || this.paymentDetails.amount === '0') {
+      this.paymentDetails.amount = '';
+      event.target.value = '';
+    }
+  }
+
+  onAmountBlur(event: any) {
+    // If empty, set to ₱0
+    if (!this.paymentDetails.amount || this.paymentDetails.amount === '') {
+      this.paymentDetails.amount = '₱0';
+      event.target.value = '₱0';
+    }
+  }
+
   calculateReservationFee() {
     if (this.selectedRoomType?.reservationFeePercentage && this.selectedRoomType?.basePrice) {
       this.calculatedReservationFee = (this.selectedRoomType.basePrice * this.selectedRoomType.reservationFeePercentage) / 100;
       this.reservationFee = this.calculatedReservationFee;
-      this.paymentDetails.amount = this.reservationFee;
+      this.paymentDetails.amount = '₱' + this.reservationFee.toString();
     } else {
       // Fallback to default fee if room type doesn't have reservation fee percentage
       this.fetchReservationFee();
@@ -115,18 +178,22 @@ export class ConfirmationComponent implements OnInit {
     this.http.get<ReservationFee>(`${environment.apiUrl}/rooms/reservation-fee`).subscribe({
       next: (fee) => {
         this.reservationFee = fee.fee;
-        this.paymentDetails.amount = this.reservationFee;
+        this.paymentDetails.amount = '₱' + this.reservationFee.toString();
       },
       error: (err) => {
         this.reservationFee = 500;
-        this.paymentDetails.amount = this.reservationFee;
+        this.paymentDetails.amount = '₱' + this.reservationFee.toString();
       }
     });
   }
 
   async confirmBooking() {
+    // Convert amount to number for validation (remove peso sign)
+    const numericAmount = this.paymentDetails.amount.replace('₱', '');
+    const amount = parseFloat(numericAmount) || 0;
+    
     // Basic fee check
-    if (this.paymentDetails.amount < this.reservationFee) {
+    if (amount < this.reservationFee) {
       alert(`Reservation fee must be at least ₱${this.reservationFee}.`);
       return;
     }
@@ -203,13 +270,13 @@ export class ConfirmationComponent implements OnInit {
         paymentMode: this.paymentDetails.paymentMode,
         paymentMethod: this.paymentDetails.paymentMethod,
         mobileNumber: this.paymentDetails.mobileNumber,
-        amount: this.paymentDetails.amount,
+        amount: amount,
         cardNumber: this.paymentDetails.cardNumber,
         expiry: this.paymentDetails.expiry,
         cvv: this.paymentDetails.cvv
       },
       pay_status: false,
-      paidamount: this.paymentDetails.amount
+      paidamount: amount
     };
 
     // Submit booking
@@ -230,7 +297,7 @@ export class ConfirmationComponent implements OnInit {
     this.paymentDetails = {
       paymentMode: '',
       paymentMethod: '',
-      amount: 0,
+      amount: '₱0',
       mobileNumber: '',
       cardNumber: '',
       expiry: '',

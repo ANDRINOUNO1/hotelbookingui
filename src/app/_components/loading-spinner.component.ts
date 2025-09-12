@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
   `,
   styles: [`
     :host {
-      --main-color: #0b0b31;
+      --main-color: var(--main-bg);
       --sub-color: #e5c07b;
       --accent-color: #b4884d;
       --white: #f5f5f7;
@@ -34,7 +34,7 @@ import { CommonModule } from '@angular/common';
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(11, 11, 49, 0.8);
+      background: var(--main-bg);
       backdrop-filter: blur(4px);
       z-index: 9999;
       padding: 0;

@@ -38,4 +38,23 @@ export class LoginHistoryComponent implements OnInit {
       }
     });
   }
+  currentPage = 1;
+  pageSize = 5; // number of rows per page
+
+  get totalPages(): number {
+    return Math.ceil(this.logs.length / this.pageSize);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
 }

@@ -3,12 +3,37 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
 
-  @media (min-width: 1024px) { // lg breakpoint in Tailwind
+  // Small screens (≥ 640px, Tailwind sm)
+  @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  // Medium screens (≥ 768px, Tailwind md)
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  // Large screens (≥ 1024px, Tailwind lg)
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Extra Large screens (≥ 1280px, Tailwind xl)
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // 2XL screens (≥ 1536px, Tailwind 2xl)
+  @media (min-width: 1536px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .chart-block {
-    height: 24rem; // h-96 = 384px
-    background-color: transparent;
+    height: 24rem;
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
 
     .chart-container {
       width: 100%;
@@ -16,17 +41,19 @@
     }
   }
 }
-.chart-header{
-  h1{
-    font-size: 1.5rem; // text-2xl
-    font-weight: 600;   // font-semibold
-    color: #1f2937; // text-gray-800
-    margin-bottom: 0.5rem; // mb-2
-  }
+
+.chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.2rem;
   flex-wrap: wrap;
   gap: 1rem;
+
+  h1 {
+    font-size: 1.5rem; // text-2xl
+    font-weight: 600;   // font-semibold
+    color: var(--text-color);
+    margin-bottom: 0.5rem; // mb-2
+  }
 }

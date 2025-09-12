@@ -5,6 +5,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.7);
   max-width: 100vw;
   border: 1px solid var(--card-border);
+  overflow-x: auto;
 }
 .account-list-container.dark {
   background: #18181b;
@@ -15,6 +16,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 .add-btn {
   border: none;
@@ -45,6 +47,7 @@
   padding: 0.7rem 0.5rem;
   text-align: left;
   color: var(--text-color);
+  word-break: break-word;
 }
 .account-table th {
   font-weight: 600;
@@ -108,6 +111,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .edit-modal {
@@ -327,3 +331,72 @@
     background: #553c9a;
   }
 } 
+
+/* Tablets (≤ 992px) */
+@media (max-width: 992px) {
+  .account-table {
+    font-size: 0.9rem;
+  }
+  .update-btn,
+  .save-btn,
+  .cancel-btn,
+  .delete-btn {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobiles (≤ 768px) */
+@media (max-width: 768px) {
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .account-table,
+  .account-table th,
+  .account-table td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .pagination-row {
+    justify-content: center;
+  }
+
+  .modal-content {
+    padding: 1.25rem;
+  }
+}
+
+/* Small Mobiles (≤ 480px) */
+@media (max-width: 480px) {
+  .add-btn,
+  .pagination-btn,
+  .modal-save,
+  .modal-cancel {
+    width: 100%;
+    text-align: center;
+  }
+
+  .update-btn,
+  .save-btn,
+  .cancel-btn,
+  .delete-btn {
+    margin-bottom: 0.3rem;
+    width: 100%; // 👈 stack buttons
+  }
+
+  .account-table th,
+  .account-table td {
+    font-size: 0.8rem;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+}

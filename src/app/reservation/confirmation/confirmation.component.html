@@ -173,10 +173,12 @@
           <div class="form-group">
             <label for="amount">Amount *</label>
             <div class="amount-input">
-              <span class="currency">₱</span>
-              <input type="number" name="amount" class="form-control"
+              <input type="text" name="amount" class="form-control"
                     [(ngModel)]="paymentDetails.amount"
-                    [placeholder]="'Reservation fee: ₱  ' + reservationFee"
+                    (input)="onAmountInput($event)"
+                    (focus)="onAmountFocus($event)"
+                    (blur)="onAmountBlur($event)"
+                    placeholder="Enter Amount"
                     required />
             </div>
             <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>
@@ -225,10 +227,12 @@
           <div class="form-group">
             <label for="amount">Amount *</label>
             <div class="amount-input">
-              <span class="currency">₱</span>
-              <input type="number" name="amount" class="form-control"
+              <input type="text" name="amount" class="form-control"
                     [(ngModel)]="paymentDetails.amount"
-                    [placeholder]="'Reservation fee: ₱  ' + reservationFee"
+                    (input)="onAmountInput($event)"
+                    (focus)="onAmountFocus($event)"
+                    (blur)="onAmountBlur($event)"
+                    placeholder="Enter Amount"
                     required />
             </div>
             <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>

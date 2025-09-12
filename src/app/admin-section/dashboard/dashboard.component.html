@@ -22,7 +22,7 @@
     <div class="analytics-card blue">
       <div class="icon-wrapper blue">
         <i class="fa fa-bed"></i>
-      </div>
+      </div>  
       <div class="analytics-content">
         <p class="label">Total Rooms</p>
         <p class="value">{{ allCount }}</p>
@@ -120,7 +120,7 @@
         <!-- Dropdown filter -->
         <div class="revenue-filter">
           <label for="revenueFilter">Source:</label>
-          <select id="revenueFilter" [(ngModel)]="selectedSource" (change)="filterRevenue()">
+          <select class="dropdown-btn" id="revenueFilter" [(ngModel)]="selectedSource" (change)="filterRevenue()">
             <option value="All">All</option>
             <option value="Booking">Booking</option>
             <option value="Reservation">Reservation</option>

@@ -1,5 +1,5 @@
 .archive-container {
-  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  background: var(--main-bg);
   min-height: 100vh;
   padding: 2rem;
   position: relative;
@@ -11,7 +11,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
     z-index: -1;
   }
 }
@@ -56,16 +55,14 @@
 
 .tables th,
 .tables td {
-    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
+    color: var(--table-text);
     transition: all 0.3s ease;
 }
 
 .tables th {
     font-weight: 600;
-    background: rgba(180, 136, 77, 0.2);
+    background: var(--table-header);
     color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.5px;

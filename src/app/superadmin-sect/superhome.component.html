@@ -1,5 +1,25 @@
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" (click)="closeMobileMenu()"></div>
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+  <div class="mobile-header-content">
+    <div class="mobile-logo">
+      <span class="mobile-logo-text">BC Flats</span>
+    </div>
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
 <div class="superadmin-topbar">
   <div class="topbar-left">
+    <button class="desktop-menu-toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <i class="fa fa-bars"></i>
+    </button>
     <a href="#home" class="logo">
       <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
     </a>
@@ -8,27 +28,32 @@
   <div class="user-section">
     <h1>Super Admin</h1>
   </div>
-  <div class="logout">
-    <button (click)="logout()">
-      <i class="fa fa-sign-out-alt"></i>Logout
-    </button>
-  </div>
 </div>
-<div class="superadmin-container">
-  <div class="superadmin-sidebar">
+
+<div class="superadmin-container" [class.sidebar-open]="isSidebarOpen">
+  <div class="superadmin-sidebar" [class.mobile-open]="isMobileMenuOpen">
     <ul>
       <li (click)="toggleAccountsDropdown()" [class.active]="showAccountsDropdown" class="fa fa-users dropdown-toggle">
         <span>Manage Accounts</span>
+        <i class="fa fa-chevron-down dropdown-arrow" [class.rotated]="showAccountsDropdown"></i>
       </li>
       <ul *ngIf="showAccountsDropdown" class="dropdown-menu">
-        <li routerLink="account-list" routerLinkActive="active"><span>Account List</span></li>
-        <li routerLink="pending-accounts" routerLinkActive="active"><span>Pending Accounts</span></li>
-        <li routerLink="add-accounts" routerLinkActive="active"><span>Add Account</span></li>
+        <li routerLink="account-list" routerLinkActive="active" (click)="closeMobileMenu()"><span>Account List</span></li>
+        <li routerLink="pending-accounts" routerLinkActive="active" (click)="closeMobileMenu()"><span>Pending Accounts</span></li>
+        <li routerLink="add-accounts" routerLinkActive="active" (click)="closeMobileMenu()"><span>Add Account</span></li>
       </ul>
-      <li routerLink="pricing" routerLinkActive="active" class="fa fa-dollar-sign"><span>Pricing</span></li>
-      <li routerLink="archives" routerLinkActive="active" class="fa fa-archive"><span>Archives</span></li>
+      <li routerLink="pricing" routerLinkActive="active" (click)="closeMobileMenu()" class="fa fa-dollar-sign"><span>Pricing</span></li>
+      <li routerLink="archives" routerLinkActive="active" (click)="closeMobileMenu()" class="fa fa-archive"><span>Archives</span></li>
     </ul>
+
+    <!-- logout button moved here -->
+    <div class="sidebar-logout">
+      <button (click)="logout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </div>
+
   <main class="superadmin-content">
     <router-outlet></router-outlet>
   </main>

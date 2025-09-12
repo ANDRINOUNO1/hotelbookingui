@@ -5,14 +5,23 @@
   color: var(--text-color);
 }
 
+.archives-container {
+  padding: 10px;
+  h2{
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid black;
+    color: var(--text-color);
+  }
+}
+
 .tables {
-  background: #3b83f65e;
   border-radius: 10px;
   width: 100%;
   border-collapse: collapse;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.452);
   color: var(--text-color);
   border: 1px solid var(--table-border);
 
@@ -21,7 +30,8 @@
     text-align: left;
     border-bottom: 1px solid var(--table-border);
     color: var(--text-color);
-  }
+    font-size: 1.3rem;
+  } 
 
   th {
     font-weight: bold;
@@ -33,7 +43,7 @@
     border-radius: 10px;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--text-color);
+    color: #ffffff;
   }
 }
 
@@ -51,7 +61,7 @@
 }
 
 .popup {
-  background: rgba(21, 98, 199, 0.712);
+  background: rgb(255, 255, 255);
   border-radius: 12px;
   padding: 2rem;
   max-width: 600px;
@@ -62,7 +72,7 @@
 }
 
 .popup h3 {
-  background: linear-gradient(90deg, #0f4cce, #3b82f6);
+  background: rgb(19, 63, 156);
   color: #fff;
   padding: 1rem 1.5rem;
   border-radius: 8px;

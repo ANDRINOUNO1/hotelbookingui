@@ -1,4 +1,5 @@
-.frontdeskdashboard-container{
+/* --- Main Dashboard Container --- */
+.frontdeskdashboard-container {
   max-width: 1200px;
   height: 100%;
   margin: 0 auto;
@@ -6,20 +7,110 @@
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background: var(--ait-primary-content-text-color);
+
+  // Tablet & Mobile Padding
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  @media (max-width: 480px) {
+    padding: 1rem;
+    border-radius: 0;
+  }
 }
+
+/* --- Headers --- */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--text-color);
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+  }
+
+  // Mobile Font Sizes
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+.dashboard-headertwo {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f3f4f6;
+  h2 {
+    color: var(--text-color);
+  }
+}
+
+/* --- Summary Cards --- */
+.dashboard-cards {
+  display: grid; // Use Grid for easier responsive columns
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-card {
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.322);
+  background: #f5f5f5;
+  transition: transform 0.15s;
+  &:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.842);
+  }
+}
+
+.dashboard-card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-card-label {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.dashboard-card-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* --- Room View Header & Tabs --- */
 .roomview-header {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap; // Allow controls to wrap if needed
 }
 
 .type-tabs {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.2rem;
+
   button {
-    background: #e0e0e0;
+    background: var(--button-bg);
     border: none;
     padding: 0.5rem 1.5rem;
     border-radius: 6px 6px 0 0;
@@ -28,30 +119,49 @@
     color: #333;
     transition: background 0.2s;
     &.active {
-      background-color: #23233a;
-      border-bottom: 2px solid #b4884d;
+      background-color: #55adff;
+      border-bottom: 2px solid #ececec;
       color: #fff;
     }
     &:hover {
-      background: var(--color-secondary);
-      color: #fff;
+      background: var(--button-hover);
+      color: #000000;
+    }
+  }
+
+  // Make tabs scrollable on mobile
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    padding-bottom: 10px; // Space for scrollbar
+    // Hide scrollbar for a cleaner look
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    button {
+      font-size: 1.2rem;
+      white-space: nowrap; // Prevent button text from wrapping
     }
   }
 }
 
+/* --- Room Grid (Made Responsive with CSS Grid) --- */
 .roomview-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: grid; // Changed from flex to grid
+  // This single line creates a responsive grid
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem; // Replaces margin on cards for better spacing control
   position: relative;
 
   .room-card {
-    width: 150px;
+    // Width and margin are no longer needed
     height: 150px;
     padding: 1rem;
-    margin: 0.5rem;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.349);    
     border-left: 6px solid transparent;
     transition: all 0.3s ease;
 
@@ -76,305 +186,35 @@
       color: #000;
     }
 
-    // Status color indicators
-    &.occupied,
-    &.Occupied {
-      border-left-color: #e74c3c; // Red
-    }
+  @media (max-width: 768px) {
+    height: auto;
+  }
 
-    &.stay-over,
-    &.Stay\ Over {
-      border-left-color: #d35400; // Orange-brown
-    }
 
-    &.on-change,
-    &.On\ Change {
-      border-left-color: #f39c12; // Yellow-orange
-    }
-
-    &.do-not-disturb,
-    &.Do\ Not\ Disturb {
-      border-left-color: #8e44ad; // Purple
-    }
-
-    &.cleaning-in-progress,
-    &.Cleaning\ in\ Progress {
-      border-left-color: #3498db; // Blue
-    }
-
-    &.sleep-out,
-    &.Sleep\ Out {
-      border-left-color: #16a085; // Teal
-    }
-
-    &.on-queue,
-    &.On\ Queue {
-      border-left-color: #95a5a6; // Grey
-    }
-
-    &.skipper,
-    &.Skipper {
-      border-left-color: #2c3e50; // Dark gray
-    }
-
-    &.vacant-and-ready,
-    &.Vacant\ and\ Ready {
-      border-left-color: #27ae60; // Green
-    }
-
-    &.vacant-and-clean,
-    &.Vacant\ and\ Clean {
-      border-left-color: #2ecc71; // Light green
-    }
-
-    &.out-of-order,
-    &.Out\ of\ Order {
-      border-left-color: #5a5a5a; // Dark red
-    }
-
-    &.out-of-service,
-    &.Out\ of\ Service {
-      border-left-color: #383838; // Orange
-    }
-
-    &.lockout,
-    &.Lockout {
-      border-left-color: #34495e; // Navy
-    }
-
-    &.did-not-checkout,
-    &.Did\ Not\ Check\ Out {
-      border-left-color: #9b59b6; // Purple
-    }
-
-    &.due-out,
-    &.Due\ Out {
-      border-left-color: #f1c40f; // Yellow
-    }
-
-    &.check-out,
-    &.Check\ Out {
-      border-left-color: #2980b9; // Blue
-    }
-
-    &.early-checkin,
-    &.Early\ Check\ In {
-      border-left-color: #1abc9c; // Aqua
-    }
-
-    &.reserved-guaranteed,
-    &.Reserved\ -\ Guaranteed {
-      border-left-color: #f1c40f; // Bright yellow
-    }
-
-    &.reserved-not-guaranteed,
-    &.Reserved\ -\ Not\ Guaranteed {
-      border-left-color: #f39c12; // Orange-yellow
-    }
+    // Status color indicators (no changes needed here)
+    &.occupied, &.Occupied { border-left-color: #e74c3c; }
+    &.stay-over, &.Stay\ Over { border-left-color: #d35400; }
+    &.on-change, &.On\ Change { border-left-color: #f39c12; }
+    &.do-not-disturb, &.Do\ Not\ Disturb { border-left-color: #8e44ad; }
+    &.cleaning-in-progress, &.Cleaning\ in\ Progress { border-left-color: #3498db; }
+    &.sleep-out, &.Sleep\ Out { border-left-color: #16a085; }
+    &.on-queue, &.On\ Queue { border-left-color: #95a5a6; }
+    &.skipper, &.Skipper { border-left-color: #2c3e50; }
+    &.vacant-and-ready, &.Vacant\ and\ Ready { border-left-color: #27ae60; }
+    &.vacant-and-clean, &.Vacant\ and\ Clean { border-left-color: #2ecc71; }
+    &.out-of-order, &.Out\ of\ Order { border-left-color: #5a5a5a; }
+    &.out-of-service, &.Out\ of\ Service { border-left-color: #383838; }
+    &.lockout, &.Lockout { border-left-color: #34495e; }
+    &.did-not-checkout, &.Did\ Not\ Check\ Out { border-left-color: #9b59b6; }
+    &.due-out, &.Due\ Out { border-left-color: #f1c40f; }
+    &.check-out, &.Check\ Out { border-left-color: #2980b9; }
+    &.early-checkin, &.Early\ Check\ In { border-left-color: #1abc9c; }
+    &.reserved-guaranteed, &.Reserved\ -\ Guaranteed { border-left-color: #f1c40f; }
+    &.reserved-not-guaranteed, &.Reserved\ -\ Not\ Guaranteed { border-left-color: #f39c12; }
   }
 }
 
-.dashboard-header{
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #f3f4f6;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    font-size: 1.1rem;
-    color: #ffffff;
-  }
-}
-.dashboard-headertwo{
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #f3f4f6;
-}
-.dashboard-basic-info {
-  margin: 2rem 0;
-  color: --text-color;
-}
-
-
-.dashboard-title {
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  gap: 0.5rem;
-}
-
-.dashboard-cards {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.dashboard-card {
-  flex: 1 1 0;
-  border-radius: 12px;
-  padding: 1.5rem 1rem;
-  color: #222;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 140px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  background: #f5f5f5;
-  transition: transform 0.15s;
-  &:hover {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  }
-}
-
-.dashboard-card-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.dashboard-card-label {
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
-  font-weight: 500;
-}
-
-.dashboard-card-value {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-/* Status color classes */
-.status-vacant    { background: #4da3ff; color: #fff; }
-.status-occupied  { background: #ffe29a; color: #222; }
-.status-reserved  { background: #e6d6fd; color: #222; }
-.status-outoforder{ background: #ffd6d6; color: #222; }
-.status-dueout    { background: #d6f7ff; color: #222; }
-.status-dirty     { background: #fbe6c2; color: #222; }
-.status-all       { background: #e2e2e2; color: #222; }
-
-.headertext{
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
-}
-
-/* Legend color box base */
-.legend-color {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  margin-right: 6px;
-  border: 2px solid #ccc; /* fallback border */
-}
-
-/* Match legend colors to status colors */
-.legend-color.occupied {
-  background-color: #e74c3c; /* Red */
-  border-color: #e74c3c;
-}
-
-.legend-color.stay-over {
-  background-color: #d35400; /* Orange-brown */
-  border-color: #d35400;
-}
-
-.legend-color.on-change {
-  background-color: #f39c12; /* Yellow-orange */
-  border-color: #f39c12;
-}
-
-.legend-color.do-not-disturb {
-  background-color: #8e44ad; /* Purple */
-  border-color: #8e44ad;
-}
-
-.legend-color.cleaning-in-progress {
-  background-color: #3498db; /* Blue */
-  border-color: #3498db;
-}
-
-.legend-color.sleep-out {
-  background-color: #16a085; /* Teal */
-  border-color: #16a085;
-}
-
-.legend-color.on-queue {
-  background-color: #95a5a6; /* Grey */
-  border-color: #95a5a6;
-}
-
-.legend-color.skipper {
-  background-color: #2c3e50; /* Dark gray */
-  border-color: #2c3e50;
-}
-
-.legend-color.vacant-ready {
-  background-color: #27ae60; /* Green */
-  border-color: #27ae60;
-}
-
-.legend-color.vacant-clean {
-  background-color: #2ecc71; /* Light green */
-  border-color: #2ecc71;
-}
-
-.legend-color.out-of-order {
-  background-color: #5a5a5a; /* Dark red */
-  border-color: #5a5a5a;
-}
-
-.legend-color.out-of-service {
-  background-color: #383838; /* Orange-ish */
-  border-color: #383838;
-}
-
-.legend-color.lockout {
-  background-color: #34495e; /* Navy */
-  border-color: #34495e;
-}
-
-.legend-color.did-not-checkout {
-  background-color: #9b59b6; /* Purple */
-  border-color: #9b59b6;
-}
-
-.legend-color.due-out {
-  background-color: #f1c40f; /* Yellow */
-  border-color: #f1c40f;
-}
-
-.legend-color.check-out {
-  background-color: #2980b9; /* Blue */
-  border-color: #2980b9;
-}
-
-.legend-color.early-checkin {
-  background-color: #1abc9c; /* Aqua */
-  border-color: #1abc9c;
-}
-
-.legend-color.reserved-guaranteed {
-  background-color: #f1c40f; /* Bright yellow */
-  border-color: #f1c40f;
-}
-
-.legend-color.reserved-not-guaranteed {
-  background-color: #f39c12; /* Orange-yellow */
-  border-color: #f39c12;
-}
-
-/* Dropdown styles */
+/* --- Legend & Dropdown (No major changes needed, but will behave better) --- */
 .status-dropdown {
   position: relative;
   display: inline-block;
@@ -404,16 +244,14 @@
   border-radius: 8px;
   padding: 12px;
   margin-top: 4px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   z-index: 10;
 }
 
-/* Show when active */
 .status-dropdown.open .dropdown-menu {
   display: block;
 }
 
-/* Legend item layout inside dropdown */
 .legend-item {
   display: flex;
   align-items: center;
@@ -425,5 +263,50 @@
   height: 14px;
   border-radius: 4px;
   margin-right: 8px;
+  &.occupied { background-color: #e74c3c; border-color: #e74c3c; }
+  &.stay-over { background-color: #d35400; border-color: #d35400; }
+  &.on-change { background-color: #f39c12; border-color: #f39c12; }
+  &.do-not-disturb { background-color: #8e44ad; border-color: #8e44ad; }
+  &.cleaning-in-progress { background-color: #3498db; border-color: #3498db; }
+  &.sleep-out { background-color: #16a085; border-color: #16a085; }
+  &.on-queue { background-color: #95a5a6; border-color: #95a5a6; }
+  &.skipper { background-color: #2c3e50; border-color: #2c3e50; }
+  &.vacant-ready { background-color: #27ae60; border-color: #27ae60; }
+  &.vacant-clean { background-color: #2ecc71; border-color: #2ecc71; }
+  &.out-of-order { background-color: #5a5a5a; border-color: #5a5a5a; }
+  &.out-of-service { background-color: #383838; border-color: #383838; }
+  &.lockout { background-color: #34495e; border-color: #34495e; }
+  &.did-not-checkout { background-color: #9b59b6; border-color: #9b59b6; }
+  &.due-out { background-color: #f1c40f; border-color: #f1c40f; }
+  &.check-out { background-color: #2980b9; border-color: #2980b9; }
+  &.early-checkin { background-color: #1abc9c; border-color: #1abc9c; }
+  &.reserved-guaranteed { background-color: #f1c40f; border-color: #f1c40f; }
+  &.reserved-not-guaranteed { background-color: #f39c12; border-color: #f39c12; }
 }
 
+/* --- Unused classes from your code, kept for context --- */
+.dashboard-basic-info {
+  margin: 2rem 0;
+  color: --text-color;
+}
+.dashboard-title {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+.headertext {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+.status-vacant { background: #4da3ff; color: #fff; }
+.status-occupied { background: #ffe29a; color: #222; }
+.status-reserved { background: #e6d6fd; color: #222; }
+.status-outoforder { background: #ffd6d6; color: #222; }
+.status-dueout { background: #d6f7ff; color: #222; }
+.status-dirty { background: #fbe6c2; color: #222; }
+.status-all { background: #e2e2e2; color: #222; }
