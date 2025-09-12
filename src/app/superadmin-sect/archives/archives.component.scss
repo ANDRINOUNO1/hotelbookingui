@@ -5,6 +5,16 @@
   color: var(--text-color);
 }
 
+.archives-container {
+  padding: 10px;
+  h2{
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid black;
+    color: var(--text-color);
+  }
+}
+
 .tables {
   border-radius: 10px;
   width: 100%;
@@ -20,7 +30,8 @@
     text-align: left;
     border-bottom: 1px solid var(--table-border);
     color: var(--text-color);
-  }
+    font-size: 1.3rem;
+  } 
 
   th {
     font-weight: bold;
@@ -32,7 +43,7 @@
     border-radius: 10px;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--text-color);
+    color: #ffffff;
   }
 }
 
