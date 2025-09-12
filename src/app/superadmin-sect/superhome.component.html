@@ -1,10 +1,16 @@
 <div class="superadmin-topbar">
   <div class="topbar-left">
+    <!-- Sidebar toggle button -->
+    <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fa" [ngClass]="isSidebarCollapsed ? 'fa-bars' : 'fa-times'"></i>
+    </button>
+
     <a href="#home" class="logo">
       <img src="assets/images/bcflats.png" alt="BC Flats Logo" class="w-16 h-16">
     </a>
     <h1>Bc Flats</h1>
   </div>
+
   <div class="user-section">
     <h1>Super Admin</h1>
   </div>
@@ -14,7 +20,8 @@
     </button>
   </div>
 </div>
-<div class="superadmin-container">
+
+<div class="superadmin-container" [class.collapsed]="isSidebarCollapsed">
   <div class="superadmin-sidebar">
     <ul>
       <li (click)="toggleAccountsDropdown()" [class.active]="showAccountsDropdown" class="fa fa-users dropdown-toggle">
@@ -29,6 +36,7 @@
       <li routerLink="archives" routerLinkActive="active" class="fa fa-archive"><span>Archives</span></li>
     </ul>
   </div>
+
   <main class="superadmin-content">
     <router-outlet></router-outlet>
   </main>

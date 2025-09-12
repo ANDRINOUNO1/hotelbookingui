@@ -30,4 +30,18 @@
   <div *ngIf="!isLoading && logs.length === 0">
     No login/logout records found.
   </div>
+
+  <div class="pagination" *ngIf="logs.length > pageSize">
+    <button 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1">
+      Previous
+    </button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages">
+      Next
+    </button>
+  </div>
 </div>

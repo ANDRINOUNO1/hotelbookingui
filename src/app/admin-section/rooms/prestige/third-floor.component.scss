@@ -3,20 +3,20 @@
         border-spacing: 0; /* Remove spacing between cells */
         width: 100%;
         text-align: left;
-        border: 1px solid #ddd;
         border-radius: 10px; /* Rounded corners for the table */
         overflow: hidden;
-        color: var(--text-color);
 }
 .tables th,
 .tables td {
-    border: 1px solid #ddd;
-    padding: 8px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--table-border);
+  padding: 8px;
 }
 
 .tables th {
-    font-weight: bold;
-    background: var(--card-bg);
+  color: white;
+  background: var(--table-header);
+  font-weight: bold;
 }
 
 .status-label {

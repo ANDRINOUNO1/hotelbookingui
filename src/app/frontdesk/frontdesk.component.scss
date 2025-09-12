@@ -1,36 +1,102 @@
 :host {
-  --main-background: #0b0b31;
+  --sidebar-color: #5c9bcf;
+  --sidebar-active: #181824;
+  --sidebar-text: #000000;
+  --main-bg: #ffffff;
+  --header-bg: #b4884d;
+  --header-text: #fff;
+  --card-bg: rgb(255, 255, 255);
+  --card-border: #e0e0e0;
+  --room-all: #1d52ff;
+  --room-all-bg: #d1dcff;
+  --room-vacant: #e5c07b;
+  --room-vacant-bg: #fff8eb;
+  --room-occupied: #ff3c3c;
+  --room-occupied-bg: #ff9b9b;
+  --room-reserved: #4caf50;
+  --room-reserved-bg: #d7ffd8;
+  --room-revenue: #63ff55;
+  --room-revenue-bg: #d8ffd4;
+  --room-other: #009688;
+  --room-other-bg: #b9fff8;
+  --room-stay: #ff00ea;
+  --room-stay-bg: #ffaefb;
+  --room-occ: #0004ff;
+  --room-occ-bg: #a8a9ff;
+  --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --gradient-touch: linear-gradient(90deg, #171725 0%, #b4884d 100%);
+  --border: .1rem solid rgba(229, 192, 123, 0.15);
   --text-color: #222;
-  --header-text-color: #fff;
-  --color-primary:  linear-gradient(90deg, #007affa1 70%, #549eff 100%);
-  --color-secondary: #2196f3;
-  --sidebar-color: linear-gradient(90deg, #007affa1 0%, #0f83a0 100%);
+  --input-bg: #ffffff;
+  --input-text: #171725;
+  --input-border: #87afff;
+  --table-bg: #ffffff;
+  --table-border: #ddd;
+  --popup-bg: #ffffff;
+  --popup-border: #ddd;
+  --button-bg: #22a3ee;
+  --button-text: #374151;
+  --button-hover: #e5e7eb;
+  --click-active: #0b4161;
+  --table-color: #ffffff;
+  --table-text: #222;
+  --table-header: #55a4ff;
+  --dropdown-text: #ffffff;
+  --status-vacant-ready: #10B981;
+  --status-occupied: #f53a0b;
+  --status-stay-over: #8b00ad;
+  --status-on-change: #00c9bf;
+  --status-dnd: #6b0225;
+  --status-cleaning: #04a1fc;
+  --status-reserved-guaranteed: #fc8f00;
+  --status-reserved-not-guaranteed: #aa7e04;
+  --status-out-of-order: #525252;
+  --status-lockout: #DC2626;
+  --status-default: #10B981;
+  --text-red: #ff3c3c;
+  --text-green: #4caf50;
+  --toggle-btn-bg: #374151;
+  --toggle-btn-shadow: #1f2937;
+  --toggle-btn-hover: #4b5563;
+  --toggle-btn-text: #ffffff;
+  --logout-btn-bg: #d94732;
+  --logout-btn-shadow: #a52b1a;
+  --logout-btn-hover: #e15f4e;
+  --logout-btn-text: #ffffff;
+  --topbar: rgb(50, 126, 197);
 }
 
 .frontdesk-container {
-  min-height: 100vh;
   display: flex;
-  background-color: var(--main-background);
+  flex-direction: row;
+  height: 100dvh; /* Dynamic viewport height, fixes mobile viewport issues */
+  background-color: var(--main-bg);
   color: var(--text-color);
+  overflow: hidden;
+  position: relative;
 }
 
+/* --- TOPBAR --- */
 .frontdesk-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #0a47b885;
-  color: #fff;
+  background: var(--topbar);
+  color: white;
   padding: 0.5rem 1rem;
   width: 100%;
+  flex-shrink: 0;
+
+  h1 {
+    font-size: clamp(1.2rem, 2vw, 2rem); /* Scales with screen size */
+    color: var(--header-text-color);
+    margin: 0;
+  }
 
   .topbar-left {
     display: flex;
     align-items: center;
-    gap: 2rem;
-  }
-
-  .search-section {
-    flex: none;
+    gap: 1rem;
   }
 
   .user-section {
@@ -40,54 +106,204 @@
     text-align: right;
   }
 
-  h1 {
-    font-size: 2rem;
-    color: var(--header-text-color);
-    margin: 0;
-    padding: 0.2rem 1rem;
-    border-radius: 4px;
-  }
-
-  .logout{
+  .logout {
     cursor: pointer;
     padding: 0.5rem 1rem;
     background: #e74c3c;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    white-space: nowrap;
   }
 }
+
 .logo {
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 2vw, 2rem);
   color: #b4884d;
   letter-spacing: 0.5px;
 }
+
+/* --- SIDEBAR --- */
 .frontdesk-sidebar {
-  flex-direction: column;
-  padding-top: 1rem;
-  min-height: 100vh;
-  justify-content: space-between;
-  z-index: 1;
   width: 220px;
-  background: #1e1eca77;
-  color: #fff;
-  ul { list-style: none; padding: 10px; }
-  li {
+  background: var(--sidebar-color);
+  color: white;
+  flex-shrink: 0;
+  padding-top: 1rem;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  overflow-y: auto;
+  max-height: 100%; /* Ensures sidebar doesn’t overflow viewport */
+  ul {
+    flex-grow: 1; /* push logout to bottom */
+    padding: 1rem 0;
+  }
+
+  .sidebar-logout {
+    margin-top: auto; /* forces it to bottom */
     padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    cursor: pointer;
-    &:hover { background: #1a222b; }
-    &.active {
-      background: var(--color-primary);
+    border-top: 1px solid rgba(255,255,255,0.2);
+
+    button {
+      width: 100%;
+      background: #e74c3c;
       color: #fff;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: left;
+
+      i {
+        margin-right: 0.5rem;
+      }
+
+      &:hover {
+        background: #c0392b;
+      }
     }
+  }
+
+}
+
+.frontdesk-container:not(.sidebar-open) .frontdesk-sidebar {
+  width: 0;
+  padding: 1rem 0;
+  overflow: hidden;
+}
+
+.frontdesk-sidebar ul {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.frontdesk-sidebar li {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.frontdesk-sidebar li:hover {
+  background: #1a222b;
+  transform: translateX(5px);
+  color: white;
+  border-radius: 10px;
+}
+
+.frontdesk-sidebar li.active {
+  background: rgb(30, 30, 131);
+  color: #fff;
+  border-radius: 5px;
+}
+
+/* --- MAIN CONTENT --- */
+.frontdesk-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  min-width: 0; /* Prevents overflow on flex children */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  /* Ensure text and tables scale properly */
+  * {
+    max-width: 100%;
+    word-wrap: break-word;
   }
 }
 
-.frontdesk-content {
-  flex: 1;
-  background:  linear-gradient(90deg, #007affa1 0%, #77c2ff 100%);
-  padding: 1rem;
+/* --- TOGGLE BUTTONS --- */
+.mobile-menu-toggle,
+.desktop-menu-toggle {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.desktop-menu-toggle {
+  display: block;
+}
+
+.mobile-menu-toggle .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+/* --- RESPONSIVENESS --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .frontdesk-sidebar {
+    width: 180px;
+  }
+  .frontdesk-topbar h1 {
+    font-size: 1.5rem;
+  }
+  .frontdesk-content {
+    padding: 0.75rem;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+/* --- MOBILE FIXES --- */
+@media (max-width: 768px) {
+  .frontdesk-topbar {
+    flex-direction: row; /* Keep items in a row */
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .frontdesk-topbar .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* space between hamburger & text/logo */
+    flex: none;
+  }
+
+  .frontdesk-topbar .topbar-left h1 {
+    display: block; /* show Front Desk text */
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .frontdesk-topbar .hamburger {
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .frontdesk-topbar .user-section {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .frontdesk-topbar .logout {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  /* Logo smaller on mobile */
+  .logo img {
+    width: 40px;
+    height: auto;
+  }
 }

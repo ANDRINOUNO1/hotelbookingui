@@ -1,28 +1,3 @@
-:host {
-  --sidebar-bg: var(--main-color, #dfdffa);
-  --sidebar-active: var(--dark-base, #181824);
-  --sidebar-text: var(--sub-color, #e5c07b);
-  --main-bg: var(--white, #f5f5f7);
-  --header-bg: var(--accent-color, #b4884d);
-  --header-text: #fff;
-  --card-bg: var(--white, #f5f5f7);
-  --card-border: #e0e0e0;
-  --room-vacant: var(--sub-color, #e5c07b);
-  --room-occupied: var(--main-color, #0b0b31);
-  --room-reserved: #4caf50;
-  --room-dueout: #9c27b0;
-  --room-dirty: #e53935;
-  --room-outoforder: #f44336;
-  --room-default: var(--accent-color, #b4884d);
-  --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --gradient-touch: linear-gradient(90deg, #171725 0%, #b4884d 100%);
-  --border: .1rem solid rgba(229, 192, 123, 0.15);
-  --text-color: #222;
-}
-
-/* ...existing code... */
-
-/* Enhanced Room View Styles */
 .room-view-container {
   padding: 20px;
   background: #f8f9fa;
@@ -34,15 +9,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  background: var(--header-bg);
   padding: 20px;
-  background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .room-view-header h2 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--header-text);
   font-size: 24px;
 }
 
@@ -53,7 +28,7 @@
 }
 
 .header-info span {
-  color: #666;
+  color: var(--header-text);
   font-size: 14px;
 }
 
@@ -68,7 +43,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  background: white;
+  background: var(--card-bg);
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -93,181 +68,16 @@
 }
 
 .tab-button.active {
-  background: #3498db;
   color: white;
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .room-content {
-  background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow: hidden;
   min-height: 400px;
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-main);
-  background: var(--main-bg);
-  color: var(--main-color);
-}
-.admin-logo-bar {
-  width: 100%;
-  background: var(--main-bg);
-  text-align: center;
-  padding: 1rem 0 0.5rem 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.admin-logo {
-  height: 60px;
-  width: auto;
-  display: inline-block;
-}
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background: var(--main-bg);
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
-  display: flex;
-  flex-direction: column;
-  padding-top: 1rem;
-  min-height: 100vh;
-}
-.sidebar .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--sidebar-text);
-  letter-spacing: 1px;
-}
-.sidebar nav {
-  flex: 1;
-}
-.sidebar nav a {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--sidebar-text);
-  padding: 1rem 2rem;
-  text-decoration: none;
-  font-size: 1.1rem;
-  border-left: 4px solid transparent;
-  transition: background 0.2s, border-color 0.2s;
-}
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background: var(--sidebar-active);
-  border-left: 4px solid var(--sidebar-text);
-  color: var(--white);
-}
-.sidebar .powered {
-  font-size: 0.9rem;
-  text-align: center;
-  margin: 2rem 0 1rem 0;
-  color: #aaa;
-}
-
-/* Main */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-/* Header */
-.header-bar {
-  background: var(--header-bg);
-  color: var(--header-text);
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.header-bar .left {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-.header-bar .hotel-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-.header-bar .search-box input {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: none;
-  font-size: 1rem;
-  width: 220px;
-}
-.header-bar .user-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.header-bar .user-info .fa-user-circle {
-  font-size: 1.7rem;
-}
-
-/* Status Summary */
-.status-summary {
-  display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem 2rem 0 2rem;
-  flex-wrap: wrap;
-}
-.status-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  min-width: 120px;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-.status-card .icon {
-  font-size: 1.5rem;
-}
-.status-vacant { color: var(--room-vacant);}
-.status-occupied { color: var(--room-occupied);}
-.status-reserved { color: var(--room-reserved);}
-.status-outoforder { color: var(--room-outoforder);}
-.status-dueout { color: var(--room-dueout);}
-.status-dirty { color: var(--room-dirty);}
-.status-all { color: var(--room-default);}
-
-/* Room Grid */
-.room-view-container {
-  padding: 2rem;
-  padding-top: 1rem;
-}
-.room-view-header {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-.room-view-header select,
-.room-view-header input[type="date"] {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
 .room-tabs {
   display: flex;
   gap: 1rem;

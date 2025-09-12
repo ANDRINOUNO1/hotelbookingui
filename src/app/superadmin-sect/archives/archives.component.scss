@@ -6,13 +6,12 @@
 }
 
 .tables {
-  background: #3b83f65e;
   border-radius: 10px;
   width: 100%;
   border-collapse: collapse;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.452);
   color: var(--text-color);
   border: 1px solid var(--table-border);
 
@@ -51,7 +50,7 @@
 }
 
 .popup {
-  background: rgba(21, 98, 199, 0.712);
+  background: rgb(255, 255, 255);
   border-radius: 12px;
   padding: 2rem;
   max-width: 600px;
@@ -62,7 +61,7 @@
 }
 
 .popup h3 {
-  background: linear-gradient(90deg, #0f4cce, #3b82f6);
+  background: rgb(19, 63, 156);
   color: #fff;
   padding: 1rem 1.5rem;
   border-radius: 8px;

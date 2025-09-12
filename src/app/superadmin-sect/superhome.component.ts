@@ -13,6 +13,7 @@ import { LoginHistoryService } from '../_services/login-history.service';
 })
 export class SuperhomeComponent {
   showAccountsDropdown = false;
+  isSidebarCollapsed = false;  // 👈 NEW
 
   constructor(
     private renderer: Renderer2,
@@ -23,9 +24,12 @@ export class SuperhomeComponent {
     private loginHistoryService: LoginHistoryService
   ) {}
 
+  ngOnInit(){
+    this.titleservice.setTitle('BC Flats - Admin');
+  }
+
   logout() {
     const accountId = sessionStorage.getItem('accountId'); 
-
     if (accountId) {
       this.loginHistoryService.createLog({ accountId: +accountId, action: 'logout' })
         .subscribe({
@@ -35,7 +39,7 @@ export class SuperhomeComponent {
     }
 
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('user');        // 👈 clear user too
+      localStorage.removeItem('user');
     }
 
     this.titleservice.setTitle('BC Flats');
@@ -45,4 +49,8 @@ export class SuperhomeComponent {
   toggleAccountsDropdown() {
     this.showAccountsDropdown = !this.showAccountsDropdown;
   }
-} 
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+}
