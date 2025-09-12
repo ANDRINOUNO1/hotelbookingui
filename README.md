@@ -26,3 +26,26 @@ DOCUMENTATION UPDATES :
 | ⛔ Security                           | Done                                                                         |
 | ✔︎ Development                         | Done                                                                         |
 | ✔︎ Hardware Specification              | Done                                                                         |
+
+
+
+
+# HOTEL BOOKING SYSTEM #
+    - The price is not updating.
+    - The card payment is wrong it needs to change.
+
+# INVENTORY SYSTEM #
+    -The landing page of their UI is not labeled
+    - Need to be bigger the fonts.
+    - The staff view button is duplicated. It should be one button only
+
+
+# RECORDING MANAGEMENT SYSTEM #
+    - Lacking request certificate in student side
+    - Lacking request release date
+
+# VOTING SYSTEM # 
+    - The add button for the add course is just to big for me
+
+# LIBRARY MANAGEMENT SYSTEM #
+    - In about us, PACUCOA accredetations
