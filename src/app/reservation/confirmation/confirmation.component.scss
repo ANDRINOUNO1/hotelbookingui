@@ -270,6 +270,23 @@
         }
       }
     }
+    .card-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input {
+        flex: 1;
+        padding-right: 50px; // space for the icon
+      }
+
+      .card-icon {
+        position: absolute;
+        right: 10px;
+        width: 40px;
+        height: auto;
+      }
+    }
 
     .help-text {
       color: #000000;

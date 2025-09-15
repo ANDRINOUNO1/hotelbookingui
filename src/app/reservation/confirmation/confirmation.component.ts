@@ -7,6 +7,7 @@ import { RESERVATION_FEES } from '../../_models/entities';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-confirmation',
@@ -42,7 +43,8 @@ export class ConfirmationComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private reservationDataService: ReservationDataService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +73,69 @@ export class ConfirmationComponent implements OnInit {
     this.mobileNumberError = '';
     return true;
   }
+
+    cardIcon: SafeUrl = '';
+
+    onCardNumberInput(event: any) {
+      let rawValue = event.target.value.replace(/\D/g, ''); // digits only
+
+      // Detect card type first (on raw digits)
+      const detectedType = this.detectCardType(rawValue);
+
+      // Apply length limits
+      let maxLength = 16;
+      if (detectedType === 'American Express') {
+        maxLength = 15;
+      }
+      rawValue = rawValue.substring(0, maxLength);
+
+      // Format as XXXX XXXX XXXX XXXX
+      let formattedValue = rawValue.replace(/(.{4})/g, '$1 ').trim();
+
+      this.paymentDetails.cardNumber = formattedValue;
+      event.target.value = formattedValue;
+
+      this.paymentDetails.paymentMethod = detectedType;
+      this.cardIcon = this.getCardIcon(detectedType);
+    }
+
+    detectCardType(cardNumber: string): string {
+      const bin = cardNumber.substring(0, 6);
+
+      if (/^416511/.test(bin)) return 'Visa - Debit';
+      if (/^545143/.test(bin)) return 'MasterCard - Credit';
+      if (/^548809/.test(bin)) return 'MasterCard - Credit';
+      if (/^3[47]/.test(cardNumber)) return 'American Express';
+      if (/^6(?:011|5|4[4-9])/.test(cardNumber)) return 'Discover';
+      if (/^3(?:0[0-5]|[68])/.test(cardNumber)) return 'Diners Club';
+      if (/^35/.test(cardNumber)) return 'JCB';
+      return '';
+    }
+
+    getCardIcon(cardType: string): SafeUrl {
+      let url = '';
+      switch (cardType) {
+        case 'Visa':
+          url = 'https://img.icons8.com/color/48/visa.png';
+          break;
+        case 'MasterCard':
+          url = 'https://img.icons8.com/color/48/mastercard-logo.png';
+          break;
+        case 'American Express':
+          url = 'https://img.icons8.com/color/48/amex.png';
+          break;
+        case 'Discover':
+          url = 'https://img.icons8.com/color/48/discover.png';
+          break;
+        case 'Diners Club':
+          url = 'https://img.icons8.com/color/48/diners-club.png';
+          break;
+        case 'JCB':
+          url = 'https://img.icons8.com/color/48/jcb.png';
+          break;
+      }
+      return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
 
     onMobileNumberInput(event: any) {
     let value = event.target.value; 

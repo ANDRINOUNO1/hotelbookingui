@@ -7,7 +7,7 @@ import { Role } from '../../_models/role.model';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-add-account',
+  selector: 'app-add-accounts',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-account.component.html',

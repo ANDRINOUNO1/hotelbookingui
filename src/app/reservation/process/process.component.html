@@ -25,6 +25,7 @@
         <div class="form-group">
           <input type="text" placeholder="First Name" formControlName="firstName"
             (focus)="onFieldFocus('firstName')" (blur)="onFieldBlur('firstName')" (input)="onFieldChange('firstName')"
+            (input)="capitalizeFirstLetter('firstName')"
             [class.error]="hasError('firstName')" [class.valid]="isValid('firstName')" />
           <div class="error-message" *ngIf="hasError('firstName')">{{ getErrorMessage('firstName') }}</div>
         </div>
@@ -33,6 +34,7 @@
         <div class="form-group">
           <input type="text" placeholder="Last Name" formControlName="lastName"
             (focus)="onFieldFocus('lastName')" (blur)="onFieldBlur('lastName')" (input)="onFieldChange('lastName')"
+            (input)="capitalizeFirstLetter('lastName')"
             [class.error]="hasError('lastName')" [class.valid]="isValid('lastName')" />
           <div class="error-message" *ngIf="hasError('lastName')">{{ getErrorMessage('lastName') }}</div>
         </div>
@@ -80,6 +82,7 @@
         <div class="form-group">
           <input type="text" placeholder="Address" formControlName="address"
             (focus)="onFieldFocus('address')" (blur)="onFieldBlur('address')" (input)="onFieldChange('address')"
+            (input)="capitalizeFirstLetter('address')"
             [class.error]="hasError('address')" [class.valid]="isValid('address')" />
           <div class="error-message" *ngIf="hasError('address')">{{ getErrorMessage('address') }}</div>
         </div>
@@ -88,6 +91,7 @@
         <div class="form-group">
           <input type="text" placeholder="City" formControlName="city"
             (focus)="onFieldFocus('city')" (blur)="onFieldBlur('city')" (input)="onFieldChange('city')"
+            (input)="capitalizeFirstLetter('city')"
             [class.error]="hasError('city')" [class.valid]="isValid('city')" />
           <div class="error-message" *ngIf="hasError('city')">{{ getErrorMessage('city') }}</div>
         </div>

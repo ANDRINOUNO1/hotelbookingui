@@ -140,7 +140,10 @@
   background: var(--main-bg);
   position: relative;
 }
-
+.footer{
+  background: var(--main-bg);
+  color: var(--text-color);
+}
 /* Sidebar */
 .sidebar {
   width: 220px;

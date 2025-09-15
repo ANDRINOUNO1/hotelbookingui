@@ -111,7 +111,7 @@
     <div class="sidebar-bottom">
       <button class="toggle-mode-btn" (click)="toggleDarkMode()">
         <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
-        {{ isDarkMode ? 'Dark Mode' : 'Light Mode' }}
+        {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
       </button>
       <button class="logout-btn" (click)="logout()">
         <i class="fa fa-sign-out-alt"></i> Logout
@@ -125,6 +125,5 @@
 </div>
 
 <div class="footer">
-  <p>&copy; 2023 Hotel Management System</p>
-  <p>Version 1.0.0</p>
+  <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
 </div>

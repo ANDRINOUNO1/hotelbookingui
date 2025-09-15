@@ -239,7 +239,7 @@
           </div>
           <button 
             type="button" 
-            class="navigation-button" 
+            class="btn btn-secondary" 
             (click)="addNavigationItem()">
             <i class="fa fa-plus"></i> Add Navigation Item
           </button>
@@ -503,8 +503,8 @@
                 <input type="number" class="form-control" [(ngModel)]="footerStartYear" min="1900" placeholder="Start year">
                 <span>—</span>
                 <input type="number" class="form-control" [(ngModel)]="footerEndYear" min="1900" placeholder="End year (optional)">
-                <button type="button" class="navigation-button" (click)="updateFooterYearRange(footerStartYear, footerEndYear)">Apply</button>
-                <button type="button" class="navigation-button" (click)="saveFooterYearRange(footerStartYear, footerEndYear)" [disabled]="savingFooter">Save Year</button>
+                <button type="button" class="btn btn-secondary" (click)="updateFooterYearRange(footerStartYear, footerEndYear)">Apply</button>
+                <button type="button" class="btn btn-primary" (click)="saveFooterYearRange(footerStartYear, footerEndYear)" [disabled]="savingFooter">Save Year</button>
               </div>
               <small class="form-help">Leave End year empty to set a single year.</small>
             </div>
@@ -666,11 +666,11 @@
                   <img [src]="homeContent.aboutImages['staff']" alt="Staff image" class="image-preview">
                 </div>
                 <div class="upload-actions">
-                  <button type="button" class="navigation-button" (click)="uploadAboutImage()" 
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()" 
                           [disabled]="!(selectedAboutImage && selectedAboutImageType === 'staff') || uploading">
                     <i class="fa fa-save"></i> Save Changes
                   </button>
-                  <button type="button" class="navigation-button" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
                     <i class="fa fa-undo"></i> Reset to Original Homepage
                   </button>
                 </div>
@@ -724,11 +724,11 @@
                   <img [src]="homeContent.aboutImages['foods']" alt="Foods image" class="image-preview">
                 </div>
                 <div class="upload-actions">
-                  <button type="button" class="navigation-button" (click)="uploadAboutImage()"
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()"
                           [disabled]="!(selectedAboutImage && selectedAboutImageType === 'foods') || uploading">
                     <i class="fa fa-save"></i> Save Changes
                   </button>
-                  <button type="button" class="navigation-button" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
                     <i class="fa fa-undo"></i> Reset to Original Homepage
                   </button>
                 </div>
@@ -782,11 +782,11 @@
                   <img [src]="homeContent.aboutImages['pool']" alt="Pool image" class="image-preview">
                 </div>
                 <div class="upload-actions">
-                  <button type="button" class="navigation-button" (click)="uploadAboutImage()"
+                  <button type="button" class="primary-btn upload-btn" (click)="uploadAboutImage()"
                           [disabled]="!(selectedAboutImage && selectedAboutImageType === 'pool') || uploading">
                     <i class="fa fa-save"></i> Save Changes
                   </button>
-                  <button type="button" class="navigation-button" (click)="resetToOriginalHomepage()" [disabled]="uploading">
+                  <button type="button" class="btn btn-secondary" (click)="resetToOriginalHomepage()" [disabled]="uploading">
                     <i class="fa fa-undo"></i> Reset to Original Homepage
                   </button>
                 </div>

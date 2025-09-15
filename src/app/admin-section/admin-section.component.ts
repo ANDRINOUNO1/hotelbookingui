@@ -175,4 +175,43 @@ export class AdminSectionComponent implements OnInit {
     this.titleservice.setTitle('BC Flats');
     this.router.navigate(['/login']);
   }
+  footerContent = {
+    companyName: 'BC Flats',
+    phone1: '+123-456-7890',
+    phone2: '+696-969-69696',
+    email: 'BCflats.edu.ph',
+    address: 'A.S Fortuna - 400104',
+    social: {
+      facebook: '#',
+      twitter: '#',
+      instagram: '#',
+      linkedin: '#'
+    },
+    copyrightText: '',
+    showDynamicYear: true,
+    styles: {
+      backgroundColor: '#0b0b31',
+      textColor: '#e5c07b',
+      linkColor: '#b4884d',
+      copyrightBackgroundColor: '#f8f9fa'
+    }
+  };
+  getCopyrightText(): string {
+    if (this.footerContent.copyrightText) {
+      return this.footerContent.copyrightText;
+    }
+    
+    if (this.footerContent.showDynamicYear) {
+      return `© ${this.getCurrentYear()}-${this.getNextYear()} ${this.footerContent.companyName}. All rights reserved.`;
+    }
+    
+    return `© ${this.footerContent.companyName}. All rights reserved.`;
+  }
+  getCurrentYear(): number {
+    return new Date().getFullYear();
+  }
+
+  getNextYear(): number {
+    return new Date().getFullYear() + 1;
+  }
 }
