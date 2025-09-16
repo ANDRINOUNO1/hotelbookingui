@@ -27,13 +27,13 @@
       </a>
 
       <div class="sidebar-group" [class.open]="openMenu === 'booking'">
-        <a (click)="toggleMenu('booking')">
+        <a (click)="toggleMenu('booking')" [attr.aria-expanded]="openMenu === 'booking'">
           <i class="fa fa-briefcase"></i> Booking
           <span class="arrow">
-            <i class="fa" [ngClass]="openMenu === 'booking' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="fa fa-chevron-right"></i>
           </span>
         </a>
-        <div class="submenu" *ngIf="openMenu === 'booking'">
+        <div class="submenu">
           <a routerLink="booking" routerLinkActive="active" (click)="closeMobileMenu()">
             <i class="fa fa-briefcase"></i> New Bookings
           </a>
@@ -47,13 +47,13 @@
       </div>
 
       <div class="sidebar-group" [class.open]="openMenu === 'customers'">
-        <a (click)="toggleMenu('customers')">
+        <a (click)="toggleMenu('customers')" [attr.aria-expanded]="openMenu === 'customers'">
           <i class="fa fa-user"></i> Customers
           <span class="arrow">
-            <i class="fa" [ngClass]="openMenu === 'customers' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="fa fa-chevron-right"></i>
           </span>
         </a>
-        <div class="submenu" *ngIf="openMenu === 'customers'">
+        <div class="submenu">
           <a routerLink="customers" routerLinkActive="active" (click)="closeMobileMenu()">
             <i class="fa fa-users"></i> Customer List
           </a>
@@ -62,18 +62,18 @@
       </div>
 
       <div class="sidebar-group" [class.open]="openMenu === 'rooms'">
-        <a (click)="toggleMenu('rooms')">
+        <a (click)="toggleMenu('rooms')" [attr.aria-expanded]="openMenu === 'rooms'">
           <i class="fa fa-key"></i> Rooms
           <span class="arrow">
-            <i class="fa" [ngClass]="openMenu === 'rooms' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="fa fa-chevron-right"></i>
           </span>
         </a>
-        <div class="submenu" *ngIf="openMenu === 'rooms'">
+        <div class="submenu">
           <a routerLink="rooms" routerLinkActive="active" (click)="closeMobileMenu()">
             <i class="fa fa-bed"></i> Room List
           </a>
         </div>
-        <div class="submenu" *ngIf="openMenu === 'rooms'">
+        <div class="submenu">
           <a routerLink="roomstatus" routerLinkActive="active" (click)="closeMobileMenu()">
             <i class="fa fa-cogs"></i> Room Status
           </a>
@@ -81,16 +81,16 @@
       </div>
 
       <div class="sidebar-group" [class.open]="openMenu === 'staff'">
-        <a (click)="toggleMenu('staff')">
+        <a (click)="toggleMenu('staff')" [attr.aria-expanded]="openMenu === 'staff'">
           <i class="fa fa-user"></i> Accounts
           <span class="arrow">
-            <i class="fa" [ngClass]="openMenu === 'staff' ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="fa fa-chevron-right"></i>
           </span>
         </a>
-        <div class="submenu" *ngIf="openMenu === 'staff'">
+        <div class="submenu">
           <a routerLink="addaccount" routerLinkActive="active" (click)="closeMobileMenu()">Add Account</a>
         </div>
-        <div class="submenu" *ngIf="openMenu === 'staff'">
+        <div class="submenu">
           <a routerLink="history" routerLinkActive="active" (click)="closeMobileMenu()">Login History</a>
         </div>
       </div>
@@ -108,13 +108,14 @@
       </a>
     </nav>
     
-    <div class="sidebar-bottom">
-      <button class="toggle-mode-btn" (click)="toggleDarkMode()">
+    <div class="sidebar-bottom" role="group" aria-label="User actions">
+      <button class="toggle-mode-btn" (click)="toggleDarkMode()" title="Toggle theme">
         <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>
-        {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+        <span class="btn-text">{{ isDarkMode ? 'Light' : 'Dark' }}</span>
       </button>
-      <button class="logout-btn" (click)="logout()">
-        <i class="fa fa-sign-out-alt"></i> Logout
+      <button class="logout-btn" (click)="logout()" title="Logout">
+        <i class="fa fa-sign-out-alt"></i>
+        <span class="btn-text">Logout</span>
       </button>
     </div>
   </aside>

@@ -22,6 +22,9 @@ export class AvailabilityComponent implements OnInit {
   selectedDates: { checkIn: string; checkOut: string } | null = null;
   roomAvailabilityCounts: { [key: string]: { available: number; total: number } } = {};
   roomAmenities: { [key: string]: string[] } = {};
+  isModalOpen = false;
+  selectedImages: string[] = [];
+  currentImageIndex = 0;
 
       // Multiple room images for each room type
       roomImages = {
@@ -161,10 +164,12 @@ export class AvailabilityComponent implements OnInit {
         'Free WiFi',
         'TV',
         'Daily housekeeping',
-        'Towels and linens'
+        'Towels and linens',
+        'Free Parking (Reservation Only)',
+        'sample'
       ],
       'Deluxe': [
-        'All Classic amenities',
+        'All Classic amenities', // This keyword triggers the inheritance
         'Premium bedding',
         'Mini refrigerator',
         'Coffee maker',
@@ -189,7 +194,45 @@ export class AvailabilityComponent implements OnInit {
       ]
     };
 
-    return amenitiesMap[roomType] || [];
+    const amenities = amenitiesMap[roomType] || [];
+    if (amenities.length === 0) {
+      return [];
+    }
+
+    const firstAmenity = amenities[0];
+
+    if (firstAmenity.startsWith('All ') && firstAmenity.endsWith(' amenities')) {
+      const baseRoomType = firstAmenity.substring(4, firstAmenity.length - 10);
+      
+      const baseAmenities = this.getAmenitiesByRoomType(baseRoomType);
+      
+      const specificAmenities = amenities.slice(1);
+      
+      return [...new Set([...baseAmenities, ...specificAmenities])];
+    }
+
+    return amenities;
+  }
+
+  openImageModal(roomType: string, index: number): void {
+    const images = this.roomImages[roomType as keyof typeof this.roomImages];
+    if (images && images.length > 0) {
+      this.selectedImages = images;
+      this.currentImageIndex = index;
+      this.isModalOpen = true;
+    }
+  }
+
+  closeImageModal(): void {
+    this.isModalOpen = false;
+  }
+
+  nextImage(): void {
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedImages.length;
+  }
+
+  prevImage(): void {
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.selectedImages.length) % this.selectedImages.length;
   }
 
   getRoomImage(roomType: string, viewNumber: number): string {

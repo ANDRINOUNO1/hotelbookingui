@@ -40,6 +40,12 @@ export class ConfirmationComponent implements OnInit {
   calculatedReservationFee: number = 0;
   mobileNumberError: string = '';
 
+  // Modal state
+  isModalOpen: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+  modalType: 'success' | 'error' | 'info' = 'info';
+
   constructor(
     private http: HttpClient,
     private reservationDataService: ReservationDataService,
@@ -259,7 +265,7 @@ export class ConfirmationComponent implements OnInit {
     
     // Basic fee check
     if (amount < this.reservationFee) {
-      alert(`Reservation fee must be at least ₱${this.reservationFee}.`);
+      this.openModal('Payment Error', `Reservation fee must be at least ₱${this.reservationFee}.`, 'error');
       return;
     }
 
@@ -267,19 +273,19 @@ export class ConfirmationComponent implements OnInit {
 
     // Validate required fields based on payment mode
     if (!mode) {
-      alert('Please select a payment mode.');
+      this.openModal('Payment Required', 'Please select a payment mode.', 'error');
       return;
     }
 
     if ((mode === 'GCash' || mode === 'Maya')) {
       if (!this.paymentDetails.mobileNumber) {
-        alert('Mobile number is required for GCash/Maya payments.');
+        this.openModal('Missing Information', 'Mobile number is required for GCash/Maya payments.', 'error');
         return;
       }
       
       // Validate mobile number format
       if (!this.validateMobileNumber(this.paymentDetails.mobileNumber)) {
-        alert(this.mobileNumberError || 'Please enter a valid mobile number.');
+        this.openModal('Invalid Mobile Number', this.mobileNumberError || 'Please enter a valid mobile number.', 'error');
         return;
       }
     }
@@ -287,7 +293,7 @@ export class ConfirmationComponent implements OnInit {
     if (mode === 'Card') {
       const { paymentMethod, cardNumber, expiry, cvv } = this.paymentDetails;
       if (!paymentMethod || !cardNumber || !expiry || !cvv) {
-        alert('Please fill in all required card payment fields.');
+        this.openModal('Missing Card Details', 'Please fill in all required card payment fields.', 'error');
         return;
       }
     }
@@ -302,7 +308,7 @@ export class ConfirmationComponent implements OnInit {
     );
 
     if (!availableRooms.length) {
-      alert('No available rooms for the selected type.');
+      this.openModal('No Availability', 'No available rooms for the selected type.', 'error');
       return;
     }
 
@@ -348,12 +354,12 @@ export class ConfirmationComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({
       next: booking => {
         console.log('Booking saved:', booking);
-        this.showConfirmationAlert();
+        this.showConfirmationModal();
         this.clearPaymentForm();        // 👈 clear after success
         this.reservationDataService.clearAllData(); // 👈 reset service data
       },
       error: err => {
-        alert(err.error?.message || 'Booking failed.');
+        this.openModal('Booking Failed', err.error?.message || 'Booking failed.', 'error');
       }
     });
   }
@@ -372,10 +378,22 @@ export class ConfirmationComponent implements OnInit {
   }
 
 
-  showConfirmationAlert() {
-    // Show alert and navigate to home after OK
-    alert('Booking confirmed!');
-    this.router.navigate(['/']);
+  showConfirmationModal() {
+    this.openModal('Booking Confirmed', 'Your booking has been confirmed, please wait for an email for payment confirmation. Thank you!', 'success');
+  }
+
+  openModal(title: string, message: string, type: 'success' | 'error' | 'info' = 'info') {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalType = type;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    if (this.modalType === 'success') {
+      this.router.navigate(['/']);
+    }
   }
 
   startNewReservation() {
