@@ -9,6 +9,11 @@ export interface Request {
   booking_id: number;
   type: 'meal' | 'extra_bed' | 'cleaning' | 'other';
   description?: string;
+  extra_bed_size?: string; // single | double | queen | king
+  food_options?: string; // comma-separated
+  parking_space?: string; // none | standard | premium
+  quantity?: number;
+  price?: number;
   status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   created_at?: string;
   updated_at?: string;

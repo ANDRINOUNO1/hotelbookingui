@@ -390,6 +390,17 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.showErrors = false;
     }
   }
+  capitalizeFirstLetter(controlName: string) {
+    const control = this.customerForm.get(controlName);
+    if (control) {
+      let value: string = control.value || '';
+      if (value.length > 0) {
+        // Preserve spaces while capitalizing each word
+        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
+        control.setValue(value, { emitEvent: false });
+      }
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { RequestService, Request } from '../../_services/requests.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,11 +14,25 @@ export class RequestsComponent implements OnInit {
 @Input() bookingId!: number;
 
   requests: Request[] = [];
-  newRequest: Request = { booking_id: 0, type: 'meal', description: '' };
+  newRequest: Request = { 
+    booking_id: 0, 
+    type: 'meal', 
+    description: '',
+    extra_bed_size: 'single',
+    food_options: '',
+    parking_space: 'none',
+    quantity: 1
+  };
 
-  constructor(private requestService: RequestService) {}
+  constructor(private requestService: RequestService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+    // If input not provided, try from query param (?bookingId=123)
+    if (!this.bookingId) {
+      const paramId = Number(this.route.snapshot.queryParamMap.get('bookingId'));
+      if (paramId) this.bookingId = paramId;
+    }
+
     if (this.bookingId) {
       this.loadRequests();
       this.newRequest.booking_id = this.bookingId;
@@ -37,7 +52,15 @@ export class RequestsComponent implements OnInit {
     this.requestService.createRequest(this.newRequest).subscribe({
       next: (res) => {
         this.requests.push(res);
-        this.newRequest = { booking_id: this.bookingId, type: 'meal', description: '' };
+        this.newRequest = { 
+          booking_id: this.bookingId, 
+          type: 'meal', 
+          description: '',
+          extra_bed_size: 'single',
+          food_options: '',
+          parking_space: 'none',
+          quantity: 1
+        };
       },
       error: (err) => console.error('Error creating request:', err)
     });

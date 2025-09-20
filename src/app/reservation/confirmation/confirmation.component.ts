@@ -7,6 +7,7 @@ import { RESERVATION_FEES } from '../../_models/entities';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-confirmation',
@@ -39,10 +40,17 @@ export class ConfirmationComponent implements OnInit {
   calculatedReservationFee: number = 0;
   mobileNumberError: string = '';
 
+  // Modal state
+  isModalOpen: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+  modalType: 'success' | 'error' | 'info' = 'info';
+
   constructor(
     private http: HttpClient,
     private reservationDataService: ReservationDataService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +79,69 @@ export class ConfirmationComponent implements OnInit {
     this.mobileNumberError = '';
     return true;
   }
+
+    cardIcon: SafeUrl = '';
+
+    onCardNumberInput(event: any) {
+      let rawValue = event.target.value.replace(/\D/g, ''); // digits only
+
+      // Detect card type first (on raw digits)
+      const detectedType = this.detectCardType(rawValue);
+
+      // Apply length limits
+      let maxLength = 16;
+      if (detectedType === 'American Express') {
+        maxLength = 15;
+      }
+      rawValue = rawValue.substring(0, maxLength);
+
+      // Format as XXXX XXXX XXXX XXXX
+      let formattedValue = rawValue.replace(/(.{4})/g, '$1 ').trim();
+
+      this.paymentDetails.cardNumber = formattedValue;
+      event.target.value = formattedValue;
+
+      this.paymentDetails.paymentMethod = detectedType;
+      this.cardIcon = this.getCardIcon(detectedType);
+    }
+
+    detectCardType(cardNumber: string): string {
+      const bin = cardNumber.substring(0, 6);
+
+      if (/^416511/.test(bin)) return 'Visa - Debit';
+      if (/^545143/.test(bin)) return 'MasterCard - Credit';
+      if (/^548809/.test(bin)) return 'MasterCard - Credit';
+      if (/^3[47]/.test(cardNumber)) return 'American Express';
+      if (/^6(?:011|5|4[4-9])/.test(cardNumber)) return 'Discover';
+      if (/^3(?:0[0-5]|[68])/.test(cardNumber)) return 'Diners Club';
+      if (/^35/.test(cardNumber)) return 'JCB';
+      return '';
+    }
+
+    getCardIcon(cardType: string): SafeUrl {
+      let url = '';
+      switch (cardType) {
+        case 'Visa':
+          url = 'https://img.icons8.com/color/48/visa.png';
+          break;
+        case 'MasterCard':
+          url = 'https://img.icons8.com/color/48/mastercard-logo.png';
+          break;
+        case 'American Express':
+          url = 'https://img.icons8.com/color/48/amex.png';
+          break;
+        case 'Discover':
+          url = 'https://img.icons8.com/color/48/discover.png';
+          break;
+        case 'Diners Club':
+          url = 'https://img.icons8.com/color/48/diners-club.png';
+          break;
+        case 'JCB':
+          url = 'https://img.icons8.com/color/48/jcb.png';
+          break;
+      }
+      return this.sanitizer.bypassSecurityTrustUrl(url);
+    }
 
     onMobileNumberInput(event: any) {
     let value = event.target.value; 
@@ -194,7 +265,7 @@ export class ConfirmationComponent implements OnInit {
     
     // Basic fee check
     if (amount < this.reservationFee) {
-      alert(`Reservation fee must be at least ₱${this.reservationFee}.`);
+      this.openModal('Payment Error', `Reservation fee must be at least ₱${this.reservationFee}.`, 'error');
       return;
     }
 
@@ -202,19 +273,19 @@ export class ConfirmationComponent implements OnInit {
 
     // Validate required fields based on payment mode
     if (!mode) {
-      alert('Please select a payment mode.');
+      this.openModal('Payment Required', 'Please select a payment mode.', 'error');
       return;
     }
 
     if ((mode === 'GCash' || mode === 'Maya')) {
       if (!this.paymentDetails.mobileNumber) {
-        alert('Mobile number is required for GCash/Maya payments.');
+        this.openModal('Missing Information', 'Mobile number is required for GCash/Maya payments.', 'error');
         return;
       }
       
       // Validate mobile number format
       if (!this.validateMobileNumber(this.paymentDetails.mobileNumber)) {
-        alert(this.mobileNumberError || 'Please enter a valid mobile number.');
+        this.openModal('Invalid Mobile Number', this.mobileNumberError || 'Please enter a valid mobile number.', 'error');
         return;
       }
     }
@@ -222,7 +293,7 @@ export class ConfirmationComponent implements OnInit {
     if (mode === 'Card') {
       const { paymentMethod, cardNumber, expiry, cvv } = this.paymentDetails;
       if (!paymentMethod || !cardNumber || !expiry || !cvv) {
-        alert('Please fill in all required card payment fields.');
+        this.openModal('Missing Card Details', 'Please fill in all required card payment fields.', 'error');
         return;
       }
     }
@@ -237,7 +308,7 @@ export class ConfirmationComponent implements OnInit {
     );
 
     if (!availableRooms.length) {
-      alert('No available rooms for the selected type.');
+      this.openModal('No Availability', 'No available rooms for the selected type.', 'error');
       return;
     }
 
@@ -283,12 +354,12 @@ export class ConfirmationComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/bookings`, bookingPayload).subscribe({
       next: booking => {
         console.log('Booking saved:', booking);
-        this.showConfirmationAlert();
+        this.showConfirmationModal();
         this.clearPaymentForm();        // 👈 clear after success
         this.reservationDataService.clearAllData(); // 👈 reset service data
       },
       error: err => {
-        alert(err.error?.message || 'Booking failed.');
+        this.openModal('Booking Failed', err.error?.message || 'Booking failed.', 'error');
       }
     });
   }
@@ -307,10 +378,22 @@ export class ConfirmationComponent implements OnInit {
   }
 
 
-  showConfirmationAlert() {
-    // Show alert and navigate to home after OK
-    alert('Booking confirmed!');
-    this.router.navigate(['/']);
+  showConfirmationModal() {
+    this.openModal('Booking Confirmed', 'Your booking has been confirmed, please wait for an email for payment confirmation. Thank you!', 'success');
+  }
+
+  openModal(title: string, message: string, type: 'success' | 'error' | 'info' = 'info') {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalType = type;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    if (this.modalType === 'success') {
+      this.router.navigate(['/']);
+    }
   }
 
   startNewReservation() {

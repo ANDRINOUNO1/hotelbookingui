@@ -36,10 +36,10 @@
       <div class="room-card-content">
         <div class="room-media">
           <div class="room-images-grid">
-            <img [src]="getRoomImage(type.type, 1)" [alt]="type.type + ' - View 1'">
-            <img [src]="getRoomImage(type.type, 2)" [alt]="type.type + ' - View 2'">
-            <img [src]="getRoomImage(type.type, 3)" [alt]="type.type + ' - View 3'">
-            <img [src]="getRoomImage(type.type, 4)" [alt]="type.type + ' - View 4'">
+            <img [src]="getRoomImage(type.type, 1)" [alt]="type.type + ' - View 1'" (click)="openImageModal(type.type, 0)" style="cursor: pointer;">
+            <img [src]="getRoomImage(type.type, 2)" [alt]="type.type + ' - View 2'" (click)="openImageModal(type.type, 1)" style="cursor: pointer;">
+            <img [src]="getRoomImage(type.type, 3)" [alt]="type.type + ' - View 3'" (click)="openImageModal(type.type, 2)" style="cursor: pointer;">
+            <img [src]="getRoomImage(type.type, 4)" [alt]="type.type + ' - View 4'" (click)="openImageModal(type.type, 3)" style="cursor: pointer;">
           </div>
         </div>
 
@@ -106,6 +106,7 @@
           </div>
         </div>
       </div>
+      
     </div>
   </div>
   
@@ -117,3 +118,18 @@
   
   <button type="button" (click)="back.emit()" class="btn-secondary back-button">Back</button>
 </div>
+<div *ngIf="isModalOpen" class="image-modal-overlay" (click)="closeImageModal()">
+        <div class="image-modal-content" (click)="$event.stopPropagation()">
+          <button class="modal-close-btn" (click)="closeImageModal()">&times;</button>
+          
+          <button class="modal-nav-btn prev" (click)="prevImage()">&#10094;</button>
+          
+          <img [src]="selectedImages[currentImageIndex]" alt="Room View {{ currentImageIndex + 1 }}" class="modal-image">
+          
+          <button class="modal-nav-btn next" (click)="nextImage()">&#10095;</button>
+
+          <div class="modal-counter">
+              
+          </div>  
+        </div>
+      </div>
