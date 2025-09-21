@@ -328,7 +328,6 @@ export class ConfirmationComponent implements OnInit {
         city: this.customerDetails?.city
       },
       roomsCount: this.reservationData?.rooms,
-      rooms: selectedRooms.map(r => ({ id: r.id, number: r.number })),
       availability: {
         checkIn: this.reservationData?.checkIn,
         checkOut: this.reservationData?.checkOut,

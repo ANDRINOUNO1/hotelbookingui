@@ -81,31 +81,32 @@
 
     <!-- Steps content -->
     <div class="progress_inner__tabs">
-      <ng-container [ngSwitch]="currentStep">
-        <app-reservation-form 
-            *ngSwitchCase="1" 
-            (next)="handleReservationSubmitted($event)">
-        </app-reservation-form>
+      <div class="step-content">
+        <ng-container [ngSwitch]="currentStep">
+          <app-reservation-form 
+              *ngSwitchCase="1" 
+              (next)="handleReservationSubmitted($event)">
+          </app-reservation-form>
 
-        <app-availability 
-            *ngSwitchCase="2" 
-            (next)="handleRoomSelected($event)" 
-            (back)="goBack()">
-        </app-availability>
+          <app-availability 
+              *ngSwitchCase="2" 
+              (next)="handleRoomSelected($event)" 
+              (back)="goBack()">
+          </app-availability>
 
-        <app-process 
-            *ngSwitchCase="3" 
-            (next)="handleCustomerDetails($event)" 
-            (back)="goBack()">
-        </app-process>
+          <app-process 
+              *ngSwitchCase="3" 
+              (next)="handleCustomerDetails($event)" 
+              (back)="goBack()">
+          </app-process>
 
-        <app-confirmation 
-            *ngSwitchCase="4"
-            (back)="goBack()"
-            (newReservation)="startNewReservation()">
-        </app-confirmation>
-    </ng-container>
-
+          <app-confirmation 
+              *ngSwitchCase="4"
+              (back)="goBack()"
+              (newReservation)="startNewReservation()">
+          </app-confirmation>
+        </ng-container>
+      </div>
     </div>
   </div>
 </section>

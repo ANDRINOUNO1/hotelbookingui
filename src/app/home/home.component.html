@@ -57,11 +57,6 @@
   </section>
 </section>
 
-<!-- Availability Section -->
-<section class="availability" id="availability">
-  <!-- Availability content will be added here -->
-</section>
-
 <!-- About Section -->
 <section class="about" id="about">
   <div class="row">
@@ -82,7 +77,6 @@
     <div class="content">
       <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
       <p>{{ getContentText('about', 'foods-description') || 'Savor our chef-crafted dishes made with the freshest ingredients. Every bite is an experience worth remembering.' }}</p>
-      <a href="#footer" class="btn">contact us</a>
     </div>
   </div>
 
@@ -93,13 +87,12 @@
     <div class="content">
       <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
       <p>{{ getContentText('about', 'pool-description') || 'Relax, unwind, and soak up the sun in our crystal-clear pools—designed for both serenity and fun.' }}</p>
-      <a href="#availability" class="btn">check availability</a>
     </div>
   </div>
 </section>
 
 <!-- Services Section -->
-<div style="height: 50px;"></div>
+<div style="height: 20px;"></div>
 <section class="services">
   <div class="box-container">
     <div class="box">
@@ -139,88 +132,83 @@
     </div>
   </div>
 </section>
-<div style="height: 50px;"></div>
+<div style="height: 20px;"></div>
 
-<!-- Rooms Section -->
 <section class="rooms">
-  <section id="rooms" class="py-12 bg-gradient-to-r from-[#2b65ec] to-white min-h-[600px] min-w-full">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-8 text-black drop-shadow-md">Our Rooms</h2>
-      <div class="relative h-[500px] flex items-center justify-center">
-        <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+  <section id="rooms">
+    <div class="container">
+      <h2>Rooms</h2>
+
+      <div class="relative">
+        <div class="absolute">
           <div *ngFor="let room of rooms; let i = index"
-            class="absolute top-0 w-1/2 mx-auto transition-all duration-500"
-            [ngClass]="getCardClass(i)">
+               class="card-wrapper"
+               [ngClass]="getCardClass(i)">
             
-            <!-- Card -->
-            <div class="bg-[#f5f5f5] border-2 border-[#ffa600] rounded-xl shadow-lg overflow-hidden flex flex-col h-[600px]">
-              <div class="relative w-full flex-shrink-0" style="height: 50%;">
-                <div class="relative w-full h-full bg-cover bg-center rounded-t-xl"
-                  [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
-                  <div class="absolute inset-0 bg-black/30 rounded-t-xl"></div>
+            <div class="card">
+              <div class="card-image">
+                <div class="bg" [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
+                  <div class="overlay"></div>
                 </div>
               </div>
 
-              <div class="flex justify-center items-center gap-6 w-full flex-shrink-0" style="height: 20%;">
+              <div class="seasonal-thumbs">
                 <div *ngFor="let img of room.seasonalImages"
-                  class="aspect-square h-full rounded-xl overflow-hidden border-2 border-white bg-cover bg-center cursor-pointer transform transition-transform duration-300 hover:scale-125 hover:shadow-2xl"
-                  [ngStyle]="{'background-image': 'url(' + img + ')'}">
+                     class="thumb"
+                     [ngStyle]="{'background-image': 'url(' + img + ')'}">
                 </div>
               </div>
 
-              <div class="flex flex-col flex-grow justify-center items-center text-center p-6" style="height: 30%;">
-                <h3 class="text-xl font-bold mb-1 text-gray-900">{{ room.name }}</h3>
-                <p class="text-gray-700 text-sm font-medium mb-2">{{ room.brand }}</p>
-                <p class="text-gray-800 text-sm">{{ room.description }}</p>
+              <div class="card-content">
+                <h3>{{ room.name }}</h3>
+                <p class="brand">{{ room.brand }}</p>
+                <p class="description">{{ room.description }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Nav Buttons -->
-        <button class="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110" (click)="prevRoom()" aria-label="Previous">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <button class="nav-btn nav-left" (click)="prevRoom()" aria-label="Previous">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
 
-        <button class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-700 hover:bg-white z-30 shadow-md transition-all hover:scale-110" (click)="nextRoom()" aria-label="Next">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <button class="nav-btn nav-right" (click)="nextRoom()" aria-label="Next">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
           </svg>
         </button>
 
-        <!-- Dots -->
-        <div class="absolute bottom-6 left-0 right-0 flex justify-center items-center space-x-3 z-30">
+        <div class="dots">
           <button *ngFor="let room of rooms; let idx = index"
-            class="w-2 h-2 rounded-full transition-all duration-300"
-            [ngClass]="activeRoom === idx ? 'bg-orange-400 w-5' : 'bg-gray-400 hover:bg-gray-500'"
-            (click)="activeRoom = idx"
-            [attr.aria-label]="'Go to item ' + (idx + 1)">
+                  class="dot"
+                  [ngClass]="{ 'active': activeRoom === idx }"
+                  (click)="activeRoom = idx"
+                  [attr.aria-label]="'Go to item ' + (idx + 1)">
           </button>
         </div>
       </div>
-    </div>
+    </div> 
   </section>
 </section>
-<div style="height: 100px;"></div>
 
 <section class="contact" id="contact">
 
    <div class="row">
 
       <form (ngSubmit)="submitContactForm()" #contactForm="ngForm">
-         <h3>send us message</h3>
-         <input type="text" name="name" [(ngModel)]="contactFormData.name" required maxlength="50" placeholder="enter your name" class="box" [class.error]="contactFormData.nameError">
+         <h3>Send Us A Message!</h3>
+         <input type="text" name="name" [(ngModel)]="contactFormData.name" required maxlength="50" placeholder="Enter your Name" class="box" [class.error]="contactFormData.nameError">
          <div class="error-message" *ngIf="contactFormData.nameError">{{ contactFormData.nameError }}</div>
          
-         <input type="email" name="email" [(ngModel)]="contactFormData.email" required maxlength="50" placeholder="enter your email" class="box" [class.error]="contactFormData.emailError">
+         <input type="email" name="email" [(ngModel)]="contactFormData.email" required maxlength="50" placeholder="Enter your Email" class="box" [class.error]="contactFormData.emailError">
          <div class="error-message" *ngIf="contactFormData.emailError">{{ contactFormData.emailError }}</div>
          
-         <input type="tel" name="phone" [(ngModel)]="contactFormData.phone" required maxlength="11" placeholder="enter your number (09XXXXXXXXX)" class="box" [class.error]="contactFormData.phoneError" (input)="validatePhone($event)">
+         <input type="tel" name="phone" [(ngModel)]="contactFormData.phone" required maxlength="11" placeholder="Enter your Number (09XXXXXXXXX)" class="box" [class.error]="contactFormData.phoneError" (input)="validatePhone($event)">
          <div class="error-message" *ngIf="contactFormData.phoneError">{{ contactFormData.phoneError }}</div>
          
-         <select name="subject" [(ngModel)]="contactFormData.subject" required class="box">
+         <select name="subject" [(ngModel)]="contactFormData.subject" class="box" required>
             <option value="">Select your inquiry type</option>
             <option value="booking">Booking Inquiry</option>
             <option value="cancellation">Cancellation Request</option>

@@ -2,24 +2,70 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background: white;
+  background: rgb(255, 255, 255);
   position: relative;
-  border:3px solid  rgb(43, 101, 236);
+  .modal-backdrop {
+    position: fixed;
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; 
+  }
 
-  // Animated background particles
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(180, 136, 77, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(180, 136, 77, 0.05) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
-    z-index: 1;
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeInScale 0.3s ease-out;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    p {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 1.25rem;
+      line-height: 1.4;
+    }
+
+    .close-btn {
+      background: #4671ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #365adf;
+      }
+
+      &:active {
+        background: #2b4dbd;
+      }
+    }
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .reservation-left {
@@ -97,14 +143,11 @@
     form {
       display: flex;
       flex-direction: column;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.432);
       border-radius: 20px;
       padding: 2rem;
       backdrop-filter: blur(20px);
-      box-shadow: 
-        0 20px 40px rgba(23, 23, 37, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       animation: slideInUp 0.6s ease-out;
 
       .form-group {

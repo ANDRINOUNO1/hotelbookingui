@@ -120,7 +120,7 @@ export class ReservationComponent {
       case 3:
         return this.reservationDataService.isCustomerDetailsValid();
       case 4:
-        return true; // Confirmation step is always "completed" when reached
+        return this.currentStep === 4;
       default:
         return false;
     }

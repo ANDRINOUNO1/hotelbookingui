@@ -22,6 +22,9 @@ export class ReservationFormComponent implements OnInit {
     rooms: 1,
   };
 
+  showModal: boolean = false;
+  modalMessage: string = '';
+
   constructor(private reservationDataService: ReservationDataService) {}
 
   ngOnInit(): void {
@@ -87,7 +90,7 @@ export class ReservationFormComponent implements OnInit {
     // Validate required fields
     if (!this.booking.checkIn || !this.booking.checkOut || 
         this.booking.adults <= 0 || this.booking.rooms <= 0) {
-      alert('Please fill in all required fields: Check-in date, Check-out date, Number of adults, and Number of rooms.');
+      this.openModal('Please fill in all required fields.');
       return;
     }
 
@@ -102,28 +105,38 @@ export class ReservationFormComponent implements OnInit {
     fiveYearsFromNow.setHours(23, 59, 59, 999);
 
     if (checkIn < today) {
-      alert('Check-in date cannot be in the past.');
+      this.openModal('Check-in date cannot be in the past.');
       return;
     }
 
     if (checkIn > fiveYearsFromNow) {
-      alert('Check-in date cannot be more than 5 years from today.');
+      this.openModal('Check-in date cannot be more than 5 years from today.');
       return;
     }
 
     if (checkOut <= checkIn) {
-      alert('Check-out date must be after check-in date.');
+      this.openModal('Check-out date must be after check-in date.');
       return;
     }
 
     if (checkOut > fiveYearsFromNow) {
-      alert('Check-out date cannot be more than 5 years from today.');
+      this.openModal('Check-out date cannot be more than 5 years from today.');
       return;
     }
 
     console.log('Submitting Reservation:', this.booking);
     this.reservationDataService.setReservation(this.booking);
     this.next.emit(this.booking);
+  }
+
+  openModal(message: string) {
+    this.modalMessage = message;
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.modalMessage = '';
   }
 
   isFormValid(): boolean {
