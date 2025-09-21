@@ -1,0 +1,35 @@
+<!-- 404 Not Found Page -->
+<section class="not-found-section">
+  <div class="not-found-container">
+    <div class="not-found-content">
+      <!-- 404 Number -->
+      <div class="error-number">
+        <h1>404</h1>
+      </div>
+      
+      <!-- Error Message -->
+      <div class="error-message">
+        <h2>Page Not Found</h2>
+        <p>Sorry, the page you are looking for doesn't exist or has been moved.</p>
+      </div>
+      
+      <!-- Action Button -->
+      <div class="action-buttons">
+        <button class="btn home-btn" (click)="goToHome()">
+          <i class="fas fa-home"></i>
+          Go Back to Home
+        </button>
+      </div>
+      
+      <!-- Additional Help -->
+      <div class="help-section">
+        <p>Need help? Try these options:</p>
+        <ul>
+          <li><a routerLink="/reserve">Make a Reservation</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#about">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
