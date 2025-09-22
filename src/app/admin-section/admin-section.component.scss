@@ -55,9 +55,9 @@
   --status-default: #10B981;
   --text-red: #ff3c3c;
   --text-green: #4caf50;
-  --toggle-btn-bg: #374151;
+  --toggle-btn-bg: #275daf;
   --toggle-btn-shadow: #1f2937;
-  --toggle-btn-hover: #4b5563;
+  --toggle-btn-hover: #0068fa;
   --toggle-btn-text: #ffffff;
   --logout-btn-bg: #d94732;
   --logout-btn-shadow: #a52b1a;
@@ -166,7 +166,6 @@
   align-items: center;
   justify-content: space-between;
 
-  /* 🔘 Dark/Light Mode Toggle Button */
   .toggle-mode-btn {
     position: relative;
     padding: 10px 14px;
@@ -178,23 +177,14 @@
     transition: all 0.3s ease;
     color: var(--toggle-btn-text);
     background: var(--toggle-btn-bg);
-    box-shadow: 0 4px var(--toggle-btn-shadow);
     text-align: center;
 
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px #1f2937;
 
     &:hover {
       background: var(--toggle-btn-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px var(--toggle-btn-shadow);
-    }
-
-    &:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px var(--toggle-btn-shadow);
     }
 
     .fa {
@@ -202,7 +192,6 @@
     }
   }
 
-  /* 🔴 Logout Button */
   .logout-btn {
     position: relative;
     padding: 10px 14px;
@@ -215,23 +204,14 @@
     transition: all 0.3s ease;
     color: var(--logout-btn-text);
     background: var(--logout-btn-bg);
-    box-shadow: 0 6px var(--logout-btn-shadow);
     text-align: center;
 
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 6px #c1331e;
 
     &:hover {
       background: var(--logout-btn-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 8px var(--logout-btn-shadow);
-    }
-
-    &:active {
-      transform: translateY(2px);
-      box-shadow: 0 3px var(--logout-btn-shadow);
     }
 
     .fa {
@@ -290,7 +270,7 @@
 /* Sidebar groups with animated submenu */
 .sidebar-group {
   .arrow .fa-chevron-right {
-    transition: transform 0.2s ease;
+    transition: transform 0.4s ease;
   }
   &.open {
     > a .arrow .fa-chevron-right {
@@ -303,13 +283,13 @@
       pointer-events: auto;
     }
   }
-  > .submenu {
+  .submenu {
     display: block; /* keep in DOM for animation */
     max-height: 0;
     overflow: hidden;
     opacity: 0;
     transform: translateY(-4px);
-    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+    transition: max-height 0.45s ease, opacity 0.4s ease, transform 0.4s ease;
   }
 }
 

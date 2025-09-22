@@ -1,5 +1,4 @@
   .availability-container {
-    border: solid rgb(123, 161, 249);
   text-align: center;
   padding: 1rem 1.5rem 2rem;
   position: relative;
@@ -7,33 +6,16 @@
   background: white;
   font-family: 'Nunito', sans-serif;
 
-  // Animated background particles
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(180, 136, 77, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(180, 136, 77, 0.05) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
-    z-index: 1;
-  }
-
   h2 {
     margin-bottom: 2rem;
     font-size: 2.5rem;
     font-weight: 800;
     color: #000000;
     text-align: center;
-    background: linear-gradient(135deg, #ffffff 0%, rgba(43, 107, 255, 0.486) 50%, rgb(68, 124, 255) 100%);
+    background: black;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 4px 8px rgba(23, 23, 37, 0.3);
     animation: titleGlow 3s ease-in-out infinite;
     position: relative;
     z-index: 2;
@@ -52,7 +34,6 @@
     gap: 3rem;
     position: relative;
     z-index: 2;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 
     .date-info {
       display: flex;
@@ -72,7 +53,6 @@
         color: black;
         font-size: 1.1rem;
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
     }
 
@@ -107,7 +87,6 @@
       color: rgb(123, 161, 249);
       font-size: 1.1rem;
       font-weight: 600;
-      text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
     }
   }
 
@@ -126,7 +105,6 @@
       font-size: 1.1rem;
       margin-bottom: 1rem;
       font-weight: 600;
-      text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
     }
 
     .retry-btn {
@@ -181,7 +159,6 @@
       font-size: 1.1rem;
       margin-bottom: 1rem;
       font-weight: 600;
-      text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
     }
 
     .refresh-btn {
@@ -231,9 +208,7 @@
     margin: 0 auto;
     position: relative;
     z-index: 2;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 78vh;
+    
 
     // Vertical scrollbar styling
     &::-webkit-scrollbar {
@@ -253,7 +228,7 @@
 
   .room-card {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(158, 203, 255, 0.568);
     border-radius: 20px;
     width: 100%;
     min-width: auto;
@@ -264,9 +239,6 @@
     align-items: stretch;
     padding: 1.5rem;
     position: relative;
-    box-shadow: 
-      0 20px 40px rgba(23, 23, 37, 0.3),
-      inset 0 1px 2px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     animation: slideInUp 0.6s ease-out; 
@@ -284,8 +256,7 @@
       position: absolute;
       top: 1.5rem;
       left: 1.5rem;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 16px rgba(180, 136, 77, 0.4);
+      font-size: 1rem;
       transition: all 0.3s ease;
 
       &:hover {
@@ -315,10 +286,9 @@
 
     h3 {
       margin: 0 0 0.75rem 0;
-      font-size: 1.6rem;
+      font-size: 1.7rem;  
       font-weight: 700;
-      color: rgb(123, 161, 249);
-      text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
+      color: rgb(0, 0, 0);
       transition: all 0.3s ease;
     }
 
@@ -332,16 +302,14 @@
 
       img {
         width: 100%;
-        height: 120px;
+        height: 100%;
         border-radius: 12px;
         object-fit: cover;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(23, 23, 37, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.1);
 
         &:hover {
           transform: scale(1.08);
-          box-shadow: 0 8px 24px rgba(23, 23, 37, 0.3);
           border-color: #007bff7a;
         }
       }
@@ -352,24 +320,22 @@
       color: black;
       border-radius: 50px;
       padding: 0.3rem 0.8rem;
-      font-size: 0.85rem;
+      font-size: 1rem;
       margin-top: -1.5rem;
       position: relative;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
     }
 
     .details-link {
-      font-size: 0.85rem;
+      font-size: 1rem;
       margin: 0.75rem 0;
       text-transform: uppercase;
       font-weight: 700;
       color: rgb(123, 161, 249);
       transition: all 0.3s ease;
       letter-spacing: 1px;
-      text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       cursor: pointer;
 
       &:hover {
@@ -401,7 +367,6 @@
         color: #ffffff;
         font-size: 0.9rem;
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
     }
 
@@ -425,20 +390,18 @@
 
         h4 {
           color: black;
-          font-size: 1.1rem;
+          font-size: 1.6rem;
           font-weight: 700;
           margin-bottom: 0.8rem;
-          text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
           border-bottom: 2px solid rgba(9, 125, 241, 0.3);
           padding-bottom: 0.5rem;
         }
 
         .room-description {
           color: black;
-          font-size: 0.9rem;
+          font-size: 1rem;
           line-height: 1.6;
           margin-bottom: 1.5rem;
-          text-shadow: 0 1px 2px rgba(23, 23, 37, 0.5);
         }
 
         .availability-details {
@@ -461,7 +424,7 @@
 
               .stat-label {
                 color:  rgba(43, 101, 236, 1);
-                font-size: 0.7rem;
+                font-size: 1rem;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -470,9 +433,8 @@
 
               .stat-value {
                 color: black;
-                font-size: 1.2rem;
+                font-size: 1.5rem;
                 font-weight: 700;
-                text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
 
                 &.available {
                   color: #16a34a;
@@ -497,9 +459,8 @@
 
             li {
               color: black;
-              font-size: 0.8rem;
+              font-size: 1rem;
               padding: 0.3rem 0;
-              text-shadow: 0 1px 2px rgba(23, 23, 37, 0.5);
               display: flex;
               align-items: center;
               gap: 0.3rem;
@@ -517,18 +478,16 @@
 
     .price-circle {
       background:  #55adff;
-      color: #312216;
+      color: #ffffff;
       border-radius: 30%;
-      width: 5.5rem;
-      height: 3.5rem;
+      padding: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       margin: 0 0 0.5rem 0;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       transition: all 0.3s ease;
-      box-shadow: 0 8px 24px #55adff90;
       position: relative;
       overflow: hidden;
 
@@ -545,7 +504,6 @@
 
       &:hover {
         transform: scale(1.15);
-        box-shadow: 0 12px 32px  rgba(43, 101, 236, 1);
         
         &::before {
           left: 100%;
@@ -559,33 +517,28 @@
       align-items: center;
       margin-bottom: 1rem;
       padding: 0.5rem 1rem;
-      background: rgba(180, 136, 77, 0.1);
       border-radius: 12px;
-      border: 1px solid #55adff;
+      border: 1px solid #000000;
       backdrop-filter: blur(10px);
       transition: all 0.3s ease;
 
       &:hover {
-        background: rgba(180, 136, 77, 0.15);
-        border-color: #55adff95;
         transform: translateY(-2px);
       }
 
       .fee-label {
-        font-size: 0.8rem;
+        font-size: 1rem;
         color:  rgba(43, 101, 236, 1);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 0.2rem;
-        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
 
       .fee-percentage {
         font-size: 1.1rem;
-        color: #16a34a;
+        color: #0a5224;
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(23, 23, 37, 0.5);
       }
     }
 
@@ -621,14 +574,12 @@
         transition: left 0.5s ease;
       }
 
-      color: #007aff; 
-      border: 2px solid rgba(60, 179, 113, 0.7); 
-      background: rgba(60, 179, 113, 0.25); 
+      color: #000000; 
+      border: 2px solid rgba(0, 0, 0, 0.7); 
 
       &:hover:not(:disabled) {
-        color: #ffffff;
+        color: #059900;
         border-color: #3cb371;
-        background: rgba(60, 179, 113, 0.4);
         transform: translateY(-2px); 
         
         &::before {
@@ -657,7 +608,6 @@
   
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 10;
   }
 }
@@ -693,7 +643,6 @@
 
 .modal-image {
   border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 
   // --- MODIFIED ---
   // These properties make the image fit inside the new container shape
@@ -721,7 +670,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .modal-nav-btn {
@@ -786,7 +734,6 @@
   padding: 0.75rem 1.5rem;
   cursor: pointer;
   font-weight: 700;
-  box-shadow: 0 8px 24px rgba(180, 136, 77, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   text-transform: uppercase;
@@ -808,7 +755,6 @@
   &:hover {
     background:  rgba(43, 101, 236, 1);
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(180, 136, 77, 0.4);
     
     &::before {
       left: 100%;
@@ -1032,31 +978,55 @@
     }
     
     .room-type-list {
+      display: flex;
       flex-direction: column;
-      flex-wrap: wrap;
       align-items: center;
+      justify-content: flex-start;
       gap: 1rem;
-      overflow-x: visible;
+      width: 100%;
+      overflow-x: hidden;
       overflow-y: auto;
     }
     
     .room-card {
-      max-width: 400px;
       width: 100%;
-      min-width: 300px;
-      padding: 1rem;
+      max-width: 100%;
+      min-width: auto;
+      margin: 0 auto;
+      flex: 0 0 auto;
       
       h3 {
         font-size: 1.4rem;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      /* ✅ stack image above description */
+      .room-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .room-media {
+        order: 1;      /* image first */
+        width: 100%;
+      }
+
+      .room-info {
+        order: 2;      /* description second */
+        width: 100%;
       }
       
       .room-images-grid {
-        gap: 0.3rem;
+        gap: 0.5rem;
         
         img {
-          height: 80px;
+          width: 100%;        /* take full width */
+          height: auto;       /* keep ratio */
+          max-height: 200px;  /* safety limit */
+          object-fit: cover;
+          border-radius: 6px;
         }
       }
       

@@ -7,6 +7,16 @@
   <div class="reservation-right">
     <h1>Make a Reservation</h1>
 
+    <!-- Modal for validation messages -->
+    <div class="modal-backdrop" *ngIf="showModal">
+      <div class="modal">
+        <div class="modal-content">
+          <p>{{ modalMessage }}</p>
+          <button class="close-btn" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
     <form (ngSubmit)="submit()" #reservationForm="ngForm">
       <div class="form-group">
         <label>Check In</label>

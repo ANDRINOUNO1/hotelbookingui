@@ -41,6 +41,7 @@ import { PricingComponents } from './superadmin-sect/pricing/pricing.component';
 
 //extras
 import { BillingComponent } from './frontdesk/lists/billing.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -90,7 +91,8 @@ export const routes: Routes = [
       { path: 'pricing', component: PricingComponents }
     ]
   },
-  { path: 'billing/:id', component: BillingComponent }
+  { path: 'billing/:id', component: BillingComponent },
+  { path: '**', component: NotFoundComponent }
 
 ];
 @NgModule({

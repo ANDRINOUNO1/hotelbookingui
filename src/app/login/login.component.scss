@@ -16,7 +16,6 @@
   width: 90%;
   max-width: 1200px;
   height: 600px;
-  background: var(--white);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -29,7 +28,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem;
-  background-color: #d4e3ff;
+  background-color: #ffffff;
   backdrop-filter: blur(10px);
 }
 
@@ -37,10 +36,8 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  border: #0400da 2px solid;
-  background: rgb(255, 255, 255); 
   border-radius: 18px;
-  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.274);
 }
 
 .tab-header {
@@ -53,7 +50,7 @@
 .tab-button {
   background: none;
   border: none;
-  color: var(--white);
+  color: black;
   font-size: 1.4rem;
   font-weight: 600;
   padding-bottom: 0.4rem;
@@ -63,16 +60,12 @@
   outline: none;
 }
 
-.tab-button.active {
-  color: var(--sub-color);
-}
-
 .tab-button.active::after {
   content: '';
   display: block;
   height: 3px;
   width: 100%;
-  background: rgb(255, 255, 255); 
+  background: rgb(0, 0, 0); 
   border-radius: 2px;
   position: absolute;
   left: 0;
@@ -102,7 +95,6 @@
   &:focus {
     border: 1.5px solid rgb(43, 101, 236); 
     box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
-    background: #01010123;
   }
 
   /* Hide native placeholder text */
@@ -117,7 +109,7 @@
     position: absolute;
     left: 16px;
     top: 12px;
-    color: #000000;
+    color: #4b4b4b;
     font-size: 1rem;
     pointer-events: none;
     transition: all 0.3s ease-in-out;
@@ -135,7 +127,7 @@
   }
 }
 .form-input::placeholder {
-  color: #020202;
+  color: #353535;
 }
 
 
@@ -246,6 +238,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  filter: blur(6px);
 }
 
 .image-overlay {
@@ -259,7 +252,8 @@
   background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
   color: white;
   font-weight: bold;
-  border: 3px solid #f1f1f1;
+  border: 2px solid #f1f1f1;
+  border-radius: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
