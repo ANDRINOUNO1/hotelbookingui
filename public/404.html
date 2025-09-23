@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found | BC Flats</title>
+  <base href="/">
+  <link rel="icon" type="image/x-icon" href="bcflats.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <style>
+    :root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#3b82f6}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a 0%,#1f2937 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Sego e UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    .card{width:min(720px,92vw);background:var(--card);border-radius:16px;padding:36px 28px;box-shadow:0 10px 40px rgba(0,0,0,.35);text-align:center}
+    .code{font-size:96px;line-height:1;margin:0 0 12px;font-weight:800;color:var(--accent)}
+    h1{margin:0 0 8px;font-size:34px}
+    p{margin:4px 0 20px;color:var(--muted)}
+    .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-block;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);text-decoration:none;color:var(--text);transition:.15s background,.15s transform}
+    .btn.primary{background:var(--accent);border-color:transparent;color:#fff}
+    .btn:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="card" role="alert" aria-live="polite">
+    <div class="code">404</div>
+    <h1>Page Not Found</h1>
+    <p>Sorry, the page you requested doesn’t exist or may have moved.</p>
+    <div class="actions">
+      <a class="btn primary" href="/">Go back to Home</a>
+      <a class="btn" href="/reserve">Make a Reservation</a>
+      <a class="btn" href="/contact-us">Contact Us</a>
+    </div>
+  </div>
+</body>
+</html>
