@@ -12,7 +12,7 @@ import { DashboardComponent } from './admin-section/dashboard/dashboard.componen
 import { BookingComponent } from './admin-section/booking/booking.component';
 import { CustomersComponent } from './admin-section/customers/customers.component';
 import { RoomsComponent } from './admin-section/rooms/rooms.component';
-import { PricingComponent } from './admin-section/pricing/pricing.component';
+import { PricingComponent as AdminPricingComponent } from './admin-section/pricing/pricing.component';
 import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
 import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
 import { ArchiveComponent } from './admin-section/archive/archive.component';
@@ -36,7 +36,7 @@ import { AccountListComponent } from './superadmin-sect/accountlist/account-list
 import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
 import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
 import { AddAccountComponentt } from './superadmin-sect/addaccount/add-account.component';
-import { PricingComponents } from './superadmin-sect/pricing/pricing.component';
+import { PricingComponent as SuperAdminPricingComponent } from './superadmin-sect/pricing/pricing.component';
 
 
 //extras
@@ -56,7 +56,7 @@ export const routes: Routes = [
       { path: 'booking', component: BookingComponent },
       { path: 'customers', component: CustomersComponent },
       { path: 'rooms', component: RoomsComponent },
-      { path: 'pricing', component: PricingComponent },
+      { path: 'pricing', component: AdminPricingComponent },
       { path: 'addaccount', component: AddAccountComponent },
       { path: 'allbooking', component: AllbookingsComponent },
       { path: 'archive', component: ArchiveComponent },
@@ -88,7 +88,7 @@ export const routes: Routes = [
       { path: 'pending-accounts', component: PendingAccountsComponent },
       { path: 'add-accounts', component: AddAccountComponentt },
       { path: 'archives', component: ArchivesComponent},
-      { path: 'pricing', component: PricingComponents }
+      { path: 'pricing', component: SuperAdminPricingComponent }
     ]
   },
   { path: 'billing/:id', component: BillingComponent },

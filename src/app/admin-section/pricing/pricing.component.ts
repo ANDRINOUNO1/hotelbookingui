@@ -88,7 +88,7 @@ export class PricingComponent implements OnInit {
       
       this.http.put<RoomType>(`${environment.apiUrl}/rooms/types/${roomType.id}`, updateData).subscribe({
         next: (updated) => {
-          roomType.rate = updated.rate || updated.basePrice;
+          roomType.rate = updated.basePrice;
           roomType.basePrice = updated.basePrice;
           roomType.reservationFeePercentage = updated.reservationFeePercentage;
           this.editingId = null;

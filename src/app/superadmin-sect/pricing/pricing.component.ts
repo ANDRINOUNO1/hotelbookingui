@@ -13,7 +13,7 @@ import { LoadingSpinnerComponent } from '../../_components/loading-spinner.compo
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.scss']
 })
-export class PricingComponents implements OnInit {
+export class PricingComponent implements OnInit {
   roomTypes: RoomType[] = [];
 
   editingId: number | null = null;
@@ -88,7 +88,7 @@ export class PricingComponents implements OnInit {
       
       this.http.put<RoomType>(`${environment.apiUrl}/rooms/types/${roomType.id}`, updateData).subscribe({
         next: (updated) => {
-          roomType.rate = updated.rate || updated.basePrice;
+          roomType.rate = updated.basePrice;
           roomType.basePrice = updated.basePrice;
           roomType.reservationFeePercentage = updated.reservationFeePercentage;
           this.editingId = null;
