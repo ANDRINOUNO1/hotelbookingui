@@ -2,7 +2,7 @@ services:
   - type: web
     name: hotel-reservation-app
     env: static
-    buildCommand: npm run build && cp -r dist/hotel-reservation-app dist/build
+    buildCommand: npm run build && cp -r dist/hotel-reservation-app dist/build && cp static.json dist/build/static.json
     staticPublishPath: ./dist/build
     routes:
       - type: rewrite
