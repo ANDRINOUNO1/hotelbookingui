@@ -220,6 +220,18 @@ export class HomeComponent implements AfterViewInit, OnInit {
     }
   }
 
+  onHeaderNavClick(event: Event, href: string | null | undefined): void {
+    if (!href) return;
+    if (href.startsWith('#')) {
+      event.preventDefault();
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
   ngOnInit() {
     this.loadContent();
   }

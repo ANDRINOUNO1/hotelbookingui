@@ -267,4 +267,16 @@ export class DynamicHeaderComponent implements OnInit, OnDestroy {
   getCurrentConfig(): HeaderConfig {
     return this.headerConfigSubject.value;
   }
+
+  onNavClick(event: Event, href: string | null | undefined): void {
+    if (!href) return;
+    if (href.startsWith('#')) {
+      event.preventDefault();
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
 }
