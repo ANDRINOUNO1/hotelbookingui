@@ -11,14 +11,16 @@
       <a 
         *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
         [href]="item.href"
-        [routerLink]="!item.isExternal ? item.href : null"
+        [routerLink]="!item.isExternal && !(item.href && item.href.startsWith('#')) ? item.href : null"
+        (click)="onHeaderNavClick($event, item.href)"
         [target]="item.isExternal ? '_blank' : undefined"
         class="nav-link">
         {{ item.label }}
       </a>
       <a 
         [href]="headerContent.ctaButton.href"
-        [routerLink]="!headerContent.ctaButton.isExternal ? headerContent.ctaButton.href : null"
+        [routerLink]="!headerContent.ctaButton.isExternal && !(headerContent.ctaButton.href && headerContent.ctaButton.href.startsWith('#')) ? headerContent.ctaButton.href : null"
+        (click)="onHeaderNavClick($event, headerContent.ctaButton.href)"
         [target]="headerContent.ctaButton.isExternal ? '_blank' : undefined"
         class="btn book-now-btn">
         {{ headerContent.ctaButton.text }}
@@ -31,7 +33,8 @@
     </button>
     <a 
       [href]="headerContent.loginButton.href"
-      [routerLink]="!headerContent.loginButton.isExternal ? headerContent.loginButton.href : null"
+      [routerLink]="!headerContent.loginButton.isExternal && !(headerContent.loginButton.href && headerContent.loginButton.href.startsWith('#')) ? headerContent.loginButton.href : null"
+      (click)="onHeaderNavClick($event, headerContent.loginButton.href)"
       [target]="headerContent.loginButton.isExternal ? '_blank' : undefined"
       class="btn login-btn">
       {{ headerContent.loginButton.text }}
@@ -93,7 +96,7 @@
 
 <!-- Services Section -->
 <div style="height: 20px;"></div>
-<section class="services">
+<section class="services" id="services">
   <div class="box-container">
     <div class="box">
       <img src="assets/images/icon-1.png" alt="">

@@ -16,8 +16,9 @@
       <a 
         *ngFor="let item of getCurrentConfig().navigation; trackBy: trackByIndex"
         [href]="item.href"
-        [routerLink]="!item.isExternal ? item.href : null"
+        [routerLink]="!item.isExternal && !(item.href && item.href.startsWith('#')) ? item.href : null"
         [target]="item.isExternal ? '_blank' : null"
+        (click)="onNavClick($event, item.href)"
         class="nav-link">
         {{ item.label }}
       </a>
@@ -27,16 +28,18 @@
     <div class="header-actions">
       <a 
         [href]="getCurrentConfig().ctaButton.href"
-        [routerLink]="!getCurrentConfig().ctaButton.isExternal ? getCurrentConfig().ctaButton.href : null"
+        [routerLink]="!getCurrentConfig().ctaButton.isExternal && !(getCurrentConfig().ctaButton.href && getCurrentConfig().ctaButton.href.startsWith('#')) ? getCurrentConfig().ctaButton.href : null"
         [target]="getCurrentConfig().ctaButton.isExternal ? '_blank' : null"
+        (click)="onNavClick($event, getCurrentConfig().ctaButton.href)"
         class="btn book-now-btn">
         {{ getCurrentConfig().ctaButton.text }}
       </a>
       
       <a 
         [href]="getCurrentConfig().loginButton.href"
-        [routerLink]="!getCurrentConfig().loginButton.isExternal ? getCurrentConfig().loginButton.href : null"
+        [routerLink]="!getCurrentConfig().loginButton.isExternal && !(getCurrentConfig().loginButton.href && getCurrentConfig().loginButton.href.startsWith('#')) ? getCurrentConfig().loginButton.href : null"
         [target]="getCurrentConfig().loginButton.isExternal ? '_blank' : null"
+        (click)="onNavClick($event, getCurrentConfig().loginButton.href)"
         class="btn login-btn">
         {{ getCurrentConfig().loginButton.text }}
       </a>
@@ -64,20 +67,23 @@
       <a 
         *ngFor="let item of getCurrentConfig().navigation; trackBy: trackByIndex"
         [href]="item.href"
-        [routerLink]="!item.isExternal ? item.href : null"
+        [routerLink]="!item.isExternal && !(item.href && item.href.startsWith('#')) ? item.href : null"
         [target]="item.isExternal ? '_blank' : null"
+        (click)="onNavClick($event, item.href)"
         class="mobile-nav-link">
         {{ item.label }}
       </a>
       <a 
         [href]="getCurrentConfig().ctaButton.href"
-        [routerLink]="!getCurrentConfig().ctaButton.isExternal ? getCurrentConfig().ctaButton.href : null"
+        [routerLink]="!getCurrentConfig().ctaButton.isExternal && !(getCurrentConfig().ctaButton.href && getCurrentConfig().ctaButton.href.startsWith('#')) ? getCurrentConfig().ctaButton.href : null"
+        (click)="onNavClick($event, getCurrentConfig().ctaButton.href)"
         class="btn mobile-cta-btn">
         {{ getCurrentConfig().ctaButton.text }}
       </a>
       <a 
         [href]="getCurrentConfig().loginButton.href"
-        [routerLink]="!getCurrentConfig().loginButton.isExternal ? getCurrentConfig().loginButton.href : null"
+        [routerLink]="!getCurrentConfig().loginButton.isExternal && !(getCurrentConfig().loginButton.href && getCurrentConfig().loginButton.href.startsWith('#')) ? getCurrentConfig().loginButton.href : null"
+        (click)="onNavClick($event, getCurrentConfig().loginButton.href)"
         class="btn mobile-login-btn">
         {{ getCurrentConfig().loginButton.text }}
       </a>
