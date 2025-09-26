@@ -57,5 +57,28 @@
       </div>
     </div>
   </section>
+  <script>
+    (function() {
+      try {
+       
+        var shouldFallback = true;
+     
+        if (location.pathname === '/' || location.pathname === '/index.html') {
+          shouldFallback = false;
+        }
+        if (shouldFallback) {
+          fetch('/index.html', { credentials: 'same-origin' })
+            .then(function(resp){ return resp.text(); })
+            .then(function(html){
+     
+              document.open();
+              document.write(html);
+              document.close();
+            })
+            .catch(function(){ /* ignore and keep static 404 */ });
+        }
+      } catch (e) { /* keep static 404 */ }
+    })();
+  </script>
 </body>
 </html>
