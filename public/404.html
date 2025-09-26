@@ -13,6 +13,8 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text);font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    /* Hide UI until we decide whether to fallback to SPA */
+    #nf-root{display:none}
     .not-found-section{width:100%;padding:24px}
     .not-found-container{max-width:960px;margin:0 auto}
     .not-found-content{background:rgba(255,255,255,.04);border-radius:16px;padding:40px 28px;box-shadow:0 12px 40px rgba(0,0,0,.35);text-align:center;border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px)}
@@ -30,6 +32,7 @@
   </style>
 </head>
 <body>
+  <div id="nf-root">
   <section class="not-found-section">
     <div class="not-found-container">
       <div class="not-found-content">
@@ -57,12 +60,12 @@
       </div>
     </div>
   </section>
+  </div>
   <script>
     (function() {
       try {
-       
         var shouldFallback = true;
-     
+        var root = document.getElementById('nf-root');
         if (location.pathname === '/' || location.pathname === '/index.html') {
           shouldFallback = false;
         }
@@ -70,14 +73,16 @@
           fetch('/index.html', { credentials: 'same-origin' })
             .then(function(resp){ return resp.text(); })
             .then(function(html){
-     
               document.open();
               document.write(html);
               document.close();
             })
-            .catch(function(){ /* ignore and keep static 404 */ });
+            .catch(function(){ if(root) root.style.display='block'; });
+          // Safety net: if SPA load doesn't happen quickly, show static 404
+          setTimeout(function(){ if(document.body && !document.body.querySelector('app-root')) { if(root) root.style.display='block'; } }, 1200);
         }
-      } catch (e) { /* keep static 404 */ }
+        else { if(root) root.style.display='block'; }
+      } catch (e) { var root = document.getElementById('nf-root'); if(root) root.style.display='block'; }
     })();
   </script>
 </body>
