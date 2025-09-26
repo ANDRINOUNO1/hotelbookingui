@@ -6,5 +6,5 @@ services:
     staticPublishPath: ./dist/hotel-reservation-app
     routes:
       - type: rewrite
-        source: /.*
+        source: /*
         destination: /index.html
