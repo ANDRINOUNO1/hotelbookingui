@@ -5,7 +5,7 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { dirname, resolve } from 'node:path';
+import path, { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Role } from './app/_models/role.model.js';
 
@@ -39,17 +39,9 @@ let accounts = [
   }
 ];
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 /**
  * Parse JSON bodies
