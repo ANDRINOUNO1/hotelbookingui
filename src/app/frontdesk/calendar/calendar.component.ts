@@ -236,7 +236,7 @@ export class CalendarComponent implements OnInit {
   }
 
   isMaintenance(cell: { booking?: Booking }): boolean {
-    return !!cell.booking?.requests && cell.booking.requests!.toLowerCase().includes('maintenance');
+    return !!cell.booking?.specialRequests && cell.booking.specialRequests!.toLowerCase().includes('maintenance');
   }
   
   setSelectedType(type: string) {

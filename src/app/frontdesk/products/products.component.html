@@ -1,0 +1,72 @@
+<div class="products-container">
+  <h2 class="section-title">Products Section</h2>
+
+  <!-- Add / Edit Form -->
+  <form (ngSubmit)="saveProduct()" #productForm="ngForm" class="product-form">
+    <!-- If editing -->
+    <div *ngIf="editingProduct; else addForm" class="form-fields">
+      <h3>Edit Product</h3>
+      <input type="text" [(ngModel)]="editingProduct.name" name="name" placeholder="Product Name" required />
+      
+     <select [(ngModel)]="newProduct.category" name="category" required>
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+
+      <input type="number" [(ngModel)]="editingProduct.price" name="price" placeholder="Price" required />
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- If adding new -->
+    <ng-template #addForm>
+      <div class="form-fields">
+        <h3>Add New Product</h3>
+        <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required />
+
+        <select [(ngModel)]="newProduct.category" name="category" required>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+
+        <input type="number" [(ngModel)]="newProduct.price" name="price" placeholder="Price" required />
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add Product</button>
+        </div>
+      </div>
+    </ng-template>
+  </form>
+
+
+  <!-- 🔍 Search & Filter -->
+  <div class="filter-bar">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name..." class="search-input" />
+    <select [(ngModel)]="selectedCategory" class="filter-select">
+      <option value="">All Categories</option>
+      <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <!-- Products Table -->
+  <table class="products-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th class="actions-col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of filteredProducts">
+        <td>{{ p.name }}</td>
+        <td>{{ p.category }}</td>
+        <td>{{ p.price | currency }}</td>
+        <td class="actions">
+          <button class="btn btn-small btn-edit" (click)="editProduct(p)">Edit</button>
+          <button class="btn btn-small btn-delete" (click)="deleteProduct(p.id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

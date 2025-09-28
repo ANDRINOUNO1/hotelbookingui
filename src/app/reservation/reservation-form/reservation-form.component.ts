@@ -86,48 +86,75 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
-  submit() {
-    // Validate required fields
-    if (!this.booking.checkIn || !this.booking.checkOut || 
-        this.booking.adults <= 0 || this.booking.rooms <= 0) {
-      this.openModal('Please fill in all required fields.');
-      return;
-    }
+  // Helper to format dates for MySQL (YYYY-MM-DD HH:MM:SS)
+private formatForMySQL(dateStr: string): string {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return ''; // fallback if invalid
+  return d.toISOString().slice(0, 19).replace('T', ' ');
+}
 
-    // Validate dates
-    const checkIn = new Date(this.booking.checkIn);
-    const checkOut = new Date(this.booking.checkOut);
-    const today = new Date();
-    const fiveYearsFromNow = new Date();
-    fiveYearsFromNow.setFullYear(today.getFullYear() + 5);
-    
-    today.setHours(0, 0, 0, 0);
-    fiveYearsFromNow.setHours(23, 59, 59, 999);
-
-    if (checkIn < today) {
-      this.openModal('Check-in date cannot be in the past.');
-      return;
-    }
-
-    if (checkIn > fiveYearsFromNow) {
-      this.openModal('Check-in date cannot be more than 5 years from today.');
-      return;
-    }
-
-    if (checkOut <= checkIn) {
-      this.openModal('Check-out date must be after check-in date.');
-      return;
-    }
-
-    if (checkOut > fiveYearsFromNow) {
-      this.openModal('Check-out date cannot be more than 5 years from today.');
-      return;
-    }
-
-    console.log('Submitting Reservation:', this.booking);
-    this.reservationDataService.setReservation(this.booking);
-    this.next.emit(this.booking);
+submit() {
+  // Validate required fields
+  if (
+    !this.booking.checkIn ||
+    !this.booking.checkOut ||
+    this.booking.adults <= 0 ||
+    this.booking.rooms <= 0
+  ) {
+    this.openModal('Please fill in all required fields.');
+    return;
   }
+
+  // Parse as Date objects
+  const checkInDate = new Date(this.booking.checkIn);
+  const checkOutDate = new Date(this.booking.checkOut);
+  const today = new Date();
+  const fiveYearsFromNow = new Date();
+
+  today.setHours(0, 0, 0, 0);
+  fiveYearsFromNow.setFullYear(today.getFullYear() + 5);
+  fiveYearsFromNow.setHours(23, 59, 59, 999);
+
+  // Date validations
+  if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+    this.openModal('Please select valid check-in and check-out dates.');
+    return;
+  }
+
+  if (checkInDate < today) {
+    this.openModal('Check-in date cannot be in the past.');
+    return;
+  }
+
+  if (checkInDate > fiveYearsFromNow) {
+    this.openModal('Check-in date cannot be more than 5 years from today.');
+    return;
+  }
+
+  if (checkOutDate <= checkInDate) {
+    this.openModal('Check-out date must be after check-in date.');
+    return;
+  }
+
+  if (checkOutDate > fiveYearsFromNow) {
+    this.openModal('Check-out date cannot be more than 5 years from today.');
+    return;
+  }
+
+  // Create formatted booking for backend
+  const formattedBooking: ReservationData = {
+    ...this.booking,
+    checkIn: this.formatForMySQL(this.booking.checkIn),
+    checkOut: this.formatForMySQL(this.booking.checkOut),
+  };
+
+  console.log('Submitting Reservation:', formattedBooking);
+
+  // Save & emit
+  this.reservationDataService.setReservation(formattedBooking);
+  this.next.emit(formattedBooking);
+} 
+
 
   openModal(message: string) {
     this.modalMessage = message;

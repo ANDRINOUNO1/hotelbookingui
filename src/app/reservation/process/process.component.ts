@@ -59,7 +59,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
       address: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', [Validators.required, this.postalCodeValidator()]],
-      specialRequest: [''],
+      specialRequests: [''],
       consentAccepted: [false, Validators.requiredTrue]
     });
   }

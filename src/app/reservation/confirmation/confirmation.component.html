@@ -121,77 +121,81 @@
       </div>
 
       <form (ngSubmit)="confirmBooking()" #paymentForm="ngForm" class="payment-form">
-        <!-- Payment Mode Selection -->
+        <!-- STEP 1: Select Payment Mode -->
         <div class="form-group">
-          <label for="paymentMode">Payment Method *</label>
+          <label for="paymentMode">Payment Mode *</label>
           <div class="payment-options">
-            <div class="payment-option" 
-                 [class.selected]="paymentDetails.paymentMode === 'GCash'"
-                 (click)="paymentDetails.paymentMode = 'GCash'">
-              <img src="assets/images/Gcash_logo.png" alt="GCash" class="option-icon" />
-              <span class="option-text">GCash</span>
+            <div class="payment-option"
+                [class.selected]="paymentDetails.paymentMode === 'Online'"
+                (click)="paymentDetails.paymentMode = 'Online'; paymentDetails.paymentMethod = ''">
+              <span class="option-icon">🌐</span>
+              <span class="option-text">Online Payment</span>
             </div>
-            <div class="payment-option" 
-                 [class.selected]="paymentDetails.paymentMode === 'Maya'"
-                 (click)="paymentDetails.paymentMode = 'Maya'">
-              <img src="assets/images/Maya_logo.png" alt="GCash" class="option-icon" />
-              <span class="option-text">Maya</span>
-            </div>
-            <div class="payment-option" 
-                 [class.selected]="paymentDetails.paymentMode === 'Card'"
-                 (click)="paymentDetails.paymentMode = 'Card'">
+            <div class="payment-option"
+                [class.selected]="paymentDetails.paymentMode === 'Card'"
+                (click)="paymentDetails.paymentMode = 'Card'; paymentDetails.paymentMethod = ''">
               <span class="option-icon">💳</span>
               <span class="option-text">Card</span>
             </div>
           </div>
-          <select name="paymentMode" class="form-control" required [(ngModel)]="paymentDetails.paymentMode" style="display: none;">
-            <option value="" disabled selected>Select Payment Mode</option>
-            <option value="GCash">GCash</option>
-            <option value="Maya">Maya</option>
-            <option value="Card">Card (Visa / MasterCard / AmEx)</option>
-          </select>
         </div>
 
-        <!-- Mobile Payment Fields -->
-        <div *ngIf="paymentDetails.paymentMode === 'GCash' || paymentDetails.paymentMode === 'Maya'" class="payment-fields">
+        <!-- STEP 2A: Online Payment (choose GCash or Maya) -->
+        <div *ngIf="paymentDetails.paymentMode === 'Online'" class="form-group">
+          <label for="paymentMethod">Choose Platform *</label>
+          <div class="payment-options">
+            <div class="payment-option"
+                [class.selected]="paymentDetails.paymentMethod === 'GCash'"
+                (click)="paymentDetails.paymentMethod = 'GCash'">
+              <img src="assets/images/Gcash_logo.png" alt="GCash" class="option-icon" />
+              <span class="option-text">GCash</span>
+            </div>
+            <div class="payment-option"
+                [class.selected]="paymentDetails.paymentMethod === 'Maya'"
+                (click)="paymentDetails.paymentMethod = 'Maya'">
+              <img src="assets/images/Maya_logo.png" alt="Maya" class="option-icon" />
+              <span class="option-text">Maya</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2B: Online Payment Fields -->
+        <div *ngIf="paymentDetails.paymentMode === 'Online' && (paymentDetails.paymentMethod === 'GCash' || paymentDetails.paymentMethod === 'Maya')" class="payment-fields">
           <div class="form-group">
             <label for="mobileNumber">Mobile Number *</label>
-                         <input type="tel" name="mobileNumber" class="form-control"
-                   [class.error]="mobileNumberError"
-                   [value]="paymentDetails.mobileNumber"
-                   (input)="onMobileNumberInput($event)"
-                   (keypress)="onMobileNumberKeyPress($event)"
-                   (blur)="onMobileNumberBlur()"
-                   placeholder="09XXXXXXXXX (11 digits)"
-                   maxlength="11"
-                   required />
+            <input type="tel" name="mobileNumber" class="form-control"
+                  [class.error]="mobileNumberError"
+                  [value]="paymentDetails.mobileNumber"
+                  (input)="onMobileNumberInput($event)"
+                  (keypress)="onMobileNumberKeyPress($event)"
+                  (blur)="onMobileNumberBlur()"
+                  placeholder="09XXXXXXXXX (11 digits)"
+                  maxlength="11"
+                  required />
             <div *ngIf="mobileNumberError" class="error-message">
               {{ mobileNumberError }}
             </div>
             <small class="help-text">Enter your Philippine mobile number starting with "09"</small>
           </div>
+
           <div class="form-group">
             <label for="amount">Amount *</label>
-            <div class="amount-input">
-              <input type="text" name="amount" class="form-control"
-                    [(ngModel)]="paymentDetails.amount"
-                    (input)="onAmountInput($event)"
-                    (focus)="onAmountFocus($event)"
-                    (blur)="onAmountBlur($event)"
-                    placeholder="Enter Amount"
-                    required />
-            </div>
-            <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>
+            <input type="text" name="amount" class="form-control"
+                  [(ngModel)]="paymentDetails.amount"
+                  (input)="onAmountInput($event)"
+                  (focus)="onAmountFocus($event)"
+                  (blur)="onAmountBlur($event)"
+                  placeholder="Enter Amount"
+                  required />
+            <small class="help-text">Reservation fee: ₱ {{ reservationFee }}</small>
           </div>
         </div>
 
-        <!-- Card Payment Fields -->
+        <!-- STEP 2C: Card Payment Fields -->
         <div *ngIf="paymentDetails.paymentMode === 'Card'" class="payment-fields">
           <div class="form-group">
             <label for="cardNumber">Card Number *</label>
-            <input type="text"
-                  name="cardNumber"
-                  class="form-control"
+            <input type="text" name="cardNumber" class="form-control"
                   [(ngModel)]="paymentDetails.cardNumber"
                   (input)="onCardNumberInput($event)"
                   placeholder="1234 5678 9012 3456"
@@ -222,20 +226,18 @@
 
           <div class="form-group">
             <label for="amount">Amount *</label>
-            <div class="amount-input">
-              <input type="text" name="amount" class="form-control"
-                    [(ngModel)]="paymentDetails.amount"
-                    (input)="onAmountInput($event)"
-                    (focus)="onAmountFocus($event)"
-                    (blur)="onAmountBlur($event)"
-                    placeholder="Enter Amount"
-                    required />
-            </div>
-            <small class="help-text">Reservation fee: ₱  {{ reservationFee }}</small>
+            <input type="text" name="amount" class="form-control"
+                  [(ngModel)]="paymentDetails.amount"
+                  (input)="onAmountInput($event)"
+                  (focus)="onAmountFocus($event)"
+                  (blur)="onAmountBlur($event)"
+                  placeholder="Enter Amount"
+                  required />
+            <small class="help-text">Reservation fee: ₱ {{ reservationFee }}</small>
           </div>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit -->
         <div class="submit-section">
           <button class="btn-confirm" type="submit" [disabled]="paymentForm.invalid">
             <span class="btn-icon">✅</span>

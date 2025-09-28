@@ -6,14 +6,15 @@
         border-radius: 10px; /* Rounded corners for the table */
         overflow: hidden;
 }
-.tables th,
 .tables td {
   color: var(--text-color);
   border-bottom: 1px solid var(--table-border);
   padding: 8px;
+  font-size: 11px;
 }
 
 .tables th {
+  padding: 8px;
   color: white;
   background: var(--table-header);
   font-weight: bold;

@@ -1,0 +1,258 @@
+<div class="requests-header">
+  <h1>Guest Requests</h1>
+</div>
+
+<div class="bookings-list">
+  <h4>Booking Lists</h4>
+
+  <!-- Select booking -->
+  <select [(ngModel)]="selectedGuestId" (change)="onGuestChange($event)">
+    <option *ngFor="let g of uniqueGuests" [value]="g.email">
+      {{ g.first_name }} {{ g.last_name }} - {{ g.email }}
+    </option>
+  </select>
+
+  <!-- Select room booking for that guest -->
+  <div *ngIf="filteredBookings.length > 0" class="rooms-list">
+    <label for="roomSelect">Select Room:</label>
+    <select id="roomSelect" [(ngModel)]="selectedBookingId" (change)="onBookingChange($event)">
+      <option *ngFor="let b of filteredBookings" [value]="b.id">
+        Room #{{ b.room_id }} — Booking #{{ b.id }} ({{ b.status }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Requests for selected booking -->
+  <div class="requests" *ngIf="selectedBooking?.requests?.length">
+    <label for="requestSelect">Select Request:</label>
+    <select id="requestSelect" [(ngModel)]="selectedRequestId" (change)="onRequestChange($event)">
+      <option *ngFor="let r of selectedBooking?.requests" [value]="r.id">
+        Request #{{ r.id }} - ({{ r.status }})
+      </option>
+    </select>
+
+    <!-- Details -->
+    <div *ngIf="selectedRequest" class="request-details">
+      <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+      <ul>
+        <li *ngFor="let p of selectedRequest.products">
+          {{ p.name }} — Qty: {{ p.quantity }}
+        </li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="request-actions">
+        <button (click)="updateRequestStatus('in_progress')">
+          <i class="fas fa-spinner"></i> In Progress
+        </button>
+        <button (click)="updateRequestStatus('completed')">
+          <i class="fas fa-check-circle"></i> Complete
+        </button>
+        <button (click)="updateRequestStatus('cancelled')">
+          <i class="fas fa-times-circle"></i> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pos-root">
+
+  <div class="pos-header">
+    <div class="brand">
+    <div class="terminal">
+      <!-- show guest if selected -->
+      <ng-container *ngIf="selectedBooking; else defaultHeader">
+        {{ selectedBooking.guest.first_name }} {{ selectedBooking.guest.last_name }}
+        <small>
+          Booking #{{ selectedBooking.id }} · {{ selectedBooking.guest.phone }}
+        </small>
+      </ng-container>
+
+      <!-- fallback if none selected -->
+      <ng-template #defaultHeader>
+        Name Name <small>Terminal 1 · 11/1/2018 11:52 PM</small>
+      </ng-template>
+    </div>
+    </div>
+
+    <nav class="top-categories">
+      <div
+        *ngFor="let c of categories"
+        class="cat"
+        [class.active]="c===selectedCategory"
+        (click)="selectedCategory = c"
+      >
+        {{ c }}
+      </div>
+    </nav>
+
+    <div class="header-actions">
+      <button class="square-icon"></button>
+    </div>
+  </div>
+
+  <div class="pos-body">
+    <!-- Left: Order / Requests panel -->
+    <aside class="left-panel">
+      <!-- Tabs -->
+      <div class="order-tabs">
+        <button 
+          class="tab" 
+          [class.active]="activeTab === 'guest'" 
+          (click)="setActiveTab('guest')">
+          Guest details
+        </button>
+        <button 
+          class="tab" 
+          [class.active]="activeTab === 'request'" 
+          (click)="setActiveTab('request')">
+          Add Request
+        </button>
+        <button 
+          class="tab" 
+          [class.active]="activeTab === 'view-requests'" 
+          (click)="setActiveTab('view-requests')">
+          View Requests
+        </button>
+      </div>
+
+      <!-- Guest details tab -->
+      <div *ngIf="activeTab === 'guest'" class="guest-details">
+        <h4><i class="fas fa-user-check"></i> Selected Booking</h4>
+
+        <div *ngIf="selectedBooking; else noBooking" class="booking-card">
+          <!-- Guest Information -->
+          <section class="info-section">
+            <h5><i class="fas fa-user"></i> Guest Information</h5>
+            <p><strong>Name:</strong> {{ selectedBooking.guest.first_name }} {{ selectedBooking.guest.last_name }}</p>
+            <p><strong>Email:</strong> {{ selectedBooking.guest.email }}</p>
+            <p><strong>Phone:</strong> {{ selectedBooking.guest.phone }}</p>
+            <p><strong>Address:</strong> {{ selectedBooking.guest.address }}, {{ selectedBooking.guest.city }}</p>
+          </section>
+
+          <!-- Stay Details -->
+          <section class="info-section">
+            <h5><i class="fas fa-bed"></i> Stay Details</h5>
+            <p><strong>Check-in:</strong> {{ selectedBooking.availability.checkIn | date }}</p>
+            <p><strong>Check-out:</strong> {{ selectedBooking.availability.checkOut | date }}</p>
+            <p><strong>Guests:</strong> {{ selectedBooking.availability.adults }} Adult(s), 
+              {{ selectedBooking.availability.children }} Child(ren)</p>
+            <p><strong>Rooms:</strong> {{ selectedBooking.availability.rooms }}</p>
+            <p><strong>Room ID:</strong> {{ selectedBooking.room_id }}</p>
+          </section>
+
+          <!-- Payment Info -->
+          <section class="info-section">
+            <h5><i class="fas fa-credit-card"></i> Payment</h5>
+            <p><strong>Mode:</strong> {{ selectedBooking.payment.paymentMode }}</p>
+            <p><strong>Method:</strong> {{ selectedBooking.payment.paymentMethod }}</p>
+            <p><strong>Amount:</strong> ₱{{ selectedBooking.payment.amount | number:'1.2-2' }}</p>
+            <p><strong>Status:</strong> 
+              <span [ngClass]="{ 'paid': selectedBooking.pay_status, 'unpaid': !selectedBooking.pay_status }">
+                <i class="fas" [ngClass]="selectedBooking.pay_status ? 'fa-check-circle' : 'fa-times-circle'"></i>
+                {{ selectedBooking.pay_status ? 'Paid' : 'Unpaid' }}
+              </span>
+            </p>
+          </section>
+
+          <!-- Booking Status -->
+          <section class="info-section status-section">
+            <h5><i class="fas fa-info-circle"></i> Booking Status</h5>
+            <p class="status-badge" [ngClass]="selectedBooking.status">
+              <i class="fas fa-tag"></i> {{ selectedBooking.status | titlecase }}
+            </p>
+            <small><i class="fas fa-clock"></i> <strong>Created:</strong> {{ selectedBooking.created_at | date:'medium' }}</small><br />
+            <small><i class="fas fa-edit"></i> <strong>Updated:</strong> {{ selectedBooking.updated_at | date:'medium' }}</small>
+          </section>
+        </div>
+
+        <ng-template #noBooking>
+          <p>No booking selected.</p>
+        </ng-template>
+      </div>
+
+      <!-- Add request tab -->
+      <div *ngIf="activeTab === 'request'">
+        <div class="orders-list">
+          <h4>Tray</h4>
+          <ul>
+            <li *ngFor="let item of cart">
+              <div class="item-left">
+                <span class="dot"></span>
+                <div>
+                  <div class="item-name">{{ item.product.name }}</div>
+                  <small>₱{{ item.product.price.toFixed(2) }} × {{ item.qty }}</small>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button (click)="changeQty(item, 1)">+</button>
+                <button (click)="changeQty(item, -1)">−</button>
+              </div>
+            </li>
+            <li *ngIf="cart.length===0" class="empty">No items</li>
+          </ul>
+        </div>
+
+        <!-- Bottom action area -->
+        <div class="left-bottom">
+          <div class="total-row">
+            <div class="total-label">Total</div>
+            <div class="total-value">₱{{ subtotal.toFixed(2) }}</div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn save" (click)="addRequest()">Add Request</button>
+            <button class="btn cancel" (click)="cancelRequest()">Cancel Request</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'view-requests'" class="requests-list">
+        <h4>Requests for Booking #{{ selectedBooking?.id }}</h4>
+
+        <div *ngIf="selectedBooking?.requests?.length; else noRequests">
+          <div class="request-card" *ngFor="let r of selectedBooking?.requests">
+            <div class="request-header">
+              <span class="status" [ngClass]="r.status">{{ r.status | titlecase }}</span>
+              <span class="request-id">Request #{{ r.id }}</span>
+            </div>
+
+            <ul class="product-list">
+              <li *ngFor="let p of r.products">
+                <span class="product-name">{{ p.name }}</span>
+                <span class="qty">× {{ p.quantity }}</span>
+                <span class="price">₱{{ getProductTotal(p) | number:'1.2-2' }}</span>
+              </li>
+            </ul>
+
+            <div class="request-total">
+              Total:
+              <strong>₱{{ getRequestTotal(r) | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noRequests>
+          <p>No requests yet for this booking.</p>
+        </ng-template>
+      </div>
+    </aside>
+
+    <!-- Right: Products grid -->
+    <main class="catalog">
+      <section class="category-title">{{ selectedCategory }}</section>
+
+      <div class="products-grid">
+        <div
+          *ngFor="let p of visibleProducts"
+          class="{{ productClass(p) }}"
+          (click)="addToCart(p)"
+        >
+          <div class="p-name">{{ p.name }}</div>
+          <div class="p-price">₱{{ p.price.toFixed(2) }}</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

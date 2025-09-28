@@ -335,7 +335,7 @@ export class ConfirmationComponent implements OnInit {
         children: this.reservationData?.children,
         rooms: this.reservationData?.rooms
       },
-      requests: this.reservationData?.requests || '',
+      specialRequests: this.reservationData?.specialRequests || '',
       payment: {
         paymentMode: this.paymentDetails.paymentMode,
         paymentMethod: this.paymentDetails.paymentMethod,
