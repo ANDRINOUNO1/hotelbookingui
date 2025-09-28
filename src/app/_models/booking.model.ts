@@ -29,7 +29,7 @@ export interface Booking {
   created_at?: string;
   updated_at?: string;
   room?: Room;
-  requests?: string;
+  specialRequests?: string;
   paidamount: number;
 }
 

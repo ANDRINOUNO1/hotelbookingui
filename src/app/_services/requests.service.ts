@@ -4,19 +4,29 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+// Match backend Request model
+export interface RequestProduct {
+  quantity: number;
+}
+
 export interface Request {
   id?: number;
   booking_id: number;
-  type: 'meal' | 'extra_bed' | 'cleaning' | 'other';
-  description?: string;
-  extra_bed_size?: string; // single | double | queen | king
-  food_options?: string; // comma-separated
-  parking_space?: string; // none | standard | premium
-  quantity?: number;
-  price?: number;
   status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   created_at?: string;
   updated_at?: string;
+  products?: {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;  // direct quantity field
+  }[];
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
 }
 
 @Injectable({
@@ -28,17 +38,24 @@ export class RequestService {
   constructor(private http: HttpClient) {}
 
   // Create new request
-  createRequest(request: Request): Observable<Request> {
+  createRequest(request: Partial<Request>): Observable<Request> {
     return this.http.post<Request>(this.apiUrl, request);
   }
 
   // Get all requests for a booking
   getRequestsByBooking(bookingId: number): Observable<Request[]> {
-    return this.http.get<Request[]>(`${this.apiUrl}/${bookingId}`);
+    return this.http.get<Request[]>(`${this.apiUrl}/booking/${bookingId}`);
   }
 
   // Update request status
   updateRequest(id: number, data: Partial<Request>): Observable<Request> {
     return this.http.put<Request>(`${this.apiUrl}/${id}`, data);
   }
+
+  addProductsToRequest(requestId: number, products: { id: number; quantity: number }[]) {
+    return this.http.post<Request>(`${this.apiUrl}/${requestId}/products`, {
+      products
+    });
+  }
+
 }

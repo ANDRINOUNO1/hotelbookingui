@@ -107,7 +107,7 @@
                       'booking-maintenance': isMaintenance(cell)
                     }"
                     style="cursor: pointer;">
-                  {{ cell.booking?.guest?.first_name || '' }} {{ cell.booking?.guest?.last_name || cell.booking?.requests || '' }}
+                  {{ cell.booking?.guest?.first_name || '' }} {{ cell.booking?.guest?.last_name || cell.booking?.specialRequests || '' }}
                 </div>
               </td>
             </ng-container>

@@ -24,11 +24,12 @@ import { LoginHistoryComponent } from './admin-section/history/history.component
 //Frontdesk
 import { FrontdeskComponent } from './frontdesk/frontdesk.component';
 import { ReservationsComponent } from './frontdesk/reservations/reservations.component';
-import { RequestsComponent } from './frontdesk/requests/requests.component';
+import { PosComponent } from './frontdesk/pos/pos.component';
 import { CalendarComponent } from './frontdesk/calendar/calendar.component';
 import { ListsComponent } from './frontdesk/lists/lists.component';
 import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
 import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.component';
+import { ProductsComponent } from './frontdesk/products/products.component';
 
 //Superadmin
 import { SuperhomeComponent } from './superadmin-sect/superhome.component';
@@ -73,10 +74,11 @@ export const routes: Routes = [
       { path: '', redirectTo: 'frontdeskdashboard', pathMatch: 'full' },
       { path: 'frontdeskdashboard', component: FrontdeskdashboardComponent },
       { path: 'reservations', component: ReservationsComponent },
-      { path: 'requests', component: RequestsComponent },
+      { path: 'requests', component: PosComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'lists', component: ListsComponent },
-      { path: 'addbookings', component: AddbookingsComponent }
+      { path: 'addbookings', component: AddbookingsComponent },
+      { path: 'products', component: ProductsComponent }
     ]
   },
   {

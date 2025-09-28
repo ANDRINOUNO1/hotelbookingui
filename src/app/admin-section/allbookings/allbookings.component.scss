@@ -78,15 +78,16 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.tables th,
 .tables td {
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     color: var(--table-text);
     transition: all 0.3s ease;
+    font-size: 12px;
 }
 
 .tables th {
+  padding: 1rem;
     font-weight: 600;
     background: var(--table-header);
     color: #ffffff;

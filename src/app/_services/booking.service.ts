@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Request } from './requests.service';
 
 export interface Booking {
   id: number;
@@ -29,12 +30,20 @@ export interface Booking {
     cvv: string;
   };
   room_id: number;
+  status: string;
   pay_status: boolean;
   created_at: string;
   updated_at: string;
-  requests: string;
+  requests: Request[];
   paidamount: number;
+  specialRequests: string;
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+} 
 
 export interface EmailCheckResponse {
   exists: boolean;
@@ -78,4 +87,30 @@ export class BookingService {
   deleteBooking(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Get all requests for a booking
+  getRequests(bookingId: number): Observable<Request[]> {
+    return this.http.get<Request[]>(`${this.apiUrl}/${bookingId}/requests`);
+  }
+
+  // Get a single request by ID
+  getRequestById(bookingId: number, requestId: number): Observable<Request> {
+    return this.http.get<Request>(`${this.apiUrl}/${bookingId}/requests/${requestId}`);
+  }
+
+  // Create a new request for a booking
+  createRequest(bookingId: number, request: Partial<Request>): Observable<Request> {
+    return this.http.post<Request>(`${this.apiUrl}/${bookingId}/requests`, request);
+  }
+
+  // Update an existing request
+  updateRequest(bookingId: number, requestId: number, data: Partial<Request>): Observable<Request> {
+    return this.http.put<Request>(`${this.apiUrl}/${bookingId}/requests/${requestId}`, data);
+  }
+
+  // Delete a request
+  deleteRequest(bookingId: number, requestId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${bookingId}/requests/${requestId}`);
+  }
+
 } 

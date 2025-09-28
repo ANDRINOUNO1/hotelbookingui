@@ -53,14 +53,15 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.tables th,
 .tables td {
     padding: 1rem;
     color: var(--table-text);
     transition: all 0.3s ease;
+    font-size: 11px;
 }
 
 .tables th {
+  padding: 1rem;
     font-weight: 600;
     background: var(--table-header);
     color: #ffffff;

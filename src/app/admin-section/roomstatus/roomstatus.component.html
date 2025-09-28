@@ -1,14 +1,9 @@
 <div *ngIf="loading">Loading rooms...</div>
 <div class="topbar">
   <h2>Room Status</h2>
-  <p>View and manage the status of all rooms. You can edit individual room statuses or reset all rooms to "Vacant and Ready".</p>
+  <p>View and manage the status of all rooms. You can edit individual room statuses.</p>
 </div>
  
-<div class="actions-bar" style="margin-bottom: 1rem;">
-  <button class="reset-btn" (click)="resetAllRooms()" [disabled]="loading">
-    Reset All to Vacant and Ready
-  </button>
-</div>
 <div *ngIf="error" class="error">{{ error }}</div>
 
 <table>

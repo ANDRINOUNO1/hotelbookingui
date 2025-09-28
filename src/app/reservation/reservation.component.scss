@@ -96,48 +96,6 @@ body {
       font-weight: 500;
     }
 
-    .terms-text {
-      margin-bottom: 30px;
-
-      h3 {
-        color: $text-dark;
-        font-size: 20px;
-        font-weight: 600;
-        margin: 25px 0 15px 0;
-        border-left: 4px solid $primary-blue;
-        padding-left: 15px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 20px 0;
-
-        li {
-          color: $text-light;
-          font-size: 14px;
-          margin-bottom: 8px;
-          padding-left: 20px;
-          position: relative;
-
-          &:before {
-            content: '•';
-            color: $primary-blue;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-          }
-        }
-      }
-
-      p {
-        color: $text-light;
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 15px;
-      }
-    }
-
     .terms-actions {
       text-align: center;
       padding-top: 20px;
