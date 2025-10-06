@@ -284,8 +284,9 @@ body {
       position: relative;
       margin-top: 100px;
       .step-content {
-        margin-top: 2rem;  // space between progress bar and step content
-        padding: 1rem 0;   // optional extra breathing room
+        margin-top: 2rem;
+        padding: 1rem 0;
+        border-radius: 2rem;
       }
 
       .tab {

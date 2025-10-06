@@ -34,7 +34,6 @@ import { RoomService } from '../../_services/room.service';
   </div>
 
 
-  <!-- Charges Breakdown -->
   <table class="charges">
     <thead>
       <tr>
@@ -51,6 +50,27 @@ import { RoomService } from '../../_services/room.service';
         <td>{{ day.charge | currency:'PHP' }}</td>
         <td>{{ day.payment ? (day.payment | currency:'PHP') : '-' }}</td>
       </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let req of filterRequestsByStatus('completed')">
+        <tr *ngFor="let product of req.products">
+          <td>{{ product.name }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>₱{{ product.price.toFixed(2) }}</td>
+          <td>₱{{ (product.price * product.quantity).toFixed(2) }}</td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 
@@ -113,6 +133,7 @@ export class ReceiptComponent implements OnInit {
   hotelEmail = 'BCflats.edu.ph';
 
   breakdown: any[] = [];
+  requestBreakdown: any[] = [];
   totalAmount: number = 0;
   discount: number = 0;
   grandTotal: number = 0;
@@ -137,12 +158,19 @@ export class ReceiptComponent implements OnInit {
     }
   }
 
+  filterRequestsByStatus(status: string): any[] {
+    if (!this.selectedReservation?.requests) {
+      return [];
+    }
+    return this.selectedReservation.requests.filter((req: any) => req.status === status);
+  }
 
   calculateBreakdown() {
     if (this.selectedReservation) {
       const nights = this.getNights(this.selectedReservation.checkIn, this.selectedReservation.checkOut);
       const dailyRate = this.getRateForRoomType(this.selectedReservation.roomType);
 
+      // Room rentals
       this.breakdown = Array.from({ length: nights }).map((_, i) => {
         const date = new Date(this.selectedReservation.checkIn);
         date.setDate(date.getDate() + i);
@@ -155,18 +183,39 @@ export class ReceiptComponent implements OnInit {
         };
       });
 
-      this.totalAmount = this.breakdown.reduce((sum, d) => sum + d.charge, 0);
+      // Requests/products separately - ONLY include 'Confirmed' requests for calculation
+      this.requestBreakdown = [];
+      const confirmedRequests = this.filterRequestsByStatus('completed'); // Filter here for calculation
+
+      if (confirmedRequests && confirmedRequests.length > 0) {
+        confirmedRequests.forEach((req: any) => {
+          (req.products || []).forEach((product: any) => {
+            this.requestBreakdown.push({
+              name: product.name,
+              quantity: product.quantity,
+              price: product.price,
+              subtotal: product.price * product.quantity
+            });
+          });
+        });
+      }
+
+      // Compute totals
+      const roomTotal = this.breakdown.reduce((sum, d) => sum + d.charge, 0);
+      const requestsTotal = this.requestBreakdown.reduce((sum, p) => sum + p.subtotal, 0);
+
+      this.totalAmount = roomTotal + requestsTotal;
       this.grandTotal = this.totalAmount - this.discount;
       this.change = this.paymentAmount - this.grandTotal;
 
       this.totalCalculated.emit(this.grandTotal);
-
     }
   }
 
   getNights(checkIn: string, checkOut: string): number {
     const inDate = new Date(checkIn);
     const outDate = new Date(checkOut);
+    // Math.max(1, ...) ensures a minimum of 1 night for date calculations
     return Math.max(1, (outDate.getTime() - inDate.getTime()) / (1000 * 3600 * 24));
   }
 

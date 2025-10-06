@@ -30,6 +30,7 @@ import { ListsComponent } from './frontdesk/lists/lists.component';
 import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
 import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.component';
 import { ProductsComponent } from './frontdesk/products/products.component';
+import { RoomAvailabilityCalendarComponent} from './frontdesk/room-availability-calendar/room-availability-calendar.component';
 
 //Superadmin
 import { SuperhomeComponent } from './superadmin-sect/superhome.component';
@@ -76,6 +77,7 @@ export const routes: Routes = [
       { path: 'reservations', component: ReservationsComponent },
       { path: 'requests', component: PosComponent },
       { path: 'calendar', component: CalendarComponent },
+      { path: 'availabilitycalendar', component: RoomAvailabilityCalendarComponent },
       { path: 'lists', component: ListsComponent },
       { path: 'addbookings', component: AddbookingsComponent },
       { path: 'products', component: ProductsComponent }

@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let log of logs">
+      <tr *ngFor="let log of paginatedLogs">
         <td>{{ log.id }}</td>
         <td>{{ log.account.firstName }} {{ log.account.lastName }}</td>
         <td>{{ log.account.email }}</td>
@@ -37,11 +37,20 @@
       [disabled]="currentPage === 1">
       Previous
     </button>
+
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
+
     <button 
       (click)="nextPage()" 
       [disabled]="currentPage === totalPages">
       Next
     </button>
   </div>
+
+  <p class="page-info" *ngIf="!isLoading && logs.length > 0">
+    Showing {{ (currentPage - 1) * pageSize + 1 }}–
+    {{ Math.min(currentPage * pageSize, logs.length) }}
+    of {{ logs.length }} records
+  </p>
+
 </div>

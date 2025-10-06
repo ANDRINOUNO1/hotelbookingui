@@ -71,7 +71,7 @@
                     <span class="stat-value available">{{ getAvailabilityCount(type.type).available }}</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-label">Occupied:</span>
+                    <span class="stat-label">Reserved / Occupied:</span>
                     <span class="stat-value occupied">{{ getAvailabilityCount(type.type).total - getAvailabilityCount(type.type).available }}</span>
                   </div>
                 </div>
@@ -88,7 +88,7 @@
 
           <div class="price-and-action">
             <div class="price-circle">
-              ₱{{ type.rate || type.basePrice }}
+              ₱{{ type.basePrice }}
             </div>
 
             <div class="reservation-fee-info" *ngIf="type.reservationFeePercentage">

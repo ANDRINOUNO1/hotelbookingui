@@ -9,30 +9,30 @@ import { BookingService } from '../../_services/booking.service';
   standalone: true,
   imports: [CommonModule, ReceiptComponent],
   template: `
-    <div *ngIf="reservation">
       <app-receipt
-        [selectedReservation]="reservation"
+        [selectedReservation]="selectedReservation"
         [paymentAmount]="paymentAmount"
-        [billNo]="'BILL-' + reservation.id">
+        [billNo]="'BILL-' + selectedReservation?.id"
+        (totalCalculated)="onTotalCalculated($event)">
       </app-receipt>
-    </div>
-    <p *ngIf="!reservation">Loading...</p>
   `
 })
-export class BillingComponent implements OnInit {
-  reservation: any;
+export class BillingComponent {
+  selectedReservation: any;
   paymentAmount: number = 0;
+  billNo: string = '';
 
-  constructor(private route: ActivatedRoute, private bookingService: BookingService) {}
+  constructor(private route: ActivatedRoute) {}
 
-    ngOnInit() {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-        const id = Number(idParam); // ✅ convert to number
-        this.bookingService.getBookingById(id).subscribe(data => {
-        this.reservation = data;
-        });
-    }
-    }
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.selectedReservation = params['reservation'] ? JSON.parse(params['reservation']) : null;
+      this.paymentAmount = Number(params['paymentAmount']) || 0;
+      this.billNo = params['billNo'] || '';
+    });
+  }
 
+  onTotalCalculated(total: number) {
+    this.paymentAmount = total;
+  }
 }

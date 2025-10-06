@@ -25,7 +25,7 @@
   .selected-dates {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border: 2px solid rgb(59 130 246 / 50%);
+    border: 2px solid rgba(59, 131, 246, 0.568);
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -43,7 +43,7 @@
 
       .date-label {
         color:black;
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -51,7 +51,7 @@
 
       .date-value {
         color: black;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         font-weight: 700;
       }
     }
@@ -304,6 +304,8 @@
       font-weight: 700;
       color: rgb(0, 0, 0);
       transition: all 0.3s ease;
+      border-left: 5px solid rgb(202, 158, 13);
+      padding-left: 10px;
     }
 
     .seasonal-tag {
@@ -367,7 +369,7 @@
       width: 100%;
       margin: 0.5rem 0 0.75rem 0;
       background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(45, 109, 248, 0.3);
+      border: 1px solid rgb(45, 109, 248);
       border-radius: 12px;
       overflow: hidden;
       backdrop-filter: blur(10px);
@@ -384,13 +386,13 @@
           font-size: 1.6rem;
           font-weight: 700;
           margin-bottom: 0.8rem;
-          border-bottom: 2px solid rgba(9, 125, 241, 0.3);
+          border-bottom: 2px solid rgb(7, 129, 250);
           padding-bottom: 0.5rem;
         }
 
         .room-description {
           color: black;
-          font-size: 1rem;
+          font-size: 1.5rem;
           line-height: 1.6;
           margin-bottom: 1.5rem;
         }
@@ -450,7 +452,7 @@
 
             li {
               color: black;
-              font-size: 1rem;
+              font-size: 1.2rem;
               padding: 0.3rem 0;
               display: flex;
               align-items: center;
@@ -471,7 +473,7 @@
       background:  #55adff;
       color: #ffffff;
       border-radius: 30%;
-      padding: 0.5rem;
+      padding: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1060,7 +1062,7 @@
     padding: 0.5rem;
     
     h2 {
-      font-size: 1.4rem;
+      font-size: 1.25rem; // Was: 1.4rem
       margin-bottom: 0.75rem;
     }
     
@@ -1078,17 +1080,22 @@
       width: 100%;
       min-width: 280px;
       padding: 0.75rem;
+
+      .room-card-content {
+        display: flex;
+        flex-direction: column;
+      }
       
       .room-card-index {
         width: 2rem;
         height: 2rem;
-        font-size: 0.9rem;
+        font-size: 0.8rem; // Was: 0.9rem
         top: 0.75rem;
         left: 0.75rem;
       }
       
       h3 {
-        font-size: 1.2rem;
+        font-size: 1.05rem; // Was: 1.2rem
         margin-top: 1.5rem;
         margin-bottom: 0.75rem;
       }
@@ -1098,20 +1105,101 @@
         margin-bottom: 0.75rem;
         
         img {
-          height: 70px;
+          height: 55px;
           border-radius: 0.5rem;
         }
       }
       
       .details-link {
-        font-size: 0.75rem;
+        font-size: 0.7rem; // Was: 0.75rem
         margin: 0.75rem 0;
       }
+
+      // --- NEW STYLES START HERE ---
+      .room-details-dropdown {
+        margin-top: 1rem;
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+
+        h4 {
+          font-size: 0.5rem;
+          font-weight: 600;
+          color: #343a40;
+          margin-bottom: 0.5rem;
+        }
+
+        .room-description {
+          font-size: 0.8rem;
+          color: #495057;
+          line-height: 1.5;
+          margin-bottom: 1rem;
+        }
+
+        .availability-details, .amenities-section {
+          margin-bottom: 1rem;
+        }
+
+        .availability-stats {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .stat-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #f8f9fa;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+        }
+
+        .stat-label {
+          font-size: 0.75rem;
+          color: #6c757d;
+        }
+
+        .stat-value {
+          font-size: 0.8rem;
+          font-weight: bold;
+
+          &.available {
+            color: #28a745; // Green
+          }
+          &.occupied {
+            color: #dc3545; // Red
+          }
+        }
+
+        .amenities-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr); // Two columns
+          gap: 0.25rem 1rem;
+
+          li {
+            font-size: 0.75rem;
+            color: #495057;
+            display: flex;
+            align-items: center;
+
+            &::before {
+              content: '✓';
+              color: #28a745;
+              margin-right: 0.5em;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+      // --- NEW STYLES END HERE ---
       
       .price-circle {
         width: 2.5rem;
         height: 2.5rem;
-        font-size: 0.8rem;
+        font-size: 0.75rem; // Was: 0.8rem
         margin-bottom: 0.75rem;
       }
       
@@ -1120,16 +1208,16 @@
         margin-bottom: 0.75rem;
         
         .fee-label {
-          font-size: 0.65rem;
+          font-size: 0.6rem; // Was: 0.65rem
         }
         
         .fee-percentage {
-          font-size: 0.8rem;
+          font-size: 0.7rem; // Was: 0.8rem
         }
       }
       
       .select-indicator {
-        font-size: 0.7rem;
+        font-size: 0.65rem; // Was: 0.7rem
         padding: 0.25rem 0.5rem;
         letter-spacing: 0.3px;
       }
@@ -1140,7 +1228,7 @@
     bottom: 0.75rem;
     right: 0.75rem;
     padding: 0.5rem 1rem;
-    font-size: 0.8rem;
+    font-size: 0.75rem; // Was: 0.8rem
   }
 }
 
@@ -1150,7 +1238,7 @@
     padding: 0.25rem;
     
     h2 {
-      font-size: 1.2rem;
+      font-size: 1.1rem; // Was: 1.2rem
     }
     
     .room-type-list {
@@ -1167,24 +1255,40 @@
       padding: 0.5rem;
       
       h3 {
-        font-size: 1.1rem;
+        font-size: 1.0rem; // Was: 1.1rem
       }
       
       .room-images-grid img {
-        height: 60px;
+        height: 45px;
+      }
+
+      // --- ADJUSTMENTS FOR EXTRA SMALL SCREENS ---
+      .room-details-dropdown {
+        h4 {
+          font-size: 0.85rem;
+        }
+        .room-description {
+          font-size: 0.75rem;
+        }
+        .stat-label, .amenities-list li {
+          font-size: 0.7rem;
+        }
+        .stat-value {
+          font-size: 0.75rem;
+        }
       }
       
       .price-circle {
         width: 2.2rem;
         height: 2.2rem;
-        font-size: 0.75rem;
+        font-size: 0.7rem; // Was: 0.75rem
       }
     }
   }
   
   .back-button {
     padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+    font-size: 0.7rem; // Was: 0.75rem
   }
 }
 

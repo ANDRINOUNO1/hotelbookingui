@@ -5,18 +5,20 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ✅ Added for [(ngModel)]
 
 @Component({
   selector: 'app-frontdeskdashboard',
   templateUrl: './frontdeskdashboard.component.html',
   styleUrls: ['./frontdeskdashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule], // ✅ Added FormsModule
   providers: [DatePipe]
 })
 export class FrontdeskdashboardComponent implements OnInit {
   rooms: Room[] = [];
   bookings: Booking[] = [];
+  filteredBookings: Booking[] = []; // ✅ Filtered bookings based on selected date
 
   roomTypes: RoomType[] = [];
   roomsByType: { [key: string]: Room[] } = {};
@@ -26,6 +28,7 @@ export class FrontdeskdashboardComponent implements OnInit {
   reservedRooms = 0;
   otherRooms = 0;
 
+  selectedDate: string = ''; // ✅ For date filter input
   isDropdownOpen = false;
 
   statusSummary: { label: string; count: number; class: string; icon: string }[] = [];
@@ -33,6 +36,7 @@ export class FrontdeskdashboardComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.selectedDate = new Date().toISOString().split('T')[0]; // ✅ default to today
     this.loadRooms();
     this.getBookings();
   }
@@ -61,14 +65,26 @@ export class FrontdeskdashboardComponent implements OnInit {
     this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
       next: (data) => {
         console.log('Frontdesk - Bookings data received:', data);
-        this.bookings = data;
         this.bookings = data.filter(booking => booking.status !== 'checked_out');
-        this.updateStatusSummary(); // Refresh after bookings load
+        this.filterBookingsByDate(); 
       },
       error: (err) => {
         console.error('Failed to load bookings:', err);
       }
     });
+  }
+
+  filterBookingsByDate() {
+    if (!this.selectedDate) return;
+
+    const selected = new Date(this.selectedDate);
+    this.filteredBookings = this.bookings.filter(b => {
+      const checkIn = new Date(b.availability.checkIn);
+      const checkOut = new Date(b.availability.checkOut);
+      return selected >= checkIn && selected <= checkOut; 
+    });
+
+    this.updateStatusSummary();
   }
 
   getUniqueRoomTypes(rooms: Room[]): RoomType[] {
@@ -107,31 +123,20 @@ export class FrontdeskdashboardComponent implements OnInit {
   }
 
   updateStatusSummary() {
-    const availableStatuses = ['Vacant and Ready', 'Vacant and Clean'];
-    const reservedStatuses = ['Reserved - Guaranteed', 'Reserved - Not Guaranteed'];
-    const occupiedStatuses = [
-      'Occupied', 'Stay Over', 'On Change', 'Do Not Disturb', 'Cleaning in Progress',
-      'Sleep Out', 'On Queue', 'Skipper', 'Lockout', 'Did Not Check Out',
-      'Due Out', 'Check Out', 'Early Check In'
-    ];
+    const activeBookings = this.filteredBookings;
 
-    this.availableRooms = this.rooms.filter(
-      r => availableStatuses.includes(r.roomStatus)
-    ).length;
+    const occupiedRoomIds = activeBookings
+      .filter(b => b.status === 'checked_in')
+      .map(b => b.room_id);
 
-    this.reservedRooms = this.rooms.filter(
-      r => reservedStatuses.includes(r.roomStatus)
-    ).length;
+    const reservedRoomIds = activeBookings
+      .filter(b => b.status === 'reserved')
+      .map(b => b.room_id);
 
-    this.occupiedRooms = this.rooms.filter(
-      r => occupiedStatuses.includes(r.roomStatus)
-    ).length;
-
-    this.otherRooms = this.rooms.filter(
-      r => !availableStatuses.includes(r.roomStatus) &&
-           !reservedStatuses.includes(r.roomStatus) &&
-           !occupiedStatuses.includes(r.roomStatus)
-    ).length;
+    this.occupiedRooms = occupiedRoomIds.length;
+    this.reservedRooms = reservedRoomIds.length;
+    this.availableRooms = this.rooms.length - (this.occupiedRooms + this.reservedRooms);
+    this.otherRooms = Math.max(0, this.rooms.length - (this.availableRooms + this.occupiedRooms + this.reservedRooms));
 
     this.statusSummary = [
       { label: 'Available', count: this.availableRooms, class: 'card-available', icon: 'fa-circle-check' },
@@ -141,27 +146,48 @@ export class FrontdeskdashboardComponent implements OnInit {
     ];
   }
 
+  getGuestName(roomId: number): string {
+    const booking = this.filteredBookings.find(b => b.room_id === roomId);
+    if (booking?.guest) {
+      return `${booking.guest.first_name} ${booking.guest.last_name}`;
+    }
+    return '';
+  }
+
   getRoomType(room: any): string {
     return (room as any).roomType?.type || room.RoomType?.type || 'Unknown';
   }
 
   getRoomStatusClass(status: string): string {
     if (!status) return '';
-
     return status
       .toLowerCase()
-      .replace(/\s*-\s*/g, '-')   // fix " - " into "-"
-      .replace(/\s+/g, '-')       // replace spaces with single dash
+      .replace(/\s*-\s*/g, '-') 
+      .replace(/\s+/g, '-') 
       .trim();
   }
 
-  getGuestName(roomId: number): string {
-    const booking = this.bookings.find(b => b.room_id === roomId);
-    if (booking?.guest) {
-      return `${booking.guest.first_name} ${booking.guest.last_name}`;
+  /** ✅ Determine room color indicator dynamically by date */
+  getRoomColorByDate(roomId: number): string {
+    const booking = this.filteredBookings.find(b => b.room_id === roomId);
+    if (!booking) {
+      // No booking for this date → Room available
+      return 'vacant-and-ready';
     }
-    return '';
+
+    // Has booking → Check its status
+    switch (booking.status?.toLowerCase()) {
+      case 'checked_in':
+        return 'occupied';
+      case 'reserved':
+        return 'reserved-guaranteed';
+      case 'cleaning':
+        return 'cleaning-in-progress';
+      default:
+        return 'vacant-and-ready';
+    }
   }
+
   getBookingStatusClass(status: string): string {
     switch (status) {
       case 'reserved': return 'status-reserved';

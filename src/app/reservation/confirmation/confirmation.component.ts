@@ -246,7 +246,7 @@ export class ConfirmationComponent implements OnInit {
   }
 
   fetchReservationFee() {
-    this.http.get<ReservationFee>(`${environment.apiUrl}/rooms/reservation-fee`).subscribe({
+    this.http.get<ReservationFee>(`${environment.apiUrl}/rooms/types`).subscribe({
       next: (fee) => {
         this.reservationFee = fee.fee;
         this.paymentDetails.amount = '₱' + this.reservationFee.toString();
@@ -258,7 +258,35 @@ export class ConfirmationComponent implements OnInit {
     });
   }
 
+  isPaymentFormValid(): boolean {
+    const mode = this.paymentDetails.paymentMode;
+
+    if (!mode) return false;
+
+    if (mode === 'Online') {
+      if (!this.paymentDetails.paymentMethod) return false;
+      if (!this.paymentDetails.mobileNumber || this.mobileNumberError) return false;
+      if (!this.paymentDetails.amount || this.paymentDetails.amount === '₱0') return false;
+      return true;
+    }
+
+    if (mode === 'Card') {
+      if (!this.paymentDetails.cardNumber ||
+          !this.paymentDetails.expiry ||
+          !this.paymentDetails.cvv ||
+          !this.paymentDetails.amount ||
+          this.paymentDetails.amount === '₱0') return false;
+      return true;
+    }
+
+    return false;
+  }
+
   async confirmBooking() {
+    if (!this.isPaymentFormValid()) {
+      this.openModal('Incomplete Payment', 'Please fill in all required payment details.', 'error');
+      return;
+    }
     // Convert amount to number for validation (remove peso sign)
     const numericAmount = this.paymentDetails.amount.replace('₱', '');
     const amount = parseFloat(numericAmount) || 0;
