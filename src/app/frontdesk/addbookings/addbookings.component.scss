@@ -3,35 +3,36 @@
   margin: 2rem auto;
   padding: 2rem;
   border-radius: 12px;
-  color: black;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #1e293b;
+  background: #ffffff;
   font-family: var(--font-main);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 
   display: flex;
   flex-direction: column;
-  gap: 2rem; /* spacing between header, form, room types */
+  gap: 2rem;
 }
 
-/* HEADER */
+/* ---------------- HEADER ---------------- */
 .addbooking-header {
   text-align: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: rgb(189, 146, 28);
+  border-bottom: 2px solid #e0e0e0;
 
   h1 {
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 700;
-    color: rgb(0, 0, 0);
+    color: #0f172a;
   }
 
   p {
     font-size: clamp(1rem, 2vw, 1.125rem);
-    color: rgb(0, 0, 0);
+    color: #475569;
   }
 }
 
-/* ALERTS */
+/* ---------------- ALERTS ---------------- */
 .alert {
   padding: 1rem 1.5rem;
   border-radius: 8px;
@@ -39,36 +40,36 @@
   font-weight: 500;
 
   &.alert-danger {
-    background: rgba(229, 57, 53, 0.1);
-    color: var(--room-dirty);
-    border: 1px solid rgba(229, 57, 53, 0.3);
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
   }
 
   &.alert-success {
-    background: rgba(76, 175, 80, 0.1);
-    color: var(--room-reserved);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
   }
 }
 
-/* FORM SECTIONS */
+/* ---------------- FORM SECTIONS ---------------- */
 .booking-form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 
   .form-section {
-    border: var(--border);
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
+    background: #f9fafb;
     padding: 1.5rem;
-          box-shadow: 0 0 0 2px rgba(65, 93, 121, 0.685);
-
+    box-shadow: 0 0 0 2px rgba(232, 240, 255, 0.6);
 
     .section-title {
       font-size: 1.5rem;
       font-weight: 600;
-      color: rgb(0, 0, 0);
-      border-bottom: 0.2rem solid rgb(219, 153, 29);
+      color: #0f172a;
+      border-bottom: 2px solid #3b82f6;
       padding-bottom: 0.5rem;
       margin-bottom: 1.5rem;
     }
@@ -81,13 +82,13 @@
   }
 }
 
-/* FORM INPUTS */
+/* ---------------- FORM INPUTS ---------------- */
 .form-group {
   display: flex;
   flex-direction: column;
 
   label {
-    color: var(--white);
+    color: #1e293b;
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
@@ -98,35 +99,35 @@
   textarea {
     padding: 0.75rem 1rem;
     border-radius: 8px;
-    border: 2px solid rgba(37, 44, 54, 0.683);
-    background: #f0f2f5;
-    color: black;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
     font-size: 1rem;
     transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(77, 134, 180, 0.281);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
     }
 
     &::placeholder {
-      color: #706f6f;
+      color: #9ca3af;
     }
 
     &.invalid {
-      border-color: var(--room-dirty);
+      border-color: #ef4444;
     }
   }
 
   .error-message {
-    color: var(--room-dirty);
+    color: #ef4444;
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
 }
 
-/* FORM ACTIONS */
+/* ---------------- FORM ACTIONS ---------------- */
 .form-actions {
   display: flex;
   justify-content: center;
@@ -134,7 +135,7 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: var(--border);
+  border-top: 1px solid #e2e8f0;
 
   .btn {
     padding: 0.875rem 2rem;
@@ -145,24 +146,23 @@
     transition: all 0.3s ease;
 
     &.btn-primary {
-      background: #1ec751;
-      color: var(--white);
+      background: #3b82f6;
+      color: #fff;
       border: none;
 
       &:hover {
-        opacity: 0.9;
+        background: #2563eb;
         transform: translateY(-1px);
       }
     }
 
     &.btn-secondary {
-      background: rgb(61, 61, 61);
-      color: white;
-      border: 2px solid var(--white);
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
 
       &:hover {
-        background: var(--sub-color);
-        color: var(--main-bg);
+        background: #e2e8f0;
       }
     }
 
@@ -173,7 +173,7 @@
   }
 }
 
-/* ROOM TYPES */
+/* ---------------- ROOM TYPES ---------------- */
 .room-types-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -186,22 +186,23 @@
   padding: 1.5rem;
   transition: all 0.3s ease;
   cursor: pointer;
-  background: rgba(97, 95, 95, 0.582);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
 
   &:hover {
     border-color: #3b82f6;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
   }
 
   &.selected {
+    background: linear-gradient(135deg, #eff6ff, #bfdbfe);
     border-color: #3b82f6;
-    background: linear-gradient(135deg, #eff6ff, #9bc3f8);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
   }
 }
 
-/* ROOM TYPE DETAILS */
+/* ---------------- ROOM TYPE DETAILS ---------------- */
 .room-type-checkbox {
   display: flex;
   align-items: center;
@@ -221,19 +222,19 @@
   h3.room-type-name {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 0.5rem 0;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
   }
 
   p.room-type-rate {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #f9f9f9;
+    color: #3b82f6;
     margin: 0;
   }
 }
 
-/* --- RESPONSIVENESS --- */
+/* ---------------- RESPONSIVENESS ---------------- */
 
 /* Tablets */
 @media (max-width: 1024px) {

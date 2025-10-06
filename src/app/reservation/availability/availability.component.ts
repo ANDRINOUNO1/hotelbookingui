@@ -56,7 +56,7 @@ export class AvailabilityComponent implements OnInit {
 
   constructor(
     private reservationDataService: ReservationDataService,
-    private roomService: RoomService
+    private roomService: RoomService,
   ) {}
 
   ngOnInit() {

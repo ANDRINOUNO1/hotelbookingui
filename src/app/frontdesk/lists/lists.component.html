@@ -164,12 +164,13 @@
           <i class="fa fa-times"></i>
         </button>
       </div>
+
       <div class="modal-body">
         <div class="warning-message">
           <i class="fa fa-exclamation-triangle"></i>
           <h3>Are you sure you want to check out this guest?</h3>
         </div>
-        
+
         <div class="guest-info">
           <p><strong>Guest:</strong> {{ selectedReservation ? getGuestName(selectedReservation) : '' }}</p>
           <p><strong>Room Type:</strong> {{ selectedReservation?.roomType }}</p>
@@ -177,47 +178,40 @@
           <p><strong>Total Amount:</strong> {{ selectedReservation ? formatCurrency(calculateTotalAmount(selectedReservation)) : '' }}</p>
         </div>
 
-        <div class="modal-body">
-          <button (click)="closeBilling()">❌ Close</button>
-
-            <app-receipt
-              [selectedReservation]="selectedReservation"
-              [paymentAmount]="paymentAmount"
-              [billNo]="'BILL-' + selectedReservation?.id"
-              (totalCalculated)="onTotalCalculated($event)">
-            </app-receipt>
+        <div class="receipt-section">
+          <app-receipt
+            [selectedReservation]="selectedReservation"
+            [paymentAmount]="paymentAmount"
+            [billNo]="'BILL-' + selectedReservation?.id"
+            (totalCalculated)="onTotalCalculated($event)">
+          </app-receipt>
         </div>
 
-        <button 
-          class="billbutton" 
-          *ngIf="selectedReservation" 
-          (click)="showBilling(selectedReservation)">
-          Show Billing
-        </button>
-                
         <div class="pos-section">
           <h3>Payment Details</h3>
 
-          <label>Payment Mode:</label>
-          <select [(ngModel)]="paymentMode">
-            <option value="Cash">Cash</option>
-            <option value="GCash">GCash</option>
-            <option value="Card">Card</option>
-          </select>
+          <div class="form-group">
+            <label>Payment Mode:</label>
+            <select [(ngModel)]="paymentMode" class="form-control">
+              <option value="Cash">Cash</option>
+              <option value="GCash">GCash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
 
-          <label>Amount Received:</label>
-          <input type="number" [(ngModel)]="paymentAmount" placeholder="Enter amount">
+          <div class="form-group">
+            <label>Amount Received:</label>
+            <input type="number" [(ngModel)]="paymentAmount" placeholder="Enter amount" class="form-control">
+          </div>
 
           <p *ngIf="selectedReservation && paymentAmount >= calculateTotalAmount(selectedReservation)">
-            <strong>Change:</strong> 
-            {{ formatCurrency(paymentAmount - calculateTotalAmount(selectedReservation)) }}
+            <strong>Change:</strong> {{ formatCurrency(paymentAmount - calculateTotalAmount(selectedReservation)) }}
           </p>
 
-          <p *ngIf="selectedReservation && paymentAmount && paymentAmount < calculateTotalAmount(selectedReservation)" style="color: red;">
+          <p *ngIf="selectedReservation && paymentAmount && paymentAmount < calculateTotalAmount(selectedReservation)" class="error">
             Payment is less than total amount.
           </p>
         </div>
-
 
         <div class="checkout-note">
           <p><i class="fa fa-info-circle"></i> This action will:</p>
@@ -228,10 +222,18 @@
           </ul>
         </div>
       </div>
+
+      <!-- Footer Buttons -->
       <div class="modal-footer">
         <button class="btn-cancel" (click)="cancelCheckout()">No, Cancel</button>
-        <button class="btn-confirm" (click)="confirmCheckout()">Yes, Check Out</button>
+        <button 
+          class="btn-confirm" 
+          (click)="confirmCheckout()" 
+          [disabled]="!canCheckout()">
+          Yes, Check Out
+        </button>
       </div>
     </div>
   </div>
+
 </div>

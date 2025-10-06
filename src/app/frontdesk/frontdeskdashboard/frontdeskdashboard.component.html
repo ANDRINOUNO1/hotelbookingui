@@ -4,6 +4,15 @@
       <h1>Front Desk Dashboard</h1>
       <p class="text-gray-600">Overview of room status and bookings</p>
     </div>
+    <div class="date-filter">
+      <label for="dateFilter">Select Date:</label>
+      <input
+        id="dateFilter"
+        type="date"
+        [(ngModel)]="selectedDate"
+        (change)="filterBookingsByDate()"
+      />
+    </div>
     <div class="dashboard-cards">
       <div *ngFor="let status of statusSummary" class="dashboard-card" [ngClass]="status.class">
         <div class="dashboard-card-icon">
@@ -87,7 +96,7 @@
   <div class="roomview-grid">
     <div *ngFor="let room of roomsByType[selectedType]"
         class="room-card"
-        [ngClass]="getRoomStatusClass(room.roomStatus)">
+        [ngClass]="getRoomColorByDate(room.id)">
       <div class="booking-guest">{{ getGuestName(room.id) }}</div>
       <div class="room-number">{{ room.roomNumber }}</div>
              <div class="room-type">{{ getRoomType(room) }}</div>

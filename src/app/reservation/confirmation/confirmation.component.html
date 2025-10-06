@@ -239,7 +239,7 @@
 
         <!-- Submit -->
         <div class="submit-section">
-          <button class="btn-confirm" type="submit" [disabled]="paymentForm.invalid">
+          <button class="btn-confirm" type="submit" [disabled]="!isPaymentFormValid()">
             <span class="btn-icon">✅</span>
             Confirm Booking
           </button>
@@ -268,4 +268,4 @@
       <button type="button" class="btn-confirm" (click)="closeModal()">OK</button>
     </div>
   </div>
-  </div>
+</div>

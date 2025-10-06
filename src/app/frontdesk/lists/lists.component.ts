@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { RoomAvailabilityService } from '../../_services/room-availability.service';
 import { ReceiptComponent } from './pointofsale.modal';
 import { Router } from '@angular/router';
+import { RoomService } from '../../_services/room.service';
 
 interface Reservation {
   id: number;
@@ -22,6 +23,16 @@ interface Reservation {
   room_id?: number;
   bookingStatus?: string;
   paymentMode?: string;
+  requests?: {
+    id: number;
+    status: string;
+    products: {
+      id: number;
+      name: string;
+      price: number;
+      quantity: number;
+    }[];
+  }[];
 }
 
 interface RoomType {
@@ -63,28 +74,26 @@ export class ListsComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private roomAvailabilityService: RoomAvailabilityService,
-    private router: Router
+    private router: Router,
+    private roomsService: RoomService
   ) {}
 
   ngOnInit() {
     this.loadReservations();
-    this.loadRoomRates
+    this.loadRoomRates();
   }
 
-  private loadRoomRates() {
-  this.http.get<RoomType[]>(`${environment.apiUrl}/roomtypes`).subscribe({
-    next: (types) => {
-      this.roomRates = types.reduce<Record<string, number>>((acc, t) => {
-        acc[t.type.toLowerCase()] = 
-          typeof t.basePrice === 'string' ? parseFloat(t.basePrice) : t.basePrice;
-        return acc;
-      }, {});
-    },
-    error: (err) => {
-      console.error('Failed to load room rates:', err);
-    }
-  });
-}
+  loadRoomRates() {
+    this.roomsService.getRoomTypes().subscribe(types => {
+        this.roomRates = types.reduce<Record<string, number>>((acc, t) => {
+          acc[t.type.toLowerCase()] = typeof t.basePrice === 'string'
+            ? parseFloat(t.basePrice)
+            : t.basePrice;
+          return acc;
+        }, {});
+
+      });
+  }
 
   loadReservations() {
     this.loading = true;
@@ -110,7 +119,8 @@ export class ListsComponent implements OnInit {
               totalAmount: booking.paidamount || booking.payment?.amount || 0,
               status: booking.pay_status ? 'active' : 'pending',
               room_id: booking.room_id,
-              bookingStatus: booking.status || 'reserved'
+              bookingStatus: booking.status || 'reserved',
+              requests: booking.requests || []
             };
           })
           .filter(reservation => 
@@ -129,9 +139,39 @@ export class ListsComponent implements OnInit {
   }
 
   getRateForRoomType(roomType: string): number {
-    return this.roomRates[roomType?.toLowerCase()] || 1500;
+    return this.roomRates[roomType?.toLowerCase()] || 0;
   }
 
+  calculateTotalAmount(reservation: Reservation): number {
+    if (!reservation) return 0;
+
+    // Room total
+    const days = this.getDaysBetween(reservation.checkIn, reservation.checkOut);
+    const roomRate = this.getRateForRoomType(reservation.roomType);
+    const roomTotal = days * roomRate;
+
+    // Requests total
+    let requestsTotal = 0;
+    const completedRequests = this.filterRequestsByStatus(reservation, 'completed');
+
+    if (completedRequests && completedRequests.length > 0) {
+      for (const req of completedRequests) {
+        // Inner loop for products remains the same...
+        for (const product of req.products) {
+          requestsTotal += product.price * product.quantity;
+        }
+      }
+    }
+
+    return roomTotal + requestsTotal;
+  }
+
+  filterRequestsByStatus(reservation: Reservation, status: string): any[] {
+    if (!reservation?.requests) {
+      return [];
+    }
+    return reservation.requests.filter((req: any) => req.status === status);
+  }
 
   applySearch() {
     const term = this.searchTerm.trim().toLowerCase();
@@ -308,6 +348,13 @@ export class ListsComponent implements OnInit {
     this.grandTotalFromReceipt = total;
   }
 
+  canCheckout(): boolean {
+    if (!this.selectedReservation) return false;
+
+    const total = this.calculateTotalAmount(this.selectedReservation);
+    return this.paymentAmount >= total;
+  }
+
   confirmCheckout() {
     if (!this.selectedReservation) return;
 
@@ -364,6 +411,7 @@ export class ListsComponent implements OnInit {
             this.showCheckoutModal = false;
             this.selectedReservation = null;
           }
+          this.showBilling(reservationToCheckOut);
         },
         error: (err) => {
           console.error('❌ Error updating booking status:', err);
@@ -457,37 +505,6 @@ export class ListsComponent implements OnInit {
     return `P${amount.toLocaleString()}`;
   }
 
-  calculateTotalAmount(reservation: Reservation): number {
-    try {
-      // Skip calculation if dates are invalid
-      if (!reservation.checkIn || !reservation.checkOut) {
-        return 0;
-      }
-      
-      // Calculate days between check-in and check-out
-      const checkIn = new Date(reservation.checkIn);
-      const checkOut = new Date(reservation.checkOut);
-      
-      // Validate dates
-      if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
-        return 0;
-      }
-      
-      const days = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-      
-      // Ensure days is not negative or zero
-      if (days <= 0) {
-        return 0;
-      }
-      
-      // For now, use a default rate of 1500 per night if room type info is not available
-      const ratePerNight = this.getRateForRoomType(reservation.roomType);
-      return days * ratePerNight;
-
-    } catch (error) {
-      return 0;
-    }
-  }
 
   // Helper method to normalize date formats from backend
   private normalizeDate(dateString: any): string {
@@ -614,18 +631,18 @@ export class ListsComponent implements OnInit {
     }
   }
 
-  showBilling(reservation: Reservation) {
-    if (!reservation) return;
-
+  showBilling(reservation: any) {
+    const billNo = 'BILL-' + reservation?.id;
     const url = this.router.serializeUrl(
-      this.router.createUrlTree([`/billing/${reservation.id}`])
+      this.router.createUrlTree(['/billing'], {
+        queryParams: {
+          reservation: JSON.stringify(reservation),
+          paymentAmount: this.paymentAmount,
+          billNo: billNo
+        }
+      })
     );
-    window.open(url, '_blank');
+    window.open(url, '_blank'); // Opens in a new tab
   }
 
-
-
-  closeBilling() {
-    this.billbutton = false;
-  }
 }
