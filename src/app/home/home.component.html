@@ -7,7 +7,7 @@
 <section class="header" [style]="getHeaderStyles()">
   <div class="header-bar">
     <a href="#home" class="logo">
-      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
+      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16" (load)="onLogoLoad($event)" (error)="onLogoError($event)">
       <span class="logo-text" *ngIf="headerContent.companyName">{{ headerContent.companyName }}</span>
     </a>
     <nav [class.mobile-open]="mobileMenuOpen">

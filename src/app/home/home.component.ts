@@ -104,6 +104,19 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     img.src = 'assets/images/placeholder.jpg'; // Fallback image
   }
 
+  // Logo event handlers
+  onLogoLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.classList.add('loaded');
+    console.log('Logo loaded successfully');
+  }
+
+  onLogoError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    console.warn('Logo failed to load, using fallback');
+    img.src = 'assets/images/bcflats.png'; // Fallback logo
+  }
+
   // Enhanced room functionality
   setRoomImage(roomIndex: number, imageSrc: string): void {
     if (this.rooms[roomIndex]) {
@@ -253,7 +266,10 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     private contentService: ContentService,
     private errorModalService: ErrorModalService,
     private roomService: RoomService
-  ) {}
+  ) {
+    // Set up periodic logo refresh
+    this.setupLogoRefresh();
+  }
 
   toggleMenu() {
     this.navbar.nativeElement.classList.toggle('active');
@@ -317,15 +333,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       await this.loadAboutContent();
       
       // Load logo
-      try {
-        const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
-        if (logoContent) {
-          this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
-          console.log('Logo loaded:', this.logoUrl);
-        }
-      } catch (logoError) {
-        console.warn('Failed to load logo:', logoError);
-      }
+      await this.loadLogo();
       
       // Load hero images
       const heroContent = this.content['hero'] || [];
@@ -1021,6 +1029,83 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
+    }
+    
+    // Clear logo refresh interval
+    if (this.logoRefreshInterval) {
+      clearInterval(this.logoRefreshInterval);
+    }
+  }
+
+  // Logo refresh functionality
+  private logoRefreshInterval: any;
+  private lastLogoUpdate: string = '';
+
+  private setupLogoRefresh(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    // Check for logo updates every 30 seconds
+    this.logoRefreshInterval = setInterval(() => {
+      this.checkLogoUpdate();
+    }, 30000);
+  }
+
+  private async checkLogoUpdate(): Promise<void> {
+    try {
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+      if (logoContent) {
+        const newLogoUrl = logoContent.optimizedUrl || logoContent.value;
+        const lastUpdate = logoContent.updatedAt || logoContent.createdAt;
+        
+        // Check if logo has been updated
+        if (newLogoUrl && newLogoUrl !== this.logoUrl && lastUpdate !== this.lastLogoUpdate) {
+          console.log('Logo update detected:', newLogoUrl);
+          this.updateLogo(newLogoUrl);
+          this.lastLogoUpdate = lastUpdate || '';
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to check logo update:', error);
+    }
+  }
+
+  private updateLogo(newLogoUrl: string): void {
+    // Add a small delay to ensure smooth transition
+    setTimeout(() => {
+      this.logoUrl = newLogoUrl;
+      console.log('Logo updated to:', newLogoUrl);
+      
+      // Trigger change detection
+      if (isPlatformBrowser(this.platformId)) {
+        // Force image reload by adding timestamp
+        const img = document.querySelector('.logo img') as HTMLImageElement;
+        if (img) {
+          img.src = newLogoUrl + '?t=' + Date.now();
+        }
+      }
+    }, 100);
+  }
+
+  // Public method to manually refresh logo
+  public refreshLogo(): void {
+    this.checkLogoUpdate();
+  }
+
+  // Enhanced logo loading with better error handling
+  private async loadLogo(): Promise<void> {
+    try {
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+      if (logoContent) {
+        const newLogoUrl = logoContent.optimizedUrl || logoContent.value;
+        if (newLogoUrl && newLogoUrl !== this.logoUrl) {
+          this.logoUrl = newLogoUrl;
+          this.lastLogoUpdate = logoContent.updatedAt || logoContent.createdAt || '';
+          console.log('Logo loaded:', this.logoUrl);
+        }
+      }
+    } catch (logoError) {
+      console.warn('Failed to load logo:', logoError);
+      // Keep fallback logo
     }
   }
 

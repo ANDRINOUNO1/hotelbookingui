@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Enhanced Guest Details Form with Two-Column Layout
 $primary-blue: #2B65EC;
 $light-blue: #E3F2FD;
@@ -281,7 +283,7 @@ $border-color: #E5E7EB;
                 transition: all 0.3s ease;
 
                 &:hover {
-                  color: adjust-color($primary-blue, $lightness: -10%);
+                  color: color.adjust($primary-blue, $lightness: -10%);
                   text-decoration: none;
                 }
               }
@@ -322,7 +324,7 @@ $border-color: #E5E7EB;
               box-shadow: 0 4px 12px rgba(43, 101, 236, 0.3);
 
               &:hover:not(:disabled) {
-                background: adjust-color($primary-blue, $lightness: -5%);
+                background: color.adjust($primary-blue, $lightness: -5%);
                 transform: translateY(-2px);
                 box-shadow: 0 8px 20px rgba(43, 101, 236, 0.4);
               }

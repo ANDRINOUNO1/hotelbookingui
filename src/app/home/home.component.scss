@@ -554,6 +554,16 @@ section{
   width: auto;
   object-fit: contain;
   margin-right: 0.7rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+
+.logo img.loaded {
+  opacity: 1;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
 }
 
 .header-bar nav {
