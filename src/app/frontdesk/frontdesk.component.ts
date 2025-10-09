@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { LoginHistoryService } from '../_services/login-history.service';
+import { SecureStorageService } from '../_services/secure-storage.service';
 
 @Component({
   selector: 'app-frontdesk',
@@ -21,7 +22,8 @@ export class FrontdeskComponent implements OnInit {
     private router: Router,
     private el: ElementRef,
     private titleService: Title,
-    private loginHistoryService: LoginHistoryService
+    private loginHistoryService: LoginHistoryService,
+    private secureStorage: SecureStorageService
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +43,7 @@ export class FrontdeskComponent implements OnInit {
   }
 
   logout() {
-    const accountId = sessionStorage.getItem('accountId');
+    const accountId = this.secureStorage.getItem('accountId');
 
     if (accountId) {
       this.loginHistoryService.createLog({ accountId: +accountId, action: 'logout' })
@@ -52,7 +54,7 @@ export class FrontdeskComponent implements OnInit {
     }
 
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('user');
+      this.secureStorage.clearAllStorage();
     }
 
     this.titleService.setTitle('BC Flats');

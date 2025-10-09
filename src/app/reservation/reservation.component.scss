@@ -4,6 +4,7 @@ $step-gap: 60px;
 $bar-height: 8px;
 
 $primary-blue: #2B65EC; 
+$primary-gold: #b4884d;
 $light-blue: #2b2b2b; 
 $white: #FFFFFF;
 $text-dark: #171725; 
@@ -11,9 +12,17 @@ $text-light: #555555;
 $background-main: #ffffff; 
 $disabled-bg: #CCCCCC;
 $disabled-text: #666666;
+$success-green: #10B981;
+$warning-orange: #F59E0B;
+$error-red: #EF4444;
 
 $glass-bg: rgba(0, 121, 235, 0.733);
 $glass-border: rgba(255, 255, 255, 0.2);
+
+// Modern gradients
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-gold: linear-gradient(135deg, #b4884d 0%, #d4a574 50%, #e6c088 100%);
+$gradient-blue: linear-gradient(135deg, #2B65EC 0%, #1e40af 100%);
 
 body {
   background: $background-main !important;
@@ -22,99 +31,247 @@ body {
 }
 
 .top-bar {
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background: rgb(109, 172, 253);
+  height: 80px;
+  background: $gradient-blue;
   display: flex;
   align-items: center;
-  padding: 0 1rem;
+  justify-content: space-between;
+  padding: 0 2rem;
+  box-shadow: 0 4px 20px rgba(43, 101, 236, 0.3);
+  z-index: 100;
+  backdrop-filter: blur(10px);
 
   .back-button {
-    background: none;
-    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    margin-right: 1rem;
+    gap: 8px;
+    padding: 12px 16px;
     color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
 
     svg {
       stroke: white;
     }
+
+    span {
+      font-size: 14px;
+      font-weight: 600;
+    }
   }
 
-  .page-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: white;
-    margin: 0;
+  .brand-section {
+    text-align: center;
+    flex: 1;
+
+    .page-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-subtitle {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+
+  .progress-indicator-mini {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 8px 16px;
+    backdrop-filter: blur(10px);
+
+    .step-counter {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+    }
   }
 }
 
-// -- Terms Disclaimer Modal --
+// -- Enhanced Terms Disclaimer Modal --
 .terms-disclaimer {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(black, 0.3);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px 20px;
+  padding: 100px 20px 20px;
   z-index: 999;
   overflow-y: auto;
+  backdrop-filter: blur(8px);
 
   .terms-content {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
-    padding: 40px;
-    max-width: 800px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 24px;
+    padding: 48px;
+    max-width: 600px;
     width: 100%;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInUp 0.6s ease-out;
 
-    h2 {
-      color: $text-dark;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 20px;
+    .terms-header {
       text-align: center;
-      border-bottom: 3px solid $primary-blue;
-      padding-bottom: 15px;
+      margin-bottom: 32px;
+
+      .terms-icon {
+        margin-bottom: 20px;
+        color: $primary-blue;
+        display: flex;
+        justify-content: center;
+      }
+
+      h2 {
+        color: $text-dark;
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        background: $gradient-blue;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      p {
+        color: $text-light;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 400;
+      }
     }
 
-    > p {
-      color: $text-light;
-      font-size: 16px;
-      margin-bottom: 30px;
-      text-align: center;
-      font-weight: 500;
+    .terms-checkbox {
+      margin-bottom: 32px;
+
+      .checkbox-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+        padding: 16px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+
+        &:hover {
+          background: rgba(43, 101, 236, 0.05);
+          border-color: rgba(43, 101, 236, 0.2);
+        }
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        .checkmark {
+          width: 24px;
+          height: 24px;
+          border: 2px solid #ddd;
+          border-radius: 6px;
+          position: relative;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+          margin-top: 2px;
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: all 0.3s ease;
+          }
+        }
+
+        input[type="checkbox"]:checked + .checkmark {
+          background: $gradient-blue;
+          border-color: $primary-blue;
+
+          &::after {
+            opacity: 1;
+          }
+        }
+
+        .checkbox-text {
+          color: $text-dark;
+          font-size: 15px;
+          line-height: 1.5;
+          font-weight: 400;
+
+          .policy-link {
+            color: $primary-blue;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            &:hover {
+              color: adjust-color($primary-blue, $lightness: -10%);
+            }
+          }
+        }
+      }
     }
 
     .terms-actions {
       text-align: center;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
 
       .btn {
-        background: $primary-blue;
-        color: $white;
+        background: $gradient-blue;
+        color: white;
         border: none;
-        padding: 15px 30px;
-        border-radius: 8px;
+        padding: 16px 32px;
+        border-radius: 12px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 8px 25px rgba(43, 101, 236, 0.3);
+        min-width: 200px;
+        justify-content: center;
 
-        &.btn-primary {
-          background: $primary-blue;
+        &:hover:not(:disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 35px rgba(43, 101, 236, 0.4);
+        }
+
+        &:active {
+          transform: translateY(-1px);
         }
 
         &:disabled {
@@ -122,234 +279,172 @@ body {
           color: $disabled-text;
           cursor: not-allowed;
           transform: none;
+          box-shadow: none;
         }
-      }
-    }
 
-    .terms-checkbox {
-      margin-top: 20px;
-      text-align: center;
-      color: $text-light;
-      font-size: 14px;
+        svg {
+          transition: transform 0.3s ease;
+        }
 
-      input {
-        margin-right: 10px;
-        transform: scale(1.2);
-        vertical-align: middle;
-        cursor: pointer;
+        &:hover:not(:disabled) svg {
+          transform: translateX(4px);
+        }
       }
     }
   }
 }
 
-// -- Main Progress Bar Component --
+// Enhanced Progress Section
 .progress {
-  background: $background-main;
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 30px;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: calc(100vh - 80px);
 
-  &_inner {
-    width: 100%;
-    max-width: none;
-    margin: 50px 0 0;
-    position: relative;
-    z-index: 1;
+  .progress_inner {
+    max-width: 1200px;
+    margin: 0 auto;
 
-    &__step {
-      float: left;
-      text-align: center;
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
       position: relative;
-      cursor: pointer;
-      width: calc(100% / $steps);
-      padding: 0 $step-gap;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-      label {
-        display: block;
-        margin-top: calc($step-gap - 10px);
-        position: relative;
-        font-weight: 700;
-        color: $white;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+      .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
         transition: all 0.3s ease;
-        opacity: 0.7;
-      }
+        cursor: pointer;
 
-      &:before {
-        content: '';
-        position: absolute;
-        width: $step-point-width;
-        height: $step-point-width;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      }
+        &.active {
+          .step-circle {
+            background: $gradient-blue;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(43, 101, 236, 0.4);
+          }
 
-      // Active step
-      &.active {
+          label {
+            color: $primary-blue;
+            font-weight: 700;
+          }
+        }
+
+        &.completed {
+          .step-circle {
+            background: $success-green;
+            color: white;
+          }
+
+          label {
+            color: $success-green;
+            font-weight: 600;
+          }
+        }
+
+        &.disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+
+          .step-circle {
+            background: $disabled-bg;
+            color: $disabled-text;
+          }
+
+          label {
+            color: $disabled-text;
+          }
+        }
+
+        .step-circle {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: white;
+          border: 3px solid #e2e8f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          font-weight: 700;
+          font-size: 18px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+          .step-number {
+            color: $text-light;
+          }
+        }
+
         label {
-          opacity: 1;
-          color: $primary-blue;
-        }
-
-        &:before {
-          background: $primary-blue;
-          border-color: $white;
-          animation: pulse 2s ease-in-out infinite;
-        }
-      }
-
-      // Completed step
-      &.completed {
-        label {
-          opacity: 0.9;
-          color: $light-blue;
-        }
-
-        &:before {
-          background: $primary-blue;
-          border-color: $white;
-        }
-
-        &:after {
-          content: '✓';
-          position: absolute;
-          top: 8px;
-          left: 50%;
-          transform: translateX(-50%);
-          color: $white;
-          font-weight: bold;
-          font-size: 12px;
-          z-index: 3;
-        }
-      }
-
-      // Disabled step
-      &.disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-        label {
-          opacity: 0.9;
-          color: black;
+          font-size: 14px;
+          font-weight: 600;
+          color: $text-light;
+          text-align: center;
+          transition: all 0.3s ease;
+          max-width: 100px;
         }
       }
     }
 
-    &__bar--set {
-      position: absolute;
-      height: $bar-height;
-      width: 100%;
-      background: rgba(161, 210, 255, 0.493);
-      left: 0;
-      z-index: 1;
-      border-radius: $bar-height;
-      top: 10px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    .progress-bar-container {
+      position: relative;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      margin-bottom: 3rem;
+      overflow: hidden;
 
-    &__bar {
-      position: absolute;
-      height: $bar-height;
-      background: rgb(83, 132, 221);
-      left: 0;
-      border-radius: $bar-height;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      top: $step-point-width / 2 - ($bar-height / 2);
-      z-index: 1;
-      
-      &::after {
-        content: '';
+      .progress-bar-background {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
-        border-radius: $bar-height;
-        animation: shimmer 2s ease-in-out infinite;
-      }
-    }
-
-    &__tabs {
-      clear: both;
-      position: relative;
-      margin-top: 100px;
-      .step-content {
-        margin-top: 2rem;
-        padding: 1rem 0;
-        border-radius: 2rem;
+        background: #e2e8f0;
+        border-radius: 4px;
       }
 
-      .tab {
-        background: $glass-bg;
-        border: 1px solid $glass-border;
-        border-radius: 20px;
-        padding: 50px;
-        backdrop-filter: blur(20px);
-        transition: all 0.3s ease;
-        animation: slideIn 0.5s ease-out;
-
-        display: none;
-
-        &.active {
-          display: block;
-        }
-      }
-    }
-
-    &__status {
-      width: 40px;
-      height: 40px;
-      top: -80px;
-      position: relative;
-      margin: 50px auto;
-
-      div {
+      .progress-bar-fill {
         position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background: $gradient-blue;
+        border-radius: 4px;
+        transition: width 0.6s ease;
+        box-shadow: 0 2px 8px rgba(43, 101, 236, 0.3);
+      }
+    }
+
+    .progress_inner__tabs {
+      .step-content {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.6s ease-out;
       }
     }
   }
 }
 
-
-// =============================================================================
-// 4. KEYFRAME ANIMATIONS
-// =============================================================================
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-20px) rotate(1deg); }
-  66% { transform: translateY(10px) rotate(-1deg); }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    box-shadow:
-      0 0 30px rgba($primary-blue, 0.8),
-      inset 0 2px 8px rgba(255, 255, 255, 0.4);
+// Animations
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  50% {
-    box-shadow:
-      0 0 40px $primary-blue,
-      inset 0 2px 8px rgba(255, 255, 255, 0.6);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes slideIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -360,274 +455,70 @@ body {
   }
 }
 
+// Responsive Design
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0 1rem;
+    height: 70px;
 
-// =============================================================================
-// 5. RESPONSIVE DESIGN (MEDIA QUERIES)
-// =============================================================================
-
-// Large Desktop (1920px and up)
-@media (min-width: 1920px) {
-  .progress {
-    padding: 30px;
-
-    &_inner {
-      width: 100%;
-      margin: 60px auto;
+    .back-button span {
+      display: none;
     }
 
-    &_inner__step {
-      padding: 0 80px;
-
-      label {
-        font-size: 16px;
-        margin-top: 80px;
-      }
-
-      &:before {
-        width: 35px;
-        height: 35px;
-      }
+    .brand-section .page-title {
+      font-size: 1.4rem;
     }
 
-    &_inner__tabs {
-      margin-top: 120px;
+    .brand-section .page-subtitle {
+      display: none;
+    }
+  }
 
-      .tab {
-        padding: 60px;
+  .terms-disclaimer {
+    padding: 80px 15px 15px;
+
+    .terms-content {
+      padding: 32px 24px;
+      border-radius: 20px;
+
+      .terms-header h2 {
+        font-size: 24px;
       }
     }
   }
-}
 
-// Desktop (1600px - 1919px)
-@media (max-width: 1919px) and (min-width: 1600px) {
   .progress {
-    &_inner {
-      width: 100%;
-      margin: 55px auto;
-    }
+    padding: 1rem;
 
-    &_inner__step {
-      padding: 0 70px;
+    .progress_inner {
+      .progress-steps {
+        flex-direction: column;
+        gap: 1rem;
 
-      label {
-        font-size: 15px;
-        margin-top: 70px;
-      }
-    }
+        .progress-step {
+          flex-direction: row;
+          gap: 16px;
 
-    &_inner__tabs {
-      margin-top: 110px;
+          .step-circle {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+          }
 
-      .tab {
-        padding: 55px;
-      }
-    }
-  }
-}
-
-// Large Tablet/Small Desktop (1400px - 1599px)
-@media (max-width: 1599px) and (min-width: 1400px) {
-  .progress {
-    &_inner {
-      width: 100%;
-      margin: 50px auto;
-    }
-
-    &_inner__step {
-      padding: 0 60px;
-
-      label {
-        font-size: 14px;
-        margin-top: 60px;
-      }
-    }
-
-    &_inner__tabs {
-      margin-top: 100px;
-
-      .tab {
-        padding: 50px;
-      }
-    }
-  }
-}
-
-// Tablet Landscape (1200px - 1399px)
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .progress {
-    &_inner {
-      width: 100%;
-      margin: 45px auto;
-    }
-
-    &_inner__step {
-      padding: 0 50px;
-
-      label {
-        font-size: 13px;
-        margin-top: 55px;
-      }
-    }
-
-    &_inner__tabs {
-      margin-top: 90px;
-
-      .tab {
-        padding: 45px;
-      }
-    }
-  }
-}
-
-// Tablet Portrait (768px - 1199px)
-@media (max-width: 1199px) and (min-width: 768px) {
-  .progress {
-    padding: 15px;
-
-    &_inner {
-      width: 95%;
-      margin: 40px auto;
-    }
-
-    &_inner__step {
-      padding: 0 30px;
-
-      label {
-        font-size: 12px;
-        margin-top: 50px;
+          label {
+            font-size: 16px;
+            max-width: none;
+          }
+        }
       }
 
-      &:before {
-        width: 25px;
-        height: 25px;
-      }
-    }
-
-    &_inner__tabs {
-      margin-top: 80px;
-
-      .tab {
-        padding: 40px;
-      }
-    }
-  }
-}
-
-// Mobile Large (576px - 767px)
-@media (max-width: 767px) and (min-width: 576px) {
-  .progress {
-    padding: 10px;
-
-    &_inner {
-      width: 98%;
-      margin: 30px auto;
-    }
-
-    &_inner__step {
-      padding: 0 15px;
-
-      label {
-        font-size: 11px;
-        margin-top: 40px;
+      .progress-bar-container {
+        display: none;
       }
 
-      &:before {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    &_inner__bar--set,
-    &_inner__bar {
-      height: 6px;
-      top: 10px;
-    }
-
-    &_inner__tabs {
-      margin-top: 60px;
-
-      .tab {
-        padding: 30px;
-      }
-    }
-  }
-}
-
-// Mobile Small (up to 575px)
-@media (max-width: 575px) {
-  .progress {
-    padding: 8px;
-
-    &_inner {
-      width: 100%;
-      margin: 20px auto;
-    }
-
-    &_inner__step {
-      padding: 0 8px;
-
-      label {
-        font-size: 10px;
-        margin-top: 30px;
-      }
-
-      &:before {
-        width: 18px;
-        height: 18px;
-      }
-    }
-
-    &_inner__bar--set,
-    &_inner__bar {
-      height: 4px;
-      top: 9px;
-    }
-
-    &_inner__tabs {
-      margin-top: 50px;
-
-      .tab {
-        padding: 20px;
-      }
-    }
-  }
-}
-
-// Extra Small Mobile (up to 375px)
-@media (max-width: 375px) {
-  .progress {
-    padding: 5px;
-
-    &_inner {
-      margin: 15px auto;
-    }
-
-    &_inner__step {
-      padding: 0 5px;
-
-      label {
-        font-size: 9px;
-        margin-top: 25px;
-      }
-
-      &:before {
-        width: 16px;
-        height: 16px;
-      }
-    }
-
-    &_inner__bar--set,
-    &_inner__bar {
-      height: 3px;
-      top: 8px;
-    }
-
-    &_inner__tabs {
-      margin-top: 40px;
-
-      .tab {
-        padding: 15px;
+      .progress_inner__tabs .step-content {
+        padding: 1.5rem;
+        border-radius: 16px;
       }
     }
   }

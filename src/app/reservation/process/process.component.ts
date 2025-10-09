@@ -9,13 +9,14 @@ import { debounceTime, distinctUntilChanged, switchMap, map, catchError } from '
 import { HttpClient } from '@angular/common/http';
 import { of, Subscription } from 'rxjs';
 import { ConsentPolicyModalComponent } from '../process/consent.modal';
+import { TermsNConditionsModalComponent } from '../termsnconditions.modal';
 import { environment } from '../../../environments/environment';
 
 
 @Component({
   selector: 'app-process',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConsentPolicyModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ConsentPolicyModalComponent, TermsNConditionsModalComponent],
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.scss']
 })
@@ -30,6 +31,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   phoneChecking = false;
   phoneValid: boolean | null = null;
   showPolicyModal = false;
+  showTermsModal = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -380,6 +382,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   closePolicyModal() {
     this.showPolicyModal = false;
+  }
+
+  openTermsModal() {
+    this.showTermsModal = true;
+  }
+
+  closeTermsModal() {
+    this.showTermsModal = false;
   }
 
   // Method to handle form field changes

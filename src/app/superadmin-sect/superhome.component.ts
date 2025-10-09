@@ -4,6 +4,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { LoginHistoryService } from '../_services/login-history.service';
+import { SecureStorageService } from '../_services/secure-storage.service';
 
 @Component({
   selector: 'app-superhome',
@@ -23,7 +24,8 @@ export class SuperhomeComponent implements OnInit {
     private router: Router,
     private el: ElementRef,
     private titleservice: Title,
-    private loginHistoryService: LoginHistoryService
+    private loginHistoryService: LoginHistoryService,
+    private secureStorage: SecureStorageService
   ) {
     // Listen to route changes
     this.router.events.pipe(
@@ -45,7 +47,7 @@ export class SuperhomeComponent implements OnInit {
   }
 
   logout() {
-    const accountId = sessionStorage.getItem('accountId'); 
+    const accountId = this.secureStorage.getItem('accountId'); 
     if (accountId) {
       this.loginHistoryService.createLog({ accountId: +accountId, action: 'logout' })
         .subscribe({
@@ -55,7 +57,7 @@ export class SuperhomeComponent implements OnInit {
     }
 
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('user');
+      this.secureStorage.clearAllStorage();
     }
 
     this.titleservice.setTitle('BC Flats');

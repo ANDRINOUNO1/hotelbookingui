@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../_services/account.service';
 import { Title } from '@angular/platform-browser';
-import { LoginHistoryService } from '../_services/login-history.service'; 
+import { LoginHistoryService } from '../_services/login-history.service';
+import { SecureStorageService } from '../_services/secure-storage.service'; 
 
 @Component({
   selector: 'app-login',
@@ -30,8 +31,13 @@ export class LoginComponent {
 
   activeTab: 'signin' | 'signup' = 'signin';
 
-  constructor(private router: Router, private accountService: AccountService, private titleService: Title, private loginHistoryService: LoginHistoryService, // ✅ inject
-) {}
+  constructor(
+    private router: Router, 
+    private accountService: AccountService, 
+    private titleService: Title, 
+    private loginHistoryService: LoginHistoryService,
+    private secureStorage: SecureStorageService
+  ) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('BC Flats - Login');
@@ -48,8 +54,10 @@ export class LoginComponent {
     this.accountService.login(this.email, this.password).subscribe({
       next: (account) => {
         this.isLoading = false;
-        localStorage.setItem('user', JSON.stringify(account));
-        sessionStorage.setItem('accountId', account.id.toString());
+        // Store non-sensitive data for debugging (obfuscated)
+        this.secureStorage.setItem('user', this.secureStorage.obfuscateSensitiveData(account));
+        // Store account ID for session tracking
+        this.secureStorage.setItem('accountId', account.id.toString());
 
         this.loginHistoryService.createLog({
           accountId: account.id,
@@ -58,7 +66,6 @@ export class LoginComponent {
           next: () => console.log('Login log created'),
           error: (err) => console.error('Failed to create login log:', err)
         });
-
 
         if (account.role === 'Admin') {
           this.router.navigate(['/admin/dashboard']);

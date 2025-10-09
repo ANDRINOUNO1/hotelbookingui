@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="policy-modal" *ngIf="isOpen">
-      <div class="policy-content">
+    <div class="policy-modal" *ngIf="isOpen" (click)="close()">
+      <div class="policy-content" (click)="$event.stopPropagation()">
         <h2>Data Collection Policy</h2>
         <div class="consent-text">
           <h3>Personal Information Collection:</h3>
@@ -58,43 +58,45 @@ import { CommonModule } from '@angular/common';
     }
     .policy-content {
       background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      width: 600px;
-      max-height: 80vh;
+      padding: 3rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 1000px;
+      max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+      animation: slideInUp 0.6s ease-out;
     }
     h2 {
       margin-top: 0;
       color: #171725;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 2rem;
       text-align: center;
       border-bottom: 3px solid #b4884d;
       padding-bottom: 15px;
     }
     .consent-text {
-      margin-bottom: 30px;
+      margin-bottom: 2rem;
     }
     .consent-text h3 {
       color: #171725;
-      font-size: 18px;
-      font-weight: 600;
-      margin: 20px 0 10px 0;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 25px 0 15px 0;
       border-left: 4px solid #b4884d;
       padding-left: 15px;
     }
     .consent-text ul {
       list-style: none;
       padding: 0;
-      margin: 0 0 15px 0;
+      margin: 0 0 20px 0;
     }
     .consent-text li {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 8px;
+      color: #171725;
+      font-size: 16px;
+      margin-bottom: 12px;
       padding-left: 20px;
       position: relative;
       line-height: 1.6;
@@ -126,6 +128,17 @@ import { CommonModule } from '@angular/common';
       background: rgba(255, 255, 255, 0.1);
       color: #555;
       border: 2px solid rgba(180, 136, 77, 0.3);
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   `]
 })
