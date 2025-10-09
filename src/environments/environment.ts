@@ -2,12 +2,22 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
+
 export const environment = {
-  production: true,
+  production: false, // Changed to false for development
   apiUrl: 'https://deploymentbackend-yndf.onrender.com',
   cloudinary:{
     cloudName: 'dsheuvqdc'
-  } 
+  },
+  // Performance monitoring
+  enablePerformanceMonitoring: false,
+  // Error reporting
+  enableErrorReporting: false,
+  // Analytics
+  enableAnalytics: false
 };
 
 /*

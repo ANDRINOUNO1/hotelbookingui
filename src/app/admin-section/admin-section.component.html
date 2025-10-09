@@ -107,6 +107,31 @@
       </a>
     </nav>
     
+    <!-- User Profile Section -->
+    <div class="user-profile-section">
+      <div class="user-profile-card">
+        <div class="user-avatar">
+          <div class="avatar-placeholder">
+            <i class="fa fa-user"></i>
+          </div>
+          <div class="status-indicator online"></div>
+        </div>
+        <div class="user-info">
+          <h4 class="user-name">{{ user?.firstName || 'Loading...' }} {{ user?.lastName || '' }}</h4>
+          <p class="user-role">{{ getDisplayRole() }}</p>
+          <p class="user-email">{{ user?.email || 'Loading...' }}</p>
+        </div>
+        <div class="user-menu-toggle" (click)="toggleUserMenu()">
+          <i class="fa fa-chevron-down" [class.rotated]="userMenuOpen"></i>
+        </div>
+      </div>
+      
+      <!-- User Menu Dropdown -->
+      <div class="user-menu" [class.open]="userMenuOpen">
+        <!-- Menu items removed as requested -->
+      </div>
+    </div>
+    
     <div class="sidebar-bottom" role="group" aria-label="User actions">
       <button class="toggle-mode-btn" (click)="toggleDarkMode()" title="Toggle theme">
         <i class="fa" [ngClass]="isDarkMode ? 'fa-moon' : 'fa-sun'"></i>

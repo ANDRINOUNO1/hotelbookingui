@@ -7,16 +7,17 @@
 .type-button {
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
-  background-color: #d1d5db; /* Tailwind's gray-300 */
+  background-color: var(--button-bg);
+  color: var(--button-text);
   transition: background-color 0.2s ease;
 }
 
 .type-button:hover {
-  background-color: #3f3f3f; /* Tailwind's gray-400 */
+  background-color: var(--button-hover);
 }
 
 .type-button.selected {
-  background-color: #000a44; /* Tailwind's blue-500 */
+  background-color: #000a44;
   color: #ffffff;
 }
 
@@ -38,14 +39,16 @@
 
 .calendar-header {
   padding: 0.5rem;
-  border: 1px solid #000000; /* Tailwind's default border */
-  color: #000000; 
+  border: 1px solid var(--table-border);
+  color: var(--text-color);
+  background: var(--table-header);
 }
 
 .calendar-cell {
   padding: 0.5rem;
-  border: 1px solid #000000;
-  color: #000000; 
+  border: 1px solid var(--table-border);
+  color: var(--text-color);
+  background: var(--table-bg);
 }
 
 .room-info {
@@ -131,29 +134,29 @@
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid var(--text-color);
 
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #000000;
+    color: var(--text-color);
     margin-bottom: 0.5rem;
   }
 
   p {
     font-size: 1.1rem;
-    color: #000000;
+    color: var(--text-color);
   }
 }
 .calendar-content {
   .calendar-navigation {
-    color: #000;
+    color: var(--text-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--card-bg);
     border-radius: 8px;
     backdrop-filter: blur(10px);
 
@@ -164,10 +167,10 @@
 
       .nav-button {
         padding: 0.75rem 1.5rem;
-        border: 2px solid #000000;
+        border: 2px solid var(--input-border);
         border-radius: 8px;
         background: transparent;
-        color: #000000;
+        color: var(--text-color);
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -176,7 +179,7 @@
         gap: 0.5rem;
 
         &:hover:not(:disabled) {
-          background: rgba(53, 53, 53, 0.2);
+          background: var(--button-hover);
           transform: translateY(-1px);
         }
 
@@ -186,11 +189,11 @@
         }
 
         &.today-button {
-          background: rgba(78, 77, 77, 0.2);
+          background: var(--button-bg);
           font-weight: 700;
 
           &:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--button-hover);
           }
         }
 
@@ -202,14 +205,14 @@
 
     .date-range-display {
       .date-range-text {
-        color: #000000;
+        color: var(--text-color);
         font-weight: 600;
         font-size: 1.1rem;
         text-align: center;
         padding: 0.5rem 1rem;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--input-bg);
         border-radius: 6px;
-        border: 1px solid rgba(43, 43, 43, 0.74);
+        border: 1px solid var(--input-border);
         min-width: 200px;
       }
     }
@@ -247,17 +250,16 @@
     .type-button {
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
-      background: transparent;
-      color: #000000;
+      background: var(--button-bg);
+      color: var(--button-text);
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.432);
 
       &:hover {
-        background: rgba(0, 0, 0, 0.1);
+        background: var(--button-hover);
         transform: translateY(-1px);
-        color: rgb(5, 1, 1);
       }
 
       &.selected {
@@ -279,14 +281,14 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #0e0606;
+      color: var(--text-color);
       font-weight: 500;
 
       .legend-color {
         width: 20px;
         height: 20px;
         border-radius: 4px;
-        border: 2px solid #ffffff;
+        border: 2px solid var(--text-color);
 
         &.legend-reserved {
           background: #fbbf24; /* Yellow for reserved */

@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AccountService } from '../_services/account.service';
 import { Title } from '@angular/platform-browser';
 import { LoginHistoryService } from '../_services/login-history.service';
-import { SecureStorageService } from '../_services/secure-storage.service'; 
+import { SecureStorageService } from '../_services/secure-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -77,7 +77,9 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = err?.error?.message || 'Invalid credentials!';
+        const errorMessage = err?.error?.message || 'Invalid credentials!';
+        this.error = errorMessage;
+        
         console.log('Login failed, account state:', this.accountService.accountValue);
       }
     });

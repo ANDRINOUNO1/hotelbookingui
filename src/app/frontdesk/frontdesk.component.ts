@@ -1,48 +1,185 @@
-import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef } from '@angular/core';
+import { Component, Renderer2, Inject, PLATFORM_ID, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { LoginHistoryService } from '../_services/login-history.service';
 import { SecureStorageService } from '../_services/secure-storage.service';
+import { AccountService } from '../_services/account.service';
+import { Account } from '../_models/account.model';
 
 @Component({
   selector: 'app-frontdesk',
-  standalone: true, // Assuming standalone, add if not already
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './frontdesk.component.html',
-  styleUrl: './frontdesk.component.scss'
+  styleUrls: ['./frontdesk.component.scss']
 })
 export class FrontdeskComponent implements OnInit {
-  // --- NEW CODE ---
-  public isSidebarOpen = true; // Sidebar is open by default on desktop
+  hotelName = 'BC Flats - Frontdesk';
+  user: Account | null = null;
+
+  isDarkMode = false;
+  openMenu: string | null = null;
+  userMenuOpen = false;
+  isLoading = false;
+  isMobileMenuOpen = false;
 
   constructor(
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router,
     private el: ElementRef,
-    private titleService: Title,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private titleservice: Title,
     private loginHistoryService: LoginHistoryService,
-    private secureStorage: SecureStorageService
-  ) {}
+    private secureStorage: SecureStorageService,
+    private accountService: AccountService
+  ) {
+    // Listen to route changes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.showLoading();
+      // Close mobile menu on route change
+      this.closeMobileMenu();
+    });
+  }
 
   ngOnInit(): void {
-    this.titleService.setTitle('BC Flats - Frontdesk');
-    // --- NEW CODE ---
-    // On smaller screens, start with the sidebar closed.
+    // Load user data from account service
+    this.user = this.accountService.accountValue;
+    
+    // Subscribe to account changes
+    this.accountService.account.subscribe(account => {
+      this.user = account;
+    });
+
     if (isPlatformBrowser(this.platformId)) {
-        if (window.innerWidth < 768) {
-            this.isSidebarOpen = false;
-        }
+      const savedTheme = localStorage.getItem('frontdesk-theme');
+      this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
+      this.applyTheme();
     }
+    this.titleservice.setTitle('BC Flats - Frontdesk');
   }
   
-  // --- NEW FUNCTION ---
-  toggleSidebar(): void {
-    this.isSidebarOpen = !this.isSidebarOpen;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    // Close mobile menu when clicking outside
+    const target = event.target as HTMLElement;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    
+    if (this.isMobileMenuOpen && 
+        !sidebar?.contains(target) && 
+        !mobileToggle?.contains(target)) {
+      this.closeMobileMenu();
+    }
   }
 
-  logout() {
+  showLoading() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000); // 2 seconds delay
+  }
+
+  navigateWithLoading(route: string) {
+    this.isLoading = true;
+    this.router.navigate([route]).then(() => {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
+    });
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('frontdesk-theme', this.isDarkMode ? 'dark' : 'light');
+    }
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.isDarkMode) {
+      this.renderer.addClass(this.el.nativeElement, 'dark-mode');
+    } else {
+      this.renderer.removeClass(this.el.nativeElement, 'dark-mode');
+    }
+  }
+
+  toggleMenu(menu: string) {
+    this.openMenu = this.openMenu === menu ? null : menu;
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    const overlay = this.el.nativeElement.querySelector('.mobile-overlay');
+    
+    if (sidebar) {
+      if (this.isMobileMenuOpen) {
+        this.renderer.addClass(sidebar, 'mobile-open');
+        this.renderer.addClass(mobileToggle, 'active');
+        if (overlay) {
+          this.renderer.addClass(overlay, 'active');
+        }
+      } else {
+        this.renderer.removeClass(sidebar, 'mobile-open');
+        this.renderer.removeClass(mobileToggle, 'active');
+        if (overlay) {
+          this.renderer.removeClass(overlay, 'active');
+        }
+      }
+    }
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    const sidebar = this.el.nativeElement.querySelector('.sidebar');
+    const mobileToggle = this.el.nativeElement.querySelector('.mobile-menu-toggle');
+    const overlay = this.el.nativeElement.querySelector('.mobile-overlay');
+    
+    if (sidebar) {
+      this.renderer.removeClass(sidebar, 'mobile-open');
+      this.renderer.removeClass(mobileToggle, 'active');
+      if (overlay) {
+        this.renderer.removeClass(overlay, 'active');
+      }
+    }
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  closeUserMenu() {
+    setTimeout(() => this.userMenuOpen = false, 150); // Delay to allow click
+  }
+
+  goToProfile(event: Event) {
+    event.preventDefault();
+    this.userMenuOpen = false;
+    // Navigate to profile page
+    // Example: this.router.navigate(['/frontdesk/profile']);
+    console.log('Navigate to profile');
+  }
+
+  goToSettings(event: Event) {
+    event.preventDefault();
+    this.userMenuOpen = false;
+    // Navigate to settings page
+    // Example: this.router.navigate(['/frontdesk/settings']);
+    console.log('Navigate to settings');
+  }
+
+  logout(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      this.userMenuOpen = false;
+    }
     const accountId = this.secureStorage.getItem('accountId');
 
     if (accountId) {
@@ -54,10 +191,68 @@ export class FrontdeskComponent implements OnInit {
     }
 
     if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('frontdesk-theme');
       this.secureStorage.clearAllStorage();
     }
 
-    this.titleService.setTitle('BC Flats');
+    this.titleservice.setTitle('BC Flats');
     this.router.navigate(['/login']);
+  }
+
+  footerContent = {
+    companyName: 'BC Flats',
+    phone1: '+123-456-7890',
+    phone2: '+696-969-69696',
+    email: 'BCflats.edu.ph',
+    address: 'A.S Fortuna - 400104',
+    social: {
+      facebook: '#',
+      twitter: '#',
+      instagram: '#',
+      linkedin: '#'
+    },
+    copyrightText: '',
+    showDynamicYear: true,
+    styles: {
+      backgroundColor: '#0b0b31',
+      textColor: '#e5c07b',
+      linkColor: '#b4884d',
+      copyrightBackgroundColor: '#f8f9fa'
+    }
+  };
+
+  getDisplayRole(): string {
+    if (!this.user?.role) return 'User';
+    
+    switch (this.user.role) {
+      case 'Admin':
+        return 'Admin';
+      case 'frontdeskUser':
+        return 'Frontdesk Manager';
+      case 'SuperAdmin':
+        return 'Super Admin';
+      default:
+        return this.user.role;
+    }
+  }
+
+  getCopyrightText(): string {
+    if (this.footerContent.copyrightText) {
+      return this.footerContent.copyrightText;
+    }
+    
+    if (this.footerContent.showDynamicYear) {
+      return `© ${this.getCurrentYear()}-${this.getNextYear()} ${this.footerContent.companyName}. All rights reserved.`;
+    }
+    
+    return `© ${this.footerContent.companyName}. All rights reserved.`;
+  }
+
+  getCurrentYear(): number {
+    return new Date().getFullYear();
+  }
+
+  getNextYear(): number {
+    return new Date().getFullYear() + 1;
   }
 }

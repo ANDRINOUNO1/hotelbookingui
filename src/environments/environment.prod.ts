@@ -1,7 +1,13 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:4000',
+  production: true,
+  apiUrl: 'https://deploymentbackend-yndf.onrender.com',
   cloudinary: {
     cloudName: 'dsheuvqdc'
-  }
+  },
+  // Performance monitoring
+  enablePerformanceMonitoring: true,
+  // Error reporting
+  enableErrorReporting: true,
+  // Analytics
+  enableAnalytics: true
 };

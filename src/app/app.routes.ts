@@ -1,102 +1,102 @@
 import { Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReservationComponent  } from './reservation/reservation.component';
 
-import { LoginComponent } from './login/login.component';
+// Lazy loading imports for better performance
+const ReservationComponent = () => import('./reservation/reservation.component').then(m => m.ReservationComponent);
+const LoginComponent = () => import('./login/login.component').then(m => m.LoginComponent);
 
-//Admin
-import { AdminSectionComponent } from './admin-section/admin-section.component';
-import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './admin-section/dashboard/dashboard.component';
-import { BookingComponent } from './admin-section/booking/booking.component';
-import { CustomersComponent } from './admin-section/customers/customers.component';
-import { RoomsComponent } from './admin-section/rooms/rooms.component';
-import { PricingComponent as AdminPricingComponent } from './admin-section/pricing/pricing.component';
-import { AddAccountComponent } from './admin-section/addaccount/add-account.component';
-import { AllbookingsComponent } from './admin-section/allbookings/allbookings.component';
-import { ArchiveComponent } from './admin-section/archive/archive.component';
-import { ContactMessagesComponent } from './admin-section/contact-messages/contact-messages.component';
-import { ContentManagementComponent } from './admin-section/content-management/content-management.component';
-import { RoomstatusComponent } from './admin-section/roomstatus/roomstatus.component';
-import { LoginHistoryComponent } from './admin-section/history/history.component';
+// Admin lazy loading
+const AdminSectionComponent = () => import('./admin-section/admin-section.component').then(m => m.AdminSectionComponent);
+const HomeComponent = () => import('./home/home.component').then(m => m.HomeComponent);
+const DashboardComponent = () => import('./admin-section/dashboard/dashboard.component').then(m => m.DashboardComponent);
+const BookingComponent = () => import('./admin-section/booking/booking.component').then(m => m.BookingComponent);
+const CustomersComponent = () => import('./admin-section/customers/customers.component').then(m => m.CustomersComponent);
+const RoomsComponent = () => import('./admin-section/rooms/rooms.component').then(m => m.RoomsComponent);
+const AdminPricingComponent = () => import('./admin-section/pricing/pricing.component').then(m => m.PricingComponent);
+const AddAccountComponent = () => import('./admin-section/addaccount/add-account.component').then(m => m.AddAccountComponent);
+const AllbookingsComponent = () => import('./admin-section/allbookings/allbookings.component').then(m => m.AllbookingsComponent);
+const ArchiveComponent = () => import('./admin-section/archive/archive.component').then(m => m.ArchiveComponent);
+const ContactMessagesComponent = () => import('./admin-section/contact-messages/contact-messages.component').then(m => m.ContactMessagesComponent);
+const ContentManagementComponent = () => import('./admin-section/content-management/content-management.component').then(m => m.ContentManagementComponent);
+const RoomstatusComponent = () => import('./admin-section/roomstatus/roomstatus.component').then(m => m.RoomstatusComponent);
+const LoginHistoryComponent = () => import('./admin-section/history/history.component').then(m => m.LoginHistoryComponent);
 
-//Frontdesk
-import { FrontdeskComponent } from './frontdesk/frontdesk.component';
-import { ReservationsComponent } from './frontdesk/reservations/reservations.component';
-import { PosComponent } from './frontdesk/pos/pos.component';
-import { CalendarComponent } from './frontdesk/calendar/calendar.component';
-import { ListsComponent } from './frontdesk/lists/lists.component';
-import { FrontdeskdashboardComponent } from './frontdesk/frontdeskdashboard/frontdeskdashboard.component';
-import { AddbookingsComponent } from './frontdesk/addbookings/addbookings.component';
-import { ProductsComponent } from './frontdesk/products/products.component';
-import { RoomAvailabilityCalendarComponent} from './frontdesk/room-availability-calendar/room-availability-calendar.component';
+// Frontdesk lazy loading
+const FrontdeskComponent = () => import('./frontdesk/frontdesk.component').then(m => m.FrontdeskComponent);
+const ReservationsComponent = () => import('./frontdesk/reservations/reservations.component').then(m => m.ReservationsComponent);
+const PosComponent = () => import('./frontdesk/pos/pos.component').then(m => m.PosComponent);
+const CalendarComponent = () => import('./frontdesk/calendar/calendar.component').then(m => m.CalendarComponent);
+const ListsComponent = () => import('./frontdesk/lists/lists.component').then(m => m.ListsComponent);
+const FrontdeskdashboardComponent = () => import('./frontdesk/frontdeskdashboard/frontdeskdashboard.component').then(m => m.FrontdeskdashboardComponent);
+const AddbookingsComponent = () => import('./frontdesk/addbookings/addbookings.component').then(m => m.AddbookingsComponent);
+const ProductsComponent = () => import('./frontdesk/products/products.component').then(m => m.ProductsComponent);
+const RoomAvailabilityCalendarComponent = () => import('./frontdesk/room-availability-calendar/room-availability-calendar.component').then(m => m.RoomAvailabilityCalendarComponent);
 
-//Superadmin
-import { SuperhomeComponent } from './superadmin-sect/superhome.component';
-import { AccountListComponent } from './superadmin-sect/accountlist/account-list.component';
-import { PendingAccountsComponent } from './superadmin-sect/pendingaccount/pending-accounts.component';
-import { ArchivesComponent } from './superadmin-sect/archives/archives.component';
-import { AddAccountComponentt } from './superadmin-sect/addaccount/add-account.component';
-import { PricingComponent as SuperAdminPricingComponent } from './superadmin-sect/pricing/pricing.component';
+// Superadmin lazy loading
+const SuperhomeComponent = () => import('./superadmin-sect/superhome.component').then(m => m.SuperhomeComponent);
+const AccountListComponent = () => import('./superadmin-sect/accountlist/account-list.component').then(m => m.AccountListComponent);
+const PendingAccountsComponent = () => import('./superadmin-sect/pendingaccount/pending-accounts.component').then(m => m.PendingAccountsComponent);
+const ArchivesComponent = () => import('./superadmin-sect/archives/archives.component').then(m => m.ArchivesComponent);
+const AddAccountComponentt = () => import('./superadmin-sect/addaccount/add-account.component').then(m => m.AddAccountComponentt);
+const SuperAdminPricingComponent = () => import('./superadmin-sect/pricing/pricing.component').then(m => m.PricingComponent);
 
-
-//extras
-import { BillingComponent } from './frontdesk/lists/billing.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+// Extras lazy loading
+const BillingComponent = () => import('./frontdesk/lists/billing.component').then(m => m.BillingComponent);
+const NotFoundComponent = () => import('./not-found/not-found.component').then(m => m.NotFoundComponent);
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'reserve', component: ReservationComponent },
-  { path: 'login', component: LoginComponent },
+  { path: '', loadComponent: HomeComponent },
+  { path: 'reserve', loadComponent: ReservationComponent },
+  { path: 'login', loadComponent: LoginComponent },
   {
     path: 'admin',
-    component: AdminSectionComponent,
+    loadComponent: AdminSectionComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'booking', component: BookingComponent },
-      { path: 'customers', component: CustomersComponent },
-      { path: 'rooms', component: RoomsComponent },
-      { path: 'pricing', component: AdminPricingComponent },
-      { path: 'addaccount', component: AddAccountComponent },
-      { path: 'allbooking', component: AllbookingsComponent },
-      { path: 'archive', component: ArchiveComponent },
-      { path: 'contact-messages', component: ContactMessagesComponent },
-      { path: 'content-management', component: ContentManagementComponent },
-      { path: 'roomstatus', component: RoomstatusComponent },
-      { path: 'history', component: LoginHistoryComponent }
+      { path: 'dashboard', loadComponent: DashboardComponent },
+      { path: 'booking', loadComponent: BookingComponent },
+      { path: 'customers', loadComponent: CustomersComponent },
+      { path: 'rooms', loadComponent: RoomsComponent },
+      { path: 'pricing', loadComponent: AdminPricingComponent },
+      { path: 'addaccount', loadComponent: AddAccountComponent },
+      { path: 'allbooking', loadComponent: AllbookingsComponent },
+      { path: 'archive', loadComponent: ArchiveComponent },
+      { path: 'contact-messages', loadComponent: ContactMessagesComponent },
+      { path: 'content-management', loadComponent: ContentManagementComponent },
+      { path: 'roomstatus', loadComponent: RoomstatusComponent },
+      { path: 'history', loadComponent: LoginHistoryComponent }
     ]
   },
   {
     path: 'frontdesk',
-    component: FrontdeskComponent,
+    loadComponent: FrontdeskComponent,
     children: [
       { path: '', redirectTo: 'frontdeskdashboard', pathMatch: 'full' },
-      { path: 'frontdeskdashboard', component: FrontdeskdashboardComponent },
-      { path: 'reservations', component: ReservationsComponent },
-      { path: 'requests', component: PosComponent },
-      { path: 'calendar', component: CalendarComponent },
-      { path: 'availabilitycalendar', component: RoomAvailabilityCalendarComponent },
-      { path: 'lists', component: ListsComponent },
-      { path: 'addbookings', component: AddbookingsComponent },
-      { path: 'products', component: ProductsComponent }
+      { path: 'frontdeskdashboard', loadComponent: FrontdeskdashboardComponent },
+      { path: 'reservations', loadComponent: ReservationsComponent },
+      { path: 'requests', loadComponent: PosComponent },
+      { path: 'calendar', loadComponent: CalendarComponent },
+      { path: 'availabilitycalendar', loadComponent: RoomAvailabilityCalendarComponent },
+      { path: 'lists', loadComponent: ListsComponent },
+      { path: 'addbookings', loadComponent: AddbookingsComponent },
+      { path: 'products', loadComponent: ProductsComponent }
     ]
   },
   {
     path: 'superadmin',
-    component: SuperhomeComponent,
+    loadComponent: SuperhomeComponent,
     children: [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
-      { path: 'account-list', component: AccountListComponent },
-      { path: 'pending-accounts', component: PendingAccountsComponent },
-      { path: 'add-accounts', component: AddAccountComponentt },
-      { path: 'archives', component: ArchivesComponent},
-      { path: 'pricing', component: SuperAdminPricingComponent }
+      { path: 'account-list', loadComponent: AccountListComponent },
+      { path: 'pending-accounts', loadComponent: PendingAccountsComponent },
+      { path: 'add-accounts', loadComponent: AddAccountComponentt },
+      { path: 'archives', loadComponent: ArchivesComponent},
+      { path: 'pricing', loadComponent: SuperAdminPricingComponent }
     ]
   },
-  { path: 'billing/:id', component: BillingComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: 'billing/:id', loadComponent: BillingComponent },
+  { path: '**', loadComponent: NotFoundComponent }
 
 ];
 @NgModule({
