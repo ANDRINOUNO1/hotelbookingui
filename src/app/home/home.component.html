@@ -1,13 +1,16 @@
 <router-outlet></router-outlet>
 
+<!-- Skip to main content link for accessibility -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <!-- Header Section -->
 <section class="header" [style]="getHeaderStyles()">
   <div class="header-bar">
     <a href="#home" class="logo">
-      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16">
+      <img [src]="logoUrl" alt="BC Flats Logo" class="w-16 h-16" (load)="onLogoLoad($event)" (error)="onLogoError($event)">
       <span class="logo-text" *ngIf="headerContent.companyName">{{ headerContent.companyName }}</span>
     </a>
-    <nav>
+    <nav [class.mobile-open]="mobileMenuOpen">
       <a 
         *ngFor="let item of headerContent.navigation; trackBy: trackByIndex"
         [href]="item.href"
@@ -43,12 +46,18 @@
 </section>
 
 <!-- Hero Section -->
-<section class="back">
+<section class="back" id="main-content">
   <section class="home" id="home">
     <div class="swiper home-slider">
       <div class="swiper-wrapper">
         <div class="box swiper-slide" *ngFor="let image of heroImages; let i = index">
-          <img [src]="image" [alt]="'Hero image ' + (i + 1)">
+          <img 
+            [src]="image" 
+            [alt]="'Hero image ' + (i + 1)"
+            loading="lazy"
+            class="hero-image"
+            (load)="onImageLoad($event)"
+            (error)="onImageError($event, image)">
           <div class="flex">
             <h3>{{ getHeroTitle(i) }}</h3>
           </div>
@@ -62,9 +71,13 @@
 
 <!-- About Section -->
 <section class="about" id="about">
-  <div class="row">
+  <div class="row" data-aos="fade-up" data-aos-duration="1000">
     <div class="image">
-      <img [src]="aboutImages['staff']" alt="Best Staff">
+      <img 
+        src="assets/images/Staff.jpg" 
+        alt="Best Staff"
+        loading="lazy"
+        class="about-image">
     </div>
     <div class="content">
       <h3>{{ getContentText('about', 'staff-title') || 'best staff' }}</h3>
@@ -73,9 +86,13 @@
     </div>
   </div>
 
-  <div class="row revers">
+  <div class="row revers" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
     <div class="image">
-      <img [src]="aboutImages['foods']" alt="Best Foods">
+      <img 
+        src="assets/images/Foods.jpg" 
+        alt="Best Foods"
+        loading="lazy"
+        class="about-image">
     </div>
     <div class="content">
       <h3>{{ getContentText('about', 'foods-title') || 'best foods' }}</h3>
@@ -83,9 +100,13 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
     <div class="image">
-      <img [src]="aboutImages['pool']" alt="Swimming Pool">
+      <img 
+        src="assets/images/Pool.jpg" 
+        alt="Swimming Pool"
+        loading="lazy"
+        class="about-image">
     </div>
     <div class="content">
       <h3>{{ getContentText('about', 'pool-title') || 'swimming pool' }}</h3>
@@ -140,7 +161,7 @@
 <section class="rooms">
   <section id="rooms">
     <div class="container">
-      <h2>Rooms</h2>
+      <h2>Our Premium Rooms</h2>
 
       <div class="relative">
         <div class="absolute">
@@ -152,13 +173,16 @@
               <div class="card-image">
                 <div class="bg" [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
                   <div class="overlay"></div>
+                  <div class="price-tag">${{ room.price }}/night</div>
                 </div>
               </div>
 
               <div class="seasonal-thumbs">
-                <div *ngFor="let img of room.seasonalImages"
+                <div *ngFor="let img of room.seasonalImages; let j = index"
                      class="thumb"
-                     [ngStyle]="{'background-image': 'url(' + img + ')'}">
+                     [ngStyle]="{'background-image': 'url(' + img + ')'}"
+                     (click)="setRoomImage(i, img)"
+                     [title]="'View image ' + (j + 1)">
                 </div>
               </div>
 
@@ -166,6 +190,12 @@
                 <h3>{{ room.name }}</h3>
                 <p class="brand">{{ room.brand }}</p>
                 <p class="description">{{ room.description }}</p>
+                <div class="room-tags">
+                  <span *ngFor="let tag of room.tags" class="tag">{{ tag }}</span>
+                </div>
+                <button class="book-room-btn" (click)="bookRoom(room)">
+                  Book Now
+                </button>
               </div>
             </div>
           </div>

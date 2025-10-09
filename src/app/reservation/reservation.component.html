@@ -1,55 +1,93 @@
 <app-terms-conditions-modal
   *ngIf="showPolicyModal"
+  [isOpen]="showPolicyModal"
   (closed)="closePolicyModal()">
 </app-terms-conditions-modal>
 
 <ng-container *ngIf="!showPolicyModal">
-
+  <!-- Enhanced Top Navigation Bar -->
   <div class="top-bar">
     <button class="back-button" (click)="goToHome()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
+      <span>Back to Home</span>
     </button>
-    <h1 class="page-title">BC Flats</h1>
+    <div class="brand-section">
+      <h1 class="page-title">BC Flats</h1>
+      <p class="page-subtitle">Premium Hotel Experience</p>
+    </div>
+    <div class="progress-indicator-mini" *ngIf="termsAccepted">
+      <span class="step-counter">{{ currentStep }} of {{ steps.length }}</span>
+    </div>
   </div>
 
+  <!-- Enhanced Terms Disclaimer Modal -->
   <div class="terms-disclaimer" *ngIf="!termsAccepted">
     <div class="terms-content">
-      <h2>Terms and Conditions</h2>
-      <p>Before proceeding with your reservation, make sure you  read and accept our terms and conditions:</p>
+      <div class="terms-header">
+        <div class="terms-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Welcome to BC Flats</h2>
+        <p>Before proceeding with your reservation, please read and accept our terms and conditions to ensure a smooth booking experience.</p>
+      </div>
 
       <div class="terms-checkbox">
-        <input type="checkbox" [(ngModel)]="termsChecked" />
-        <span>
-          I have read and agree to the
-          <strong class="policy-link" (click)="openPolicyModal()">Terms and Conditions</strong>
-        </span>
+        <label class="checkbox-container">
+          <input type="checkbox" [(ngModel)]="termsChecked" />
+          <span class="checkmark"></span>
+          <span class="checkbox-text">
+            I have read and agree to the
+            <strong class="policy-link" (click)="openPolicyModal()">Terms and Conditions</strong>
+          </span>
+        </label>
       </div>
 
       <div class="terms-actions">
         <button class="btn btn-primary" (click)="acceptTerms()" [disabled]="!termsChecked">
-          Proceed
+          <span>Start Reservation</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
     </div>
   </div>
 
+  <!-- Enhanced Progress Section -->
   <section class="progress" *ngIf="termsAccepted">
     <div class="progress_inner">
-      <div *ngFor="let step of steps; index as i"
-           class="progress_inner__step"
-           [class.active]="currentStep === i + 1"
-           [class.completed]="isStepCompleted(i + 1)"
-           [class.disabled]="!canProceedToStep(i + 1) && currentStep < i + 1"
-           (click)="goToStep(i + 1)"
-           [style.cursor]="canProceedToStep(i + 1) ? 'pointer' : 'not-allowed'">
-        <label>{{ step }}</label>
+      <!-- Enhanced Progress Steps -->
+      <div class="progress-steps">
+        <div *ngFor="let step of steps; index as i"
+             class="progress-step"
+             [class.active]="currentStep === i + 1"
+             [class.completed]="isStepCompleted(i + 1)"
+             [class.disabled]="!canProceedToStep(i + 1) && currentStep < i + 1"
+             (click)="goToStep(i + 1)"
+             [style.cursor]="canProceedToStep(i + 1) ? 'pointer' : 'not-allowed'">
+          <div class="step-circle">
+            <span class="step-number" *ngIf="!isStepCompleted(i + 1)">{{ i + 1 }}</span>
+            <svg *ngIf="isStepCompleted(i + 1)" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <label>{{ step }}</label>
+        </div>
       </div>
-      <div class="progress_inner__bar--set"></div>
-      <div class="progress_inner__bar"
-           [style.width.%]="(100 / steps.length) * (currentStep - 1)">
+      
+      <!-- Enhanced Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-background"></div>
+        <div class="progress-bar-fill"
+             [style.width.%]="(100 / steps.length) * (currentStep - 1)">
+        </div>
       </div>
+      
+      <!-- Enhanced Step Content -->
       <div class="progress_inner__tabs">
         <div class="step-content">
           <ng-container [ngSwitch]="currentStep">

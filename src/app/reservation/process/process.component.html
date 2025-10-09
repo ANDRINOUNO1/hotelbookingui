@@ -1,9 +1,16 @@
 <!-- Policy Modal -->
-        <app-consent-policy-modal
-          [isOpen]="showPolicyModal"
-          (closed)="closePolicyModal()">
-        </app-consent-policy-modal>
-<!-- Main Form Container -->
+<app-consent-policy-modal
+  [isOpen]="showPolicyModal"
+  (closed)="closePolicyModal()">
+</app-consent-policy-modal>
+
+<!-- Terms and Conditions Modal -->
+<app-terms-conditions-modal
+  [isOpen]="showTermsModal"
+  (closed)="closeTermsModal()">
+</app-terms-conditions-modal>
+
+<!-- Enhanced Guest Details Form with Image -->
 <div class="form-container">
   <!-- Left Image Section -->
   <div class="left-side">
@@ -14,12 +21,14 @@
   <!-- Right Form Section -->
   <div class="right-side">
     <div class="form-box">
-      <h2>Guest Details</h2>
-      <p class="selected-room">
-        Selected Room: <strong>{{ selectedRoomType?.type }}</strong>
-      </p>
+      <div class="form-header">
+        <h2>Guest Details</h2>
+        <p class="selected-room">
+          Selected Room: <strong>{{ selectedRoomType?.type }}</strong>
+        </p>
+      </div>
 
-      <form [formGroup]="customerForm" (ngSubmit)="submitFormWithLoading()">
+      <form [formGroup]="customerForm" (ngSubmit)="submitFormWithLoading()" class="guest-form">
         
         <!-- First Name -->
         <div class="form-group">
@@ -46,11 +55,12 @@
             [class.error]="hasError('email')" [class.valid]="isValid('email')" />
           <div class="error-message" *ngIf="hasError('email')">{{ getErrorMessage('email') }}</div>
           <div class="loading-message" *ngIf="customerForm.get('email')?.pending">
-            <i class="fa fa-spinner fa-spin"></i> Checking email availability...
+            <div class="spinner"></div>
+            <span>Checking email availability...</span>
           </div>
         </div>
 
-        <!-- Phone Number with Veriphone Validation -->
+        <!-- Phone Number -->
         <div class="form-group">
           <input type="tel" placeholder="Contact Number (+63XXXXXXXXXX)" formControlName="phone"
             (focus)="onFieldFocus('phone')" (blur)="onFieldBlur('phone')" (input)="formatPhoneNumber($event)"
@@ -61,20 +71,30 @@
 
           <!-- Loading indicator -->
           <div class="loading-message" *ngIf="phoneChecking">
-            <i class="fa fa-spinner fa-spin"></i> Validating phone number...
+            <div class="spinner"></div>
+            <span>Validating phone number...</span>
           </div>
 
           <!-- Validation result -->
           <div class="success-message" *ngIf="phoneValid === true">
-            ✅ Phone number is valid
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Phone number is valid</span>
           </div>
           <div class="error-message" *ngIf="phoneValid === false">
-            ❌ Invalid phone number
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Invalid phone number</span>
           </div>
           
-          <!-- Help text for mobile users -->
+          <!-- Help text -->
           <div class="help-text" *ngIf="!phoneChecking && phoneValid === null">
-            <small>📱 Format: +63XXXXXXXXXX (10 digits after +63)</small>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Format: +63XXXXXXXXXX (10 digits after +63)</span>
           </div>
         </div>
 
@@ -111,24 +131,40 @@
             (focus)="onFieldFocus('specialRequests')" (blur)="onFieldBlur('specialRequests')" (input)="onFieldChange('specialRequests')"></textarea>
         </div>
 
-        <!-- Consent Checkbox -->
-        <div class="consent-checkbox">
-          <input type="checkbox" formControlName="consentAccepted" (change)="onConsentChange()" />
-          <span>
-            I have read and agree to the 
-            <strong class="policy-link" (click)="openPolicyModal()">Data Collection Policy</strong>
-            and consent to the processing of my personal information.
-          </span>
+        <!-- Enhanced Consent Checkbox -->
+        <div class="consent-section">
+          <label class="consent-checkbox">
+            <input type="checkbox" formControlName="consentAccepted" (change)="onConsentChange()" />
+            <span class="checkmark"></span>
+            <span class="consent-text">
+              I have read and agree to the 
+              <strong class="policy-link" (click)="openTermsModal()">Terms and Conditions</strong>
+              and 
+              <strong class="policy-link" (click)="openPolicyModal()">Data Collection Policy</strong>
+              and consent to the processing of my personal information.
+            </span>
+          </label>
         </div>
 
-        <!-- Buttons -->
-        <div class="actions">
-          <button type="button" (click)="back.emit()" class="btn-secondary">Back</button>
-          <button type="submit" class="btn-primary" [disabled]="!isFormValid() || isFormProcessing()">
-            <span *ngIf="isFormProcessing()">
-              <i class="fa fa-spinner fa-spin"></i> Processing...
-            </span>
-            <span *ngIf="!isFormProcessing()">Submit Reservation</span>
+        <!-- Enhanced Action Buttons -->
+        <div class="form-actions">
+          <button type="button" (click)="back.emit()" class="btn btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Back</span>
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!isFormValid() || isFormProcessing()">
+            <div class="btn-content" *ngIf="isFormProcessing()">
+              <div class="spinner"></div>
+              <span>Processing...</span>
+            </div>
+            <div class="btn-content" *ngIf="!isFormProcessing()">
+              <span>Submit Reservation</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
           </button>
         </div>
 

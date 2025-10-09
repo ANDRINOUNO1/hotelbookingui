@@ -27,14 +27,14 @@
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div class="loading-spinner" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading your content...</p>
-  </div>
-
   <!-- Main Content -->
-  <div class="content-sections" *ngIf="!loading">
+  <div class="content-sections">
+    
+    <!-- Loading State -->
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading content...</p>
+    </div>
     
     <!-- Quick Actions Bar -->
     <div class="quick-actions-bar">
@@ -96,7 +96,7 @@
             <span>Recommended: PNG or JPG format, max 2MB, transparent background preferred</span>
           </div>
           
-          <div class="file-upload-area">
+          <div class="file-upload-area" [class.uploading]="uploading">
             <div class="file-input-wrapper">
               <input type="file" 
                      id="logo-upload" 
@@ -107,6 +107,12 @@
                 <i class="fa fa-cloud-upload"></i>
                 <span>Choose Logo File</span>
               </label>
+            </div>
+            
+            <!-- Upload loading overlay -->
+            <div class="uploading-overlay" *ngIf="uploading">
+              <div class="upload-spinner"></div>
+              <div class="upload-text">Uploading logo...</div>
             </div>
             
             <div class="file-selected-info" *ngIf="selectedLogo">

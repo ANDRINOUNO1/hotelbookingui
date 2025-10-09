@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, Renderer2, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID, Renderer2, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,8 @@ import flatpickr from 'flatpickr';
 import { ReservationComponent } from '../reservation/reservation.component';
 import { ContactMessageService } from '../_services/contact-message.service';
 import { ContentService, ContentItem } from '../_services/content.service';
+import { ErrorModalService } from '../_services/error-modal.service';
+import { RoomService, RoomType } from '../_services/room.service';
 
 @Component({
   selector: 'app-home',
@@ -19,9 +21,11 @@ import { ContentService, ContentItem } from '../_services/content.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit, OnInit {
+export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   title = 'hotel-reservation-app';
   isDarkMode = false;
+  mobileMenuOpen = false;
+  private intersectionObserver?: IntersectionObserver;
 
   rooms = [
     {
@@ -88,9 +92,62 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   activeRoom = 0;
 
+  // Enhanced image handling
+  onImageLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.classList.add('loaded');
+  }
+
+  onImageError(event: Event, fallbackSrc: string): void {
+    const img = event.target as HTMLImageElement;
+    console.warn('Image failed to load:', fallbackSrc);
+    img.src = 'assets/images/placeholder.jpg'; // Fallback image
+  }
+
+  // Logo event handlers
+  onLogoLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.classList.add('loaded');
+    console.log('Logo loaded successfully');
+  }
+
+  onLogoError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    console.warn('Logo failed to load, using fallback');
+    img.src = 'assets/images/bcflats.png'; // Fallback logo
+  }
+
+  // Enhanced room functionality
+  setRoomImage(roomIndex: number, imageSrc: string): void {
+    if (this.rooms[roomIndex]) {
+      this.rooms[roomIndex].image = imageSrc;
+    }
+  }
+
+  bookRoom(room: any): void {
+    // Navigate to reservation with room pre-selected
+    this.router.navigate(['/reserve'], { 
+      queryParams: { 
+        roomType: room.name,
+        price: room.price,
+        roomId: room.id // Include database ID if available
+      } 
+    });
+  }
+
+  setActiveRoom(index: number): void {
+    this.activeRoom = index;
+  }
+
+  // Performance optimization
+  trackByIndex(index: number, item: any): number {
+    return index;
+  }
+
   nextRoom() {
     this.activeRoom = (this.activeRoom + 1) % this.rooms.length;
   }
+  
   prevRoom() {
     this.activeRoom = (this.activeRoom - 1 + this.rooms.length) % this.rooms.length;
   }
@@ -206,18 +263,20 @@ export class HomeComponent implements AfterViewInit, OnInit {
     private router: Router,
     private http: HttpClient,
     private contactMessageService: ContactMessageService,
-    private contentService: ContentService
-  ) {}
+    private contentService: ContentService,
+    private errorModalService: ErrorModalService,
+    private roomService: RoomService
+  ) {
+    // Set up periodic logo refresh
+    this.setupLogoRefresh();
+  }
 
   toggleMenu() {
     this.navbar.nativeElement.classList.toggle('active');
   }
 
   toggleMobileMenu() {
-    const nav = document.querySelector('.header-bar nav');
-    if (nav) {
-      nav.classList.toggle('mobile-open');
-    }
+    this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
   onHeaderNavClick(event: Event, href: string | null | undefined): void {
@@ -230,10 +289,32 @@ export class HomeComponent implements AfterViewInit, OnInit {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
+    // Close mobile menu after navigation
+    this.mobileMenuOpen = false;
   }
 
   ngOnInit() {
+    // Ensure fallback images are immediately available
+    this.ensureAboutImagesAvailable();
     this.loadContent();
+  }
+
+  // Ensure about images are always available
+  private ensureAboutImagesAvailable(): void {
+    const fallbackImages: { [key: string]: string } = {
+      staff: 'assets/images/Staff.jpg',
+      foods: 'assets/images/Foods.jpg',
+      pool: 'assets/images/Pool.jpg'
+    };
+
+    Object.keys(fallbackImages).forEach(key => {
+      if (!this.aboutImages[key] || this.aboutImages[key].trim() === '') {
+        this.aboutImages[key] = fallbackImages[key];
+        console.log(`Initialized fallback image for ${key}:`, fallbackImages[key]);
+      }
+    });
+
+    console.log('Initial about images:', this.aboutImages);
   }
 
   async loadContent() {
@@ -252,15 +333,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
       await this.loadAboutContent();
       
       // Load logo
-      try {
-      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
-      if (logoContent) {
-        this.logoUrl = logoContent.optimizedUrl || logoContent.value || this.logoUrl;
-          console.log('Logo loaded:', this.logoUrl);
-        }
-      } catch (logoError) {
-        console.warn('Failed to load logo:', logoError);
-      }
+      await this.loadLogo();
       
       // Load hero images
       const heroContent = this.content['hero'] || [];
@@ -278,14 +351,33 @@ export class HomeComponent implements AfterViewInit, OnInit {
         if (item.type === 'image') {
           const key = item.key.replace('-image', '');
           const imageUrl = item.optimizedUrl || item.value;
-          if (imageUrl) {
+          if (imageUrl && imageUrl.trim() !== '') {
             this.aboutImages[key] = imageUrl;
+            console.log(`Updated ${key} image from CMS:`, imageUrl);
           }
         }
       });
-      console.log('About images loaded:', this.aboutImages);
+      
+      // Ensure fallback images are always available
+      const fallbackImages: { [key: string]: string } = {
+        staff: 'assets/images/Staff.jpg',
+        foods: 'assets/images/Foods.jpg',
+        pool: 'assets/images/Pool.jpg'
+      };
+      
+      Object.keys(fallbackImages).forEach(key => {
+        if (!this.aboutImages[key] || this.aboutImages[key].trim() === '') {
+          this.aboutImages[key] = fallbackImages[key];
+          console.log(`Restored fallback image for ${key}:`, fallbackImages[key]);
+        }
+      });
+      
+      console.log('Final about images:', this.aboutImages);
 
-      // Load rooms from CMS
+      // Load rooms from database
+      await this.loadRoomsFromDatabase();
+      
+      // Load rooms from CMS (for images and additional content)
       await this.loadRoomsFromContent();
 
       // Load services content
@@ -309,7 +401,95 @@ export class HomeComponent implements AfterViewInit, OnInit {
     } catch (error) {
       console.error('Error loading content:', error);
       // Fallback to default images if content loading fails
+      console.log('CMS loading failed, ensuring fallback images are available');
+      
+      const fallbackImages: { [key: string]: string } = {
+        staff: 'assets/images/Staff.jpg',
+        foods: 'assets/images/Foods.jpg',
+        pool: 'assets/images/Pool.jpg'
+      };
+      
+      Object.keys(fallbackImages).forEach(key => {
+        this.aboutImages[key] = fallbackImages[key];
+        console.log(`Set fallback image for ${key}:`, fallbackImages[key]);
+      });
+      
+      console.log('Fallback about images set:', this.aboutImages);
     }
+  }
+
+  async loadRoomsFromDatabase(): Promise<void> {
+    try {
+      console.log('Loading room types from database...');
+      const roomTypes = await this.roomService.getRoomTypes().toPromise();
+      
+      if (roomTypes && roomTypes.length > 0) {
+        console.log('Room types loaded from database:', roomTypes);
+        
+        // Store original fallback rooms for reference
+        const originalRooms = [...this.rooms];
+        
+        // Map database room types to our room structure
+        this.rooms = roomTypes.map((roomType: RoomType, index: number) => {
+          // Find matching room in our fallback array by index or name
+          const fallbackRoom = originalRooms[index] || originalRooms.find(r => 
+            r.name.toLowerCase().includes(roomType.type.toLowerCase()) ||
+            roomType.type.toLowerCase().includes(r.name.toLowerCase())
+          ) || originalRooms[0]; // fallback to first room if no match
+          
+          return {
+            name: roomType.type,
+            description: roomType.description || fallbackRoom.description,
+            image: fallbackRoom.image,
+            price: roomType.basePrice || roomType.rate || fallbackRoom.price,
+            brand: this.getBrandFromRoomType(roomType.type),
+            tags: this.getTagsFromRoomType(roomType.type),
+            link: '#',
+            seasonalImages: fallbackRoom.seasonalImages,
+            id: roomType.id // Add database ID for reference
+          };
+        });
+        
+        console.log('Rooms updated with database pricing:', this.rooms);
+      } else {
+        console.log('No room types found in database, using fallback data');
+      }
+    } catch (error) {
+      console.error('Failed to load room types from database:', error);
+      console.log('Using fallback room data');
+      
+      // Show user-friendly error message
+      this.errorModalService.showWarning(
+        'Unable to load current room pricing from database. Using default prices.',
+        'Pricing Notice'
+      );
+    }
+  }
+
+  private getBrandFromRoomType(roomType: string): string {
+    const type = roomType.toLowerCase();
+    if (type.includes('classic') || type.includes('standard')) return 'Classic';
+    if (type.includes('deluxe')) return 'Deluxe';
+    if (type.includes('prestige')) return 'Luxury';
+    if (type.includes('luxury') || type.includes('suite')) return 'Luxury';
+    return 'Premium';
+  }
+
+  private getTagsFromRoomType(roomType: string): string[] {
+    const type = roomType.toLowerCase();
+    if (type.includes('classic') || type.includes('standard')) {
+      return ['Cozy', 'Affordable', 'Single Bed'];
+    }
+    if (type.includes('deluxe')) {
+      return ['Spacious', 'View', 'Double Bed'];
+    }
+    if (type.includes('prestige')) {
+      return ['Luxury', 'Suite', 'King Bed'];
+    }
+    if (type.includes('luxury') || type.includes('suite')) {
+      return ['Luxury', 'Suite', 'King Bed'];
+    }
+    return ['Comfortable', 'Modern', 'Well-equipped'];
   }
 
   private async loadRoomsFromContent(): Promise<void> {
@@ -439,6 +619,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)){
+      // Initialize intersection observer for scroll animations
+      this.initIntersectionObserver();
+      
       // Navbar toggle for mobile (already handled by toggleMenu)
       window.onscroll = () => {
         this.navbar?.nativeElement.classList.remove('active');
@@ -610,16 +793,16 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.contactMessageService.submitMessage(messageData).subscribe({
       next: (response) => {
         if (response.success) {
-          alert('Thank you for your message! We will get back to you within 24 hours.');
+          this.errorModalService.showContactSuccess();
           this.resetContactForm();
         } else {
-          alert('Sorry, there was an error sending your message. Please try again.');
+          this.errorModalService.showContactError();
         }
         this.isSubmitting = false;
       },
       error: (error) => {
         console.error('Error submitting contact message:', error);
-        alert('Sorry, there was an error sending your message. Please try again.');
+        this.errorModalService.showContactError();
         this.isSubmitting = false;
       }
     });
@@ -698,10 +881,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
       color: ${styles.textColor};
       font-family: ${styles.fontFamily};
     `;
-  }
-
-  trackByIndex(index: number, item: any): number {
-    return index;
   }
 
   getCurrentYear(): number {
@@ -821,6 +1000,112 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
     } catch (error) {
       console.error('Error loading about content:', error);
+    }
+  }
+
+  // Intersection Observer for scroll animations
+  private initIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('aos-animate');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    // Observe all elements with data-aos attribute
+    const elements = document.querySelectorAll('[data-aos]');
+    elements.forEach(el => this.intersectionObserver?.observe(el));
+  }
+
+  ngOnDestroy(): void {
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
+    
+    // Clear logo refresh interval
+    if (this.logoRefreshInterval) {
+      clearInterval(this.logoRefreshInterval);
+    }
+  }
+
+  // Logo refresh functionality
+  private logoRefreshInterval: any;
+  private lastLogoUpdate: string = '';
+
+  private setupLogoRefresh(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    // Check for logo updates every 30 seconds
+    this.logoRefreshInterval = setInterval(() => {
+      this.checkLogoUpdate();
+    }, 30000);
+  }
+
+  private async checkLogoUpdate(): Promise<void> {
+    try {
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+      if (logoContent) {
+        const newLogoUrl = logoContent.optimizedUrl || logoContent.value;
+        const lastUpdate = logoContent.updatedAt || logoContent.createdAt;
+        
+        // Check if logo has been updated
+        if (newLogoUrl && newLogoUrl !== this.logoUrl && lastUpdate !== this.lastLogoUpdate) {
+          console.log('Logo update detected:', newLogoUrl);
+          this.updateLogo(newLogoUrl);
+          this.lastLogoUpdate = lastUpdate || '';
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to check logo update:', error);
+    }
+  }
+
+  private updateLogo(newLogoUrl: string): void {
+    // Add a small delay to ensure smooth transition
+    setTimeout(() => {
+      this.logoUrl = newLogoUrl;
+      console.log('Logo updated to:', newLogoUrl);
+      
+      // Trigger change detection
+      if (isPlatformBrowser(this.platformId)) {
+        // Force image reload by adding timestamp
+        const img = document.querySelector('.logo img') as HTMLImageElement;
+        if (img) {
+          img.src = newLogoUrl + '?t=' + Date.now();
+        }
+      }
+    }, 100);
+  }
+
+  // Public method to manually refresh logo
+  public refreshLogo(): void {
+    this.checkLogoUpdate();
+  }
+
+  // Enhanced logo loading with better error handling
+  private async loadLogo(): Promise<void> {
+    try {
+      const logoContent = await this.contentService.getContent('header', 'main-logo').toPromise();
+      if (logoContent) {
+        const newLogoUrl = logoContent.optimizedUrl || logoContent.value;
+        if (newLogoUrl && newLogoUrl !== this.logoUrl) {
+          this.logoUrl = newLogoUrl;
+          this.lastLogoUpdate = logoContent.updatedAt || logoContent.createdAt || '';
+          console.log('Logo loaded:', this.logoUrl);
+        }
+      }
+    } catch (logoError) {
+      console.warn('Failed to load logo:', logoError);
+      // Keep fallback logo
     }
   }
 

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, finalize, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { SecureStorageService } from './secure-storage.service';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
 
@@ -16,10 +17,12 @@ export class AccountService {
 
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private secureStorage: SecureStorageService
     ) {
-        // Do NOT initialize from localStorage; always start as null
-        this.accountSubject = new BehaviorSubject<Account | null>(null);
+        // Initialize from secure storage if available
+        const storedAccount = this.secureStorage.getSecureItem('account');
+        this.accountSubject = new BehaviorSubject<Account | null>(storedAccount);
         this.account = this.accountSubject.asObservable();
     }
 
@@ -35,13 +38,17 @@ export class AccountService {
     ).pipe(
         map(account => {
             this.accountSubject.next(account);
-            localStorage.setItem('account', JSON.stringify(account));
+            // Store sensitive data securely
+            this.secureStorage.setSecureItem('account', account);
+            // Store non-sensitive data normally for debugging
+            this.secureStorage.setItem('user_info', this.secureStorage.obfuscateSensitiveData(account));
             this.startRefreshTokenTimer();
             return account;
         }),
         catchError(err => {
             this.accountSubject.next(null);
-            localStorage.removeItem('account');
+            this.secureStorage.removeSecureItem('account');
+            this.secureStorage.removeItem('user_info');
             throw err;
         })
     );
@@ -52,7 +59,8 @@ export class AccountService {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
-        localStorage.removeItem('account');
+        this.secureStorage.removeSecureItem('account');
+        this.secureStorage.removeItem('user_info');
         this.router.navigate(['/account/login']);
     }
 
@@ -62,13 +70,15 @@ export class AccountService {
             .pipe(
                 map(account => {
                     this.accountSubject.next(account);
-                    localStorage.setItem('account', JSON.stringify(account));
+                    this.secureStorage.setSecureItem('account', account);
+                    this.secureStorage.setItem('user_info', this.secureStorage.obfuscateSensitiveData(account));
                     this.startRefreshTokenTimer();
                     return account;
                 }),
                 catchError(err => {
                     this.accountSubject.next(null);
-                    localStorage.removeItem('account');
+                    this.secureStorage.removeSecureItem('account');
+                    this.secureStorage.removeItem('user_info');
                     return of(null);
                 })
             );

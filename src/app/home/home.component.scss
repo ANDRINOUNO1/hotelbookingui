@@ -212,9 +212,11 @@
     @media (max-width: 1024px) {
       .relative {
         height: auto;
+        min-height: 400px;
 
         .card-wrapper {
           width: 70%;
+          max-width: 500px;
 
           .card {
             height: 350px;
@@ -236,16 +238,48 @@
     }
 
     @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+      
       .relative {
         flex-direction: column;
+        min-height: 300px;
 
         .card-wrapper {
           width: 90%;
+          max-width: 400px;
           position: relative;
           margin: 1rem auto;
 
           .card {
             height: auto;
+            min-height: 300px;
+
+            .card-image {
+              height: 40%;
+              min-height: 120px;
+            }
+
+            .card-content {
+              height: 60%;
+              padding: 1rem;
+              
+              h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+              }
+              
+              p.brand {
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
+              }
+              
+              p.description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+              }
+            }
 
             /* Hide seasonal thumbs on tablet & smaller */
             .seasonal-thumbs {
@@ -272,44 +306,188 @@
 
         h2 {
           font-size: 1.5rem;
+          margin-bottom: 1rem;
         }
       }
 
       .relative {
         .card-wrapper {
           width: 100%;
+          margin: 0.5rem auto;
 
           .card {
+            .card-image {
+              height: 35%;
+              min-height: 100px;
+            }
+
             .card-content {
-              padding: 1rem;
+              height: 65%;
+              padding: 0.75rem;
 
               h3 {
-                font-size: 1.25rem;
+                font-size: 1.1rem;
               }
               p.brand {
-                font-size: 1rem;
+                font-size: 0.9rem;
               }
               p.description {
-                font-size: 0.875rem;
+                font-size: 0.8rem;
               }
             }
           }
         }
 
         .dots {
-          bottom: 2rem;
+          bottom: 1rem;
+          gap: 0.5rem;
+          
+          .dot {
+            width: 0.4rem;
+            height: 0.4rem;
+            
+            &.active {
+              width: 1rem;
+            }
+          }
         }
       }
     }
   }
 }
 
-*{
-   font-family: 'Montserrat', sans-serif;
-   margin: 0; padding: 0;
-   box-sizing: border-box;
-   outline: none; border: none;
-   text-decoration: none;
+/* Enhanced Image Loading */
+.hero-image {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.hero-image.loaded {
+  opacity: 1;
+}
+
+.about-image {
+  transition: opacity 0.3s ease;
+  opacity: 1; /* Make about images visible by default */
+}
+
+/* Enhanced Room Cards */
+.price-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(43, 101, 236, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.room-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tag {
+  background: rgba(43, 101, 236, 0.1);
+  color: rgb(43, 101, 236);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(43, 101, 236, 0.2);
+}
+
+.book-room-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, rgb(43, 101, 236) 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.book-room-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(43, 101, 236, 0.4);
+}
+
+/* Enhanced Navigation */
+.nav-btn {
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Enhanced Dots */
+.dot {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dot:hover {
+  transform: scale(1.2);
+}
+
+/* Scroll Animations */
+[data-aos] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 768px) {
+  .price-tag {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .room-tags {
+    justify-content: center;
+  }
+  
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+  }
+  
+  .book-room-btn {
+    font-size: 0.85rem;
+    padding: 0.7rem 0.8rem;
+  }
 }
 
 *::selection{
@@ -376,6 +554,16 @@ section{
   width: auto;
   object-fit: contain;
   margin-right: 0.7rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+
+.logo img.loaded {
+  opacity: 1;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
 }
 
 .header-bar nav {
@@ -1131,6 +1319,20 @@ section.header {
   font-size: 1.8rem;
 }
 
+.address-details .city {
+  font-weight: 500;
+  color: #000000 !important;
+  font-size: 1.6rem;
+  opacity: 1;
+}
+
+.address-details .country {
+  font-weight: 500;
+  color: #000000 !important;
+  font-size: 1.6rem;
+  opacity: 1;
+}
+
 .contact-details {
   display: flex;
   flex-direction: column;
@@ -1810,6 +2012,8 @@ body, html {
 @media (max-width: 767px) {
   .header-bar {
     position: relative;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     
     // Add mobile menu toggle
     .mobile-menu-toggle {
@@ -1821,12 +2025,13 @@ body, html {
       cursor: pointer;
       padding: 0.5rem;
       margin-left: auto;
-      margin-right: 1rem;
+      margin-right: 0.5rem;
       min-width: 44px;
       min-height: 44px;
       justify-content: center;
       align-items: center;
       gap: 3px;
+      order: 2;
       
       span {
         width: 20px;
@@ -1837,8 +2042,20 @@ body, html {
       }
       
       &:hover span {
-        background-color:  rgba(43, 101, 236, 1);
+        background-color: rgba(43, 101, 236, 1);
       }
+    }
+    
+    .logo {
+      order: 1;
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .login-btn {
+      order: 3;
+      margin-left: 0;
+      margin-right: 0.5rem;
     }
     
     nav {
@@ -1853,6 +2070,8 @@ body, html {
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       z-index: 1000;
       display: none;
+      order: 4;
+      width: 100%;
       
       &.mobile-open {
         display: flex;
@@ -1873,7 +2092,7 @@ body, html {
         }
         
         &.book-now-btn {
-          background:  rgba(43, 101, 236, 1);
+          background: rgba(43, 101, 236, 1);
           margin: 0.5rem 1.5rem;
           border-radius: 6px;
           font-weight: 600;
@@ -1881,7 +2100,7 @@ body, html {
           letter-spacing: 0.5px;
           
           &:hover {
-            background:  rgba(43, 101, 236, 1);
+            background: rgba(43, 101, 236, 1);
             transform: translateY(-1px);
           }
         }
@@ -1896,6 +2115,8 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
   }
 }
 

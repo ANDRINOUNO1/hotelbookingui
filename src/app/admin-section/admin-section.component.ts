@@ -4,6 +4,8 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
 import { LoginHistoryService } from '../_services/login-history.service';
+import { AccountService } from '../_services/account.service';
+import { Account } from '../_models/account.model';
 
 @Component({
   selector: 'app-admin-section',
@@ -14,7 +16,7 @@ import { LoginHistoryService } from '../_services/login-history.service';
 })
 export class AdminSectionComponent implements OnInit {
   hotelName = 'BC Flats - Admin';
-  user = 'Admin';
+  user: Account | null = null;
 
   isDarkMode = false;
   openMenu: string | null = null;
@@ -28,7 +30,8 @@ export class AdminSectionComponent implements OnInit {
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
     private titleservice: Title,
-    private loginHistoryService: LoginHistoryService
+    private loginHistoryService: LoginHistoryService,
+    private accountService: AccountService
   ) {
     // Listen to route changes
     this.router.events.pipe(
@@ -41,6 +44,14 @@ export class AdminSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Load user data from account service
+    this.user = this.accountService.accountValue;
+    
+    // Subscribe to account changes
+    this.accountService.account.subscribe(account => {
+      this.user = account;
+    });
+
     if (isPlatformBrowser(this.platformId)) {
       const savedTheme = localStorage.getItem('admin-theme');
       this.isDarkMode = savedTheme ? savedTheme === 'dark' : true;
@@ -146,17 +157,27 @@ export class AdminSectionComponent implements OnInit {
     setTimeout(() => this.userMenuOpen = false, 150); // Delay to allow click
   }
 
-  goToProfile() {
+  goToProfile(event: Event) {
+    event.preventDefault();
+    this.userMenuOpen = false;
     // Navigate to profile page
     // Example: this.router.navigate(['/admin/profile']);
+    console.log('Navigate to profile');
   }
 
-  goToSettings() {
+  goToSettings(event: Event) {
+    event.preventDefault();
+    this.userMenuOpen = false;
     // Navigate to settings page
     // Example: this.router.navigate(['/admin/settings']);
+    console.log('Navigate to settings');
   }
 
-  logout() {
+  logout(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      this.userMenuOpen = false;
+    }
     const accountId = sessionStorage.getItem('accountId'); 
 
     if (accountId) {
@@ -196,6 +217,21 @@ export class AdminSectionComponent implements OnInit {
       copyrightBackgroundColor: '#f8f9fa'
     }
   };
+  getDisplayRole(): string {
+    if (!this.user?.role) return 'User';
+    
+    switch (this.user.role) {
+      case 'Admin':
+        return 'Admin';
+      case 'frontdeskUser':
+        return 'Frontdesk Manager';
+      case 'SuperAdmin':
+        return 'Super Admin';
+      default:
+        return this.user.role;
+    }
+  }
+
   getCopyrightText(): string {
     if (this.footerContent.copyrightText) {
       return this.footerContent.copyrightText;

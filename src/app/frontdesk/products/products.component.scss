@@ -1,5 +1,5 @@
 .products-container {
-  background: #fff;
+  background: var(--card-bg);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -9,7 +9,7 @@
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    color: #333;
+    color: var(--text-color);
   }
 
   .product-form {
@@ -23,10 +23,12 @@
       input, select {
         flex: 1 1 30%;
         padding: 0.7rem 1rem;
-        border: 1px solid #ddd;
+        border: 1px solid var(--input-border);
         border-radius: 6px;
         font-size: 1.3rem;
         transition: border 0.2s;
+        background: var(--input-bg);
+        color: var(--input-text);
 
         &:focus {
           border-color: #3b82f6;
@@ -51,10 +53,12 @@
     .search-input,
     .filter-select {
       padding: 0.6rem 0.9rem;
-      border: 1px solid #ddd;
+      border: 1px solid var(--input-border);
       border-radius: 6px;
       font-size: 1.3rem;
       flex: 1;
+      background: var(--input-bg);
+      color: var(--input-text);
 
       &:focus {
         border-color: #3b82f6;
@@ -79,36 +83,37 @@
     }
 
     thead {
-      background: #f9fafb;
+      background: var(--table-header);
 
       th {
         font-weight: 600;
         font-size: 1rem;
-        color: #444;
+        color: white;
       }
     }
 
     tbody {
       tr {
-        border-top: 1px solid #eee;
+        border-top: 1px solid var(--table-border);
+        background: var(--table-row-bg);
 
         &:hover {
-          background: #f1f5f9; // 🔹 Highlight row on hover
+          background: var(--table-row-hover);
         }
       }
 
       /* 🔹 Striped rows */
       tr:nth-child(odd) {
-        background: #ffffff;
+        background: var(--table-row-bg);
       }
 
       tr:nth-child(even) {
-        background: #f9fafb;
+        background: var(--table-row-bg);
       }
 
       td {
         font-size: 1.3rem;
-        color: #333;
+        color: var(--table-text);
       }
 
       .actions {

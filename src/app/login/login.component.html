@@ -33,14 +33,22 @@
             </label>
           </div>
 
-          <!-- bomboclat pprocessing -->
+          <!-- Modern Loading Button -->
           <button
             type="submit"
             [disabled]="isLoading"
             class="login-btn"
+            [class.loading]="isLoading"
           >
-            <span *ngIf="isLoading" class="loading-spinner"></span>
-            {{ isLoading ? 'Processing...' : 'LOGIN' }}
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span class="loading-text">Signing you in...</span>
+            </div>
+            <span *ngIf="!isLoading" class="btn-text">LOGIN</span>
           </button>
 
           <div *ngIf="error" class="error-message">
