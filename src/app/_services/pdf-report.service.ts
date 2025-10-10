@@ -44,30 +44,34 @@ export class PdfReportService {
     const lightGray = '#f8f9fa';
     const borderColor = '#dee2e6';
 
-    // Header
+    // PAGE 1: Monthly Revenue Summary
     this.addHeader(doc, data.month, data.year, primaryColor, secondaryColor);
-    
-    // Enhanced Summary Section
     this.addEnhancedSummarySection(doc, data, primaryColor, secondaryColor, accentColor);
+    this.addPageFooter(doc, 1, primaryColor, secondaryColor);
     
-    // Reservations Table
-    this.addReservationsTable(doc, data.bookings, primaryColor, secondaryColor, borderColor);
+    // PAGE 2: Reservations List (first half) + Check-In List (second half)
+    doc.addPage();
+    this.addPageHeader(doc, 2, primaryColor, secondaryColor);
     
-    // Check-In List Table
+    // First half of Page 2: Reservations List
+    this.addReservationsTable(doc, data.bookings, primaryColor, secondaryColor, borderColor, true);
+    
+    // Second half of Page 2: Check-In List
     if (data.checkInList && data.checkInList.length > 0) {
-      this.addCheckInTable(doc, data.checkInList, primaryColor, secondaryColor, borderColor);
+      this.addCheckInTable(doc, data.checkInList, primaryColor, secondaryColor, borderColor, true);
     }
+    this.addPageFooter(doc, 2, primaryColor, secondaryColor);
     
-    // Check-Out List Table with Net Paid calculations
-    if (data.checkOutList && data.checkOutList.length > 0) {
-      this.addCheckOutTable(doc, data.checkOutList, primaryColor, secondaryColor, borderColor);
-    }
+    // PAGE 3: Check-Out List (first half) + Archived Records (second half)
+    doc.addPage();
+    this.addPageHeader(doc, 3, primaryColor, secondaryColor);
     
-    // Archives Table
-    this.addArchivesTable(doc, data.archives, primaryColor, secondaryColor, borderColor);
+    // First half of Page 3: Check-Out List
+    this.addCheckOutTable(doc, data.checkOutList || [], primaryColor, secondaryColor, borderColor, true);
     
-    // Footer
-    this.addFooter(doc, primaryColor, secondaryColor);
+    // Second half of Page 3: Archived Records
+    this.addArchivesTable(doc, data.archives || [], primaryColor, secondaryColor, borderColor, true);
+    this.addPageFooter(doc, 3, primaryColor, secondaryColor);
 
     // Save the PDF
     const fileName = `Monthly_Revenue_Report_${data.month}_${data.year}.pdf`;
@@ -113,13 +117,13 @@ export class PdfReportService {
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Monthly Summary', 20, yPosition);
-    yPosition += 10;
+    yPosition += 15; // Increased spacing
     
     // Summary Box - Larger to accommodate enhanced pricing data
     doc.setFillColor(lightGray);
-    doc.rect(20, yPosition - 5, 170, 70, 'F');
+    doc.rect(20, yPosition - 5, 170, 80, 'F'); // Increased height
     doc.setDrawColor(borderColor);
-    doc.rect(20, yPosition - 5, 170, 70, 'S');
+    doc.rect(20, yPosition - 5, 170, 80, 'S');
     
     // Summary Content
     doc.setTextColor(textColor);
@@ -179,23 +183,24 @@ export class PdfReportService {
     });
   }
 
-  private addReservationsTable(doc: jsPDF, bookings: Booking[], primaryColor: string, secondaryColor: string, borderColor: string): void {
-    let yPosition = 110;
+  private addReservationsTable(doc: jsPDF, bookings: Booking[], primaryColor: string, secondaryColor: string, borderColor: string, isMultiPage: boolean = false): void {
+    let yPosition = isMultiPage ? 40 : 160; // Start position based on page layout
     const lightGray = '#f8f9fa';
     const textColor = '#333333';
+    const maxHeight = isMultiPage ? 120 : 200; // Limit height for multi-page layout
     
     // Table Title
     doc.setTextColor(primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Reservations List', 20, yPosition);
-    yPosition += 10;
+    yPosition += 15;
     
-    // Prepare table data
+    // Prepare table data with full booking cost calculation
     const tableData = bookings.map(booking => {
       const basePrice = booking.room?.roomType?.basePrice || 0;
       const reservationFee = this.calculateReservationFee(booking);
-      const totalAmount = basePrice + reservationFee;
+      const totalAmount = basePrice + reservationFee; // Full booking cost
       
       return [
         booking.id?.toString() || 'N/A',
@@ -210,12 +215,12 @@ export class PdfReportService {
     
     // Generate table
     autoTable(doc, {
-      head: [['Booking ID', 'Guest Name', 'Room Type', 'Check-in', 'Check-out', 'Amount', 'Status']],
+      head: [['Booking ID', 'Guest Name', 'Room Type', 'Check-in', 'Check-out', 'Total Amount', 'Status']],
       body: tableData,
       startY: yPosition,
       styles: {
-        fontSize: 8,
-        cellPadding: 3,
+        fontSize: 9,
+        cellPadding: 4,
         overflow: 'linebreak',
         halign: 'left'
       },
@@ -223,22 +228,25 @@ export class PdfReportService {
         fillColor: primaryColor,
         textColor: secondaryColor,
         fontStyle: 'bold',
-        halign: 'center'
+        halign: 'center',
+        fontSize: 9
       },
       alternateRowStyles: {
         fillColor: lightGray
       },
       columnStyles: {
-        0: { halign: 'center', cellWidth: 18 },
-        1: { cellWidth: 30 },
-        2: { cellWidth: 20 },
-        3: { halign: 'center', cellWidth: 22 },
-        4: { halign: 'center', cellWidth: 22 },
-        5: { halign: 'right', cellWidth: 22 },
-        6: { halign: 'center', cellWidth: 18 }
+        0: { halign: 'center', cellWidth: 25 },
+        1: { cellWidth: 35 },
+        2: { cellWidth: 25 },
+        3: { halign: 'center', cellWidth: 25 },
+        4: { halign: 'center', cellWidth: 25 },
+        5: { halign: 'right', cellWidth: 25 },
+        6: { halign: 'center', cellWidth: 25 }
       },
       margin: { left: 20, right: 20 },
       pageBreak: 'auto',
+      tableWidth: 'auto',
+      showHead: 'everyPage',
       didDrawPage: (data: any) => {
         // Add page number
         doc.setFontSize(8);
@@ -248,39 +256,25 @@ export class PdfReportService {
     });
   }
 
-  private addCheckInTable(doc: jsPDF, checkIns: Booking[], primaryColor: string, secondaryColor: string, borderColor: string): void {
+  private addCheckInTable(doc: jsPDF, checkIns: Booking[], primaryColor: string, secondaryColor: string, borderColor: string, isMultiPage: boolean = false): void {
     const lightGray = '#f8f9fa';
     const textColor = '#333333';
     
-    // Check if we need a new page
-    const finalY = (doc as any).lastAutoTable.finalY || 200;
-    let yPosition = finalY + 20;
-    
-    // If not enough space, add new page
-    if (yPosition > 250) {
-      doc.addPage();
-      yPosition = 20;
-    }
+    // Position for second half of page
+    let yPosition = isMultiPage ? 180 : 200; // Start in second half of page
     
     // Table Title
     doc.setTextColor(primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Check-In List', 20, yPosition);
-    yPosition += 10;
+    yPosition += 15;
     
-    // Prepare table data with enhanced pricing information
+    // Prepare table data
     const tableData = checkIns.map(booking => {
       const basePrice = booking.room?.roomType?.basePrice || 0;
       const reservationFee = this.calculateReservationFee(booking);
       const totalAmount = basePrice + reservationFee;
-      
-      console.log('Check-In calculation:', {
-        bookingId: booking.id,
-        basePrice: basePrice,
-        reservationFee: reservationFee,
-        totalAmount: totalAmount
-      });
       
       return [
         booking.id?.toString() || 'N/A',
@@ -300,8 +294,8 @@ export class PdfReportService {
       body: tableData,
       startY: yPosition,
       styles: {
-        fontSize: 8,
-        cellPadding: 3,
+        fontSize: 9,
+        cellPadding: 4,
         overflow: 'linebreak',
         halign: 'left'
       },
@@ -309,22 +303,26 @@ export class PdfReportService {
         fillColor: primaryColor,
         textColor: secondaryColor,
         fontStyle: 'bold',
-        halign: 'center'
+        halign: 'center',
+        fontSize: 9
       },
       alternateRowStyles: {
         fillColor: lightGray
       },
       columnStyles: {
-        0: { halign: 'center', cellWidth: 18 },
+        0: { halign: 'center', cellWidth: 22 },
         1: { cellWidth: 30 },
         2: { cellWidth: 20 },
-        3: { halign: 'center', cellWidth: 22 },
-        4: { halign: 'center', cellWidth: 22 },
+        3: { halign: 'right', cellWidth: 22 },
+        4: { halign: 'right', cellWidth: 22 },
         5: { halign: 'right', cellWidth: 22 },
-        6: { halign: 'center', cellWidth: 18 }
+        6: { halign: 'center', cellWidth: 25 },
+        7: { halign: 'center', cellWidth: 22 }
       },
       margin: { left: 20, right: 20 },
       pageBreak: 'auto',
+      tableWidth: 'auto',
+      showHead: 'everyPage',
       didDrawPage: (data: any) => {
         // Add page number
         doc.setFontSize(8);
@@ -334,51 +332,49 @@ export class PdfReportService {
     });
   }
 
-  private addCheckOutTable(doc: jsPDF, checkOuts: Booking[], primaryColor: string, secondaryColor: string, borderColor: string): void {
+  private addCheckOutTable(doc: jsPDF, checkOuts: Booking[], primaryColor: string, secondaryColor: string, borderColor: string, isMultiPage: boolean = false): void {
     const lightGray = '#f8f9fa';
     const textColor = '#333333';
     
-    // Check if we need a new page
-    const finalY = (doc as any).lastAutoTable.finalY || 200;
-    let yPosition = finalY + 20;
-    
-    // If not enough space, add new page
-    if (yPosition > 250) {
-      doc.addPage();
-      yPosition = 20;
-    }
+    // Position for first half of page
+    let yPosition = isMultiPage ? 40 : 200; // Start in first half of page
     
     // Table Title
     doc.setTextColor(primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Check-Out List (with Net Paid Calculation)', 20, yPosition);
-    yPosition += 10;
+    yPosition += 15;
     
-    // Prepare table data with enhanced net paid calculation
-    const tableData = checkOuts.map(booking => {
-      const paymentReceived = booking.paidamount || 0;
-      const reservationFee = this.calculateReservationFee(booking);
-      const netPaid = Math.max(0, paymentReceived - reservationFee);
-      
-      console.log('Check-Out calculation:', {
-        bookingId: booking.id,
-        paymentReceived: paymentReceived,
-        reservationFee: reservationFee,
-        netPaid: netPaid
+    // Prepare table data with correct Net Paid calculation
+    let tableData: any[];
+    if (checkOuts.length === 0) {
+      tableData = [['No check-out records found', '', '', '', '', '', '', '']];
+    } else {
+      tableData = checkOuts.map(booking => {
+        const paymentReceived = booking.paidamount || 0;
+        const reservationFee = this.calculateReservationFee(booking);
+        const basePrice = booking.room?.roomType?.basePrice || 0;
+        
+        // Correct Net Paid calculation: Payment Received - Reservation Fee
+        // If full balance is settled, Net Paid = Total Amount - Reservation Fee
+        const totalAmount = basePrice + reservationFee;
+        const netPaid = paymentReceived >= totalAmount ? 
+          totalAmount - reservationFee : // Full balance settled
+          Math.max(0, paymentReceived - reservationFee); // Partial payment
+        
+        return [
+          booking.id?.toString() || 'N/A',
+          `${booking.guest?.first_name || ''} ${booking.guest?.last_name || ''}`.trim(),
+          booking.room?.roomType?.type || 'Standard Room',
+          booking.availability?.checkOut ? new Date(booking.availability.checkOut).toLocaleDateString() : 'N/A',
+          this.formatCurrency(paymentReceived),
+          this.formatCurrency(reservationFee),
+          this.formatCurrency(netPaid),
+          booking.pay_status ? 'Paid' : 'Pending'
+        ];
       });
-      
-      return [
-        booking.id?.toString() || 'N/A',
-        `${booking.guest?.first_name || ''} ${booking.guest?.last_name || ''}`.trim(),
-        booking.room?.roomType?.type || 'Standard Room',
-        booking.availability?.checkOut ? new Date(booking.availability.checkOut).toLocaleDateString() : 'N/A',
-        this.formatCurrency(paymentReceived),
-        this.formatCurrency(reservationFee),
-        this.formatCurrency(netPaid),
-        booking.pay_status ? 'Paid' : 'Pending'
-      ];
-    });
+    }
     
     // Generate table
     autoTable(doc, {
@@ -386,8 +382,8 @@ export class PdfReportService {
       body: tableData,
       startY: yPosition,
       styles: {
-        fontSize: 8,
-        cellPadding: 3,
+        fontSize: 9,
+        cellPadding: 4,
         overflow: 'linebreak',
         halign: 'left'
       },
@@ -395,23 +391,26 @@ export class PdfReportService {
         fillColor: primaryColor,
         textColor: secondaryColor,
         fontStyle: 'bold',
-        halign: 'center'
+        halign: 'center',
+        fontSize: 9
       },
       alternateRowStyles: {
         fillColor: lightGray
       },
       columnStyles: {
-        0: { halign: 'center', cellWidth: 16 },
+        0: { halign: 'center', cellWidth: 20 },
         1: { cellWidth: 25 },
         2: { cellWidth: 18 },
-        3: { halign: 'center', cellWidth: 20 },
-        4: { halign: 'right', cellWidth: 20 },
-        5: { halign: 'right', cellWidth: 20 },
-        6: { halign: 'right', cellWidth: 20 },
-        7: { halign: 'center', cellWidth: 16 }
+        3: { halign: 'center', cellWidth: 25 },
+        4: { halign: 'right', cellWidth: 25 },
+        5: { halign: 'right', cellWidth: 25 },
+        6: { halign: 'right', cellWidth: 25 },
+        7: { halign: 'center', cellWidth: 22 }
       },
       margin: { left: 20, right: 20 },
       pageBreak: 'auto',
+      tableWidth: 'auto',
+      showHead: 'everyPage',
       didDrawPage: (data: any) => {
         // Add page number
         doc.setFontSize(8);
@@ -490,36 +489,34 @@ export class PdfReportService {
     return Math.max(0, netPaid);
   }
 
-  private addArchivesTable(doc: jsPDF, archives: Archive[], primaryColor: string, secondaryColor: string, borderColor: string): void {
+  private addArchivesTable(doc: jsPDF, archives: Archive[], primaryColor: string, secondaryColor: string, borderColor: string, isMultiPage: boolean = false): void {
     const lightGray = '#f8f9fa';
     const textColor = '#333333';
     
-    // Check if we need a new page
-    const finalY = (doc as any).lastAutoTable.finalY || 200;
-    let yPosition = finalY + 20;
-    
-    // If not enough space, add new page
-    if (yPosition > 250) {
-      doc.addPage();
-      yPosition = 20;
-    }
+    // Position for second half of page
+    let yPosition = isMultiPage ? 180 : 200; // Start in second half of page
     
     // Table Title
     doc.setTextColor(primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Archived Records', 20, yPosition);
-    yPosition += 10;
+    yPosition += 15;
     
-    // Prepare table data
-    const tableData = archives.map(archive => [
-      archive.id?.toString() || 'N/A',
-      archive.guest || 'N/A',
-      archive.roomType || 'N/A',
-      archive.createdAt ? new Date(archive.createdAt).toLocaleDateString() : 'N/A',
-      archive.arrivalDate ? new Date(archive.arrivalDate).toLocaleDateString() : 'N/A',
-      archive.status || 'N/A'
-    ]);
+    // Prepare table data - show empty message if no archives
+    let tableData: any[];
+    if (archives.length === 0) {
+      tableData = [['No archived records found', '', '', '', '', '']];
+    } else {
+      tableData = archives.map(archive => [
+        archive.id?.toString() || 'N/A',
+        archive.guest || 'N/A',
+        archive.roomType || 'N/A',
+        archive.createdAt ? new Date(archive.createdAt).toLocaleDateString() : 'N/A',
+        archive.arrivalDate ? new Date(archive.arrivalDate).toLocaleDateString() : 'N/A',
+        archive.status || 'N/A'
+      ]);
+    }
     
     // Generate table
     autoTable(doc, {
@@ -527,8 +524,8 @@ export class PdfReportService {
       body: tableData,
       startY: yPosition,
       styles: {
-        fontSize: 8,
-        cellPadding: 3,
+        fontSize: 9,
+        cellPadding: 4,
         overflow: 'linebreak',
         halign: 'left'
       },
@@ -536,21 +533,24 @@ export class PdfReportService {
         fillColor: primaryColor,
         textColor: secondaryColor,
         fontStyle: 'bold',
-        halign: 'center'
+        halign: 'center',
+        fontSize: 9
       },
       alternateRowStyles: {
         fillColor: lightGray
       },
       columnStyles: {
-        0: { halign: 'center', cellWidth: 18 },
-        1: { cellWidth: 30 },
-        2: { cellWidth: 20 },
-        3: { halign: 'center', cellWidth: 22 },
-        4: { halign: 'center', cellWidth: 22 },
-        5: { halign: 'center', cellWidth: 20 }
+        0: { halign: 'center', cellWidth: 25 },
+        1: { cellWidth: 35 },
+        2: { cellWidth: 25 },
+        3: { halign: 'center', cellWidth: 25 },
+        4: { halign: 'center', cellWidth: 25 },
+        5: { halign: 'center', cellWidth: 25 }
       },
       margin: { left: 20, right: 20 },
       pageBreak: 'auto',
+      tableWidth: 'auto',
+      showHead: 'everyPage',
       didDrawPage: (data: any) => {
         // Add page number
         doc.setFontSize(8);
@@ -558,6 +558,65 @@ export class PdfReportService {
         doc.text(`Page ${doc.getNumberOfPages()}`, 190, 285, { align: 'right' });
       }
     });
+  }
+
+  private addPageHeader(doc: jsPDF, pageNumber: number, primaryColor: string, secondaryColor: string): void {
+    // Page header background
+    doc.setFillColor(primaryColor);
+    doc.rect(0, 0, 210, 25, 'F');
+    
+    // Page title
+    doc.setTextColor(secondaryColor);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    
+    let pageTitle = '';
+    switch(pageNumber) {
+      case 2:
+        pageTitle = 'Reservations & Check-In Records';
+        break;
+      case 3:
+        pageTitle = 'Check-Out & Archived Records';
+        break;
+      default:
+        pageTitle = 'Monthly Revenue Report';
+    }
+    
+    doc.text(pageTitle, 20, 18);
+    
+    // Page number
+    doc.setFontSize(10);
+    doc.text(`Page ${pageNumber}`, 190, 18, { align: 'right' });
+    
+    // Decorative line
+    doc.setDrawColor(secondaryColor);
+    doc.setLineWidth(1);
+    doc.line(20, 30, 190, 30);
+  }
+
+  private addPageFooter(doc: jsPDF, pageNumber: number, primaryColor: string, secondaryColor: string): void {
+    // Footer background
+    doc.setFillColor(primaryColor);
+    doc.rect(0, 280, 210, 20, 'F');
+    
+    // Footer content
+    doc.setTextColor(secondaryColor);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    
+    // Left side - Prepared by
+    doc.text('Prepared by: Frontdesk Manager', 20, 290);
+    
+    // Center - System info
+    doc.text('BC Flats Hotel Management System', 105, 290, { align: 'center' });
+    
+    // Right side - Page X of Y
+    doc.text(`Page ${pageNumber} of 3`, 190, 290, { align: 'right' });
+    
+    // Signature line
+    doc.setDrawColor(secondaryColor);
+    doc.line(20, 295, 80, 295);
+    doc.text('Signature', 50, 300, { align: 'center' });
   }
 
   private addFooter(doc: jsPDF, primaryColor: string, secondaryColor: string): void {

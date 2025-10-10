@@ -25,6 +25,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   title = 'hotel-reservation-app';
   isDarkMode = false;
   mobileMenuOpen = false;
+  isLoadingContent = true;
   private intersectionObserver?: IntersectionObserver;
 
   rooms = [
@@ -335,6 +336,9 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       // Load logo
       await this.loadLogo();
       
+      // Content loading completed
+      this.isLoadingContent = false;
+      
       // Load hero images
       const heroContent = this.content['hero'] || [];
       if (heroContent.length > 0) {
@@ -402,6 +406,9 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       console.error('Error loading content:', error);
       // Fallback to default images if content loading fails
       console.log('CMS loading failed, ensuring fallback images are available');
+      
+      // Clear loading state even on error
+      this.isLoadingContent = false;
       
       const fallbackImages: { [key: string]: string } = {
         staff: 'assets/images/Staff.jpg',

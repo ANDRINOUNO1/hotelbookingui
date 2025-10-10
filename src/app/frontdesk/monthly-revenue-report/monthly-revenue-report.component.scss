@@ -43,68 +43,106 @@
     margin-bottom: 2rem;
     
     .controls-card {
-      background: white;
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
       display: flex;
-      gap: 2rem;
+      gap: 2.5rem;
       align-items: end;
       flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+      
+      // Add subtle pattern overlay
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+        pointer-events: none;
+      }
       
       .form-group {
         flex: 1;
-        min-width: 200px;
+        min-width: 220px;
+        position: relative;
+        z-index: 1;
         
         .form-label {
           display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-          color: #0b0b31;
-          font-size: 0.9rem;
+          margin-bottom: 0.75rem;
+          font-weight: 700;
+          color: #000000;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
           
           i {
             margin-right: 0.5rem;
-            color: #b4884d;
+            color: #000000;
           }
         }
         
         .form-select {
           width: 100%;
-          padding: 0.75rem 1rem;
-          border: 2px solid #e9ecef;
-          border-radius: 8px;
-          font-size: 1rem;
-          background: white;
-          transition: all 0.3s ease;
+          padding: 1rem 1.25rem;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: #000000;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
           
           &:focus {
             outline: none;
-            border-color: #b4884d;
-            box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
           }
           
           &:hover {
-            border-color: #b4884d;
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
           }
         }
       }
       
-      .btn-generate-pdf {
-        background: linear-gradient(135deg, #b4884d 0%, #e5c07b 100%);
+      .btn-refresh {
+        background: linear-gradient(135deg, #00d4aa 0%, #00a085 100%);
         color: white;
         border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
+        padding: 1.25rem 2.5rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(180, 136, 77, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 6px 20px rgba(0, 212, 170, 0.3);
+        position: relative;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         
         &:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(180, 136, 77, 0.4);
+          background: linear-gradient(135deg, #00a085 0%, #007a6b 100%);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 30px rgba(0, 212, 170, 0.4);
+        }
+        
+        &:active:not(:disabled) {
+          transform: translateY(-1px);
         }
         
         &:disabled {
@@ -114,7 +152,57 @@
         }
         
         i {
-          margin-right: 0.5rem;
+          font-size: 1.2rem;
+          transition: transform 0.3s ease;
+        }
+        
+        &:hover:not(:disabled) i {
+          transform: rotate(180deg);
+        }
+      }
+      
+      .btn-generate-pdf {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2.25rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+        position: relative;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #ee5a52 0%, #d63031 100%);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        &:active:not(:disabled) {
+          transform: translateY(-1px);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        i {
+          font-size: 1.1rem;
+          transition: transform 0.3s ease;
+        }
+        
+        &:hover:not(:disabled) i {
+          transform: scale(1.1);
         }
       }
     }
@@ -395,7 +483,8 @@
 
   // Responsive Design
   @media (max-width: 768px) {
-    padding: 1rem;
+    .monthly-revenue-report-container {
+      padding: 1rem;
     
     .report-header .header-content .report-title {
       font-size: 2rem;
@@ -487,5 +576,47 @@
         color: #e2e8f0;
       }
     }
+  }
+  }
+}
+
+// Status badge styles
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &.status-reserved {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+  }
+  
+  &.status-checked-in {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+  
+  &.status-checked-out {
+    background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
+  }
+  
+  // Legacy payment status styles (keeping for backward compatibility)
+  &.status-paid {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+  
+  &.status-pending {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
   }
 }
