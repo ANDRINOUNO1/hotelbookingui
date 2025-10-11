@@ -1,0 +1,370 @@
+<div class="monthly-revenue-report-container">
+  <!-- Header Section -->
+  <div class="report-header">
+    <div class="header-content">
+      <h1 class="report-title">
+        <i class="fa fa-chart-line"></i>
+        Monthly Revenue Report
+      </h1>
+      <p class="report-subtitle">Generate comprehensive financial reports for any month</p>
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="controls-card">
+      <div class="form-group">
+        <label for="monthSelect" class="form-label">
+          <i class="fa fa-calendar"></i>
+          Select Month
+        </label>
+        <select 
+          id="monthSelect" 
+          [(ngModel)]="selectedMonth" 
+          (ngModelChange)="onMonthYearChange()"
+          class="form-select"
+        >
+          <option *ngFor="let month of months" [value]="month.value">
+            {{ month.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="yearSelect" class="form-label">
+          <i class="fa fa-calendar-alt"></i>
+          Select Year
+        </label>
+        <select 
+          id="yearSelect" 
+          [(ngModel)]="selectedYear" 
+          (ngModelChange)="onMonthYearChange()"
+          class="form-select"
+        >
+          <option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <button 
+          (click)="generatePDF()" 
+          [disabled]="!reportData || isLoading"
+          class="btn-generate-pdf"
+        >
+          <i class="fa fa-file-pdf" *ngIf="!isLoading"></i>
+          <i class="fa fa-spinner fa-spin" *ngIf="isLoading"></i>
+          {{ isLoading ? 'Generating...' : 'Generate PDF Report' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fa fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fa fa-spinner fa-spin"></i>
+      <p>Loading report data...</p>
+    </div>
+  </div>
+
+  <!-- Report Summary -->
+  <div *ngIf="reportData && !isLoading" class="report-summary">
+    <div class="summary-card">
+      <div class="summary-header">
+        <h2>
+          <i class="fa fa-chart-bar"></i>
+          {{ getSelectedMonthName() }} {{ selectedYear }} Summary
+        </h2>
+      </div>
+      
+      <div class="summary-stats">
+        <div class="stat-item">
+          <div class="stat-icon bookings">
+            <i class="fa fa-bed"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ reportData.totalBookings }}</h3>
+            <p>Total Bookings</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon checkins">
+            <i class="fa fa-sign-in-alt"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalCheckIns }}</h3>
+            <p>Check-ins</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon checkouts">
+            <i class="fa fa-sign-out-alt"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalCheckOuts }}</h3>
+            <p>Check-outs</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon archived">
+            <i class="fa fa-archive"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ reportData.totalArchived }}</h3>
+            <p>Archived Records</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon revenue">
+            <i class="fa fa-dollar-sign"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ formatCurrency(totalPaymentsReceived) }}</h3>
+            <p>Payments Received</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon additional">
+            <i class="fa fa-plus-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ formatCurrency(totalReservationFees) }}</h3>
+            <p>Reservation Fees</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon netpaid">
+            <i class="fa fa-calculator"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ formatCurrency(netRevenue) }}</h3>
+            <p>Net Revenue</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon revenue">
+            <i class="fa fa-chart-line"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ formatCurrency(totalMonthlyRevenue) }}</h3>
+            <p>Total Revenue</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reservations Preview -->
+  <div *ngIf="reportData && !isLoading" class="reservations-preview">
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3>
+          <i class="fa fa-list"></i>
+          Reservations Preview ({{ reportData.bookings.length }} records)
+        </h3>
+        <p class="preview-note">Full details will be included in the PDF report</p>
+      </div>
+
+      <div class="table-container">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Guest Name</th>
+              <th>Room Type</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of reportData.bookings.slice(0, 5)">
+              <td>{{ booking.id || 'N/A' }}</td>
+              <td>{{ booking.guest.first_name }} {{ booking.guest.last_name }}</td>
+              <td>{{ booking.room?.roomType?.type || 'Standard Room' }}</td>
+              <td>{{ booking.availability.checkIn ? (booking.availability.checkIn | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ booking.availability.checkOut ? (booking.availability.checkOut | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ formatCurrency(booking.paidamount || 0) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getPaymentStatusClass(booking.pay_status)">
+                  {{ getPaymentStatusText(booking.pay_status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="reportData.bookings.length > 5" class="more-records">
+          <p>... and {{ reportData.bookings.length - 5 }} more records</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-In List Preview -->
+  <div *ngIf="reportData && !isLoading && checkInList.length > 0" class="checkin-preview">
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3>
+          <i class="fa fa-sign-in-alt"></i>
+          Check-In List Preview ({{ checkInList.length }} records)
+        </h3>
+        <p class="preview-note">Guests who checked in during {{ getSelectedMonthName() }} {{ selectedYear }}</p>
+      </div>
+
+      <div class="table-container">
+        <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest Name</th>
+                <th>Room Type</th>
+                <th>Base Price</th>
+                <th>Reservation Fee</th>
+                <th>Total Amount</th>
+                <th>Check-in Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr *ngFor="let booking of checkInList.slice(0, 5)">
+              <td>{{ booking.id || 'N/A' }}</td>
+              <td>{{ booking.guest.first_name }} {{ booking.guest.last_name }}</td>
+              <td>{{ booking.room?.roomType?.type || 'Standard Room' }}</td>
+              <td>{{ formatCurrency(booking.room?.roomType?.basePrice || 0) }}</td>
+              <td>{{ formatCurrency(calculateReservationFee(booking)) }}</td>
+              <td>{{ formatCurrency(calculateTotalReservationAmount(booking)) }}</td>
+              <td>{{ booking.availability.checkIn ? (booking.availability.checkIn | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getPaymentStatusClass(booking.pay_status)">
+                  {{ getPaymentStatusText(booking.pay_status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="checkInList.length > 5" class="more-records">
+          <p>... and {{ checkInList.length - 5 }} more records</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-Out List Preview -->
+  <div *ngIf="reportData && !isLoading && checkOutList.length > 0" class="checkout-preview">
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3>
+          <i class="fa fa-sign-out-alt"></i>
+          Check-Out List Preview ({{ checkOutList.length }} records)
+        </h3>
+        <p class="preview-note">Guests who checked out during {{ getSelectedMonthName() }} {{ selectedYear }} with Net Paid calculations</p>
+      </div>
+
+      <div class="table-container">
+        <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest Name</th>
+                <th>Room Type</th>
+                <th>Check-out Date</th>
+                <th>Payment Received</th>
+                <th>Reservation Fee</th>
+                <th>Net Paid</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr *ngFor="let booking of checkOutList.slice(0, 5)">
+              <td>{{ booking.id || 'N/A' }}</td>
+              <td>{{ booking.guest.first_name }} {{ booking.guest.last_name }}</td>
+              <td>{{ booking.room?.roomType?.type || 'Standard Room' }}</td>
+              <td>{{ booking.availability.checkOut ? (booking.availability.checkOut | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ formatCurrency(booking.paidamount || 0) }}</td>
+              <td>{{ formatCurrency(calculateReservationFee(booking)) }}</td>
+              <td>{{ formatCurrency(calculateNetPaidForBooking(booking)) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getPaymentStatusClass(booking.pay_status)">
+                  {{ getPaymentStatusText(booking.pay_status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="checkOutList.length > 5" class="more-records">
+          <p>... and {{ checkOutList.length - 5 }} more records</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archives Preview -->
+  <div *ngIf="reportData && !isLoading && reportData.archives.length > 0" class="archives-preview">
+    <div class="preview-card">
+      <div class="preview-header">
+        <h3>
+          <i class="fa fa-archive"></i>
+          Archives Preview ({{ reportData.archives.length }} records)
+        </h3>
+        <p class="preview-note">Full details will be included in the PDF report</p>
+      </div>
+
+      <div class="table-container">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th>Archive ID</th>
+              <th>Guest Name</th>
+              <th>Room Type</th>
+              <th>Booking Date</th>
+              <th>Archived Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let archive of reportData.archives.slice(0, 5)">
+              <td>{{ archive.id || 'N/A' }}</td>
+              <td>{{ archive.guest || 'N/A' }}</td>
+              <td>{{ archive.roomType || 'N/A' }}</td>
+              <td>{{ archive.createdAt ? (archive.createdAt | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ archive.arrivalDate ? (archive.arrivalDate | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ archive.status || 'N/A' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="reportData.archives.length > 5" class="more-records">
+          <p>... and {{ reportData.archives.length - 5 }} more records</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data Message -->
+  <div *ngIf="reportData && !isLoading && reportData.bookings.length === 0 && reportData.archives.length === 0" class="no-data">
+    <div class="no-data-content">
+      <i class="fa fa-chart-line"></i>
+      <h3>No Data Available</h3>
+      <p>No bookings or archives found for {{ getSelectedMonthName() }} {{ selectedYear }}</p>
+    </div>
+  </div>
+</div>

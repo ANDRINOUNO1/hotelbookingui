@@ -1,0 +1,491 @@
+.monthly-revenue-report-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+
+  // Header Section
+  .report-header {
+    margin-bottom: 2rem;
+    
+    .header-content {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #0b0b31 0%, #1a1a4a 100%);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(11, 11, 49, 0.3);
+      
+      .report-title {
+        color: #e5c07b;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        
+        i {
+          margin-right: 1rem;
+          color: #b4884d;
+        }
+      }
+      
+      .report-subtitle {
+        color: #ffffff;
+        font-size: 1.1rem;
+        margin: 0;
+        opacity: 0.9;
+      }
+    }
+  }
+
+  // Controls Section
+  .controls-section {
+    margin-bottom: 2rem;
+    
+    .controls-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: 2rem;
+      align-items: end;
+      flex-wrap: wrap;
+      
+      .form-group {
+        flex: 1;
+        min-width: 200px;
+        
+        .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: #0b0b31;
+          font-size: 0.9rem;
+          
+          i {
+            margin-right: 0.5rem;
+            color: #b4884d;
+          }
+        }
+        
+        .form-select {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          font-size: 1rem;
+          background: white;
+          transition: all 0.3s ease;
+          
+          &:focus {
+            outline: none;
+            border-color: #b4884d;
+            box-shadow: 0 0 0 3px rgba(180, 136, 77, 0.1);
+          }
+          
+          &:hover {
+            border-color: #b4884d;
+          }
+        }
+      }
+      
+      .btn-generate-pdf {
+        background: linear-gradient(135deg, #b4884d 0%, #e5c07b 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(180, 136, 77, 0.3);
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(180, 136, 77, 0.4);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        i {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+
+  // Error Message
+  .error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid #f5c6cb;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+
+  // Loading State
+  .loading-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    
+    .loading-spinner {
+      i {
+        font-size: 3rem;
+        color: #b4884d;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        color: #6c757d;
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  // Report Summary
+  .report-summary {
+    margin-bottom: 2rem;
+    
+    .summary-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      
+      .summary-header {
+        margin-bottom: 2rem;
+        
+        h2 {
+          color: #0b0b31;
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin: 0;
+          
+          i {
+            margin-right: 0.75rem;
+            color: #b4884d;
+          }
+        }
+      }
+      
+      .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        
+        .stat-item {
+          display: flex;
+          align-items: center;
+          padding: 1.5rem;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          border-radius: 12px;
+          border-left: 4px solid;
+          
+          .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            
+            i {
+              font-size: 1.5rem;
+              color: white;
+            }
+            
+            &.revenue {
+              background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+              border-left-color: #28a745;
+            }
+            
+            &.bookings {
+              background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+              border-left-color: #007bff;
+            }
+            
+            &.archived {
+              background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+              border-left-color: #6c757d;
+            }
+            
+            &.checkins {
+              background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+              border-left-color: #17a2b8;
+            }
+            
+            &.checkouts {
+              background: linear-gradient(135deg, #fd7e14 0%, #e55a00 100%);
+              border-left-color: #fd7e14;
+            }
+            
+            &.netpaid {
+              background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+              border-left-color: #6f42c1;
+            }
+            
+            &.additional {
+              background: linear-gradient(135deg, #20c997 0%, #17a085 100%);
+              border-left-color: #20c997;
+            }
+          }
+          
+          .stat-content {
+            h3 {
+              font-size: 1.8rem;
+              font-weight: 700;
+              color: #0b0b31;
+              margin: 0 0 0.25rem 0;
+            }
+            
+            p {
+              color: #6c757d;
+              font-size: 0.9rem;
+              margin: 0;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Preview Sections
+  .reservations-preview,
+  .checkin-preview,
+  .checkout-preview,
+  .archives-preview {
+    margin-bottom: 2rem;
+    
+    .preview-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      
+      .preview-header {
+        margin-bottom: 1.5rem;
+        
+        h3 {
+          color: #0b0b31;
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin: 0 0 0.5rem 0;
+          
+          i {
+            margin-right: 0.75rem;
+            color: #b4884d;
+          }
+        }
+        
+        .preview-note {
+          color: #6c757d;
+          font-size: 0.9rem;
+          margin: 0;
+          font-style: italic;
+        }
+      }
+      
+      .table-container {
+        overflow-x: auto;
+        
+        .preview-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.9rem;
+          
+          thead {
+            background: linear-gradient(135deg, #0b0b31 0%, #1a1a4a 100%);
+            
+            th {
+              color: #e5c07b;
+              padding: 1rem 0.75rem;
+              text-align: left;
+              font-weight: 600;
+              border-bottom: 2px solid #b4884d;
+            }
+          }
+          
+          tbody {
+            tr {
+              border-bottom: 1px solid #e9ecef;
+              transition: background-color 0.2s ease;
+              
+              &:hover {
+                background-color: #f8f9fa;
+              }
+              
+              &:nth-child(even) {
+                background-color: #f8f9fa;
+              }
+              
+              td {
+                padding: 0.75rem;
+                color: #495057;
+                
+                .status-badge {
+                  padding: 0.25rem 0.75rem;
+                  border-radius: 20px;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  
+                  &.status-paid {
+                    background-color: #d4edda;
+                    color: #155724;
+                  }
+                  
+                  &.status-pending {
+                    background-color: #fff3cd;
+                    color: #856404;
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        .more-records {
+          text-align: center;
+          padding: 1rem;
+          color: #6c757d;
+          font-style: italic;
+          background-color: #f8f9fa;
+          border-radius: 0 0 8px 8px;
+        }
+      }
+    }
+  }
+
+  // No Data State
+  .no-data {
+    text-align: center;
+    padding: 4rem 2rem;
+    
+    .no-data-content {
+      i {
+        font-size: 4rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+      }
+      
+      h3 {
+        color: #495057;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        color: #6c757d;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  // Responsive Design
+  @media (max-width: 768px) {
+    padding: 1rem;
+    
+    .report-header .header-content .report-title {
+      font-size: 2rem;
+    }
+    
+    .controls-section .controls-card {
+      flex-direction: column;
+      align-items: stretch;
+      
+      .form-group {
+        min-width: auto;
+      }
+    }
+    
+    .summary-stats {
+      grid-template-columns: 1fr;
+    }
+    
+    .preview-table {
+      font-size: 0.8rem;
+      
+      th, td {
+        padding: 0.5rem 0.25rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .report-header .header-content {
+      padding: 1.5rem;
+      
+      .report-title {
+        font-size: 1.5rem;
+      }
+      
+      .report-subtitle {
+        font-size: 1rem;
+      }
+    }
+    
+    .controls-section .controls-card,
+    .summary-card,
+    .preview-card {
+      padding: 1.5rem;
+    }
+  }
+}
+
+// Dark mode support
+.dark-mode {
+  .monthly-revenue-report-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    
+    .controls-card,
+    .summary-card,
+    .preview-card {
+      background: #2d3748;
+      color: #e2e8f0;
+    }
+    
+    .form-select {
+      background: #4a5568;
+      color: #e2e8f0;
+      border-color: #4a5568;
+      
+      &:focus {
+        border-color: #b4884d;
+      }
+    }
+    
+    .preview-table {
+      tbody tr {
+        &:hover {
+          background-color: #4a5568;
+        }
+        
+        &:nth-child(even) {
+          background-color: #4a5568;
+        }
+        
+        td {
+          color: #e2e8f0;
+        }
+      }
+    }
+    
+    .no-data-content {
+      h3, p {
+        color: #e2e8f0;
+      }
+    }
+  }
+}

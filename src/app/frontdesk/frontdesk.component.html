@@ -49,6 +49,10 @@
       <a routerLink="pos" routerLinkActive="active" (click)="closeMobileMenu()">
         <i class="fa fa-cash-register"></i> POS
       </a>
+
+      <a routerLink="monthly-revenue-report" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fa fa-chart-line"></i> Revenue Report
+      </a>
     </nav>
     
     <!-- User Profile Section -->
@@ -91,8 +95,4 @@
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
-</div>
-
-<div class="footer">
-  <p>&copy; {{ getCopyrightText() }} Hotel Management System | Version 1.0.0</p>
 </div>
