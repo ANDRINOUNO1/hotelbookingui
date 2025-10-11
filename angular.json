@@ -41,7 +41,13 @@
                 "node_modules/apexcharts/dist/apexcharts.min.js"
             ],
             "allowedCommonJsDependencies": [
-              "highcharts"
+              "highcharts",
+              "canvg",
+              "jspdf",
+              "html2canvas",
+              "core-js",
+              "raf",
+              "rgbcolor"
             ]
           },
           "configurations": {
@@ -65,7 +71,16 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "allowedCommonJsDependencies": [
+                "highcharts",
+                "canvg",
+                "jspdf",
+                "html2canvas",
+                "core-js",
+                "raf",
+                "rgbcolor"
+              ]
             },
             "development": {
               "optimization": false,

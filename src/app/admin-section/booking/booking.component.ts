@@ -6,6 +6,7 @@ import { Room } from '../../_models/room.model';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LoadingSpinnerComponent } from '../../_components/loading-spinner.component';
+import { ConfirmationModalService } from '../../_services/confirmation-modal.service';
 
 @Component({
   selector: 'app-booking',
@@ -20,7 +21,10 @@ export class BookingComponent implements OnInit {
   isLoading = true;
   showSuccessMessage = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private confirmationModalService: ConfirmationModalService
+  ) {}
 
   ngOnInit() {
     this.loadOccupiedRooms();
@@ -85,8 +89,18 @@ export class BookingComponent implements OnInit {
   }
 
   addBooking(newBooking: Booking) {
-    this.http.post<Booking>(`${environment.apiUrl}/bookings`, newBooking).subscribe(() => {
-      this.loadOccupiedRooms();
+    this.http.post<Booking>(`${environment.apiUrl}/bookings`, newBooking).subscribe({
+      next: (createdBooking) => {
+        console.log('✅ Booking created successfully:', createdBooking);
+        
+        // Send booking confirmation email for new bookings
+        this.sendBookingConfirmationEmail(createdBooking);
+        
+        this.loadOccupiedRooms();
+      },
+      error: (err) => {
+        console.error('❌ Failed to create booking:', err);
+      }
     });
   }
 
@@ -111,20 +125,102 @@ export class BookingComponent implements OnInit {
   }
 
   sendPaymentConfirmationEmail(booking: any) {
+    // Ensure we have all required data
+    if (!booking || !booking.guest || !booking.guest.email) {
+      console.error('❌ Missing booking or guest email data');
+      return;
+    }
+
     const emailData = {
       bookingId: booking.id,
       guestEmail: booking.guest.email,
       guestName: `${booking.guest.first_name} ${booking.guest.last_name}`,
-      paymentAmount: booking.paidamount || booking.payment?.amount,
-      paymentMethod: booking.payment?.paymentMethod || booking.paidamount?.paymentMode
+      paymentAmount: booking.paidamount || booking.payment?.amount || 0,
+      paymentMethod: booking.payment?.paymentMethod || booking.paidamount?.paymentMode || 'Cash'
     };
 
+    console.log('📧 Sending payment confirmation email with data:', emailData);
+
     this.http.post(`${environment.apiUrl}/bookings/send-payment-confirmation`, emailData).subscribe({
-      next: (response) => {
-        console.log('✅ Payment confirmation email sent successfully');
+      next: (response: any) => {
+        console.log('✅ Payment confirmation email sent successfully:', response);
+        // You could add a success notification here
       },
       error: (err) => {
         console.error('❌ Failed to send payment confirmation email:', err);
+        console.error('Error details:', err.error);
+        // You could add an error notification here
+      }
+    });
+  }
+
+  sendBookingConfirmationEmail(booking: any) {
+    // Ensure we have all required data
+    if (!booking || !booking.guest || !booking.guest.email) {
+      console.error('❌ Missing booking or guest email data');
+      return;
+    }
+
+    const emailData = {
+      bookingId: booking.id,
+      guestEmail: booking.guest.email
+    };
+
+    console.log('📧 Sending booking confirmation email with data:', emailData);
+
+    this.http.post(`${environment.apiUrl}/bookings/send-booking-confirmation`, emailData).subscribe({
+      next: (response: any) => {
+        console.log('✅ Booking confirmation email sent successfully:', response);
+        // You could add a success notification here
+      },
+      error: (err) => {
+        console.error('❌ Failed to send booking confirmation email:', err);
+        console.error('Error details:', err.error);
+        // You could add an error notification here
+      }
+    });
+  }
+
+  // Test email functionality using new test endpoint
+  testEmailSending() {
+    const testEmail = prompt('Enter email address to test:');
+    if (!testEmail) return;
+
+    console.log('🧪 Testing email functionality...');
+    
+    this.http.post(`${environment.apiUrl}/bookings/test-email`, { recipientEmail: testEmail }).subscribe({
+      next: (response: any) => {
+        console.log('✅ Test email result:', response);
+        if (response.success) {
+          alert('✅ Test email sent successfully!');
+        } else {
+          alert(`❌ Test email failed: ${response.error}\n\nDebug Info:\n• Email User: ${response.debug?.emailUser}\n• Password Set: ${response.debug?.emailPasswordSet}\n• Environment: ${response.debug?.environment}`);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Test email failed:', err);
+        alert('❌ Test email failed: ' + (err.error?.message || err.message));
+      }
+    });
+  }
+
+  // Debug email configuration using new debug endpoint
+  debugEmailConfig() {
+    console.log('🔍 Checking email configuration...');
+    
+    this.http.get(`${environment.apiUrl}/bookings/debug-email-config`).subscribe({
+      next: (response: any) => {
+        console.log('📧 Email configuration:', response);
+        alert(`Email Configuration:\n\n` +
+              `• Email User: ${response.emailUser}\n` +
+              `• Password Set: ${response.emailPasswordSet}\n` +
+              `• Environment: ${response.environment}\n` +
+              `• Connection Test: ${response.connectionTest?.success ? 'Success' : 'Failed'}\n` +
+              `• Timestamp: ${response.timestamp}`);
+      },
+      error: (err) => {
+        console.error('❌ Failed to get email config:', err);
+        alert('❌ Failed to get email configuration: ' + (err.error?.message || err.message));
       }
     });
   }
@@ -143,8 +239,9 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  confirmPayment(room: any) {
-    if (confirm(`Are you sure you want to confirm payment for ${room.guest}? This will send a payment confirmation email.`)) {
+  async confirmPayment(room: any) {
+    const confirmed = await this.confirmationModalService.confirmPayment(room.guest);
+    if (confirmed) {
       const updatedBooking = {
         ...room.booking,
         pay_status: true
@@ -189,13 +286,14 @@ export class BookingComponent implements OnInit {
     }
   }
 
-  deleteBooking(id: number, roomId: number) {
+  async deleteBooking(id: number, roomId: number) {
     if (!id) {
       console.error('❌ Cannot delete booking: Invalid or missing booking ID.');
       return;
     }
 
-    if (confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
+    const confirmed = await this.confirmationModalService.confirmDelete('this booking');
+    if (confirmed) {
       this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe({
         next: () => {
           console.log('✅ Booking deleted successfully');
