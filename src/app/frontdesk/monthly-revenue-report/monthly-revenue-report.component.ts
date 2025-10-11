@@ -25,7 +25,7 @@ export class MonthlyRevenueReportComponent implements OnInit {
   reportData: MonthlyReportData | null = null;
   errorMessage = '';
 
-  // Additional data for enhanced report
+  // Additional data for enhanced report - always initialized
   checkInList: Booking[] = [];
   checkOutList: Booking[] = [];
   totalCheckIns = 0;
@@ -103,9 +103,9 @@ export class MonthlyRevenueReportComponent implements OnInit {
             this.selectedYear
           );
           
-          // Update check-in and check-out lists
-          this.checkInList = this.filterCheckInsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
-          this.checkOutList = this.filterCheckOutsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
+          // Update check-in and check-out lists - always ensure lists are initialized
+          this.checkInList = this.filterCheckInsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
+          this.checkOutList = this.filterCheckOutsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
         }
         this.isLoading = false;
       },
@@ -137,9 +137,9 @@ export class MonthlyRevenueReportComponent implements OnInit {
         const filteredBookings = this.filterBookingsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
         const filteredArchives = this.filterArchivesByMonth(archives, this.selectedMonth, this.selectedYear);
         
-        // Generate check-in and check-out lists
-        this.checkInList = this.filterCheckInsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
-        this.checkOutList = this.filterCheckOutsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
+        // Generate check-in and check-out lists - always ensure lists are initialized
+        this.checkInList = this.filterCheckInsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
+        this.checkOutList = this.filterCheckOutsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
         
         // Calculate enhanced totals based on room pricing management
         const totalBookings = filteredBookings.length;
@@ -225,26 +225,26 @@ export class MonthlyRevenueReportComponent implements OnInit {
     return bookings.filter(booking => {
       // Filter by reservation status = 'reserved' for the main reservations preview
       return booking.status && booking.status.toLowerCase() === 'reserved';
-    });
+    }) || [];
   }
 
   private filterArchivesByMonth(archives: Archive[], month: number, year: number): Archive[] {
-    // Show all archives regardless of date
-    return archives;
+    // Show all archives regardless of date - always return array
+    return archives || [];
   }
 
   private filterCheckInsByMonth(bookings: Booking[], month: number, year: number): Booking[] {
     return bookings.filter(booking => {
       // Filter by reservation status = 'checked_in'
       return booking.status && booking.status.toLowerCase() === 'checked_in';
-    });
+    }) || [];
   }
 
   private filterCheckOutsByMonth(bookings: Booking[], month: number, year: number): Booking[] {
     return bookings.filter(booking => {
       // Filter by reservation status = 'checked_out'
       return booking.status && booking.status.toLowerCase() === 'checked_out';
-    });
+    }) || [];
   }
 
   private calculateTotalNetPaid(checkOuts: Booking[]): number {

@@ -1,5 +1,6 @@
 import { Component, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
 import { ErrorModalService } from '../_services/error-modal.service';
+import { ConfirmationModalService } from '../_services/confirmation-modal.service';
 import { ErrorModalComponent } from '../_components/error-modal.component';
 
 @Component({
@@ -21,12 +22,14 @@ import { ErrorModalComponent } from '../_components/error-modal.component';
 export class ModalContainerComponent implements OnInit, OnDestroy {
   constructor(
     private viewContainerRef: ViewContainerRef,
-    private errorModalService: ErrorModalService
+    private errorModalService: ErrorModalService,
+    private confirmationModalService: ConfirmationModalService
   ) {}
 
   ngOnInit() {
-    // Set the view container ref for the error modal service
+    // Set the view container ref for both modal services
     (this.errorModalService as any).setViewContainerRef(this.viewContainerRef);
+    (this.confirmationModalService as any).setViewContainerRef(this.viewContainerRef);
   }
 
   ngOnDestroy() {

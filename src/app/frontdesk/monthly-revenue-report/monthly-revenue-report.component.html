@@ -237,6 +237,12 @@
                 </span>
               </td>
             </tr>
+            <tr *ngIf="reportData.bookings.length === 0">
+              <td colspan="9" class="empty-state">
+                <i class="fa fa-info-circle"></i>
+                No reservation records found
+              </td>
+            </tr>
           </tbody>
         </table>
         
@@ -248,7 +254,7 @@
   </div>
 
   <!-- Check-In List Preview -->
-  <div *ngIf="reportData && !isLoading && checkInList.length > 0" class="checkin-preview">
+  <div *ngIf="reportData && !isLoading" class="checkin-preview">
     <div class="preview-card">
       <div class="preview-header">
         <h3>
@@ -295,6 +301,12 @@
                 </span>
               </td>
             </tr>
+            <tr *ngIf="checkInList.length === 0">
+              <td colspan="10" class="empty-state">
+                <i class="fa fa-info-circle"></i>
+                No check-in records found
+              </td>
+            </tr>
           </tbody>
         </table>
         
@@ -306,7 +318,7 @@
   </div>
 
   <!-- Check-Out List Preview -->
-  <div *ngIf="reportData && !isLoading && checkOutList.length > 0" class="checkout-preview">
+  <div *ngIf="reportData && !isLoading" class="checkout-preview">
     <div class="preview-card">
       <div class="preview-header">
         <h3>
@@ -355,6 +367,12 @@
                 </span>
               </td>
             </tr>
+            <tr *ngIf="checkOutList.length === 0">
+              <td colspan="11" class="empty-state">
+                <i class="fa fa-info-circle"></i>
+                No check-out records found
+              </td>
+            </tr>
           </tbody>
         </table>
         
@@ -366,7 +384,7 @@
   </div>
 
   <!-- Archives Preview -->
-  <div *ngIf="reportData && !isLoading && reportData.archives.length > 0" class="archives-preview">
+  <div *ngIf="reportData && !isLoading" class="archives-preview">
     <div class="preview-card">
       <div class="preview-header">
         <h3>
@@ -397,6 +415,12 @@
               <td>{{ archive.arrivalDate ? (archive.arrivalDate | date:'MMM dd, yyyy') : 'N/A' }}</td>
               <td>{{ archive.status || 'N/A' }}</td>
             </tr>
+            <tr *ngIf="reportData.archives.length === 0">
+              <td colspan="6" class="empty-state">
+                <i class="fa fa-info-circle"></i>
+                No archived records found
+              </td>
+            </tr>
           </tbody>
         </table>
         
@@ -407,12 +431,4 @@
     </div>
   </div>
 
-  <!-- No Data Message -->
-  <div *ngIf="reportData && !isLoading && reportData.bookings.length === 0 && reportData.archives.length === 0" class="no-data">
-    <div class="no-data-content">
-      <i class="fa fa-chart-line"></i>
-      <h3>No Data Available</h3>
-      <p>No bookings or archives found for {{ getSelectedMonthName() }} {{ selectedYear }}</p>
-    </div>
-  </div>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContentService, ContentItem, GalleryImage } from '../../_services/content.service';
 import { AlertService } from '../../_services/alert.service';
+import { ConfirmationModalService } from '../../_services/confirmation-modal.service';
 
 interface AboutImages {
   [key: string]: string;
@@ -1103,7 +1104,8 @@ export class ContentManagementComponent implements OnInit {
 
   constructor(
     private contentService: ContentService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private confirmationModalService: ConfirmationModalService
   ) { }
 
   ngOnInit(): void {
@@ -2162,7 +2164,8 @@ export class ContentManagementComponent implements OnInit {
   }
 
   async deleteContent(id: number): Promise<void> {
-    if (confirm('Are you sure you want to delete this content?')) {
+    const confirmed = await this.confirmationModalService.confirmDelete('this content');
+    if (confirmed) {
       try {
         await this.contentService.deleteContent(id).toPromise();
         this.alertService.success('Content deleted successfully');
@@ -3625,7 +3628,8 @@ export class ContentManagementComponent implements OnInit {
 
   // Reset only the homepage to original content and persist via backend
   async resetToOriginalHomepage(): Promise<void> {
-    if (!confirm('Reset homepage content to original defaults? This will overwrite current homepage content.')) return;
+    const confirmed = await this.confirmationModalService.confirmReset('Reset homepage content to original defaults? This will overwrite current homepage content.');
+    if (!confirmed) return;
     try {
       this.loading = true;
       await this.contentService.resetAll().toPromise();
@@ -3715,7 +3719,8 @@ export class ContentManagementComponent implements OnInit {
       return;
     }
 
-    if (confirm('Are you sure you want to restore from backup? This will overwrite all current content.')) {
+    const confirmed = await this.confirmationModalService.confirmReset('Are you sure you want to restore from backup? This will overwrite all current content.');
+    if (confirmed) {
       try {
         this.content = JSON.parse(JSON.stringify(this.contentBackup));
         this.alertService.success('Content restored from backup successfully!');
@@ -3736,7 +3741,8 @@ export class ContentManagementComponent implements OnInit {
 
 
   async restoreToOriginal(): Promise<void> {
-    if (confirm('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.')) {
+    const confirmed = await this.confirmationModalService.confirmReset('Are you sure you want to restore to original content? This will overwrite ALL current content and cannot be undone.');
+    if (confirmed) {
       try {
         // Persist reset to backend so originals are saved in DB
         this.loading = true;
