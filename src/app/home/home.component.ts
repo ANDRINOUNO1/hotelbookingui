@@ -25,7 +25,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   title = 'hotel-reservation-app';
   isDarkMode = false;
   mobileMenuOpen = false;
-  isLoadingContent = true;
   private intersectionObserver?: IntersectionObserver;
 
   rooms = [
@@ -298,14 +297,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     // Ensure fallback images are immediately available
     this.ensureAboutImagesAvailable();
     
-    // Set a timeout to ensure loading state is cleared even if content loading fails
-    setTimeout(() => {
-      if (this.isLoadingContent) {
-        console.warn('Content loading timeout, clearing loading state');
-        this.isLoadingContent = false;
-      }
-    }, 10000); // 10 second timeout
-    
     this.loadContent();
   }
 
@@ -344,9 +335,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       
       // Load logo
       await this.loadLogo();
-      
-      // Content loading completed
-      this.isLoadingContent = false;
       
       // Load hero images
       const heroContent = this.content['hero'] || [];
@@ -415,9 +403,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       console.error('Error loading content:', error);
       // Fallback to default images if content loading fails
       console.log('CMS loading failed, ensuring fallback images are available');
-      
-      // Clear loading state even on error
-      this.isLoadingContent = false;
       
       const fallbackImages: { [key: string]: string } = {
         staff: 'assets/images/Staff.jpg',
@@ -1051,9 +1036,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.logoRefreshInterval) {
       clearInterval(this.logoRefreshInterval);
     }
-    
-    // Ensure loading state is cleared on destroy
-    this.isLoadingContent = false;
   }
 
   // Logo refresh functionality
