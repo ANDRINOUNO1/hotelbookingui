@@ -1,14 +1,8 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
 
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false, // Changed to false for development
-  apiUrl: 'https://deploymentbackend-yndf.onrender.com',
+  apiUrl: 'https://deploymentbackend-production-fb99.up.railway.app', // Railway backend URL
   cloudinary:{
     cloudName: 'dsheuvqdc'
   },

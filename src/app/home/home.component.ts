@@ -296,6 +296,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit() {
     // Ensure fallback images are immediately available
     this.ensureAboutImagesAvailable();
+    
     this.loadContent();
   }
 

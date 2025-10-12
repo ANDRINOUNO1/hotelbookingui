@@ -1,7 +1,7 @@
 :host {
   --sidebar-bg: #5c9bcf;
   --sidebar-active: #181824;
-  --sidebar-text: #000000;
+  --sidebar-text: #ffffff;
   --main-bg: #ffffff;
   --header-bg: #b4884d;
   --header-text: #fff;
@@ -144,7 +144,8 @@
 .dashboard-container {
   display: flex;
   flex-direction: row;
-  height: 100dvh; /* Dynamic viewport height for mobile */
+  height: 100vh; /* Use standard viewport height */
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   background-color: var(--main-bg);
   color: var(--text-color);
   overflow: hidden;
@@ -158,9 +159,11 @@
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
-  min-height: 100vh;
+  height: 100vh; /* Use standard viewport height */
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   justify-content: space-between;
   z-index: 1;
+  overflow: hidden; /* Prevent sidebar from overflowing */
 }
 
 .admin-logo-bar {
@@ -179,6 +182,9 @@
 nav {
   flex-grow: 1;
   padding: 0 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 nav a {
@@ -518,6 +524,9 @@ nav a i {
   gap: 0.75rem;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0; /* Prevent shrinking */
+  background: var(--sidebar-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   .toggle-mode-btn {
     position: relative;
@@ -716,6 +725,8 @@ nav a i {
   
   .dashboard-container {
     padding-top: 60px; /* Space for mobile header */
+    height: calc(100vh - 60px); /* Account for mobile header */
+    height: calc(100dvh - 60px); /* Dynamic viewport height minus header */
   }
   
   .mobile-overlay {
@@ -740,7 +751,8 @@ nav a i {
     position: fixed;
     left: -100%;
     top: 60px; /* Below mobile header */
-    height: calc(100vh - 60px);
+    height: calc(100vh - 60px); /* Full height minus mobile header */
+    height: calc(100dvh - 60px); /* Dynamic viewport height minus header */
     width: 280px;
     flex-direction: column;
     padding: 1rem;
@@ -749,7 +761,10 @@ nav a i {
     background: var(--sidebar-bg);
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: space-between;
   }
 
   .sidebar.mobile-open {
@@ -760,9 +775,11 @@ nav a i {
     flex-direction: column;
     gap: 0.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
     flex: 1;
     padding: 1rem 0;
     -webkit-overflow-scrolling: touch;
+    min-height: 0; /* Allow flex item to shrink */
   }
   
   .sidebar nav a {
@@ -773,6 +790,63 @@ nav a i {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+  }
+
+  /* Mobile sidebar-bottom styles */
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0; /* Prevent shrinking */
+    background: var(--sidebar-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .toggle-mode-btn,
+    .logout-btn {
+      flex: 1;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.9rem;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      touch-action: manipulation;
+
+      .fa {
+        font-size: 1rem;
+      }
+
+      .btn-text {
+        display: inline;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+    }
+
+    .toggle-mode-btn {
+      background: var(--toggle-btn-bg);
+      color: var(--toggle-btn-text);
+
+      &:hover {
+        background: var(--toggle-btn-hover);
+      }
+    }
+
+    .logout-btn {
+      background: var(--logout-btn-bg);
+      color: var(--logout-btn-text);
+
+      &:hover {
+        background: var(--logout-btn-hover);
+      }
+    }
   }
 
   .main-content {

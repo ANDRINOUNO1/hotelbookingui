@@ -32,6 +32,7 @@ const FrontdeskdashboardComponent = () => import('./frontdesk/frontdeskdashboard
 const AddbookingsComponent = () => import('./frontdesk/addbookings/addbookings.component').then(m => m.AddbookingsComponent);
 const ProductsComponent = () => import('./frontdesk/products/products.component').then(m => m.ProductsComponent);
 const RoomAvailabilityCalendarComponent = () => import('./frontdesk/room-availability-calendar/room-availability-calendar.component').then(m => m.RoomAvailabilityCalendarComponent);
+const MonthlyRevenueReportComponent = () => import('./frontdesk/monthly-revenue-report/monthly-revenue-report.component').then(m => m.MonthlyRevenueReportComponent);
 
 // Superadmin lazy loading
 const SuperhomeComponent = () => import('./superadmin-sect/superhome.component').then(m => m.SuperhomeComponent);
@@ -75,12 +76,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'frontdeskdashboard', pathMatch: 'full' },
       { path: 'frontdeskdashboard', loadComponent: FrontdeskdashboardComponent },
       { path: 'reservations', loadComponent: ReservationsComponent },
-      { path: 'requests', loadComponent: PosComponent },
+      { path: 'pos', loadComponent: PosComponent },
       { path: 'calendar', loadComponent: CalendarComponent },
       { path: 'availabilitycalendar', loadComponent: RoomAvailabilityCalendarComponent },
       { path: 'lists', loadComponent: ListsComponent },
       { path: 'addbookings', loadComponent: AddbookingsComponent },
-      { path: 'products', loadComponent: ProductsComponent }
+      { path: 'products', loadComponent: ProductsComponent },
+      { path: 'monthly-revenue-report', loadComponent: MonthlyRevenueReportComponent }
     ]
   },
   {

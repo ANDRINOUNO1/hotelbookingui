@@ -27,6 +27,8 @@
     "flatpickr": "^4.6.13",
     "highcharts": "^12.4.0",
     "highcharts-angular": "^5.1.0",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "ng-apexcharts": "^1.7.0",
     "rxjs": "~7.8.0",
     "swiper": "^11.2.8",
