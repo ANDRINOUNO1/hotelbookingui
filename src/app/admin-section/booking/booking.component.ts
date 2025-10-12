@@ -143,8 +143,14 @@ export class BookingComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/bookings/send-payment-confirmation`, emailData).subscribe({
       next: (response: any) => {
-        console.log('✅ Payment confirmation email sent successfully:', response);
-        // You could add a success notification here
+        if (response.success) {
+          console.log('✅ Payment confirmation email sent successfully:', response);
+          // You could add a success notification here
+        } else {
+          console.log('⚠️ Payment confirmation email failed:', response);
+          console.log('Error:', response.error);
+          // You could add a warning notification here
+        }
       },
       error: (err) => {
         console.error('❌ Failed to send payment confirmation email:', err);
@@ -170,8 +176,14 @@ export class BookingComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/bookings/send-booking-confirmation`, emailData).subscribe({
       next: (response: any) => {
-        console.log('✅ Booking confirmation email sent successfully:', response);
-        // You could add a success notification here
+        if (response.success) {
+          console.log('✅ Booking confirmation email sent successfully:', response);
+          // You could add a success notification here
+        } else {
+          console.log('⚠️ Booking confirmation email failed:', response);
+          console.log('Error:', response.error);
+          // You could add a warning notification here
+        }
       },
       error: (err) => {
         console.error('❌ Failed to send booking confirmation email:', err);
