@@ -2,7 +2,7 @@
 
 export const environment = {
   production: false, // Changed to false for development
-  apiUrl: 'https://deploymentbackend-production-fb99.up.railway.app', // Railway backend URL
+  apiUrl: 'https://deploymentbackend-copy-production.up.railway.app', // Railway backend URL
   cloudinary:{
     cloudName: 'dsheuvqdc'
   },
