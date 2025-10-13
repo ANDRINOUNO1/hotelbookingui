@@ -6,97 +6,48 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="loading-container" [class.overlay]="overlay">
-      <div class="spinner-container">
-        <div class="spinner" [class]="size"></div>
-        <div *ngIf="message" class="loading-message">{{ message }}</div>
-      </div>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div *ngIf="message" class="loading-text">{{ message }}</div>
     </div>
   `,
   styles: [`
-    :host {
-      --main-color: var(--main-bg);
-      --sub-color: #e5c07b;
-      --accent-color: #b4884d;
-      --white: #f5f5f7;
-    }
-
     .loading-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .loading-container.overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--main-bg);
-      backdrop-filter: blur(4px);
-      z-index: 9999;
-      padding: 0;
-    }
-
-    .spinner-container {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
     }
 
     .spinner {
-      width: 4rem;
-      height: 4rem;
-      border: 3px solid rgba(229, 192, 123, 0.3);
-      border-top: 3px solid var(--sub-color);
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(43, 101, 236, 0.1);
+      border-top: 3px solid var(--accent-color);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 1s ease-in-out infinite;
     }
 
-    .loading-message {
-      color: var(--white);
-      font-size: 1.4rem;
+    .loading-text {
+      position: absolute;
+      margin-top: 70px;
+      color: var(--accent-color);
+      font-size: var(--font-size-sm);
       font-weight: 500;
-      text-align: center;
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Small spinner variant */
-    .spinner.small {
-      width: 2rem;
-      height: 2rem;
-      border-width: 2px;
-    }
-
-    /* Large spinner variant */
-    .spinner.large {
-      width: 6rem;
-      height: 6rem;
-      border-width: 4px;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .spinner {
-        width: 3rem;
-        height: 3rem;
-      }
-      
-      .loading-message {
-        font-size: 1.2rem;
-      }
+      to { transform: rotate(360deg); }
     }
   `]
 })
 export class LoadingSpinnerComponent {
   @Input() message: string = '';
-  @Input() overlay: boolean = false;
-  @Input() size: 'small' | 'medium' | 'large' = 'medium';
 } 
