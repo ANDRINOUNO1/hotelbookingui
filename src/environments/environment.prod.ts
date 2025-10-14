@@ -1,13 +1,13 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://deploymentbackend-yndf.onrender.com',
+  apiUrl: 'https://deploymentbackend-copy-production.up.railway.app',
   cloudinary: {
     cloudName: 'dsheuvqdc'
   },
-  // Performance monitoring
+
   enablePerformanceMonitoring: true,
-  // Error reporting
+ 
   enableErrorReporting: true,
-  // Analytics
+
   enableAnalytics: true
 };

@@ -1,9 +1,7 @@
-<!-- Loading Spinner Overlay -->
+<!-- Loading Spinner -->
 <app-loading-spinner 
   *ngIf="isLoading" 
-  [overlay]="true" 
-  message="Loading Bookings..." 
-  [size]="'large'">
+  message="Loading Bookings...">
 </app-loading-spinner>
 
 <!-- Success Notification -->
@@ -19,12 +17,6 @@
 <div *ngIf="!isLoading" class="booking-container">
   <div class="room-view-header">
    <h1>New Bookings</h1>
-   
-   <!-- Email Testing Buttons -->
-   <div class="email-test-buttons">
-     <button class="btn-test-email" (click)="testEmailSending()">🧪 Test Email</button>
-     <button class="btn-debug-email" (click)="debugEmailConfig()">🔍 Debug Config</button>
-   </div>
   </div>
 
   <table class="tables">

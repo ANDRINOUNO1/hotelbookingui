@@ -2,7 +2,7 @@
 
 export const environment = {
   production: false, // Changed to false for development
-  apiUrl: 'https://deploymentbackend-yndf.onrender.com', // Back to original backend with CORS configured
+  apiUrl: 'https://deploymentbackend-copy-production.up.railway.app', // Railway backend URL
   cloudinary:{
     cloudName: 'dsheuvqdc'
   },

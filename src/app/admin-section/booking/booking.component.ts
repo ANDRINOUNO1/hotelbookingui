@@ -143,8 +143,14 @@ export class BookingComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/bookings/send-payment-confirmation`, emailData).subscribe({
       next: (response: any) => {
-        console.log('✅ Payment confirmation email sent successfully:', response);
-        // You could add a success notification here
+        if (response.success) {
+          console.log('✅ Payment confirmation email sent successfully:', response);
+          // You could add a success notification here
+        } else {
+          console.log('⚠️ Payment confirmation email failed:', response);
+          console.log('Error:', response.error);
+          // You could add a warning notification here
+        }
       },
       error: (err) => {
         console.error('❌ Failed to send payment confirmation email:', err);
@@ -170,8 +176,14 @@ export class BookingComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/bookings/send-booking-confirmation`, emailData).subscribe({
       next: (response: any) => {
-        console.log('✅ Booking confirmation email sent successfully:', response);
-        // You could add a success notification here
+        if (response.success) {
+          console.log('✅ Booking confirmation email sent successfully:', response);
+          // You could add a success notification here
+        } else {
+          console.log('⚠️ Booking confirmation email failed:', response);
+          console.log('Error:', response.error);
+          // You could add a warning notification here
+        }
       },
       error: (err) => {
         console.error('❌ Failed to send booking confirmation email:', err);
@@ -181,49 +193,6 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  // Test email functionality using new test endpoint
-  testEmailSending() {
-    const testEmail = prompt('Enter email address to test:');
-    if (!testEmail) return;
-
-    console.log('🧪 Testing email functionality...');
-    
-    this.http.post(`${environment.apiUrl}/bookings/test-email`, { recipientEmail: testEmail }).subscribe({
-      next: (response: any) => {
-        console.log('✅ Test email result:', response);
-        if (response.success) {
-          alert('✅ Test email sent successfully!');
-        } else {
-          alert(`❌ Test email failed: ${response.error}\n\nDebug Info:\n• Email User: ${response.debug?.emailUser}\n• Password Set: ${response.debug?.emailPasswordSet}\n• Environment: ${response.debug?.environment}`);
-        }
-      },
-      error: (err) => {
-        console.error('❌ Test email failed:', err);
-        alert('❌ Test email failed: ' + (err.error?.message || err.message));
-      }
-    });
-  }
-
-  // Debug email configuration using new debug endpoint
-  debugEmailConfig() {
-    console.log('🔍 Checking email configuration...');
-    
-    this.http.get(`${environment.apiUrl}/bookings/debug-email-config`).subscribe({
-      next: (response: any) => {
-        console.log('📧 Email configuration:', response);
-        alert(`Email Configuration:\n\n` +
-              `• Email User: ${response.emailUser}\n` +
-              `• Password Set: ${response.emailPasswordSet}\n` +
-              `• Environment: ${response.environment}\n` +
-              `• Connection Test: ${response.connectionTest?.success ? 'Success' : 'Failed'}\n` +
-              `• Timestamp: ${response.timestamp}`);
-      },
-      error: (err) => {
-        console.error('❌ Failed to get email config:', err);
-        alert('❌ Failed to get email configuration: ' + (err.error?.message || err.message));
-      }
-    });
-  }
 
   updateRoomStatus(roomId: number, guaranteed: boolean) {
   const newStatus = guaranteed ? 'Reserved - Guaranteed' : 'Reserved - Not Guaranteed';
