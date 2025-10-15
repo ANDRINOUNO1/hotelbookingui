@@ -1,23 +1,3 @@
-:host {
-  // Blue theme for POS component
-  --pos-primary: #3498db;
-  --pos-primary-text: #ffffff;
-  --pos-bg: var(--main-bg, #ffffff);
-  --pos-card-bg: var(--card-bg, #ffffff);
-  --pos-card-border: var(--card-border, #e0e0e0);
-  --pos-text: var(--text-color, #222);
-  --pos-input-bg: var(--input-bg, #ffffff);
-  --pos-input-text: var(--input-text, #171725);
-  --pos-input-border: #3498db;
-  --pos-button-bg: #e3f2fd;
-  --pos-button-text: #1976d2;
-  --pos-button-hover: #bbdefb;
-  --pos-success: var(--text-green, #4caf50);
-  --pos-danger: var(--text-red, #ff3c3c);
-  --pos-warning: #ff9800;
-  --pos-info: #2196f3;
-}
-
 .requests-header {
   display: flex;
   justify-content: space-between;

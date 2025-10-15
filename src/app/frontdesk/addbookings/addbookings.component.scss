@@ -3,8 +3,8 @@
   margin: 2rem auto;
   padding: 2rem;
   border-radius: 12px;
-  color: #1e293b;
-  background: #ffffff;
+  color: var(--text-color);
+  background: var(--card-bg);
   font-family: var(--font-main);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 
@@ -23,12 +23,12 @@
   h1 {
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 700;
-    color: #0f172a;
+  color: var(--text-color);
   }
 
   p {
     font-size: clamp(1rem, 2vw, 1.125rem);
-    color: #475569;
+  color: var(--text-color);
   }
 }
 
@@ -40,15 +40,15 @@
   font-weight: 500;
 
   &.alert-danger {
-    background: #fee2e2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+    background: transparent;
+    color: var(--pos-danger);
+    border: 1px solid var(--pos-danger);
   }
 
   &.alert-success {
-    background: #dcfce7;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
+    background: transparent;
+    color: var(--pos-success);
+    border: 1px solid var(--pos-success);
   }
 }
 
@@ -59,17 +59,17 @@
   gap: 2rem;
 
   .form-section {
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    background: #f9fafb;
-    padding: 1.5rem;
-    box-shadow: 0 0 0 2px rgba(232, 240, 255, 0.6);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--pos-card-bg);
+  padding: 1.5rem;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.02);
 
     .section-title {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #0f172a;
-      border-bottom: 2px solid #3b82f6;
+      color: var(--text-color);
+      border-bottom: 2px solid var(--pos-primary);
       padding-bottom: 0.5rem;
       margin-bottom: 1.5rem;
     }
@@ -88,31 +88,31 @@
   flex-direction: column;
 
   label {
-    color: #1e293b;
+    color: var(--text-color);
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
   }
 
-  input,
-  select,
-  textarea {
+    input,
+    select,
+    textarea {
     padding: 0.75rem 1rem;
     border-radius: 8px;
-    border: 1.5px solid #cbd5e1;
-    background: #ffffff;
-    color: #1e293b;
+    border: 1.5px solid var(--pos-input-border);
+    background: var(--pos-input-bg);
+    color: var(--pos-input-text);
     font-size: 1rem;
     transition: all 0.2s ease;
 
     &:focus {
       outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+      border-color: var(--pos-primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.08);
     }
 
     &::placeholder {
-      color: #9ca3af;
+      color: var(--input-placeholder, #9ca3af);
     }
 
     &.invalid {
@@ -120,8 +120,8 @@
     }
   }
 
-  .error-message {
-    color: #ef4444;
+    .error-message {
+    color: var(--pos-danger);
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
@@ -186,8 +186,8 @@
   padding: 1.5rem;
   transition: all 0.3s ease;
   cursor: pointer;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
 
   &:hover {
     border-color: #3b82f6;
@@ -222,14 +222,14 @@
   h3.room-type-name {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color);
     margin-bottom: 0.25rem;
   }
 
   p.room-type-rate {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #3b82f6;
+    color: var(--text-color);
     margin: 0;
   }
 }
