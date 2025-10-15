@@ -80,6 +80,7 @@
   --pos-warning: #ff9800;
   --pos-info: #2196f3;
   --special-txt: #422300;
+  --statscard: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
 :host(.dark-mode) {
@@ -172,7 +173,8 @@
   --pos-danger: var(--text-red, #ff3c3c);
   --pos-warning: #ff9800;
   --pos-info: #2196f3;
-  --special-txt: #cc720b;
+  --special-txt: #e4bb70;
+  --statscard: #202020;
 }
 
 .dashboard-container {
@@ -389,7 +391,7 @@ nav a i {
 
       .user-role {
         margin: 0;
-        font-size: 0.75rem;
+        font-size: 1rem;
         color: var(--special-txt);
         font-weight: 500;
         text-transform: uppercase;
@@ -398,7 +400,7 @@ nav a i {
 
       .user-email {
         margin: 0;
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         color: var(--special-txt);
         opacity: 0.8;
         white-space: nowrap;

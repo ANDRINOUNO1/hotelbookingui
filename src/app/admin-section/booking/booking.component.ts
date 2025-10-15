@@ -227,9 +227,16 @@ export class BookingComponent implements OnInit {
           this.updateRoomStatus(room.booking.room_id, true);
 
           // 3. Record revenue
+          const amount = updatedBooking.paidamount ?? updatedBooking.payment?.amount;
+
+          if (amount == null) {
+            console.error('❌ Cannot record revenue: amount is null or empty');
+            return;
+          }
+
           const revenueRecord = {
             bookingId: updatedBooking.id,
-            amount: updatedBooking.paidamount || updatedBooking.payment?.amount,
+            amount: Number(amount),
             source: 'Reservation',
             description: `Reservation payment for booking #${updatedBooking.id}`,
             date: new Date()
