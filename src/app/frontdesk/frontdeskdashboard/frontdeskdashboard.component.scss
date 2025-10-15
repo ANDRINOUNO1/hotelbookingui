@@ -141,7 +141,7 @@
     border-radius: 6px 6px 0 0;
     font-size: 1.5rem;
     cursor: pointer;
-    color: #333;
+    color: var(--text-color);
     transition: background 0.2s;
     &.active {
       background-color: #55adff;

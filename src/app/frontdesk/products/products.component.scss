@@ -12,27 +12,52 @@
     color: var(--text-color);
   }
 
+  /* ✨ Product Form */
   .product-form {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     margin-bottom: 2rem;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
 
     .form-fields {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
 
-      input, select {
+      input,
+      select {
         flex: 1 1 30%;
-        padding: 0.7rem 1rem;
+        padding: 0.75rem 1rem;
         border: 1px solid var(--input-border);
         border-radius: 6px;
-        font-size: 1.3rem;
-        transition: border 0.2s;
+        font-size: 1.2rem;
         background: var(--input-bg);
         color: var(--input-text);
+        transition: all 0.2s ease;
 
         &:focus {
           border-color: #3b82f6;
           outline: none;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          background: var(--input-bg);
+        }
+
+        &::placeholder {
+          color: var(--input-placeholder);
         }
       }
     }
@@ -40,6 +65,7 @@
     .form-actions {
       margin-top: 1rem;
       display: flex;
+      justify-content: flex-end;
       gap: 0.8rem;
     }
   }
@@ -63,6 +89,7 @@
       &:focus {
         border-color: #3b82f6;
         outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
       }
     }
 
@@ -71,7 +98,7 @@
     }
   }
 
-  /* Products Table */
+  /* 🧾 Products Table */
   .products-table {
     width: 100%;
     border-collapse: collapse;
@@ -102,11 +129,7 @@
         }
       }
 
-      /* 🔹 Striped rows */
-      tr:nth-child(odd) {
-        background: var(--table-row-bg);
-      }
-
+      tr:nth-child(odd),
       tr:nth-child(even) {
         background: var(--table-row-bg);
       }
@@ -127,7 +150,7 @@
     }
   }
 
-  /* Buttons */
+  /* 🟦 Buttons */
   .btn {
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -178,6 +201,28 @@
 
       &:hover {
         background: #dc2626;
+      }
+    }
+  }
+
+  /* 📱 Responsive */
+  @media (max-width: 600px) {
+    .product-form {
+      .form-fields {
+        flex-direction: column;
+
+        input,
+        select {
+          flex: 1 1 100%;
+        }
+      }
+
+      .form-actions {
+        flex-direction: column;
+
+        .btn {
+          width: 100%;
+        }
       }
     }
   }

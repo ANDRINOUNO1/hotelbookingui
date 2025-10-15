@@ -63,6 +63,24 @@
   --logout-btn-shadow: #a52b1a;
   --logout-btn-hover: #e15f4e;
   --logout-btn-text: #ffffff;
+  --pos-primary: #3498db;
+  --pos-primary-text: #ffffff;
+  --pos-bg: var(--main-bg, #ffffff);
+  --pos-card-bg: var(--card-bg, #ffffff);
+  --pos-card-border: var(--card-border, #e0e0e0);
+  --pos-text: var(--text-color, #222);
+  --pos-input-bg: var(--input-bg, #ffffff);
+  --pos-input-text: var(--input-text, #171725);
+  --pos-input-border: #3498db;
+  --pos-button-bg: #e3f2fd;
+  --pos-button-text: #1976d2;
+  --pos-button-hover: #bbdefb;
+  --pos-success: var(--text-green, #4caf50);
+  --pos-danger: var(--text-red, #ff3c3c);
+  --pos-warning: #ff9800;
+  --pos-info: #2196f3;
+  --special-txt: #422300;
+  --statscard: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
 :host(.dark-mode) {
@@ -139,6 +157,24 @@
   --search-border: #2a2a3e;
   --search-placeholder: #8a8a8a;
   background: var(--main-bg);
+  --pos-primary: #575555;
+  --pos-primary-text: #ffffff;
+  --pos-bg: var(--main-bg, #ffffff);
+  --pos-card-bg: var(--card-bg, #ffffff);
+  --pos-card-border: var(--card-border, #e0e0e0);
+  --pos-text: var(--text-color, #222);
+  --pos-input-bg: var(--input-bg, #ffffff);
+  --pos-input-text: var(--input-text, #171725);
+  --pos-input-border: #003355;
+  --pos-button-bg: #71787e;
+  --pos-button-text: #05386b;
+  --pos-button-hover: #74bffc;
+  --pos-success: var(--text-green, #4caf50);
+  --pos-danger: var(--text-red, #ff3c3c);
+  --pos-warning: #ff9800;
+  --pos-info: #2196f3;
+  --special-txt: #e4bb70;
+  --statscard: #202020;
 }
 
 .dashboard-container {
@@ -345,9 +381,9 @@ nav a i {
 
       .user-name {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: 0.9rem;  
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--special-txt);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -355,8 +391,8 @@ nav a i {
 
       .user-role {
         margin: 0;
-        font-size: 0.75rem;
-        color: var(--sidebar-text);
+        font-size: 1rem;
+        color: var(--special-txt);
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -364,8 +400,8 @@ nav a i {
 
       .user-email {
         margin: 0;
-        font-size: 0.7rem;
-        color: var(--sidebar-text);
+        font-size: 0.9rem;
+        color: var(--special-txt);
         opacity: 0.8;
         white-space: nowrap;
         overflow: hidden;
@@ -375,7 +411,7 @@ nav a i {
 
     .user-menu-toggle {
       padding: 0.25rem;
-      color: var(--sidebar-text);
+      color: var(--special-txt);
       transition: all 0.3s ease;
 
       i {
