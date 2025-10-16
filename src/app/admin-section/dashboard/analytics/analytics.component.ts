@@ -75,7 +75,7 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnChanges {
   private maxInitAttempts = 5;
 
   statistics = [
-    { title: 'Total Revenue', value: '$0', change: '+0%', trend: 'up' },
+    { title: 'Total Revenue', value: '₱0', change: '+0%', trend: 'up' },
     { title: 'Occupancy Rate', value: '0%', change: '+0%', trend: 'up' },
     { title: 'Average Stay', value: '0 days', change: '+0%', trend: 'up' },
     { title: 'Customer Rating', value: '0/5', change: '+0%', trend: 'up' }
@@ -138,7 +138,7 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnChanges {
       Math.round(((4.0 + Math.min((paidBookings.reduce((sum, b) => sum + (b.paidamount || 0), 0) / paidBookings.length) / 1000, 0.5) + Math.min(paidBookings.length / 10, 0.3)) * 10)) / 10;
 
     this.statistics = [
-      { title: 'Total Revenue', value: `$${totalRevenue.toLocaleString()}`, change: '+0%', trend: 'up' },
+      { title: 'Total Revenue', value: `₱${totalRevenue.toLocaleString()}`, change: '+0%', trend: 'up' },
       { title: 'Occupancy Rate', value: `${occupancyRate}%`, change: '+0%', trend: 'up' },
       { title: 'Average Stay', value: `${averageStay} days`, change: '+2%', trend: 'up' },
       { title: 'Customer Rating', value: `${customerRating}/5`, change: '+0%', trend: 'up' }

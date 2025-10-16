@@ -54,8 +54,6 @@ export class LoginComponent {
     this.accountService.login(this.email, this.password).subscribe({
       next: (account) => {
         this.isLoading = false;
-        // Store non-sensitive data for debugging (obfuscated)
-        this.secureStorage.setItem('user', this.secureStorage.obfuscateSensitiveData(account));
         // Store account ID for session tracking
         this.secureStorage.setItem('accountId', account.id.toString());
 

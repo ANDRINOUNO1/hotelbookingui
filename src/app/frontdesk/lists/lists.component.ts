@@ -502,7 +502,7 @@ export class ListsComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return `P${amount.toLocaleString()}`;
+    return `₱${amount.toLocaleString()}`;
   }
 
 

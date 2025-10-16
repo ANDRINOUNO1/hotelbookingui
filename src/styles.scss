@@ -247,6 +247,18 @@ body {
   .room-card .room-guest {
     font-size: 1rem;
   }
+  
+  // Prevent horizontal overflow
+  body {
+    overflow-x: hidden;
+  }
+  
+  // Ensure all containers respect viewport width
+  .container, .container-fluid {
+    max-width: 100vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
 
 /* Extra Small Phones (≤480px) */
@@ -264,6 +276,27 @@ body {
   }
   .room-grid {
     grid-template-columns: 1fr;
+  }
+  
+  // Additional mobile optimizations
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    touch-action: manipulation;
+  }
+  
+  // Prevent text from being cut off
+  * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  // Ensure tables are responsive
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

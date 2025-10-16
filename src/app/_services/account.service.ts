@@ -40,15 +40,12 @@ export class AccountService {
             this.accountSubject.next(account);
             // Store sensitive data securely
             this.secureStorage.setSecureItem('account', account);
-            // Store non-sensitive data normally for debugging
-            this.secureStorage.setItem('user_info', this.secureStorage.obfuscateSensitiveData(account));
             this.startRefreshTokenTimer();
             return account;
         }),
         catchError(err => {
             this.accountSubject.next(null);
             this.secureStorage.removeSecureItem('account');
-            this.secureStorage.removeItem('user_info');
             throw err;
         })
     );
@@ -60,7 +57,6 @@ export class AccountService {
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
         this.secureStorage.removeSecureItem('account');
-        this.secureStorage.removeItem('user_info');
         this.router.navigate(['/account/login']);
     }
 
@@ -71,14 +67,12 @@ export class AccountService {
                 map(account => {
                     this.accountSubject.next(account);
                     this.secureStorage.setSecureItem('account', account);
-                    this.secureStorage.setItem('user_info', this.secureStorage.obfuscateSensitiveData(account));
                     this.startRefreshTokenTimer();
                     return account;
                 }),
                 catchError(err => {
                     this.accountSubject.next(null);
                     this.secureStorage.removeSecureItem('account');
-                    this.secureStorage.removeItem('user_info');
                     return of(null);
                 })
             );

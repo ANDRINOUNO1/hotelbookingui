@@ -353,16 +353,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         selectedRoom.status = false;
 
-        let currentUser = null;
+        let accountId = null;
           if (isBrowser) {
             try {
-              currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+              accountId = localStorage.getItem('accountid');
             } catch (e) {
-              currentUser = null;
+              accountId = null;
             }
           }
 
-        const payStatus = currentUser?.role === 'frontdeskUser' ? true : false;
+        // For demo purposes, assume frontdesk users have accountid = 2
+        const payStatus = accountId === '2' ? true : false;
         const newBooking: Booking = {
           id: bookings.length + 1 + i,
           room_id: selectedRoom.id,

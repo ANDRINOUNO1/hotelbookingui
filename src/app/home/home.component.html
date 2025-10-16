@@ -174,7 +174,7 @@
               <div class="card-image">
                 <div class="bg" [ngStyle]="{'background-image': 'url(' + room.image + ')'}">
                   <div class="overlay"></div>
-                  <div class="price-tag">${{ room.price }}/night</div>
+                  <div class="price-tag">₱{{ room.price }}/night</div>
                 </div>
               </div>
 
@@ -188,15 +188,15 @@
               </div>
 
               <div class="card-content">
-                <h3>{{ room.name }}</h3>
-                <p class="brand">{{ room.brand }}</p>
-                <p class="description">{{ room.description }}</p>
-                <div class="room-tags">
-                  <span *ngFor="let tag of room.tags" class="tag">{{ tag }}</span>
+                <h3>{{ room.brand }}</h3>
+                <div class="card-actions">
+                  <button class="details-btn" (click)="showRoomDetails(room, i)">
+                    View Details
+                  </button>
+                  <button class="book-room-btn" (click)="bookRoom(room)">
+                    Book Now
+                  </button>
                 </div>
-                <button class="book-room-btn" (click)="bookRoom(room)">
-                  Book Now
-                </button>
               </div>
             </div>
           </div>
@@ -226,6 +226,64 @@
     </div> 
   </section>
 </section>
+
+<!-- Room Details Dropdown Modal -->
+<div class="room-details-modal" [class.active]="selectedRoom" (click)="closeRoomDetails($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeRoomDetails($event)">&times;</button>
+    
+    <div class="modal-header">
+      <div class="room-image">
+        <img [src]="selectedRoom?.image" [alt]="selectedRoom?.name" class="main-image">
+        <div class="price-tag">₱{{ selectedRoom?.price }}/night</div>
+      </div>
+      
+      <div class="room-info">
+        <h3>{{ selectedRoom?.name }}</h3>
+        <p class="brand">{{ selectedRoom?.brand }}</p>
+        <p class="description">{{ selectedRoom?.description }}</p>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <div class="thumbnail-gallery" *ngIf="selectedRoom?.seasonalImages">
+        <div *ngFor="let img of selectedRoom.seasonalImages; let j = index"
+             class="thumbnail"
+             [ngStyle]="{'background-image': 'url(' + img + ')'}"
+             (click)="setRoomImage(selectedRoomIndex, img)"
+             [title]="'View image ' + (j + 1)">
+        </div>
+      </div>
+      
+      <div class="room-features">
+        <h4>Room Features</h4>
+        <div class="features-grid">
+          <div *ngFor="let tag of selectedRoom?.tags" class="feature-tag">
+            {{ tag }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="amenities-section">
+        <h4>Amenities Included</h4>
+        <ul class="amenities-list">
+          <li>Free WiFi</li>
+          <li>Air Conditioning</li>
+          <li>Flat Screen TV</li>
+          <li>Private Bathroom</li>
+          <li>Room Service</li>
+          <li>Daily Housekeeping</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="book-now-modal-btn" (click)="bookRoom(selectedRoom)">
+        Book This Room - ₱{{ selectedRoom?.price }}/night
+      </button>
+    </div>
+  </div>
+</div>
 
 <section class="contact" id="contact">
 

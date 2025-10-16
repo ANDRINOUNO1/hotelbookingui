@@ -599,25 +599,25 @@ export class PdfReportService {
   // Helper method to format currency
   private formatCurrency(amount: number | string | null | undefined): string {
     if (amount === null || amount === undefined || amount === '') {
-      return 'PHP 0.00';
+      return '₱0.00';
     }
     
     let numericAmount: number;
     if (typeof amount === 'string') {
       numericAmount = parseFloat(amount);
       if (isNaN(numericAmount)) {
-        return 'PHP 0.00';
+        return '₱0.00';
       }
     } else {
       numericAmount = amount;
     }
     
     if (isNaN(numericAmount) || !isFinite(numericAmount)) {
-      return 'PHP 0.00';
+      return '₱0.00';
     }
     
     const formattedAmount = numericAmount.toFixed(2);
-    return `PHP ${formattedAmount}`;
+    return `₱${formattedAmount}`;
   }
 
   // Helper method to get month name

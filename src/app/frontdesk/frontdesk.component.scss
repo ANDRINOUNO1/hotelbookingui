@@ -675,11 +675,17 @@ nav a i {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  min-height: 60px;
 }
 
 .mobile-logo-text {
   font-weight: bold;
   font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px); // Leave space for menu button
 }
 
 .mobile-menu-toggle {
@@ -718,12 +724,17 @@ nav a i {
     justify-content: space-between;
     padding: 0 1rem;
     height: 100%;
+    width: 100%;
   }
   
   .mobile-logo-text {
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--header-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 60px);
   }
   
   .mobile-menu-toggle {
@@ -891,6 +902,13 @@ nav a i {
     padding: 1rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    min-height: calc(100vh - 60px);
+    
+    // Ensure content doesn't get cut off
+    * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
   }
   
   /* Enhanced content cards for mobile */
