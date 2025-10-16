@@ -26,8 +26,8 @@
     </tbody>
   </table>
 
-  <div *ngIf="selectedArchive" class="popup-backdrop">
-    <div class="popup">
+  <div *ngIf="selectedArchive" class="popup-backdrop" (click)="closeDetails()">
+    <div class="popup" (click)="$event.stopPropagation()">
       <div class="popup-header">
         <h3>Archived Booking Details</h3>
         <button (click)="closeDetails()" class="btn-close">Close</button>

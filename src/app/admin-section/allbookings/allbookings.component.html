@@ -52,8 +52,8 @@
 </div>
 
 
-<div class="popup-backdrop" *ngIf="selectedBooking">
-  <div class="popup">
+<div class="popup-backdrop" *ngIf="selectedBooking" (click)="closeViewPopup()">
+  <div class="popup" (click)="$event.stopPropagation()">
     <div class="popup-header">
       <h3 style="font-size: 1.5rem;">Booking Details</h3>
       <button (click)="toggleEditMode()">

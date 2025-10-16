@@ -1024,3 +1024,44 @@ nav a i {
     }
   }
 }
+
+/* Force loading spinner colors for superadmin section */
+app-loading-spinner .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+}
+
+app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 3px solid #b4884d !important;
+}
+
+app-loading-spinner .loading-text {
+  color: #fafafa !important;
+}
+
+/* Theme-based overrides */
+.superadmin-sect[data-theme="light"] app-loading-spinner .loading-container {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.superadmin-sect[data-theme="light"] app-loading-spinner .spinner {
+  border: 3px solid rgba(43, 101, 236, 0.1) !important;
+  border-top: 3px solid #2B65EC !important;
+}
+
+.superadmin-sect[data-theme="light"] app-loading-spinner .loading-text {
+  color: #2B65EC !important;
+}
+
+.superadmin-sect[data-theme="dark"] app-loading-spinner .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+}
+
+.superadmin-sect[data-theme="dark"] app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 3px solid #b4884d !important;
+}
+
+.superadmin-sect[data-theme="dark"] app-loading-spinner .loading-text {
+  color: #fafafa !important;
+}

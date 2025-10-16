@@ -44,6 +44,12 @@
   --room-outoforder: #f44336;
   --room-default: rgba(43, 101, 236, 1);
 
+  /* Loading Spinner Colors */
+  --loading-bg: rgba(255, 255, 255, 0.9);
+  --spinner-bg: rgba(43, 101, 236, 0.1);
+  --spinner-color: #b4884d;
+  --loading-text-color: #b4884d;
+
   /* Typography */
   --font-main: 'Montserrat', sans-serif;
   --font-size-xs: 1.2rem;
@@ -646,16 +652,21 @@ body {
 
 /* Dark Mode Loading */
 [data-theme="dark"] .loading-container,
-.admin-section .loading-container {
-  background: rgba(2, 2, 2, 0.95);
+.admin-section .loading-container,
+.superadmin-sect .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+  --loading-bg: rgba(2, 2, 2, 0.95);
+  --spinner-bg: rgba(255, 255, 255, 0.1);
+  --spinner-color: #b4884d;
+  --loading-text-color: #fafafa;
 
   .spinner {
-    border-color: rgba(255, 255, 255, 0.1);
-    border-top-color: var(--accent-color, #b4884d);
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    border-top-color: #b4884d !important;
   }
 
   .loading-text {
-    color: var(--sidebar-text, #fafafa);
+    color: #fafafa !important;
   }
 }
 
@@ -675,25 +686,106 @@ body {
 
 /* Superadmin Loading */
 .superadmin-sect .loading-container {
-  background: rgba(2, 2, 2, 0.95);
+  background: rgba(2, 2, 2, 0.95) !important;
+  --loading-bg: rgba(2, 2, 2, 0.95);
+  --spinner-bg: rgba(255, 255, 255, 0.1);
+  --spinner-color: #b4884d;
+  --loading-text-color: #fafafa;
 
   .spinner {
-    border-color: rgba(255, 255, 255, 0.1);
-    border-top-color: var(--accent-color, #b4884d);
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    border-top-color: #b4884d !important;
   }
 
   .loading-text {
-    color: var(--sidebar-text, #fafafa);
+    color: #fafafa !important;
   }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Force loading spinner colors for admin sections */
+.admin-section app-loading-spinner .loading-container,
+.superadmin-sect app-loading-spinner .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+}
+
+.admin-section app-loading-spinner .spinner,
+.superadmin-sect app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 3px solid #b4884d !important;
+}
+
+.admin-section app-loading-spinner .loading-text,
+.superadmin-sect app-loading-spinner .loading-text {
+  color: #fafafa !important;
+}
+
+/* Theme-based loading spinner colors */
+.admin-section[data-theme="light"] app-loading-spinner .loading-container,
+.superadmin-sect[data-theme="light"] app-loading-spinner .loading-container {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.admin-section[data-theme="light"] app-loading-spinner .spinner,
+.superadmin-sect[data-theme="light"] app-loading-spinner .spinner {
+  border: 3px solid rgba(43, 101, 236, 0.1) !important;
+  border-top: 3px solid #2B65EC !important;
+}
+
+.admin-section[data-theme="light"] app-loading-spinner .loading-text,
+.superadmin-sect[data-theme="light"] app-loading-spinner .loading-text {
+  color: #2B65EC !important;
+}
+
+.admin-section[data-theme="dark"] app-loading-spinner .loading-container,
+.superadmin-sect[data-theme="dark"] app-loading-spinner .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+}
+
+.admin-section[data-theme="dark"] app-loading-spinner .spinner,
+.superadmin-sect[data-theme="dark"] app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 3px solid #b4884d !important;
+}
+
+.admin-section[data-theme="dark"] app-loading-spinner .loading-text,
+.superadmin-sect[data-theme="dark"] app-loading-spinner .loading-text {
+  color: #fafafa !important;
+}
+
+/* Frontdesk loading spinner */
+.frontdesk app-loading-spinner .loading-container {
+  background: rgba(85, 173, 255, 0.95) !important;
+}
+
+.frontdesk app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.2) !important;
+  border-top: 3px solid #ffffff !important;
+}
+
+.frontdesk app-loading-spinner .loading-text {
+  color: #ffffff !important;
+}
+
+/* Ultra-specific overrides to force correct colors */
+body .admin-section app-loading-spinner .loading-container,
+body .superadmin-sect app-loading-spinner .loading-container {
+  background: rgba(2, 2, 2, 0.95) !important;
+}
+
+body .admin-section app-loading-spinner .spinner,
+body .superadmin-sect app-loading-spinner .spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 3px solid #b4884d !important;
+}
+
+body .admin-section app-loading-spinner .loading-text,
+body .superadmin-sect app-loading-spinner .loading-text {
+  color: #fafafa !important;
 }
 
 /* ===== Accessibility Improvements ===== */

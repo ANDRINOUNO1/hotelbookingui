@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
       width: 50px;
       height: 50px;
       border: 3px solid rgba(43, 101, 236, 0.1);
-      border-top: 3px solid var(--accent-color);
+      border-top: 3px solid #b4884d;
       border-radius: 50%;
       animation: spin 1s ease-in-out infinite;
     }
@@ -38,8 +38,8 @@ import { CommonModule } from '@angular/common';
     .loading-text {
       position: absolute;
       margin-top: 70px;
-      color: var(--accent-color);
-      font-size: var(--font-size-sm);
+      color: #b4884d;
+      font-size: 1rem;
       font-weight: 500;
     }
 

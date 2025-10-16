@@ -24,6 +24,7 @@ export class ReservationFormComponent implements OnInit {
 
   showModal: boolean = false;
   modalMessage: string = '';
+  hasDateError: boolean = false;
 
   constructor(private reservationDataService: ReservationDataService) {}
 
@@ -57,6 +58,62 @@ export class ReservationFormComponent implements OnInit {
     const nextDay = new Date(checkIn);
     nextDay.setDate(checkIn.getDate() + 1);
     return nextDay.toISOString().split('T')[0];
+  }
+
+  // Enhanced date change handlers
+  onCheckInChange() {
+    console.log('Check-in changed:', this.booking.checkIn);
+    this.hasDateError = false;
+    if (this.booking.checkIn && this.booking.checkOut) {
+      const checkIn = new Date(this.booking.checkIn);
+      const checkOut = new Date(this.booking.checkOut);
+      
+      if (checkOut <= checkIn) {
+        // Auto-adjust check-out to next day
+        const nextDay = new Date(checkIn);
+        nextDay.setDate(checkIn.getDate() + 1);
+        this.booking.checkOut = nextDay.toISOString().split('T')[0];
+        console.log('Auto-adjusted check-out to:', this.booking.checkOut);
+      }
+    }
+  }
+
+  onCheckOutChange() {
+    console.log('Check-out changed:', this.booking.checkOut);
+    this.hasDateError = false;
+    if (this.booking.checkIn && this.booking.checkOut) {
+      const checkIn = new Date(this.booking.checkIn);
+      const checkOut = new Date(this.booking.checkOut);
+      
+      if (checkOut <= checkIn) {
+        this.hasDateError = true;
+        console.log('Date error detected');
+      }
+    }
+  }
+
+  // Enhanced date display methods
+  getDayName(dateString: string): string {
+    const date = new Date(dateString);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+  }
+
+  formatDateDisplay(dateString: string): string {
+    const date = new Date(dateString);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
+  getStayDuration(): number {
+    if (!this.booking.checkIn || !this.booking.checkOut) return 0;
+    
+    const checkIn = new Date(this.booking.checkIn);
+    const checkOut = new Date(this.booking.checkOut);
+    const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays;
   }
 
   // Limit input length and value for number fields

@@ -180,4 +180,8 @@ export class ReservationsComponent {
   closePopup() {
     this.selectedCustomer = null;
   }
+
+  closeCustomerPopup() {
+    this.selectedCustomer = null;
+  }
 }

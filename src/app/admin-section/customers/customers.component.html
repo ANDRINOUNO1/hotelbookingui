@@ -34,8 +34,8 @@
   </div>
 
 
-  <div class="popup-backdrop" *ngIf="selectedCustomer">
-    <div class="popup">
+  <div class="popup-backdrop" *ngIf="selectedCustomer" (click)="closeCustomerPopup()">
+    <div class="popup" (click)="$event.stopPropagation()">
       <h3>{{ selectedCustomer.guest.first_name }} {{ selectedCustomer.guest.last_name }}</h3>
       <p>{{ selectedCustomer.guest.email }}</p>
       <p>{{ selectedCustomer.guest.phone }}</p>
