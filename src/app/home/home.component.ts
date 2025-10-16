@@ -139,6 +139,28 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     this.activeRoom = index;
   }
 
+  // Room details modal functionality
+  selectedRoom: any = null;
+  selectedRoomIndex: number = -1;
+
+  showRoomDetails(room: any, index: number): void {
+    this.selectedRoom = room;
+    this.selectedRoomIndex = index;
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeRoomDetails(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.selectedRoom = null;
+    this.selectedRoomIndex = -1;
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  }
+
   // Performance optimization
   trackByIndex(index: number, item: any): number {
     return index;
@@ -152,10 +174,10 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     this.activeRoom = (this.activeRoom - 1 + this.rooms.length) % this.rooms.length;
   }
   getCardClass(i: number): string {
-    if (i === this.activeRoom) return 'z-20 scale-100 opacity-100';
-    if (i === (this.activeRoom + 1) % this.rooms.length) return 'z-10 translate-x-[40%] scale-95 opacity-60';
-    if (i === (this.activeRoom - 1 + this.rooms.length) % this.rooms.length) return 'z-10 -translate-x-[40%] scale-95 opacity-60';
-    return 'scale-90 opacity-0 pointer-events-none';
+    if (i === this.activeRoom) return 'active';
+    if (i === (this.activeRoom + 1) % this.rooms.length) return 'next';
+    if (i === (this.activeRoom - 1 + this.rooms.length) % this.rooms.length) return 'prev';
+    return '';
   }
 
   @ViewChild('navbar') navbar!: ElementRef;
@@ -1109,5 +1131,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       // Keep fallback logo
     }
   }
+
 
 }

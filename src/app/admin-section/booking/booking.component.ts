@@ -337,6 +337,11 @@ openViewPopup(room: any) {
     this.editMode = false;
   }
 
+  closeViewPopup() {
+    this.selectedBooking = null;
+    this.editMode = false;
+  }
+
   displaySuccessMessage() {
     this.showSuccessMessage = true;
     setTimeout(() => {

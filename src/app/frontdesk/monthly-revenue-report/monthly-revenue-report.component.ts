@@ -340,7 +340,7 @@ export class MonthlyRevenueReportComponent implements OnInit {
   formatCurrency(amount: number | string | null | undefined): string {
     // Handle null, undefined, or empty values
     if (amount === null || amount === undefined || amount === '') {
-      return 'PHP 0.00';
+      return '₱0.00';
     }
     
     // Convert string to number if needed
@@ -349,7 +349,7 @@ export class MonthlyRevenueReportComponent implements OnInit {
       numericAmount = parseFloat(amount);
       // Check if conversion was successful
       if (isNaN(numericAmount)) {
-        return 'PHP 0.00';
+        return '₱0.00';
       }
     } else {
       numericAmount = amount;
@@ -357,12 +357,12 @@ export class MonthlyRevenueReportComponent implements OnInit {
     
     // Handle NaN or invalid numbers
     if (isNaN(numericAmount) || !isFinite(numericAmount)) {
-      return 'PHP 0.00';
+      return '₱0.00';
     }
     
     // Use explicit PHP prefix to avoid symbol issues
     const formattedAmount = numericAmount.toFixed(2);
-    return `PHP ${formattedAmount}`;
+    return `₱${formattedAmount}`;
   }
 
   getPaymentStatusClass(status: boolean): string {

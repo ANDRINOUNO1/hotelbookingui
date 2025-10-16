@@ -161,6 +161,11 @@ export class AllbookingsComponent implements OnInit {
     this.editMode = false;
   }
 
+  closeViewPopup() {
+    this.selectedBooking = null;
+    this.editMode = false;
+  }
+
   onSearchTermChange() {
     this.applySearch();
   }

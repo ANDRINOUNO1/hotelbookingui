@@ -117,4 +117,8 @@ export class CustomersComponent implements OnInit {
   closePopup() {
     this.selectedCustomer = null;
   }
+
+  closeCustomerPopup() {
+    this.selectedCustomer = null;
+  }
 }

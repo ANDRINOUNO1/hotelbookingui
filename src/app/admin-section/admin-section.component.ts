@@ -190,7 +190,6 @@ export class AdminSectionComponent implements OnInit {
 
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('admin-theme');
-      localStorage.removeItem('user');        // 👈 clear user too
     }
 
     this.titleservice.setTitle('BC Flats');

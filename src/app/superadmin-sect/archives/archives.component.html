@@ -23,8 +23,8 @@
     </tbody>
   </table>
 
-  <div *ngIf="selectedArchive" class="popup-backdrop">
-    <div class="popup">
+  <div *ngIf="selectedArchive" class="popup-backdrop" (click)="closeDetails()">
+    <div class="popup" (click)="$event.stopPropagation()">
     <h3>Archived Booking Details</h3>
     <p><strong>Guest:</strong> {{ selectedArchive.guest_firstName }} {{ selectedArchive.guest_lastName }}</p>
           <p><strong>Email:</strong> {{ selectedArchive.guest_email }}</p>
