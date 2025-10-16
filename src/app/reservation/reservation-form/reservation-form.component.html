@@ -34,9 +34,6 @@
             aria-label="Select check-in date"
             [value]="booking.checkIn"
           />
-          <div class="calendar-icon">
-            <i class="fas fa-calendar-alt"></i>
-          </div>
           <div class="date-info" *ngIf="booking.checkIn">
             <span class="day-name">{{ getDayName(booking.checkIn) }}</span>
             <span class="date-display">{{ formatDateDisplay(booking.checkIn) }}</span>
@@ -60,9 +57,6 @@
             aria-label="Select check-out date"
             [value]="booking.checkOut"
           />
-          <div class="calendar-icon">
-            <i class="fas fa-calendar-alt"></i>
-          </div>
           <div class="date-info" *ngIf="booking.checkOut">
             <span class="day-name">{{ getDayName(booking.checkOut) }}</span>
             <span class="date-display">{{ formatDateDisplay(booking.checkOut) }}</span>
