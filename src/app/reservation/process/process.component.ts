@@ -54,7 +54,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
       lastName: ['', [Validators.required, this.lettersOnlyValidator()]],
       email: ['', [Validators.required, this.gmailValidator()], [this.emailExistsValidator()]],
       phone: [
-        '',
+        '+63',
         [Validators.required, Validators.pattern(/^\+63\d{10}$/)], 
         [this.phoneApiValidator()]
       ],
@@ -184,24 +184,29 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   formatPhoneNumber(event: any) {
-    let value = event.target.value.replace(/\D/g, '');
+    let value = event.target.value;
     
-  
-    if (value.startsWith('63')) {
-      value = value.substring(2);
+    // Remove all non-digit characters
+    let digits = value.replace(/\D/g, '');
+    
+    // If user types 63 at the beginning, remove it (we'll add +63)
+    if (digits.startsWith('63')) {
+      digits = digits.substring(2);
     }
     
-    if (value.length > 10) {
-      value = value.substring(0, 10);
+    // Limit to 10 digits
+    if (digits.length > 10) {
+      digits = digits.substring(0, 10);
     }
     
-    // Format with +63 prefix
-    const formattedValue = value.length > 0 ? `+63${value}` : '';
+    // Format as +63XXXXXXXXXX
+    const formattedValue = `+63${digits}`;
     
+    // Update the input
     event.target.value = formattedValue;
     this.customerForm.patchValue({ phone: formattedValue });
     
-    // Reset phone validation state when phone number changes
+    // Reset validation state
     this.phoneChecking = false;
     this.phoneValid = null;
   }
@@ -334,6 +339,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
     const control = this.customerForm.get(fieldName);
     if (control && control.errors) {
       this.showErrors = false; // Clear errors when user starts typing
+    }
+    
+    // Pre-fill +63 for phone field when focused
+    if (fieldName === 'phone') {
+      const phoneControl = this.customerForm.get('phone');
+      if (phoneControl && (!phoneControl.value || phoneControl.value === '')) {
+        phoneControl.setValue('+63');
+      }
     }
   }
 
