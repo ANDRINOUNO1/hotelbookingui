@@ -6,13 +6,13 @@
     <!-- If editing -->
     <div *ngIf="editingProduct; else addForm" class="form-fields">
       <h3>Edit Product</h3>
-      <input type="text" [(ngModel)]="editingProduct.name" name="name" placeholder="Product Name" required />
-      
-     <select [(ngModel)]="newProduct.category" name="category" required>
-      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-    </select>
-
-      <input type="number" [(ngModel)]="editingProduct.price" name="price" placeholder="Price" required />
+      <div class="form-row">
+        <input type="text" [(ngModel)]="editingProduct.name" name="name" placeholder="Product Name" required />
+        <select [(ngModel)]="newProduct.category" name="category" required>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+        <input type="number" [(ngModel)]="editingProduct.price" name="price" placeholder="Price" required />
+      </div>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Update</button>
         <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
@@ -23,13 +23,13 @@
     <ng-template #addForm>
       <div class="form-fields">
         <h3>Add New Product</h3>
-        <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required />
-
-        <select [(ngModel)]="newProduct.category" name="category" required>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-        </select>
-
-        <input type="number" [(ngModel)]="newProduct.price" name="price" placeholder="Price" required />
+        <div class="form-row">
+          <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required />
+          <select [(ngModel)]="newProduct.category" name="category" required>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+          <input type="number" [(ngModel)]="newProduct.price" name="price" placeholder="Price" required />
+        </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Add Product</button>
         </div>
@@ -37,36 +37,70 @@
     </ng-template>
   </form>
 
-
   <!-- 🔍 Search & Filter -->
   <div class="filter-bar">
-    <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name..." class="search-input" />
-    <select [(ngModel)]="selectedCategory" class="filter-select">
-      <option value="">All Categories</option>
-      <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-    </select>
+    <div class="search-container">
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name..." class="search-input" />
+    </div>
+    <div class="filter-container">
+      <select [(ngModel)]="selectedCategory" class="filter-select">
+        <option value="">All Categories</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+    </div>
   </div>
 
   <!-- Products Table -->
-  <table class="products-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th class="actions-col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of filteredProducts">
-        <td>{{ p.name }}</td>
-        <td>{{ p.category }}</td>
-        <td>{{ p.price | currency:'PHP':'symbol' }}</td>
-        <td class="actions">
-          <button class="btn btn-small btn-edit" (click)="editProduct(p)">Edit</button>
-          <button class="btn btn-small btn-delete" (click)="deleteProduct(p.id!)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filteredProducts">
+          <td class="product-name">{{ p.name }}</td>
+          <td class="product-category">{{ p.category }}</td>
+          <td class="product-price">{{ p.price | currency:'PHP':'symbol' }}</td>
+          <td class="actions">
+            <button class="btn btn-small btn-edit" (click)="editProduct(p)">
+              <i class="fa fa-edit"></i>
+              <span class="btn-text">Edit</span>
+            </button>
+            <button class="btn btn-small btn-delete" (click)="deleteProduct(p.id!)">
+              <i class="fa fa-trash"></i>
+              <span class="btn-text">Delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-cards">
+    <div *ngFor="let p of filteredProducts" class="product-card">
+      <div class="card-header">
+        <h4 class="product-name">{{ p.name }}</h4>
+        <span class="product-price">{{ p.price | currency:'PHP':'symbol' }}</span>
+      </div>
+      <div class="card-body">
+        <p class="product-category">{{ p.category }}</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-small btn-edit" (click)="editProduct(p)">
+          <i class="fa fa-edit"></i>
+          <span>Edit</span>
+        </button>
+        <button class="btn btn-small btn-delete" (click)="deleteProduct(p.id!)">
+          <i class="fa fa-trash"></i>
+          <span>Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
