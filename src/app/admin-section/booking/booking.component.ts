@@ -125,16 +125,28 @@ export class BookingComponent implements OnInit {
   }
 
   sendPaymentConfirmationEmail(booking: any) {
-    // Ensure we have all required data
-    if (!booking || !booking.guest || !booking.guest.email) {
-      console.error('❌ Missing booking or guest email data');
+    // Enhanced validation for booking data
+    if (!booking) {
+      console.error('❌ No booking data provided');
+      return;
+    }
+    
+    if (!booking.guest) {
+      console.error('❌ No guest data found in booking');
+      console.log('Available booking fields:', Object.keys(booking));
+      return;
+    }
+    
+    if (!booking.guest.email) {
+      console.error('❌ No guest email found in booking');
+      console.log('Guest data:', booking.guest);
       return;
     }
 
     const emailData = {
       bookingId: booking.id,
       guestEmail: booking.guest.email,
-      guestName: `${booking.guest.first_name} ${booking.guest.last_name}`,
+      guestName: `${booking.guest.first_name || ''} ${booking.guest.last_name || ''}`.trim(),
       paymentAmount: booking.paidamount || booking.payment?.amount || 0,
       paymentMethod: booking.payment?.paymentMethod || booking.paidamount?.paymentMode || 'Cash'
     };
@@ -155,6 +167,16 @@ export class BookingComponent implements OnInit {
       error: (err) => {
         console.error('❌ Failed to send payment confirmation email:', err);
         console.error('Error details:', err.error);
+        
+        // Handle authentication errors
+        if (err.status === 401 || err.status === 403) {
+          console.log('🔐 Authentication error - please login again');
+          console.log('💡 Clear browser storage and refresh the page');
+        } else if (err.status === 400) {
+          console.log('⚠️ Bad request - check booking data structure');
+        } else if (err.status === 500) {
+          console.log('🚨 Server error - check backend logs');
+        }
         // You could add an error notification here
       }
     });
@@ -217,28 +239,40 @@ export class BookingComponent implements OnInit {
       };
 
       this.http.put<Booking>(`${environment.apiUrl}/bookings/${room.id}`, updatedBooking).subscribe({
-        next: (updatedBooking) => {
+        next: (apiResponse) => {
           console.log('✅ Payment confirmed successfully');
           
-          // 1. Send confirmation email
-          this.sendPaymentConfirmationEmail(updatedBooking);
+          // Use the original room.booking data for email (preserves guest structure)
+          const emailBookingData = {
+            ...room.booking,
+            ...apiResponse, // Merge API response data
+            pay_status: true
+          };
+          
+          // 1. Send confirmation email with proper data structure
+          this.sendPaymentConfirmationEmail(emailBookingData);
 
           // 2. Update room status
           this.updateRoomStatus(room.booking.room_id, true);
 
           // 3. Record revenue
-          const amount = updatedBooking.paidamount ?? updatedBooking.payment?.amount;
+          const amount = room.booking.paidamount ?? room.booking.payment?.amount ?? apiResponse.paidamount ?? apiResponse.payment?.amount;
 
-          if (amount == null) {
+          if (amount == null || amount === 0) {
             console.error('❌ Cannot record revenue: amount is null or empty');
+            console.log('Booking data:', {
+              original: room.booking,
+              apiResponse: apiResponse,
+              amount: amount
+            });
             return;
           }
 
           const revenueRecord = {
-            bookingId: updatedBooking.id,
+            bookingId: room.booking.id,
             amount: Number(amount),
             source: 'Reservation',
-            description: `Reservation payment for booking #${updatedBooking.id}`,
+            description: `Reservation payment for booking #${room.booking.id}`,
             date: new Date()
           };
 
