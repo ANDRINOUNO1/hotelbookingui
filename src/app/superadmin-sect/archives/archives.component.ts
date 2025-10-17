@@ -23,28 +23,37 @@ export class ArchivesComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
 
-    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
-      next: roomsData => {
-        this.archiveService.getAllArchives().subscribe({
-          next: archivesData => {
+    // Fetch archives and rooms data separately
+    this.archiveService.getAllArchives().subscribe({
+      next: archivesData => {
+        // Fetch rooms data to get room numbers and types
+        this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
+          next: roomsData => {
+            // Map archives with room data
             this.archives = archivesData.map(archive => {
               const room = roomsData.find(r => r.id === archive.room_id);
               return {
                 ...archive,
                 roomNumber: room?.roomNumber || 'N/A',
-                roomType: room?.RoomType?.type || 'N/A'
+                roomType: room?.roomType?.type || 'N/A'
               };
             });
             this.isLoading = false;
           },
           error: err => {
-            console.error('Failed to load archives', err);
+            console.error('Failed to load rooms', err);
+            // Fallback to archives without room data
+            this.archives = archivesData.map(archive => ({
+              ...archive,
+              roomNumber: 'N/A',
+              roomType: 'N/A'
+            }));
             this.isLoading = false;
           }
         });
       },
       error: err => {
-        console.error('Failed to load rooms', err);
+        console.error('Failed to load archives', err);
         this.isLoading = false;
       }
     });
@@ -56,5 +65,15 @@ export class ArchivesComponent implements OnInit {
 
   closeDetails() {
     this.selectedArchive = null;
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 }

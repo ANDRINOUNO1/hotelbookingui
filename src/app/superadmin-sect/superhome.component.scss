@@ -195,7 +195,7 @@ nav a {
 
 nav a:hover {
   background: var(--sidebar-active);
-  color: var(--sidebar-text);
+  color: #fff;
   transform: translateX(5px);
 }
 
@@ -231,7 +231,7 @@ nav a i {
 
 .sidebar-group > a:hover {
   background: var(--sidebar-active);
-  color: var(--sidebar-text);
+  color: #fff;
   transform: translateX(5px);
 }
 
@@ -819,6 +819,7 @@ nav a i {
   .submenu a:hover,
   .submenu a.active {
     background: var(--sidebar-active);
+    color: #fff;
     opacity: 1;
   }
 

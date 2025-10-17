@@ -90,9 +90,14 @@ export const routes: Routes = [
     loadComponent: SuperhomeComponent,
     children: [
       { path: '', redirectTo: 'account-list', pathMatch: 'full' },
+      { path: 'booking', loadComponent: BookingComponent },
+      { path: 'allbooking', loadComponent: AllbookingsComponent },
       { path: 'account-list', loadComponent: AccountListComponent },
       { path: 'pending-accounts', loadComponent: PendingAccountsComponent },
       { path: 'add-accounts', loadComponent: AddAccountComponentt },
+      { path: 'customers', loadComponent: CustomersComponent },
+      { path: 'rooms', loadComponent: RoomsComponent },
+      { path: 'roomstatus', loadComponent: RoomstatusComponent },
       { path: 'archives', loadComponent: ArchivesComponent},
       { path: 'pricing', loadComponent: SuperAdminPricingComponent }
     ]
