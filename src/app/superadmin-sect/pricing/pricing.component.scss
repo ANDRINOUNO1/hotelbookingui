@@ -8,7 +8,7 @@
 }
 
 h2 {
-  color: #000000;
+  color: var(--text-color);
   margin-bottom: 30px;
   text-align: center;
   font-size: 2rem;
@@ -20,7 +20,7 @@ h2 {
 .loading, .no-data {
   text-align: center;
   padding: 40px;
-  color: #000000;
+  color: var(--text-color);
   font-style: italic;
   font-size: 1.1rem;
 }
@@ -35,7 +35,8 @@ h2 {
 }
 
 .pricing-table th {
-  color: rgb(0, 0, 0);
+  color: var(--text-color);
+  background: var(--card-bg);
   padding: 18px 15px;
   text-align: left;
   font-weight: 600;
@@ -49,6 +50,7 @@ h2 {
   padding: 18px 15px;
   border-bottom: 1px solid var(--table-border);
   color: var(--text-color);
+  background: var(--card-bg);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -365,12 +367,12 @@ h2 {
 
 .room-type-cell {
   font-weight: 600;
-  color: #583d18;
+  color: var(--accent-color);
 }
 
 .room-type-name {
   font-weight: 700;
-  color: #000000;
+  color: var(--text-color);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -380,13 +382,13 @@ h2 {
 }
 
 .description-text {
-  color: #000000;
+  color: var(--text-color);
   line-height: 1.4;
   font-style: italic;
 }
 
 .no-description {
-  color: rgba(151, 151, 153, 0.5);
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -395,7 +397,7 @@ h2 {
 }
 
 .price-value {
-  color: #106634;
+  color: var(--success-color);
   font-weight: 700;
   font-size: 1.1em;
 }
@@ -405,19 +407,19 @@ h2 {
 }
 
 .fee-value {
-  color: #5f3f0c;
+  color: var(--warning-color);
   font-weight: 700;
   font-size: 1.1em;
 }
 
 .error-text {
-  color: #e74c3c;
+  color: var(--error-color);
   font-weight: 600;
   font-style: italic;
 }
 
 .rate-input.error {
-  border-color: #e74c3c;
+  border-color: var(--error-color);
   box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
 }
 
@@ -458,7 +460,7 @@ h2 {
 }
 
 .summary-card h3 {
-  color: #000000;
+  color: var(--text-color);
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
@@ -478,30 +480,35 @@ h2 {
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background: rgba(52, 126, 155, 0.541);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
 }
 
 .stat-label {
-  color: #000000;
+  color: var(--text-color);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
 .stat-value {
-  color: #b4884d;
+  color: var(--accent-color);
   font-weight: 700;
   font-size: 1.1rem;
 }
 
 // Room selector styles
 .room-selector {
-  background: rgba(52, 126, 155, 0.541);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 15px;
 }
 
 .room-type-select {
-  color: #000000;
-  border: 1px solid rgba(180, 136, 77, 0.3);
+  color: var(--text-color);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 0.9rem;
@@ -514,24 +521,24 @@ h2 {
 
 .room-type-select:focus {
   outline: none;
-  border-color: #b4884d;
+  border-color: var(--accent-color);
   box-shadow: 0 0 0 2px rgba(180, 136, 77, 0.2);
 }
 
 .room-type-select option {
-  background: rgba(255, 255, 255, 0.95);
-  color: #000000;
+  background: var(--input-bg);
+  color: var(--text-color);
   padding: 8px;
 }
 
 // Special styling for price and fee values
 .stat-value.price {
-  color: #1a883b;
+  color: var(--success-color);
   font-size: 15px;
 }
 
 .stat-value.fee {
-  color: #ac7f1f;
+  color: var(--warning-color);
   font-size: 15px;
 }
 
