@@ -115,15 +115,24 @@ export class AllbookingsComponent implements OnInit {
   }
 
   deleteBooking(id: number, roomId: number) {
+    if (!roomId) {
+      console.error('deleteBooking called without a valid roomId for booking', id);
+      this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe(() => {
+        this.loadOccupiedRooms();
+        this.closePopup();
+      }, err => console.error('Error deleting booking:', err));
+      return;
+    }
+
     this.http.delete(`${environment.apiUrl}/bookings/${id}`).subscribe(() => {
       this.setRoomVacant(roomId);
       this.loadOccupiedRooms();
       this.closePopup();
-    });
+    }, err => console.error('Error deleting booking:', err));
   }
 
   setRoomVacant(roomId: number) {
-    this.http.patch(`${environment.apiUrl}/rooms/${roomId}`, { status: 'Vacant and Ready' })
+    this.http.put(`${environment.apiUrl}/rooms/${roomId}`, { roomStatus: 'Vacant and Ready' })
       .subscribe({
         next: () => console.log(`Room ${roomId} set to Vacant and Ready`),
         error: err => console.error('Error updating room status:', err)
@@ -132,8 +141,12 @@ export class AllbookingsComponent implements OnInit {
 
   editMode = false;
   openEditPopup(room: any) {
+    // include room-level fields (roomId, number, type) so actions can reference them
     this.selectedBooking = { 
       ...room.booking,
+      roomId: room.roomId,
+      roomNumber: room.number,
+      roomType: room.type,
       payment: room.booking.payment || {
         cardNumber: '',
         expiry: '',
@@ -142,8 +155,12 @@ export class AllbookingsComponent implements OnInit {
     };
   }
   openViewPopup(room: any) {
+    // include room-level fields (roomId, number, type) so actions can reference them
     this.selectedBooking = { 
       ...room.booking,
+      roomId: room.roomId,
+      roomNumber: room.number,
+      roomType: room.type,
       payment: room.booking.payment || {
         cardNumber: '',
         expiry: '',
