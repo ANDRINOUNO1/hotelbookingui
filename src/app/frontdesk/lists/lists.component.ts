@@ -98,49 +98,77 @@ export class ListsComponent implements OnInit {
   loadReservations() {
     this.loading = true;
     this.error = '';
-    this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
-      next: (bookingsData) => {
-        this.reservations = bookingsData
-          .map(booking => {
-            const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
-            const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
-            
-            return {
-              id: booking.id,
-              guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
-              guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
-              guest_email: booking.guest?.email || booking.guest_email || '',
-              guest_phone: booking.guest?.phone || booking.guest_phone || '',
-              roomType: booking.roomType || 'Classic',
-              roomTypeId: booking.roomTypeId,
-              checkIn: checkIn,
-              checkOut: checkOut,
-              roomRate: booking.roomRate || this.getRateForRoomType(booking.roomType),
-              totalAmount: booking.paidamount || booking.payment?.amount || 0,
-              status: booking.pay_status ? 'active' : 'pending',
-              room_id: booking.room_id,
-              bookingStatus: booking.status || 'reserved',
-              requests: booking.requests || []
-            };
-          })
-          .filter(reservation => 
-            reservation.status !== 'archived' && 
-            reservation.bookingStatus === 'checked_in'
-          );
-        this.applySearch();
-        this.loading = false;
+
+    // Fetch rooms first to ensure roomType can be matched
+    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
+      next: (roomsData) => {
+        this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
+          next: (bookingsData) => {
+            this.reservations = bookingsData
+              .map(booking => {
+                const room = roomsData.find(r => r.id === booking.room_id);
+                const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
+                const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
+                
+                return {
+                  id: booking.id,
+                  guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
+                  guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
+                  guest_email: booking.guest?.email || booking.guest_email || '',
+                  guest_phone: booking.guest?.phone || booking.guest_phone || '',
+                  // Fix: pull room type from room data if available
+                  roomType: room?.roomType?.type || room?.RoomType?.type || booking.roomType?.type || 'Classic',
+                  roomTypeId: booking.roomTypeId || room?.roomTypeId,
+                  checkIn: checkIn,
+                  checkOut: checkOut,
+                  roomRate: booking.roomRate || this.getRateForRoomType(room?.roomType),
+                  totalAmount: booking.paidamount || booking.payment?.amount || 0,
+                  status: booking.pay_status ? 'active' : 'pending',
+                  room_id: booking.room_id,
+                  bookingStatus: booking.status || 'reserved',
+                  requests: booking.requests || []
+                };
+              })
+              .filter(reservation => 
+                reservation.status !== 'archived' && 
+                reservation.bookingStatus === 'checked_in'
+              );
+
+            this.applySearch();
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Failed to load reservations';
+            this.loading = false;
+            console.error('Error loading bookings:', err);
+          }
+        });
       },
       error: (err) => {
-        this.error = 'Failed to load reservations';
+        this.error = 'Failed to load rooms';
         this.loading = false;
-        console.error('Error loading reservations:', err);
+        console.error('Error loading rooms:', err);
       }
     });
   }
 
-  getRateForRoomType(roomType: string): number {
-    return this.roomRates[roomType?.toLowerCase()] || 0;
+  getRateForRoomType(roomType: any): number {
+    if (!roomType) return 0;
+
+    // If roomType is an object (e.g. { type: 'Classic' })
+    if (typeof roomType === 'object' && roomType.type) {
+      roomType = roomType.type;
+    }
+
+    // Ensure it's a string before calling toLowerCase
+    if (typeof roomType !== 'string') {
+      console.warn('Unexpected roomType format:', roomType);
+      return 0;
+    }
+
+    return this.roomRates[roomType.toLowerCase()] || 0;
   }
+
 
   calculateTotalAmount(reservation: Reservation): number {
     if (!reservation) return 0;
