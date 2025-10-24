@@ -2,8 +2,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000',
-  //apiUrl: 'https://deploymentbackend-copy-production.up.railway.app', // Railway backend URL
+  //apiUrl: 'http://localhost:3000',
+  apiUrl: 'https://deploymentbackend-copy-production.up.railway.app', // Railway backend URL
   cloudinary:{
     cloudName: 'dsheuvqdc'
   },
