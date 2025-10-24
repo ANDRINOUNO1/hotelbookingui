@@ -271,7 +271,7 @@
           </div>
 
           <p *ngIf="selectedReservation && paymentAmount >= calculateTotalAmount(selectedReservation)">
-            <strong>Change:</strong> {{ formatCurrency(paymentAmount - calculateTotalAmount(selectedReservation)) }}
+            <strong>Remaining balance:</strong> {{ formatCurrency(paymentAmount - calculateTotalAmount(selectedReservation)) }}
           </p>
 
           <p *ngIf="selectedReservation && paymentAmount && paymentAmount < calculateTotalAmount(selectedReservation)" class="error">
@@ -298,6 +298,27 @@
           [disabled]="!canCheckout()">
           Yes, Check Out
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="billbutton"></div>
+
+  <div class="modal" *ngIf="billbutton">
+    <div class="modal-content">
+      <h3>✅ Booking Checked Out Successfully</h3>
+      <p>The booking for <strong>{{ receiptData?.guest }}</strong> has been successfully checked out.</p>
+
+      <div class="receipt-summary">
+        <p><strong>Total Bill:</strong> ₱{{ receiptData?.total | number:'1.2-2' }}</p>
+        <p><strong>Payment:</strong> ₱{{ receiptData?.payment | number:'1.2-2' }}</p>
+        <p><strong>Change:</strong> ₱{{ receiptData?.change | number:'1.2-2' }}</p>
+        <p><strong>Payment Mode:</strong> {{ receiptData?.mode }}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" (click)="generatePDF()">Generate PDF</button>
+        <button class="btn btn-secondary" (click)="closeSuccessModal()">Close</button>
       </div>
     </div>
   </div>

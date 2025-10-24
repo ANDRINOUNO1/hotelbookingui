@@ -7,6 +7,8 @@ import { RoomAvailabilityService } from '../../_services/room-availability.servi
 import { ReceiptComponent } from './pointofsale.modal';
 import { Router } from '@angular/router';
 import { RoomService } from '../../_services/room.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface Reservation {
   id: number;
@@ -101,45 +103,61 @@ export class ListsComponent implements OnInit {
   loadReservations() {
     this.loading = true;
     this.error = '';
-    this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
-      next: (bookingsData) => {
-        const allReservations = bookingsData
-          .map(booking => {
-            const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
-            const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
-            
-            return {
-              id: booking.id,
-              guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
-              guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
-              guest_email: booking.guest?.email || booking.guest_email || '',
-              guest_phone: booking.guest?.phone || booking.guest_phone || '',
-              roomType: booking.roomType || 'Classic',
-              roomTypeId: booking.roomTypeId,
-              checkIn: checkIn,
-              checkOut: checkOut,
-              roomRate: booking.roomRate || this.getRateForRoomType(booking.roomType),
-              totalAmount: booking.paidamount || booking.payment?.amount || 0,
-              status: booking.pay_status ? 'active' : 'pending',
-              room_id: booking.room_id,
-              bookingStatus: booking.status || 'reserved',
-              requests: booking.requests || []
-            };
-          })
-          .filter(reservation => reservation.status !== 'archived');
 
-        // Separate active and checked out reservations
-        this.reservations = allReservations.filter(reservation => 
-          reservation.bookingStatus !== 'checked_out'
-        );
-        
-        this.checkedOutReservations = allReservations.filter(reservation => 
-          reservation.bookingStatus === 'checked_out'
-        );
+    // Fetch rooms first so we can map roomType correctly
+    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
+      next: (roomsData) => {
+        this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
+          next: (bookingsData) => {
+            const allReservations = bookingsData
+              .map(booking => {
+                const room = roomsData.find(r => r.id === booking.room_id);
+                const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
+                const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
 
-        this.applySearch();
-        this.applyCheckedOutSearch();
-        this.loading = false;
+                return {
+                  id: booking.id,
+                  guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
+                  guest_lastName: booking.guest?.last_name || booking.guestLastName || '',
+                  guest_email: booking.guest?.email || booking.guest_email || '',
+                  guest_phone: booking.guest?.phone || booking.guest_phone || '',
+                  
+                  // ✅ Correctly fetch the room type
+                  roomType: room?.roomType?.type || room?.RoomType?.type || booking.roomType?.type || booking.roomType || 'Classic',
+                  roomTypeId: booking.roomTypeId || room?.roomTypeId,
+                  
+                  checkIn: checkIn,
+                  checkOut: checkOut,
+                  
+                  // ✅ Correct rate fetch based on room type
+                  roomRate: booking.roomRate || this.getRateForRoomType(room?.roomType || booking.roomType),
+                  
+                  totalAmount: booking.paidamount || booking.payment?.amount || 0,
+                  status: booking.pay_status ? 'active' : 'pending',
+                  room_id: booking.room_id,
+                  bookingStatus: booking.status || 'reserved',
+                  requests: booking.requests || []
+                };
+              })
+              // Filter out archived
+              .filter(reservation => reservation.status !== 'archived');
+
+            // ✅ Separate active vs checked out
+            this.reservations = allReservations.filter(r => r.bookingStatus !== 'checked_out');
+            this.checkedOutReservations = allReservations.filter(r => r.bookingStatus === 'checked_out');
+
+            // ✅ Apply search filters if any
+            this.applySearch();
+            this.applyCheckedOutSearch();
+
+            this.loading = false;
+          },
+          error: (err) => {
+            this.error = 'Failed to load bookings';
+            this.loading = false;
+            console.error('Error loading bookings:', err);
+          }
+        });
       },
       error: (err) => {
         this.error = 'Failed to load rooms';
@@ -467,13 +485,99 @@ export class ListsComponent implements OnInit {
             this.showCheckoutModal = false;
             this.selectedReservation = null;
           }
-          this.showBilling(reservationToCheckOut);
+          this.receiptData = {
+            date: new Date().toLocaleString(),
+            guest: `${reservationToCheckOut.guest_firstName} ${reservationToCheckOut.guest_lastName}`,
+            email: reservationToCheckOut.guest_email,
+            phone: reservationToCheckOut.guest_phone,
+            room: reservationToCheckOut.roomType,
+            checkIn: reservationToCheckOut.checkIn,
+            checkOut: reservationToCheckOut.checkOut,
+            total: this.grandTotalFromReceipt,
+            payment: this.paymentAmount,
+            change: this.paymentAmount - this.grandTotalFromReceipt,
+            mode: this.paymentMode,
+          };
+
+          this.showCheckoutModal = false;
+          this.billbutton = true; // shows success modal
         },
         error: (err) => {
           console.error('❌ Error updating booking status:', err);
           this.error = 'Failed to check out the booking.';
         }
       });
+  }
+
+  generatePDF() {
+    if (!this.receiptData) return;
+
+    const doc = new jsPDF();
+
+    doc.setFont('helvetica', ''); 
+    doc.setFontSize(18);
+    doc.text('🏨 Hotel Checkout Receipt', 60, 20);
+
+    doc.setDrawColor(0, 0, 0);
+    doc.line(14, 25, 195, 25);
+
+    doc.setFontSize(12);
+    const startY = 35;
+    const lineHeight = 8;
+
+    doc.text(`📅 Date: ${this.receiptData.date}`, 14, startY);
+    doc.text(`👤 Guest: ${this.receiptData.guest}`, 14, startY + lineHeight);
+    doc.text(`✉️ Email: ${this.receiptData.email}`, 14, startY + lineHeight * 2);
+    doc.text(`📞 Phone: ${this.receiptData.phone}`, 14, startY + lineHeight * 3);
+    doc.text(`🛏️ Room: ${this.receiptData.room}`, 14, startY + lineHeight * 4);
+    doc.text(`⬅️ Check-In: ${this.receiptData.checkIn}`, 14, startY + lineHeight * 5);
+    doc.text(`➡️ Check-Out: ${this.receiptData.checkOut}`, 14, startY + lineHeight * 6);
+
+    const tableStartY = startY + lineHeight * 8;
+
+    const formatCurrency = (amount: number) =>
+      `₱${amount.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
+
+    autoTable(doc, {
+      startY: tableStartY,
+      head: [['Description', 'Amount (₱)']],
+      body: [
+        ['Total Bill', formatCurrency(this.receiptData.total)],
+        ['Payment', formatCurrency(this.receiptData.payment)],
+        ['Change', formatCurrency(this.receiptData.change)],
+        ['Payment Mode', this.receiptData.mode],
+      ],
+      theme: 'grid',
+      headStyles: {
+        fillColor: [0, 102, 204],
+        textColor: 255,
+        halign: 'center',
+        fontStyle: 'bold',
+      },
+      bodyStyles: {
+        halign: 'center',
+      },
+      columnStyles: {
+        0: { halign: 'left' },
+        1: { halign: 'right' },
+      },
+      styles: {
+        fontSize: 11,
+        cellPadding: 6,
+      },
+    });
+
+    const finalY = (doc as any).lastAutoTable?.finalY || tableStartY + 20;
+    doc.setFontSize(13);
+    doc.setTextColor(50);
+    doc.text('✨ Thank you for staying with us! ✨', 60, finalY + 20);
+
+    doc.save(`Receipt-${this.receiptData.guest}.pdf`);
+  }
+
+  closeSuccessModal() {
+    this.billbutton = false;
+    this.receiptData = null;
   }
 
   printReceipt() {
