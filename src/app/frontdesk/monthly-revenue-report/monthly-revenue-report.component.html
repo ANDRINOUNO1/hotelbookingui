@@ -59,16 +59,6 @@
         </button>
       </div>
 
-      <div class="form-group">
-        <button 
-          (click)="testOctoberData()" 
-          [disabled]="isLoading"
-          class="btn-test"
-          style="background-color: orange; color: white; padding: 10px; margin: 5px; border: none; border-radius: 5px;"
-        >
-          🧪 Test October Data
-        </button>
-      </div>
 
       <div class="form-group">
         <button 
@@ -102,7 +92,7 @@
         <div class="summary-header">
           <h2>
             <i class="fa fa-chart-bar"></i>
-            {{ getSelectedMonthName() || 'October' }} {{ selectedYear }} Summary
+            {{ getSelectedMonthName() }} {{ selectedYear }} Summary
           </h2>
           <!-- Debug info -->
           <div style="color: white; font-size: 12px; margin-top: 10px;">
