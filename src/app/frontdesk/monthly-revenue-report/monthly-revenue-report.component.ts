@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService, Booking as ServiceBooking } from '../../_services/booking.service';
@@ -61,7 +61,8 @@ export class MonthlyRevenueReportComponent implements OnInit {
     private bookingService: BookingService,
     private archiveService: ArchiveDataService,
     private pdfService: PdfReportService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private cdr: ChangeDetectorRef
   ) {
     // Generate years from 2020 to current year + 1
     const currentYear = new Date().getFullYear();
@@ -71,10 +72,32 @@ export class MonthlyRevenueReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Set to October (value 9) by default
+    this.selectedMonth = 9; // October
+    this.selectedYear = 2025;
+    console.log(`🚀 Initializing with month: ${this.selectedMonth} (October), year: ${this.selectedYear}`);
+    console.log(`🚀 Month type: ${typeof this.selectedMonth}, Value: ${this.selectedMonth}`);
     this.loadReportData();
   }
 
   onMonthYearChange(): void {
+    console.log(`📅 Month/Year changed to: ${this.selectedMonth + 1}/${this.selectedYear}`);
+    console.log(`📅 Raw selectedMonth value: ${this.selectedMonth} (type: ${typeof this.selectedMonth})`);
+    console.log(`📅 Raw selectedYear value: ${this.selectedYear} (type: ${typeof this.selectedYear})`);
+    this.loadReportData();
+  }
+
+  // Manual refresh method
+  manualRefresh(): void {
+    console.log('🔄 Manual refresh triggered');
+    this.loadReportData();
+  }
+
+  // Test method to force October data
+  testOctoberData(): void {
+    console.log('🧪 Testing October data specifically');
+    this.selectedMonth = 9; // October
+    this.selectedYear = 2025;
     this.loadReportData();
   }
 
@@ -121,76 +144,190 @@ export class MonthlyRevenueReportComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
+    // Ensure selectedMonth is a number and convert to backend month (1-based)
+    const selectedMonthNum = Number(this.selectedMonth);
+    const backendMonth = selectedMonthNum + 1;
+    
+    console.log(`🔄 Loading report data for month ${backendMonth}, year ${this.selectedYear}`);
+    console.log(`🔄 Original selectedMonth: ${this.selectedMonth} (${typeof this.selectedMonth}), Converted backendMonth: ${backendMonth}`);
+    
+    // Validate month range
+    if (backendMonth < 1 || backendMonth > 12) {
+      console.error(`❌ Invalid backend month: ${backendMonth}, resetting to October`);
+      this.selectedMonth = 9; // October
+      const correctedBackendMonth = 10;
+      console.log(`🔄 Corrected to backend month: ${correctedBackendMonth}`);
+    
     forkJoin({
-      bookings: this.bookingService.getAllBookings(),
-      archives: this.archiveService.getAllArchives(),
+        bookings: this.bookingService.getBookingsByMonth(correctedBackendMonth, this.selectedYear),
+        archives: this.archiveService.getArchivesByMonth(correctedBackendMonth, this.selectedYear),
       rooms: this.roomService.getAllRooms(),
-      roomTypes: this.roomService.getRoomTypes()
+        roomTypes: this.roomService.getRoomTypes(),
+        summary: this.bookingService.getMonthlySummary(correctedBackendMonth, this.selectedYear)
     }).pipe(
-      map(({ bookings, archives, rooms, roomTypes }) => {
+        map(({ bookings, archives, rooms, roomTypes, summary }) => {
+          console.log(`📊 Received corrected data for ${correctedBackendMonth}/${this.selectedYear}:`, {
+            bookings: bookings.length,
+            archives: archives.length,
+            summary: summary
+          });
+          
         const monthName = this.pdfService.getMonthName(this.selectedMonth);
         
         // Convert ServiceBooking to Booking model with room information
         const convertedBookings = bookings.map(booking => this.convertServiceBookingToBooking(booking, rooms, roomTypes));
         
-        // Filter data for selected month and year
-        const filteredBookings = this.filterBookingsByMonth(convertedBookings, this.selectedMonth, this.selectedYear);
-        const filteredArchives = this.filterArchivesByMonth(archives, this.selectedMonth, this.selectedYear);
+        // Filter to only show reserved bookings in the reservations list
+        const reservedBookings = convertedBookings.filter(booking => 
+          booking.status === 'reserved' || booking.status === undefined
+        );
         
-        // Generate check-in and check-out lists - always ensure lists are initialized
-        this.checkInList = this.filterCheckInsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
-        this.checkOutList = this.filterCheckOutsByMonth(convertedBookings, this.selectedMonth, this.selectedYear) || [];
+        // Convert Archive data to include room type information
+        const convertedArchives = archives.map(archive => this.convertArchiveData(archive));
         
-        // Calculate enhanced totals based on room pricing management
-        const totalBookings = filteredBookings.length;
-        const totalArchived = filteredArchives.length;
-        this.totalCheckIns = this.checkInList.length;
-        this.totalCheckOuts = this.checkOutList.length;
-        
-        // Calculate pricing metrics - FIXED CALCULATIONS
-        
-        // Payments Received: Include ALL payments made (reservation fees + additional payments)
-        this.totalPaymentsReceived = convertedBookings
-          .filter(booking => booking.pay_status)
-          .reduce((sum, booking) => sum + (booking.paidamount || 0), 0);
-        
-        // Reservation Fees: Calculate total reservation fees for all bookings
-        this.totalReservationFees = convertedBookings.reduce((sum, booking) => {
-          return sum + this.calculateReservationFee(booking);
-        }, 0);
-        
-        // Base Prices: Calculate total base prices for all bookings
-        this.totalBasePrices = convertedBookings.reduce((sum, booking) => {
-          return sum + (booking.room?.roomType?.basePrice || 0);
-        }, 0);
-        
-        // Net Paid for Check-outs: Additional payments made at checkout (excluding reservation fees)
-        this.totalNetPaid = this.checkOutList.reduce((sum, booking) => {
-          const totalPaymentReceived = booking.paidamount || 0;
-          const reservationFee = this.calculateReservationFee(booking);
-          const basePrice = booking.room?.roomType?.basePrice || 0;
-          const daysOfStay = this.calculateDaysOfStay(booking);
+          // Use summary data from backend
+          const totalBookings = summary.totalBookings || 0;
+          const totalArchived = summary.totalArchived || 0;
+          this.totalCheckIns = summary.totalCheckIns || 0;
+          this.totalCheckOuts = summary.totalCheckOuts || 0;
           
-          // Net Paid = Total Payment Received - Reservation Fee
-          // This represents additional payment made at checkout
-          const netPaid = Math.max(0, totalPaymentReceived - reservationFee);
+          // Use financial data from backend summary
+          this.totalPaymentsReceived = summary.totalPaymentsReceived || 0;
+          this.totalReservationFees = summary.totalReservationFees || 0;
+          this.totalBasePrices = summary.totalBasePrices || 0;
           
-          // Validation: Net Paid should not exceed (Base Price × Days of Stay)
-          const maxNetPaid = basePrice * daysOfStay;
-          const cappedNetPaid = Math.min(netPaid, maxNetPaid);
+          console.log('📊 Setting corrected component values:', {
+            totalBookings,
+            totalArchived,
+            totalCheckIns: this.totalCheckIns,
+            totalCheckOuts: this.totalCheckOuts,
+            totalPaymentsReceived: this.totalPaymentsReceived,
+            totalReservationFees: this.totalReservationFees
+          });
           
-          return sum + cappedNetPaid;
-        }, 0);
+          // Generate check-in and check-out lists for display
+          this.checkInList = convertedBookings.filter(booking => 
+            booking.status && booking.status.toLowerCase() === 'checked_in'
+          ) || [];
+          this.checkOutList = convertedBookings.filter(booking => 
+            booking.status && booking.status.toLowerCase() === 'checked_out'
+          ) || [];
+          
+          // Use additional data from backend summary
+          this.totalNetPaid = summary.totalBasePrices || 0;
+          this.totalAdditionalIncome = summary.totalReservationFees || 0;
+          this.totalMonthlyRevenue = summary.totalRevenue || 0;
+          this.netRevenue = summary.netRevenue || 0;
+          
+          return {
+            bookings: reservedBookings,
+            archives: convertedArchives,
+            totalRevenue: this.totalMonthlyRevenue,
+            totalBookings,
+            totalArchived,
+            month: monthName,
+            year: this.selectedYear,
+            // Enhanced data
+            checkInList: this.checkInList,
+            checkOutList: this.checkOutList,
+            totalCheckIns: this.totalCheckIns,
+            totalCheckOuts: this.totalCheckOuts,
+            totalNetPaid: this.totalNetPaid,
+            totalAdditionalIncome: this.totalReservationFees,
+            // Enhanced pricing metrics
+            totalReservationFees: this.totalReservationFees,
+            totalPaymentsReceived: this.totalPaymentsReceived,
+            totalBasePrices: this.totalBasePrices,
+            netRevenue: this.netRevenue
+          } as MonthlyReportData;
+        }),
+        catchError(error => {
+          console.error('❌ Error loading corrected report data:', error);
+          this.errorMessage = 'Failed to load report data. Please try again.';
+          return of(null);
+        })
+      ).subscribe(data => {
+        console.log('✅ Corrected report data loaded successfully:', data);
+        this.reportData = data;
+        this.isLoading = false;
         
-        // Net Revenue: Total of all Payments Received (reservation fees are income, not expenses)
-        this.netRevenue = this.totalPaymentsReceived;
+        // Force change detection to update the template
+        this.cdr.detectChanges();
         
-        // Total Monthly Revenue: Sum of all confirmed payments for the month
-        this.totalMonthlyRevenue = this.totalPaymentsReceived;
+        console.log('🔄 Template should now be updated with corrected data:', {
+          totalBookings: this.reportData?.totalBookings,
+          totalCheckIns: this.totalCheckIns,
+          totalPaymentsReceived: this.totalPaymentsReceived
+        });
+      });
+      
+      return;
+    }
+    
+    forkJoin({
+      bookings: this.bookingService.getBookingsByMonth(backendMonth, this.selectedYear),
+      archives: this.archiveService.getArchivesByMonth(backendMonth, this.selectedYear),
+      rooms: this.roomService.getAllRooms(),
+      roomTypes: this.roomService.getRoomTypes(),
+      summary: this.bookingService.getMonthlySummary(backendMonth, this.selectedYear)
+    }).pipe(
+      map(({ bookings, archives, rooms, roomTypes, summary }) => {
+        console.log(`📊 Received data for ${backendMonth}/${this.selectedYear}:`, {
+          bookings: bookings.length,
+          archives: archives.length,
+          summary: summary
+        });
+        
+        const monthName = this.pdfService.getMonthName(this.selectedMonth);
+        
+        // Convert ServiceBooking to Booking model with room information
+        const convertedBookings = bookings.map(booking => this.convertServiceBookingToBooking(booking, rooms, roomTypes));
+        
+        // Filter to only show reserved bookings in the reservations list
+        const reservedBookings = convertedBookings.filter(booking => 
+          booking.status === 'reserved' || booking.status === undefined
+        );
+        
+        // Convert Archive data to include room type information
+        const convertedArchives = archives.map(archive => this.convertArchiveData(archive));
+        
+        // Use summary data from backend
+        const totalBookings = summary.totalBookings || 0;
+        const totalArchived = summary.totalArchived || 0;
+        this.totalCheckIns = summary.totalCheckIns || 0;
+        this.totalCheckOuts = summary.totalCheckOuts || 0;
+        
+        // Use financial data from backend summary
+        this.totalPaymentsReceived = summary.totalPaymentsReceived || 0;
+        this.totalReservationFees = summary.totalReservationFees || 0;
+        this.totalBasePrices = summary.totalBasePrices || 0;
+        
+        console.log('📊 Setting component values:', {
+          totalBookings,
+          totalArchived,
+          totalCheckIns: this.totalCheckIns,
+          totalCheckOuts: this.totalCheckOuts,
+          totalPaymentsReceived: this.totalPaymentsReceived,
+          totalReservationFees: this.totalReservationFees
+        });
+        
+        // Generate check-in and check-out lists for display
+        this.checkInList = convertedBookings.filter(booking => 
+          booking.status && booking.status.toLowerCase() === 'checked_in'
+        ) || [];
+        this.checkOutList = convertedBookings.filter(booking => 
+          booking.status && booking.status.toLowerCase() === 'checked_out'
+        ) || [];
+        
+        // Use additional data from backend summary
+        this.totalNetPaid = summary.totalBasePrices || 0;
+        this.totalAdditionalIncome = summary.totalReservationFees || 0;
+        this.totalMonthlyRevenue = summary.totalRevenue || 0;
+        this.netRevenue = summary.netRevenue || 0;
         
         return {
-          bookings: filteredBookings,
-          archives: filteredArchives,
+          bookings: reservedBookings,
+          archives: convertedArchives,
           totalRevenue: this.totalMonthlyRevenue,
           totalBookings,
           totalArchived,
@@ -211,39 +348,79 @@ export class MonthlyRevenueReportComponent implements OnInit {
         } as MonthlyReportData;
       }),
       catchError(error => {
-        console.error('Error loading report data:', error);
+        console.error('❌ Error loading report data:', error);
         this.errorMessage = 'Failed to load report data. Please try again.';
         return of(null);
       })
     ).subscribe(data => {
+      console.log('✅ Report data loaded successfully:', data);
       this.reportData = data;
       this.isLoading = false;
+      
+      // Force change detection to update the template
+      this.cdr.detectChanges();
+      
+      console.log('🔄 Template should now be updated with:', {
+        totalBookings: this.reportData?.totalBookings,
+        totalCheckIns: this.totalCheckIns,
+        totalPaymentsReceived: this.totalPaymentsReceived
+      });
     });
   }
 
   private filterBookingsByMonth(bookings: Booking[], month: number, year: number): Booking[] {
     return bookings.filter(booking => {
-      // Filter by reservation status = 'reserved' for the main reservations preview
-      return booking.status && booking.status.toLowerCase() === 'reserved';
+      // Filter by month and year based on check-in date
+      if (booking.availability && booking.availability.checkIn) {
+        const checkInDate = new Date(booking.availability.checkIn);
+        const bookingMonth = checkInDate.getMonth();
+        const bookingYear = checkInDate.getFullYear();
+        return bookingMonth === month && bookingYear === year;
+      }
+      return false;
     }) || [];
   }
 
   private filterArchivesByMonth(archives: Archive[], month: number, year: number): Archive[] {
-    // Show all archives regardless of date - always return array
-    return archives || [];
+    return archives.filter(archive => {
+      // Filter by month and year based on created_at date
+      if (archive.created_at) {
+        const archiveDate = new Date(archive.created_at);
+        const archiveMonth = archiveDate.getMonth();
+        const archiveYear = archiveDate.getFullYear();
+        return archiveMonth === month && archiveYear === year;
+      }
+      return false;
+    }) || [];
   }
 
   private filterCheckInsByMonth(bookings: Booking[], month: number, year: number): Booking[] {
     return bookings.filter(booking => {
-      // Filter by reservation status = 'checked_in'
-      return booking.status && booking.status.toLowerCase() === 'checked_in';
+      // Filter by reservation status = 'checked_in' and by month/year
+      if (booking.status && booking.status.toLowerCase() === 'checked_in') {
+        if (booking.availability && booking.availability.checkIn) {
+          const checkInDate = new Date(booking.availability.checkIn);
+          const bookingMonth = checkInDate.getMonth();
+          const bookingYear = checkInDate.getFullYear();
+          return bookingMonth === month && bookingYear === year;
+        }
+      }
+      return false;
     }) || [];
   }
 
   private filterCheckOutsByMonth(bookings: Booking[], month: number, year: number): Booking[] {
     return bookings.filter(booking => {
-      // Filter by reservation status = 'checked_out'
-      return booking.status && booking.status.toLowerCase() === 'checked_out';
+      // Filter by reservation status = 'checked_out' and by month/year
+      if (booking.status && booking.status.toLowerCase() === 'checked_out') {
+        if (booking.availability && booking.availability.checkOut) {
+          const checkOutDate = new Date(booking.availability.checkOut);
+          const bookingMonth = checkOutDate.getMonth();
+          const bookingYear = checkOutDate.getFullYear();
+          return bookingMonth === month && bookingYear === year;
+        }
+      }
+      return false;
     }) || [];
   }
 
@@ -321,12 +498,18 @@ export class MonthlyRevenueReportComponent implements OnInit {
 
   generatePDF(): void {
     if (!this.reportData) {
-      this.errorMessage = 'No report data available. Please select a month and year.';
+      this.errorMessage = 'No report data available. Please select a month and year and refresh the data.';
       return;
     }
 
     try {
+      console.log('Generating PDF for:', this.getSelectedMonthName(), this.selectedYear);
+      console.log('Report data:', this.reportData);
+      
       this.pdfService.generateMonthlyRevenueReport(this.reportData);
+      
+      // Clear any previous error messages
+      this.errorMessage = '';
     } catch (error) {
       console.error('Error generating PDF:', error);
       this.errorMessage = 'Failed to generate PDF. Please try again.';
@@ -334,7 +517,19 @@ export class MonthlyRevenueReportComponent implements OnInit {
   }
 
   getSelectedMonthName(): string {
-    return this.months.find(m => m.value === this.selectedMonth)?.name || 'Unknown';
+    console.log(`🔍 Getting month name for selectedMonth: ${this.selectedMonth} (type: ${typeof this.selectedMonth})`);
+    
+    // Ensure selectedMonth is a valid number
+    const monthValue = Number(this.selectedMonth);
+    console.log(`🔍 Converted month value: ${monthValue}`);
+    
+    const month = this.months.find(m => m.value === monthValue);
+    console.log(`🔍 Found month:`, month);
+    
+    const monthName = month ? month.name : 'Unknown';
+    console.log(`🔍 Returning month name: ${monthName}`);
+    
+    return monthName;
   }
 
   formatCurrency(amount: number | string | null | undefined): string {
@@ -499,26 +694,87 @@ export class MonthlyRevenueReportComponent implements OnInit {
     }
   }
 
+  // Archive helper methods
+  getArchiveGuestName(archive: any): string {
+    if (archive.guest_firstName && archive.guest_lastName) {
+      return `${archive.guest_firstName} ${archive.guest_lastName}`;
+    }
+    return 'N/A';
+  }
+
+  getArchiveRoomType(archive: any): string {
+    // Try to get room type from room relationship or fallback to a default
+    if (archive.Room && archive.Room.roomType) {
+      return archive.Room.roomType.type;
+    }
+    return 'Standard Room'; // Default fallback
+  }
+
+  getArchiveStatus(archive: any): string {
+    if (archive.pay_status === true) {
+      return 'Completed';
+    } else if (archive.pay_status === false) {
+      return 'Cancelled';
+    }
+    return 'Archived';
+  }
+
+  getArchiveStatusClass(archive: any): string {
+    const status = this.getArchiveStatus(archive);
+    switch (status) {
+      case 'Completed':
+        return 'status-completed';
+      case 'Cancelled':
+        return 'status-cancelled';
+      case 'Archived':
+        return 'status-archived';
+      default:
+        return 'status-archived';
+    }
+  }
+
   private convertServiceBookingToBooking(serviceBooking: ServiceBooking, rooms: Room[], roomTypes: RoomType[]): Booking {
     // Find the room for this booking
     const room = rooms.find(r => r.id === serviceBooking.room_id);
     // Find the room type for this room
     const roomType = room ? roomTypes.find(rt => rt.id === room.roomTypeId) : null;
     
-    return {
+    console.log(`🔄 Converting booking ${serviceBooking.id}:`, {
+      guest_firstName: serviceBooking.guest_firstName,
+      guest_lastName: serviceBooking.guest_lastName,
+      guest_email: serviceBooking.guest_email,
+      checkIn: serviceBooking.checkIn,
+      checkOut: serviceBooking.checkOut,
+      fullServiceBooking: serviceBooking
+    });
+    
+    const convertedBooking = {
       id: serviceBooking.id,
       room_id: serviceBooking.room_id,
-      guest: serviceBooking.guest,
-      availability: serviceBooking.availability,
-      payment: serviceBooking.payment ? {
-        paymentMode: serviceBooking.payment.paymentMode,
-        paymentMethod: serviceBooking.payment.paymentMethod,
-        amount: serviceBooking.payment.amount,
+      guest: {
+        first_name: serviceBooking.guest_firstName || '',
+        last_name: serviceBooking.guest_lastName || '',
+        email: serviceBooking.guest_email || '',
+        phone: serviceBooking.guest_phone || '',
+        address: serviceBooking.guest_address || '',
+        city: serviceBooking.guest_city || ''
+      },
+      availability: {
+        checkIn: serviceBooking.checkIn || '',
+        checkOut: serviceBooking.checkOut || '',
+        adults: serviceBooking.adults || 0,
+        children: serviceBooking.children || 0,
+        rooms: serviceBooking.rooms || 1
+      },
+      payment: {
+        paymentMode: serviceBooking.paymentMode || '',
+        paymentMethod: serviceBooking.paymentMethod || '',
+        amount: serviceBooking.amount || 0,
         mobileNumber: '', // Default empty string since it's not in service interface
-        cardNumber: serviceBooking.payment.cardNumber,
-        expiry: serviceBooking.payment.expiry,
-        cvv: serviceBooking.payment.cvv
-      } : undefined,
+        cardNumber: serviceBooking.cardNumber || '',
+        expiry: serviceBooking.expiry || '',
+        cvv: serviceBooking.cvv || ''
+      },
       pay_status: serviceBooking.pay_status,
       status: serviceBooking.status as 'reserved' | 'checked_in' | 'checked_out' | undefined,
       created_at: serviceBooking.created_at,
@@ -540,6 +796,47 @@ export class MonthlyRevenueReportComponent implements OnInit {
           reservationFeePercentage: roomType.reservationFeePercentage
         } : undefined
       } : undefined
+    };
+    
+    console.log(`✅ Converted booking ${serviceBooking.id}:`, {
+      guest_name: `${convertedBooking.guest.first_name} ${convertedBooking.guest.last_name}`,
+      checkIn: convertedBooking.availability.checkIn,
+      checkOut: convertedBooking.availability.checkOut
+    });
+    
+    return convertedBooking;
+  }
+
+  // Helper method to convert archive data to include room type
+  private convertArchiveData(archive: any): Archive {
+    return {
+      id: archive.id,
+      roomNumber: archive.Room?.roomNumber || '',
+      roomType: archive.Room?.roomType?.type || 'Standard Room',
+      guest_firstName: archive.guest_firstName || '',
+      guest_lastName: archive.guest_lastName || '',
+      guest_email: archive.guest_email || '',
+      guest_phone: archive.guest_phone || '',
+      guest_address: archive.guest_address || '',
+      guest_city: archive.guest_city || '',
+      checkIn: archive.checkIn || '',
+      checkOut: archive.checkOut || '',
+      adults: archive.adults || 0,
+      children: archive.children || 0,
+      rooms: archive.rooms || 1,
+      paymentMode: archive.paymentMode || '',
+      paymentMethod: archive.paymentMethod || '',
+      amount: archive.amount || 0,
+      cardNumber: archive.cardNumber || '',
+      expiry: archive.expiry || '',
+      cvv: archive.cvv || '',
+      room_id: archive.room_id,
+      pay_status: archive.pay_status || false,
+      created_at: archive.created_at,
+      updated_at: archive.updated_at,
+      requests: archive.specialRequests || '',
+      paidamount: archive.paidamount || 0,
+      deleted_at: archive.deleted_at || ''
     };
   }
 }

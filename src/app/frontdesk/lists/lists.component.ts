@@ -52,8 +52,11 @@ interface RoomType {
 export class ListsComponent implements OnInit {
   reservations: Reservation[] = [];
   filteredReservations: Reservation[] = [];
+  checkedOutReservations: Reservation[] = [];
+  filteredCheckedOutReservations: Reservation[] = [];
   roomRates: Record<string, number> = {};
   searchTerm: string = '';
+  checkedOutSearchTerm: string = '';
   loading = false;
   error = '';
   showCheckoutModal = false;
@@ -98,51 +101,45 @@ export class ListsComponent implements OnInit {
   loadReservations() {
     this.loading = true;
     this.error = '';
+    this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
+      next: (bookingsData) => {
+        const allReservations = bookingsData
+          .map(booking => {
+            const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
+            const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
+            
+            return {
+              id: booking.id,
+              guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
+              guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
+              guest_email: booking.guest?.email || booking.guest_email || '',
+              guest_phone: booking.guest?.phone || booking.guest_phone || '',
+              roomType: booking.roomType || 'Classic',
+              roomTypeId: booking.roomTypeId,
+              checkIn: checkIn,
+              checkOut: checkOut,
+              roomRate: booking.roomRate || this.getRateForRoomType(booking.roomType),
+              totalAmount: booking.paidamount || booking.payment?.amount || 0,
+              status: booking.pay_status ? 'active' : 'pending',
+              room_id: booking.room_id,
+              bookingStatus: booking.status || 'reserved',
+              requests: booking.requests || []
+            };
+          })
+          .filter(reservation => reservation.status !== 'archived');
 
-    // Fetch rooms first to ensure roomType can be matched
-    this.http.get<any[]>(`${environment.apiUrl}/rooms`).subscribe({
-      next: (roomsData) => {
-        this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
-          next: (bookingsData) => {
-            this.reservations = bookingsData
-              .map(booking => {
-                const room = roomsData.find(r => r.id === booking.room_id);
-                const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
-                const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
-                
-                return {
-                  id: booking.id,
-                  guest_firstName: booking.guest?.first_name || booking.guest_firstName || '',
-                  guest_lastName: booking.guest?.last_name || booking.guest_lastName || '',
-                  guest_email: booking.guest?.email || booking.guest_email || '',
-                  guest_phone: booking.guest?.phone || booking.guest_phone || '',
-                  // Fix: pull room type from room data if available
-                  roomType: room?.roomType?.type || room?.RoomType?.type || booking.roomType?.type || 'Classic',
-                  roomTypeId: booking.roomTypeId || room?.roomTypeId,
-                  checkIn: checkIn,
-                  checkOut: checkOut,
-                  roomRate: booking.roomRate || this.getRateForRoomType(room?.roomType),
-                  totalAmount: booking.paidamount || booking.payment?.amount || 0,
-                  status: booking.pay_status ? 'active' : 'pending',
-                  room_id: booking.room_id,
-                  bookingStatus: booking.status || 'reserved',
-                  requests: booking.requests || []
-                };
-              })
-              .filter(reservation => 
-                reservation.status !== 'archived' && 
-                reservation.bookingStatus === 'checked_in'
-              );
+        // Separate active and checked out reservations
+        this.reservations = allReservations.filter(reservation => 
+          reservation.bookingStatus !== 'checked_out'
+        );
+        
+        this.checkedOutReservations = allReservations.filter(reservation => 
+          reservation.bookingStatus === 'checked_out'
+        );
 
-            this.applySearch();
-            this.loading = false;
-          },
-          error: (err) => {
-            this.error = 'Failed to load reservations';
-            this.loading = false;
-            console.error('Error loading bookings:', err);
-          }
-        });
+        this.applySearch();
+        this.applyCheckedOutSearch();
+        this.loading = false;
       },
       error: (err) => {
         this.error = 'Failed to load rooms';
@@ -223,13 +220,44 @@ export class ListsComponent implements OnInit {
     }
   }
 
+  applyCheckedOutSearch() {
+    const term = this.checkedOutSearchTerm.trim().toLowerCase();
+    
+    if (!term) {
+      this.filteredCheckedOutReservations = this.checkedOutReservations;
+    } else {
+      this.filteredCheckedOutReservations = this.checkedOutReservations.filter(reservation => {
+        const guestName = this.getGuestName(reservation).toLowerCase();
+        const email = reservation.guest_email?.toLowerCase() || '';
+        const phone = reservation.guest_phone?.toLowerCase() || '';
+        const roomType = reservation.roomType?.toLowerCase() || '';
+        const status = reservation.status?.toLowerCase() || '';
+        
+        return guestName.includes(term) || 
+               email.includes(term) || 
+               phone.includes(term) || 
+               roomType.includes(term) || 
+               status.includes(term);
+      });
+    }
+  }
+
   onSearchTermChange() {
     this.applySearch();
+  }
+
+  onCheckedOutSearchTermChange() {
+    this.applyCheckedOutSearch();
   }
 
   clearSearch() {
     this.searchTerm = '';
     this.applySearch();
+  }
+
+  clearCheckedOutSearch() {
+    this.checkedOutSearchTerm = '';
+    this.applyCheckedOutSearch();
   }
 
   openExtendModal(reservation: Reservation) {

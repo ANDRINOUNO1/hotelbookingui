@@ -49,13 +49,24 @@
 
       <div class="form-group">
         <button 
-          (click)="refreshBookingData()" 
+          (click)="manualRefresh()" 
           [disabled]="isLoading"
           class="btn-refresh"
         >
           <i class="fa fa-sync-alt" *ngIf="!isLoading"></i>
           <i class="fa fa-spinner fa-spin" *ngIf="isLoading"></i>
           {{ isLoading ? 'Refreshing...' : 'Refresh Status' }}
+        </button>
+      </div>
+
+      <div class="form-group">
+        <button 
+          (click)="testOctoberData()" 
+          [disabled]="isLoading"
+          class="btn-test"
+          style="background-color: orange; color: white; padding: 10px; margin: 5px; border: none; border-radius: 5px;"
+        >
+          🧪 Test October Data
         </button>
       </div>
 
@@ -88,12 +99,17 @@
   <!-- Report Summary -->
   <div *ngIf="reportData && !isLoading" class="report-summary">
     <div class="summary-card">
-      <div class="summary-header">
-        <h2>
-          <i class="fa fa-chart-bar"></i>
-          {{ getSelectedMonthName() }} {{ selectedYear }} Summary
-        </h2>
-      </div>
+        <div class="summary-header">
+          <h2>
+            <i class="fa fa-chart-bar"></i>
+            {{ getSelectedMonthName() || 'October' }} {{ selectedYear }} Summary
+          </h2>
+          <!-- Debug info -->
+          <div style="color: white; font-size: 12px; margin-top: 10px;">
+            Debug: Total Bookings: {{ reportData.totalBookings || 0 }}, Check-ins: {{ totalCheckIns || 0 }}, Payments: {{ totalPaymentsReceived || 0 }}
+            <br>ReportData exists: {{ reportData ? 'Yes' : 'No' }}, IsLoading: {{ isLoading }}
+          </div>
+        </div>
       
       <div class="summary-stats">
         <div class="stat-item">
@@ -218,7 +234,7 @@
           <tbody>
             <tr *ngFor="let booking of reportData.bookings.slice(0, 5)">
               <td>{{ booking.id || 'N/A' }}</td>
-              <td>{{ booking.guest.first_name }} {{ booking.guest.last_name }}</td>
+              <td>{{ booking.guest.first_name || 'N/A' }} {{ booking.guest.last_name || '' }}</td>
               <td>{{ booking.room?.roomType?.type || 'Standard Room' }}</td>
               <td>{{ calculateDaysOfStay(booking) }}</td>
               <td>{{ booking.availability.checkIn ? (booking.availability.checkIn | date:'MMM dd, yyyy') : 'N/A' }}</td>
@@ -407,11 +423,15 @@
           <tbody>
             <tr *ngFor="let archive of reportData.archives.slice(0, 5)">
               <td>{{ archive.id || 'N/A' }}</td>
-              <td>{{ archive.guest || 'N/A' }}</td>
-              <td>{{ archive.roomType || 'N/A' }}</td>
-              <td>{{ archive.createdAt ? (archive.createdAt | date:'MMM dd, yyyy') : 'N/A' }}</td>
-              <td>{{ archive.arrivalDate ? (archive.arrivalDate | date:'MMM dd, yyyy') : 'N/A' }}</td>
-              <td>{{ archive.status || 'N/A' }}</td>
+              <td>{{ getArchiveGuestName(archive) }}</td>
+              <td>{{ getArchiveRoomType(archive) }}</td>
+              <td>{{ archive.created_at ? (archive.created_at | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>{{ archive.checkIn ? (archive.checkIn | date:'MMM dd, yyyy') : 'N/A' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getArchiveStatusClass(archive)">
+                  {{ getArchiveStatus(archive) }}
+                </span>
+              </td>
             </tr>
             <tr *ngIf="reportData.archives.length === 0">
               <td colspan="6" class="empty-state">

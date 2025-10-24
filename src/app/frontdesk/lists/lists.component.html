@@ -1,7 +1,7 @@
 <div class="lists-container">
   <!-- Header -->
   <div class="header">
-    <h1>Reservations List</h1>
+    <h1>Reservations Management</h1>
     <button class="refresh-btn" (click)="loadReservations()" [disabled]="loading">
       <i class="fa fa-refresh"></i>
       {{ loading ? 'Loading...' : 'Refresh' }}
@@ -94,6 +94,72 @@
       <p *ngIf="searchTerm.trim()">No reservations found matching "{{ searchTerm }}"</p>
       <p *ngIf="!searchTerm.trim()">There are currently no active reservations to display.</p>
       <p *ngIf="searchTerm.trim()" class="search-tips">Try searching by guest name, email, phone, or room type</p>
+    </div>
+  </div>
+
+  <!-- Checked Out Reservations Section -->
+  <div class="checked-out-section" *ngIf="!loading">
+    <div class="section-header">
+      <h2>Checked Out Reservations</h2>
+      <div class="search-container">
+        <div class="search-box">
+          <input 
+            type="text" 
+            placeholder="Search checked out reservations..." 
+            [(ngModel)]="checkedOutSearchTerm" 
+            (input)="onCheckedOutSearchTermChange()"
+            (keyup)="onCheckedOutSearchTermChange()"
+            (blur)="onCheckedOutSearchTermChange()"
+            autocomplete="off"
+            spellcheck="false">
+          <button 
+            *ngIf="checkedOutSearchTerm.trim()" 
+            (click)="clearCheckedOutSearch()" 
+            class="clear-search"
+            type="button">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checked Out Reservations Table -->
+    <div class="table-container">
+      <table class="reservations-table checked-out-table">
+        <thead>
+          <tr>
+            <th>Guest Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Room Type</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of filteredCheckedOutReservations" class="reservation-row checked-out-row">
+            <td>{{ getGuestName(reservation) }}</td>
+            <td>{{ reservation.guest_email }}</td>
+            <td>{{ reservation.guest_phone }}</td>
+            <td>{{ reservation.roomType }}</td>
+            <td>{{ formatDate(reservation.checkIn) }}</td>
+            <td>{{ formatDate(reservation.checkOut) }}</td>
+            <td>
+              <span class="status-badge checked-out">Checked Out</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State for Checked Out -->
+      <div class="empty-state" *ngIf="filteredCheckedOutReservations.length === 0">
+        <i class="fa fa-sign-out-alt"></i>
+        <h3 *ngIf="checkedOutSearchTerm.trim()">No Search Results</h3>
+        <h3 *ngIf="!checkedOutSearchTerm.trim()">No Checked Out Reservations</h3>
+        <p *ngIf="checkedOutSearchTerm.trim()">No checked out reservations found matching "{{ checkedOutSearchTerm }}"</p>
+        <p *ngIf="!checkedOutSearchTerm.trim()">There are currently no checked out reservations to display.</p>
+      </div>
     </div>
   </div>
 

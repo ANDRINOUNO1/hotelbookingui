@@ -699,6 +699,56 @@
       }
     }
   }
+
+  // Checked Out Section Styles
+  .checked-out-section {
+    margin-top: 40px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+
+      h2 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .search-container {
+        flex: 1;
+        max-width: 300px;
+        min-width: 200px;
+      }
+    }
+
+    .checked-out-table {
+      .checked-out-row {
+        background-color: rgba(108, 117, 125, 0.1);
+        
+        &:hover {
+          background-color: rgba(108, 117, 125, 0.15);
+        }
+      }
+
+      .status-badge.checked-out {
+        background-color: #6c757d;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+    }
+  }
 }
 /* Small phones (≤ 400px) */
 @media (max-width: 400px) {
