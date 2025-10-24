@@ -31,12 +31,19 @@ export class FrontdeskdashboardComponent implements OnInit {
   selectedDate: string = ''; // ✅ For date filter input
   isDropdownOpen = false;
 
+  // Calendar / navigation state
+  dates: Date[] = [];
+  visibleDays = 1; // number of days to jump/show at once
+  currentStartIndex = 0; // index into `dates` for the visible window
+
   statusSummary: { label: string; count: number; class: string; icon: string }[] = [];
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.selectedDate = new Date().toISOString().split('T')[0]; // ✅ default to today
+    this.generateDates();
+    this.syncCurrentIndexWithSelectedDate();
     this.loadRooms();
     this.getBookings();
   }
@@ -85,6 +92,48 @@ export class FrontdeskdashboardComponent implements OnInit {
     });
 
     this.updateStatusSummary();
+  }
+
+  /** Generate a sliding window of dates (defaults to +/- 90 days around today) */
+  generateDates(windowDays = 180, centerOffset = 90) {
+    this.dates = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(today);
+    start.setDate(start.getDate() - centerOffset);
+    for (let i = 0; i < windowDays; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      d.setHours(0, 0, 0, 0);
+      this.dates.push(d);
+    }
+  }
+
+  syncCurrentIndexWithSelectedDate() {
+    if (!this.selectedDate || !this.dates.length) return;
+    const s = new Date(this.selectedDate);
+    s.setHours(0, 0, 0, 0);
+    const idx = this.dates.findIndex(d => d.getTime() === s.getTime());
+    this.currentStartIndex = idx !== -1 ? idx : 0;
+  }
+
+  updateVisibleRange() {
+    // clamp index
+    if (!this.dates.length) return;
+    this.currentStartIndex = Math.max(0, Math.min(this.currentStartIndex, Math.max(0, this.dates.length - 1)));
+    // ensure selectedDate reflects the start of the visible window
+    const sel = this.dates[this.currentStartIndex] || this.dates[0];
+    this.selectedDate = sel.toISOString().split('T')[0];
+    // refresh the filtered bookings for the newly selected date
+    this.filterBookingsByDate();
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentStartIndex > 0;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentStartIndex + this.visibleDays < this.dates.length;
   }
 
   getUniqueRoomTypes(rooms: Room[]): RoomType[] {
@@ -200,5 +249,27 @@ export class FrontdeskdashboardComponent implements OnInit {
 
   getPaymentStatusClass(isPaid: boolean): string {
     return isPaid ? 'payment-paid' : 'payment-unpaid';
+  }
+
+  goToToday() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const idx = this.dates.findIndex(d => d.getTime() === today.getTime());
+    this.currentStartIndex = idx !== -1 ? idx : 0;
+    this.updateVisibleRange();
+  }
+
+  goToPrevious() {
+    if (this.currentStartIndex > 0) {
+      this.currentStartIndex = Math.max(0, this.currentStartIndex - this.visibleDays);
+      this.updateVisibleRange();
+    }
+  }
+
+  goToNext() {
+    if (this.currentStartIndex + this.visibleDays < this.dates.length) {
+      this.currentStartIndex = Math.min(this.dates.length - this.visibleDays, this.currentStartIndex + this.visibleDays);
+      this.updateVisibleRange();
+    }
   }
 }

@@ -5,13 +5,42 @@
       <p class="text-gray-600">Overview of room status and bookings</p>
     </div>
     <div class="date-filter">
-      <label for="dateFilter">Select Date:</label>
-      <input
-        id="dateFilter"
-        type="date"
-        [(ngModel)]="selectedDate"
-        (change)="filterBookingsByDate()"
-      />
+      <div class="button-group">
+        <button
+          class="nav-button"
+          (click)="goToPrevious()"
+          [disabled]="!canGoPrevious"
+          title="Go to previous 14 days (Left Arrow)">
+          <i class="fa fa-chevron-left"></i>
+          Previous
+        </button>
+
+        <button
+          class="nav-button today-button"
+          (click)="goToToday()"
+          title="Go to today (Home key)">
+          <i class="fa fa-calendar-day"></i>
+          Today
+        </button>
+
+        <button
+          class="nav-button"
+          (click)="goToNext()"
+          [disabled]="!canGoNext"
+          title="Go to next 14 days (Right Arrow)">
+          Next
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="date-input-group">
+        <label for="dateFilter">Select Date:</label>
+        <input
+          id="dateFilter"
+          type="date"
+          [(ngModel)]="selectedDate"
+          (change)="filterBookingsByDate()" />
+      </div>
     </div>
     <div class="dashboard-cards">
       <div *ngFor="let status of statusSummary" class="dashboard-card" [ngClass]="status.class">
@@ -56,7 +85,7 @@
           </div>
 
           <!-- Occupied -->
-          <h3 class="legend-category">Occupied</h3>
+          <h3 class="legend-category">Other Statuses</h3>
           <div class="legend-item"><span class="legend-color occupied"></span> <span class="legend-text">Occupied</span></div>
           <div class="legend-item"><span class="legend-color stay-over"></span> <span class="legend-text">Stay Over</span></div>
           <div class="legend-item"><span class="legend-color on-change"></span> <span class="legend-text">On Change</span></div>
