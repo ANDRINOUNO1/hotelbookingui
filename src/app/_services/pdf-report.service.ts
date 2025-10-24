@@ -34,75 +34,147 @@ export class PdfReportService {
   constructor() { }
 
   generateMonthlyRevenueReport(data: MonthlyReportData): void {
-    const doc = new jsPDF();
-    
-    // Set up colors consistent with BC Flats theme
-    const primaryColor = '#0b0b31';
-    const secondaryColor = '#e5c07b';
-    const accentColor = '#b4884d';
-    const textColor = '#333333';
-    const lightGray = '#f8f9fa';
+    try {
+      const doc = new jsPDF();
+      
+      // Set up colors consistent with BC Flats theme
+      const primaryColor = '#0b0b31';
+      const secondaryColor = '#e5c07b';
+      const accentColor = '#b4884d';
+      const textColor = '#333333';
+      const lightGray = '#f8f9fa';
 
-    // PAGE 1: Monthly Revenue Summary
-    this.addHeader(doc, data.month, data.year, primaryColor, secondaryColor);
-    this.addSummarySection(doc, data, primaryColor, secondaryColor, accentColor);
-    this.addPageFooter(doc, 1, 5, primaryColor, secondaryColor);
-    
-    // PAGE 2: Reservations List
-    doc.addPage();
-    this.addPageHeader(doc, 2, primaryColor, secondaryColor);
-    this.addReservationsTable(doc, data.bookings || [], primaryColor, secondaryColor);
-    this.addPageFooter(doc, 2, 5, primaryColor, secondaryColor);
-    
-    // PAGE 3: Check-In List
-    doc.addPage();
-    this.addPageHeader(doc, 3, primaryColor, secondaryColor);
-    this.addCheckInTable(doc, data.checkInList || [], primaryColor, secondaryColor);
-    this.addPageFooter(doc, 3, 5, primaryColor, secondaryColor);
-    
-    // PAGE 4: Check-Out List
-    doc.addPage();
-    this.addPageHeader(doc, 4, primaryColor, secondaryColor);
-    this.addCheckOutTable(doc, data.checkOutList || [], primaryColor, secondaryColor);
-    this.addPageFooter(doc, 4, 5, primaryColor, secondaryColor);
-    
-    // PAGE 5: Archived Records
-    doc.addPage();
-    this.addPageHeader(doc, 5, primaryColor, secondaryColor);
-    this.addArchivesTable(doc, data.archives || [], primaryColor, secondaryColor);
-    this.addPageFooter(doc, 5, 5, primaryColor, secondaryColor);
+      // Validate data
+      if (!data) {
+        throw new Error('No data provided for PDF generation');
+      }
 
-    // Save the PDF
-    const fileName = `Monthly_Revenue_Report_${data.month}_${data.year}.pdf`;
-    doc.save(fileName);
+      // PAGE 1: Monthly Revenue Summary
+      this.addHeader(doc, data.month, data.year, primaryColor, secondaryColor);
+      this.addSummarySection(doc, data, primaryColor, secondaryColor, accentColor);
+      this.addPageFooter(doc, 1, 5, primaryColor, secondaryColor);
+      
+      // PAGE 2: Reservations List
+      if (data.bookings && data.bookings.length > 0) {
+        doc.addPage();
+        this.addPageHeader(doc, 2, primaryColor, secondaryColor);
+        this.addReservationsTable(doc, data.bookings, primaryColor, secondaryColor);
+        this.addPageFooter(doc, 2, 5, primaryColor, secondaryColor);
+      }
+      
+      // PAGE 3: Check-In List
+      if (data.checkInList && data.checkInList.length > 0) {
+        doc.addPage();
+        this.addPageHeader(doc, 3, primaryColor, secondaryColor);
+        this.addCheckInTable(doc, data.checkInList, primaryColor, secondaryColor);
+        this.addPageFooter(doc, 3, 5, primaryColor, secondaryColor);
+      }
+      
+      // PAGE 4: Check-Out List
+      if (data.checkOutList && data.checkOutList.length > 0) {
+        doc.addPage();
+        this.addPageHeader(doc, 4, primaryColor, secondaryColor);
+        this.addCheckOutTable(doc, data.checkOutList, primaryColor, secondaryColor);
+        this.addPageFooter(doc, 4, 5, primaryColor, secondaryColor);
+      }
+      
+      // PAGE 5: Archived Records
+      if (data.archives && data.archives.length > 0) {
+        doc.addPage();
+        this.addPageHeader(doc, 5, primaryColor, secondaryColor);
+        this.addArchivesTable(doc, data.archives, primaryColor, secondaryColor);
+        this.addPageFooter(doc, 5, 5, primaryColor, secondaryColor);
+      }
+
+      // Save the PDF
+      const fileName = `Monthly_Revenue_Report_${data.month}_${data.year}.pdf`;
+      doc.save(fileName);
+      
+      console.log('PDF generated successfully:', fileName);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      throw new Error('Failed to generate PDF report. Please try again.');
+    }
+  }
+
+  // Generate PDF from backend summary data
+  generatePDFFromSummary(month: number, year: number, summaryData: any, bookings: any[], archives: any[]): void {
+    try {
+      const monthName = this.getMonthName(month);
+      
+      const reportData: MonthlyReportData = {
+        bookings: bookings || [],
+        archives: archives || [],
+        totalRevenue: summaryData.totalRevenue || 0,
+        totalBookings: summaryData.totalBookings || 0,
+        totalArchived: summaryData.totalArchived || 0,
+        month: monthName,
+        year: year,
+        checkInList: bookings?.filter(b => b.status?.toLowerCase() === 'checked_in') || [],
+        checkOutList: bookings?.filter(b => b.status?.toLowerCase() === 'checked_out') || [],
+        totalCheckIns: summaryData.totalCheckIns || 0,
+        totalCheckOuts: summaryData.totalCheckOuts || 0,
+        totalNetPaid: summaryData.totalBasePrices || 0,
+        totalAdditionalIncome: summaryData.totalReservationFees || 0,
+        totalReservationFees: summaryData.totalReservationFees || 0,
+        totalPaymentsReceived: summaryData.totalPaymentsReceived || 0,
+        totalBasePrices: summaryData.totalBasePrices || 0,
+        netRevenue: summaryData.netRevenue || 0
+      };
+      
+      this.generateMonthlyRevenueReport(reportData);
+    } catch (error) {
+      console.error('Error generating PDF from summary:', error);
+      throw new Error('Failed to generate PDF report from summary data.');
+    }
+  }
+
+  // Get month name from number
+  getMonthName(month: number): string {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month] || 'Unknown';
   }
 
   private addHeader(doc: jsPDF, month: string, year: number, primaryColor: string, secondaryColor: string): void {
     // Company Logo Area
     doc.setFillColor(primaryColor);
-    doc.rect(0, 0, 210, 30, 'F');
+    doc.rect(0, 0, 210, 35, 'F');
     
     // Company Name
     doc.setTextColor(secondaryColor);
-    doc.setFontSize(20);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
-    doc.text('BC Flats Hotel', 20, 20);
+    doc.text('BC Flats Hotel', 20, 22);
     
     // Report Title
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Monthly Revenue Report', 20, 35);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Monthly Revenue Report', 20, 32);
     
     // Date Generated
-    doc.setFontSize(10);
-    doc.text(`Report Period: ${month} ${year}`, 20, 45);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 50);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Report Period: ${month} ${year}`, 20, 42);
+    
+    // Generated Date
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    doc.text(`Generated: ${currentDate}`, 20, 48);
     
     // Add decorative line
     doc.setDrawColor(secondaryColor);
     doc.setLineWidth(2);
-    doc.line(20, 55, 190, 55);
+    doc.line(20, 52, 190, 52);
+    
+    // Reset text color
+    doc.setTextColor(0, 0, 0);
   }
 
   private addSummarySection(doc: jsPDF, data: MonthlyReportData, primaryColor: string, secondaryColor: string, accentColor: string): void {
@@ -112,23 +184,30 @@ export class PdfReportService {
     
     // Summary Title
     doc.setTextColor(primaryColor);
-    doc.setFontSize(14);
+    doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.text('Monthly Summary', 20, yPosition);
-    yPosition += 15;
     
-    // Summary Box
+    // Add underline
+    doc.setDrawColor(secondaryColor);
+    doc.setLineWidth(1);
+    doc.line(20, yPosition + 2, 80, yPosition + 2);
+    
+    yPosition += 20;
+    
+    // Summary Box with better styling - larger to accommodate all data
     doc.setFillColor(lightGray);
-    doc.rect(20, yPosition - 5, 170, 80, 'F');
+    doc.rect(20, yPosition - 5, 170, 110, 'F');
     doc.setDrawColor('#dee2e6');
-    doc.rect(20, yPosition - 5, 170, 80, 'S');
+    doc.setLineWidth(1);
+    doc.rect(20, yPosition - 5, 170, 110, 'S');
     
-    // Summary Content
+    // Summary Content with better formatting
     doc.setTextColor(textColor);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     
-    // First row - Basic metrics
+    // First row - Basic metrics (4 columns)
     const summaryDataRow1 = [
       { label: 'Total Bookings:', value: (data.totalBookings || 0).toString() },
       { label: 'Check-ins:', value: (data.totalCheckIns || 0).toString() },
@@ -137,7 +216,7 @@ export class PdfReportService {
     ];
     
     summaryDataRow1.forEach((item, index) => {
-      const x = 30 + (index * 40);
+      const x = 25 + (index * 42);
       doc.setFont('helvetica', 'bold');
       doc.text(item.label, x, yPosition + 5);
       doc.setFont('helvetica', 'normal');
@@ -146,15 +225,15 @@ export class PdfReportService {
       doc.setTextColor(textColor);
     });
     
-    // Second row - Revenue metrics
+    // Second row - Revenue metrics (3 columns to prevent overflow)
     const summaryDataRow2 = [
       { label: 'Payments Received:', value: this.formatCurrency(data.totalPaymentsReceived || 0) },
       { label: 'Reservation Fees:', value: this.formatCurrency(data.totalReservationFees || 0) },
-      { label: 'Net Revenue:', value: this.formatCurrency(data.netRevenue || 0) }
+      { label: 'Base Prices:', value: this.formatCurrency(data.totalBasePrices || 0) }
     ];
     
     summaryDataRow2.forEach((item, index) => {
-      const x = 30 + (index * 55);
+      const x = 25 + (index * 56);
       doc.setFont('helvetica', 'bold');
       doc.text(item.label, x, yPosition + 25);
       doc.setFont('helvetica', 'normal');
@@ -163,15 +242,15 @@ export class PdfReportService {
       doc.setTextColor(textColor);
     });
     
-    // Third row - Additional metrics
+    // Third row - Additional metrics (3 columns)
     const summaryDataRow3 = [
-      { label: 'Base Prices:', value: this.formatCurrency(data.totalBasePrices || 0) },
+      { label: 'Net Revenue:', value: this.formatCurrency(data.netRevenue || 0) },
       { label: 'Net Paid:', value: this.formatCurrency(data.totalNetPaid || 0) },
       { label: 'Total Revenue:', value: this.formatCurrency(data.totalRevenue || 0) }
     ];
     
     summaryDataRow3.forEach((item, index) => {
-      const x = 30 + (index * 55);
+      const x = 25 + (index * 56);
       doc.setFont('helvetica', 'bold');
       doc.text(item.label, x, yPosition + 45);
       doc.setFont('helvetica', 'normal');
@@ -450,11 +529,11 @@ export class PdfReportService {
     // Prepare table data
     const tableData = archives.map(archive => [
       archive.id?.toString() || 'N/A',
-      archive.guest || 'N/A',
+      `${archive.guest_firstName || ''} ${archive.guest_lastName || ''}`.trim() || 'N/A',
       archive.roomType || 'N/A',
-      archive.createdAt ? new Date(archive.createdAt).toLocaleDateString() : 'N/A',
-      archive.arrivalDate ? new Date(archive.arrivalDate).toLocaleDateString() : 'N/A',
-      archive.status || 'N/A'
+      archive.created_at ? new Date(archive.created_at).toLocaleDateString() : 'N/A',
+      archive.checkIn ? new Date(archive.checkIn).toLocaleDateString() : 'N/A',
+      archive.pay_status ? 'Completed' : 'Cancelled'
     ]);
     
     // Generate table
@@ -599,33 +678,25 @@ export class PdfReportService {
   // Helper method to format currency
   private formatCurrency(amount: number | string | null | undefined): string {
     if (amount === null || amount === undefined || amount === '') {
-      return '₱0.00';
+      return 'PHP 0.00';
     }
     
     let numericAmount: number;
     if (typeof amount === 'string') {
       numericAmount = parseFloat(amount);
       if (isNaN(numericAmount)) {
-        return '₱0.00';
+        return 'PHP 0.00';
       }
     } else {
       numericAmount = amount;
     }
     
     if (isNaN(numericAmount) || !isFinite(numericAmount)) {
-      return '₱0.00';
+      return 'PHP 0.00';
     }
     
     const formattedAmount = numericAmount.toFixed(2);
-    return `₱${formattedAmount}`;
+    return `PHP ${formattedAmount}`;
   }
 
-  // Helper method to get month name
-  getMonthName(monthIndex: number): string {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[monthIndex] || 'Unknown';
-  }
 }

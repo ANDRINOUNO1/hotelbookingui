@@ -9,6 +9,21 @@ export const ROOM_STATUSES = [
 // This creates a TypeScript type from the array above
 export type RoomStatus = typeof ROOM_STATUSES[number];
 
+// Forward declaration for Request interface
+export interface Request {
+  id?: number;
+  booking_id: number;
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  created_at?: string;
+  updated_at?: string;
+  products?: {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
 
 export interface Availability {
   id?: number;
@@ -31,6 +46,7 @@ export interface Booking {
   room?: Room;
   specialRequests?: string;
   paidamount: number;
+  requests?: Request[];
 }
 
 export interface Guest {

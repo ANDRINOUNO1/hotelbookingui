@@ -4,8 +4,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService} from '../../_services/product.service';
 import { Product } from '../../_models/product.model';
-import { BookingService, Booking } from '../../_services/booking.service';
-import { RequestService, Request } from '../../_services/requests.service';
+import { BookingService } from '../../_services/booking.service';
+import { Booking as NestedBooking } from '../../_models/booking.model';
+import { Booking as FlattenedBooking } from '../../_services/booking.service';
+import { RequestService, Request as ServiceRequest } from '../../_services/requests.service';
+import { Request as ModelRequest } from '../../_models/booking.model';
 
 
 export interface CartItem {
@@ -22,10 +25,10 @@ export interface CartItem {
   styleUrls: ['./pos.component.scss'],
 })
 export class PosComponent {
-  bookings: Booking[] = [];
+  bookings: FlattenedBooking[] = [];
   products: Product[] = [];
   selectedBookingId: number | null = null;
-  selectedBooking: Booking | null = null;   
+  selectedBooking: NestedBooking | null = null;   
 
   constructor(
     private productService: ProductService,
@@ -43,14 +46,35 @@ export class PosComponent {
 
   loadBookings() {
     this.bookingService.getAllBookings().subscribe({
-      next: (data) => (this.bookings = data),
+      next: (data) => {
+        console.log('🔍 POS: All bookings received:', data);
+        console.log('🔍 POS: Booking statuses:', data.map(b => ({ id: b.id, status: b.status, guest: `${b.guest_firstName} ${b.guest_lastName}` })));
+        console.log('🔍 POS: Unique status values:', [...new Set(data.map(b => b.status))]);
+        
+        // Filter to only show checked-in bookings
+        const checkedInBookings = data.filter(booking => 
+          booking.status === 'checked_in'
+        );
+        
+        console.log('🔍 POS: Checked-in bookings:', checkedInBookings);
+        console.log('🔍 POS: Checked-in count:', checkedInBookings.length);
+        
+        // If no checked-in bookings found, show all bookings for debugging
+        if (checkedInBookings.length === 0) {
+          console.log('⚠️ POS: No checked-in bookings found, showing all bookings for debugging');
+          this.bookings = data;
+        } else {
+          this.bookings = checkedInBookings;
+        }
+      },
       error: (err) => console.error('Error fetching bookings:', err)
     });
   }
 
   selectBooking(id: number) {
     this.selectedBookingId = id;
-    this.selectedBooking = this.bookings.find(b => b.id === id) || null;
+    const flattenedBooking = this.bookings.find(b => b.id === id);
+    this.selectedBooking = flattenedBooking ? this.convertFlattenedToNested(flattenedBooking) : null;
   }
 
   loadProducts(): void {
@@ -104,11 +128,62 @@ export class PosComponent {
   }
 
   onBookingChange(event: any) {
-    const id = +event.target.value;
-    this.selectedBooking = this.bookings.find(b => b.id === id) || null;
+    const bookingId = +event.target.value;
+    console.log('🔍 POS: Booking selected, ID:', bookingId);
+    
+    const flattenedBooking = this.filteredBookings.find(b => b.id === bookingId);
+    if (flattenedBooking) {
+      this.selectedBooking = this.convertFlattenedToNested(flattenedBooking);
+    } else {
+      this.selectedBooking = null;
+    }
+    
+    this.selectedBookingId = bookingId;
+    this.selectedRequest = null;
+    this.selectedRequestId = null;
+    
+    console.log('🔍 POS: Selected booking:', this.selectedBooking);
   }
 
-  get checkedInBookings(): Booking[] {
+  private convertFlattenedToNested(flattened: FlattenedBooking): NestedBooking {
+    return {
+      id: flattened.id,
+      room_id: flattened.room_id,
+      guest: {
+        first_name: flattened.guest?.first_name || flattened.guest_firstName || '',
+        last_name: flattened.guest?.last_name || flattened.guest_lastName || '',
+        email: flattened.guest?.email || flattened.guest_email || '',
+        phone: flattened.guest?.phone || flattened.guest_phone || '',
+        address: flattened.guest?.address || flattened.guest_address || '',
+        city: flattened.guest?.city || flattened.guest_city || ''
+      },
+      availability: {
+        checkIn: flattened.availability?.checkIn || flattened.checkIn || '',
+        checkOut: flattened.availability?.checkOut || flattened.checkOut || '',
+        adults: flattened.availability?.adults || flattened.adults || 0,
+        children: flattened.availability?.children || flattened.children || 0,
+        rooms: flattened.availability?.rooms || flattened.rooms || 1
+      },
+      payment: flattened.payment ? {
+        paymentMode: flattened.payment.paymentMode || flattened.paymentMode || '',
+        paymentMethod: flattened.payment.paymentMethod || flattened.paymentMethod || '',
+        amount: flattened.payment.amount || flattened.amount || 0,
+        mobileNumber: '',
+        cardNumber: flattened.cardNumber || '',
+        expiry: flattened.expiry || '',
+        cvv: flattened.cvv || ''
+      } : undefined,
+      pay_status: flattened.pay_status,
+      status: flattened.status as 'reserved' | 'checked_in' | 'checked_out' | undefined,
+      created_at: flattened.created_at,
+      updated_at: flattened.updated_at,
+      specialRequests: flattened.specialRequests,
+      paidamount: flattened.paidamount,
+      requests: []
+    };
+  }
+
+  get checkedInBookings(): FlattenedBooking[] {
     return this.bookings.filter(
       (b) => b.pay_status === true && b.status === 'checked_in'
     );
@@ -124,8 +199,8 @@ export class PosComponent {
       return;
     }
 
-    const requestPayload: Request = {
-      booking_id: this.selectedBooking.id,
+    const requestPayload: ServiceRequest = {
+      booking_id: this.selectedBooking.id!,
       status: 'pending'
     };
 
@@ -141,7 +216,15 @@ export class PosComponent {
             if (!this.selectedBooking!.requests) {
               this.selectedBooking!.requests = [];
             }
-            this.selectedBooking!.requests.push(updatedRequest);
+            const modelRequest: ModelRequest = {
+              id: updatedRequest.id,
+              booking_id: updatedRequest.booking_id,
+              status: updatedRequest.status,
+              created_at: updatedRequest.created_at,
+              updated_at: updatedRequest.updated_at,
+              products: updatedRequest.products
+            };
+            this.selectedBooking!.requests.push(modelRequest);
             this.refreshBooking(this.selectedBooking!.id!);
             this.clearCart();
           }
@@ -153,8 +236,12 @@ export class PosComponent {
   refreshBooking(bookingId: number) {
     this.bookingService.getAllBookings().subscribe({
       next: (data) => {
-        this.bookings = data;
-        this.selectedBooking = this.bookings.find(b => b.id === bookingId) || null;
+        // Filter to only show checked-in bookings
+        this.bookings = data.filter(booking => 
+          booking.status === 'checked_in'
+        );
+        const flattenedBooking = this.bookings.find(b => b.id === bookingId);
+        this.selectedBooking = flattenedBooking ? this.convertFlattenedToNested(flattenedBooking) : null;
       },
       error: (err) => console.error('Error refreshing bookings:', err)
     });
@@ -178,7 +265,7 @@ export class PosComponent {
   }
 
   selectedRequestId: number | null = null;
-  selectedRequest: Request | null = null;
+  selectedRequest: ServiceRequest | null = null;
 
   onRequestChange(event: any) {
     const id = +event.target.value;
@@ -206,18 +293,31 @@ export class PosComponent {
   }
 
   selectedGuestId: string | null = null;  // guest email or unique identifier
-  filteredBookings: Booking[] = [];
+  filteredBookings: FlattenedBooking[] = [];
 
   // Extract unique guests from bookings
   get uniqueGuests() {
+    console.log('🔍 POS: uniqueGuests called, bookings:', this.bookings);
     const seen = new Set<string>();
-    return this.bookings
-      .map(b => b.guest)
+    const guests = this.bookings
+      .map(b => {
+        const guest = {
+          email: b.guest?.email || '',
+          firstName: b.guest?.first_name || '',
+          lastName: b.guest?.last_name || '',
+          phone: b.guest?.phone || ''
+        };
+        console.log('🔍 POS: Mapped guest:', guest, 'from booking:', b);
+        return guest;
+      })
       .filter(g => {
         if (seen.has(g.email)) return false;
         seen.add(g.email);
         return true;
       });
+    
+    console.log('🔍 POS: Final unique guests:', guests);
+    return guests;
   }
 
   // When guest is selected
@@ -225,13 +325,14 @@ export class PosComponent {
     const guestEmail = event.target.value;
     this.selectedGuestId = guestEmail;
     this.filteredBookings = this.bookings.filter(
-      b => b.guest.email === guestEmail && b.pay_status && b.status === 'checked_in'
+      b => b.guest?.email === guestEmail && b.pay_status && b.status === 'checked_in'
     );
     this.selectedBooking = null;
     this.selectedBookingId = null;
     this.selectedRequest = null;
     this.selectedRequestId = null;
   }
+
 
   getTotalPrice(r: any): number {
     if (!r?.products) return 0;

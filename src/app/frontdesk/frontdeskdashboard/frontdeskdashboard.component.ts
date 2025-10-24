@@ -65,7 +65,7 @@ export class FrontdeskdashboardComponent implements OnInit {
     this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
       next: (data) => {
         console.log('Frontdesk - Bookings data received:', data);
-        this.bookings = data.filter(booking => booking.status !== 'checked_out');
+        this.bookings = data;
         this.filterBookingsByDate(); 
       },
       error: (err) => {
@@ -130,7 +130,7 @@ export class FrontdeskdashboardComponent implements OnInit {
       .map(b => b.room_id);
 
     const reservedRoomIds = activeBookings
-      .filter(b => b.status === 'reserved')
+      .filter(b => b.status === 'reserved' || !b.status)
       .map(b => b.room_id);
 
     this.occupiedRooms = occupiedRoomIds.length;

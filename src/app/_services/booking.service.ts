@@ -6,7 +6,8 @@ import { Request } from './requests.service';
 
 export interface Booking {
   id: number;
-  guest: {
+  // Nested guest object (from backend)
+  guest?: {
     first_name: string;
     last_name: string;
     email: string;
@@ -14,14 +15,16 @@ export interface Booking {
     address: string;
     city: string;
   };
-  availability: {
+  // Nested availability object (from backend)
+  availability?: {
     checkIn: string;
     checkOut: string;
     adults: number;
     children: number;
     rooms: number;
   };
-  payment: {
+  // Nested payment object (from backend)
+  payment?: {
     paymentMode: string;
     paymentMethod: string;
     amount: number;
@@ -29,7 +32,32 @@ export interface Booking {
     expiry: string;
     cvv: string;
   };
+  // Flattened guest fields (fallback)
+  guest_firstName?: string;
+  guest_lastName?: string;
+  guest_email?: string;
+  guest_phone?: string;
+  guest_address?: string;
+  guest_city?: string;
+  // Flattened availability fields
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children: number;
+  rooms: number;
+  // Flattened payment fields
+  paymentMode: string;
+  paymentMethod: string;
+  amount: number;
+  cardNumber: string;
+  expiry: string;
+  cvv: string;
+  // Room information
   room_id: number;
+  roomNumber: string;
+  roomType: string;
+  roomTypeId: number;
+  // Status fields
   status: string;
   pay_status: boolean;
   created_at: string;
@@ -111,6 +139,16 @@ export class BookingService {
   // Delete a request
   deleteRequest(bookingId: number, requestId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${bookingId}/requests/${requestId}`);
+  }
+
+  // Get bookings by month and year
+  getBookingsByMonth(month: number, year: number): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.apiUrl}/by-month/${month}/${year}`);
+  }
+
+  // Get monthly summary
+  getMonthlySummary(month: number, year: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/summary/${month}/${year}`);
   }
 
 } 

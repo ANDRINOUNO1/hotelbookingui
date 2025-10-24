@@ -52,8 +52,11 @@ interface RoomType {
 export class ListsComponent implements OnInit {
   reservations: Reservation[] = [];
   filteredReservations: Reservation[] = [];
+  checkedOutReservations: Reservation[] = [];
+  filteredCheckedOutReservations: Reservation[] = [];
   roomRates: Record<string, number> = {};
   searchTerm: string = '';
+  checkedOutSearchTerm: string = '';
   loading = false;
   error = '';
   showCheckoutModal = false;
@@ -100,7 +103,7 @@ export class ListsComponent implements OnInit {
     this.error = '';
     this.http.get<any[]>(`${environment.apiUrl}/bookings`).subscribe({
       next: (bookingsData) => {
-        this.reservations = bookingsData
+        const allReservations = bookingsData
           .map(booking => {
             const checkIn = this.normalizeDate(booking.availability?.checkIn || booking.checkIn || null);
             const checkOut = this.normalizeDate(booking.availability?.checkOut || booking.checkOut || null);
@@ -123,11 +126,19 @@ export class ListsComponent implements OnInit {
               requests: booking.requests || []
             };
           })
-          .filter(reservation => 
-            reservation.status !== 'archived' && 
-            reservation.bookingStatus === 'checked_in'
-          );
+          .filter(reservation => reservation.status !== 'archived');
+
+        // Separate active and checked out reservations
+        this.reservations = allReservations.filter(reservation => 
+          reservation.bookingStatus !== 'checked_out'
+        );
+        
+        this.checkedOutReservations = allReservations.filter(reservation => 
+          reservation.bookingStatus === 'checked_out'
+        );
+
         this.applySearch();
+        this.applyCheckedOutSearch();
         this.loading = false;
       },
       error: (err) => {
@@ -195,13 +206,44 @@ export class ListsComponent implements OnInit {
     }
   }
 
+  applyCheckedOutSearch() {
+    const term = this.checkedOutSearchTerm.trim().toLowerCase();
+    
+    if (!term) {
+      this.filteredCheckedOutReservations = this.checkedOutReservations;
+    } else {
+      this.filteredCheckedOutReservations = this.checkedOutReservations.filter(reservation => {
+        const guestName = this.getGuestName(reservation).toLowerCase();
+        const email = reservation.guest_email?.toLowerCase() || '';
+        const phone = reservation.guest_phone?.toLowerCase() || '';
+        const roomType = reservation.roomType?.toLowerCase() || '';
+        const status = reservation.status?.toLowerCase() || '';
+        
+        return guestName.includes(term) || 
+               email.includes(term) || 
+               phone.includes(term) || 
+               roomType.includes(term) || 
+               status.includes(term);
+      });
+    }
+  }
+
   onSearchTermChange() {
     this.applySearch();
+  }
+
+  onCheckedOutSearchTermChange() {
+    this.applyCheckedOutSearch();
   }
 
   clearSearch() {
     this.searchTerm = '';
     this.applySearch();
+  }
+
+  clearCheckedOutSearch() {
+    this.checkedOutSearchTerm = '';
+    this.applyCheckedOutSearch();
   }
 
   openExtendModal(reservation: Reservation) {

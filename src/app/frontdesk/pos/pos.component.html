@@ -8,7 +8,7 @@
   <!-- Select booking -->
   <select [(ngModel)]="selectedGuestId" (change)="onGuestChange($event)">
     <option *ngFor="let g of uniqueGuests" [value]="g.email">
-      {{ g.first_name }} {{ g.last_name }} - {{ g.email }}
+      {{ g.firstName }} {{ g.lastName }} - {{ g.email }}
     </option>
   </select>
 
@@ -145,9 +145,9 @@
           <!-- Payment Info -->
           <section class="info-section">
             <h5><i class="fas fa-credit-card"></i> Payment</h5>
-            <p><strong>Mode:</strong> {{ selectedBooking.payment.paymentMode }}</p>
-            <p><strong>Method:</strong> {{ selectedBooking.payment.paymentMethod }}</p>
-            <p><strong>Amount:</strong> ₱{{ selectedBooking.payment.amount | number:'1.2-2' }}</p>
+            <p><strong>Mode:</strong> {{ selectedBooking.payment?.paymentMode }}</p>
+            <p><strong>Method:</strong> {{ selectedBooking.payment?.paymentMethod }}</p>
+            <p><strong>Amount:</strong> ₱{{ selectedBooking.payment?.amount | number:'1.2-2' }}</p>
             <p><strong>Status:</strong> 
               <span [ngClass]="{ 'paid': selectedBooking.pay_status, 'unpaid': !selectedBooking.pay_status }">
                 <i class="fas" [ngClass]="selectedBooking.pay_status ? 'fa-check-circle' : 'fa-times-circle'"></i>
