@@ -142,16 +142,30 @@ export class ListsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load reservations';
+        this.error = 'Failed to load rooms';
         this.loading = false;
-        console.error('Error loading reservations:', err);
+        console.error('Error loading rooms:', err);
       }
     });
   }
 
-  getRateForRoomType(roomType: string): number {
-    return this.roomRates[roomType?.toLowerCase()] || 0;
+  getRateForRoomType(roomType: any): number {
+    if (!roomType) return 0;
+
+    // If roomType is an object (e.g. { type: 'Classic' })
+    if (typeof roomType === 'object' && roomType.type) {
+      roomType = roomType.type;
+    }
+
+    // Ensure it's a string before calling toLowerCase
+    if (typeof roomType !== 'string') {
+      console.warn('Unexpected roomType format:', roomType);
+      return 0;
+    }
+
+    return this.roomRates[roomType.toLowerCase()] || 0;
   }
+
 
   calculateTotalAmount(reservation: Reservation): number {
     if (!reservation) return 0;

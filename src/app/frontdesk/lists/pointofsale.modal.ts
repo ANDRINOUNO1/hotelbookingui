@@ -28,11 +28,7 @@ import { RoomService } from '../../_services/room.service';
     <p><strong>Bill Date:</strong> {{ today | date: 'dd/MM/yyyy' }}</p>
     <p><strong>Check In:</strong> {{ selectedReservation?.checkIn | date: 'dd/MM/yyyy h:mm a' }}</p>
     <p><strong>Check Out:</strong> {{ selectedReservation?.checkOut | date: 'dd/MM/yyyy h:mm a' }}</p>
-    <p><strong>Adults:</strong> {{ selectedReservation?.adults }}</p>
-    <p><strong>Children:</strong> {{ selectedReservation?.children }}</p>
-    <p><strong>Rooms:</strong> {{ selectedReservation?.rooms }}</p>
   </div>
-
 
   <table class="charges">
     <thead>
